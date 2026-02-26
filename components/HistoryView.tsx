@@ -5,6 +5,7 @@ import Link from "next/link";
 import { getAllEntries } from "@/lib/storage";
 import type { HabitEntry } from "@/types/entry";
 import CalendarHeatmap from "@/components/CalendarHeatmap";
+import DayDetail from "@/components/DayDetail";
 
 export default function HistoryView() {
   const [entries, setEntries] = useState<HabitEntry[]>([]);
@@ -15,9 +16,16 @@ export default function HistoryView() {
   }, []);
 
   const handleDayClick = (date: string) => {
-    // Toggle selection: tapping an already-selected date deselects it
+    // Toggle selection: tapping the same date again closes the sheet
     setSelectedDate((prev) => (prev === date ? null : date));
   };
+
+  const handleClose = () => setSelectedDate(null);
+
+  // Find the full entry object for the selected date (null if none saved yet)
+  const selectedEntry = selectedDate
+    ? (entries.find((e) => e.date === selectedDate) ?? null)
+    : null;
 
   return (
     <div className="mx-auto max-w-md px-5 pt-10 pb-12">
@@ -41,6 +49,15 @@ export default function HistoryView() {
         selectedDate={selectedDate}
         onDayClick={handleDayClick}
       />
+
+      {/* ── Day detail sheet ──────────────────────────────────── */}
+      {selectedDate && (
+        <DayDetail
+          date={selectedDate}
+          entry={selectedEntry}
+          onClose={handleClose}
+        />
+      )}
 
     </div>
   );
