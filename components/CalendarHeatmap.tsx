@@ -158,7 +158,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick }: P
           onClick={prevYear}
           disabled={year <= minYear}
           aria-label="Previous year"
-          className="text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300 disabled:opacity-30"
+          className="text-base text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300 disabled:opacity-30"
         >
           ←
         </button>
@@ -169,7 +169,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick }: P
           onClick={nextYear}
           disabled={year >= currentYear}
           aria-label="Next year"
-          className="text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300 disabled:opacity-30"
+          className="text-base text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300 disabled:opacity-30"
         >
           →
         </button>
@@ -180,7 +180,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick }: P
         <button
           onClick={prevMonth}
           aria-label="Previous month"
-          className="min-h-[44px] flex items-center text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
+          className="min-h-[44px] flex items-center text-base text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
         >
           ←
         </button>
@@ -191,7 +191,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick }: P
           onClick={nextMonth}
           disabled={isAtCurrentMonth}
           aria-label="Next month"
-          className="min-h-[44px] flex items-center text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300 disabled:opacity-30"
+          className="min-h-[44px] flex items-center text-base text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300 disabled:opacity-30"
         >
           →
         </button>

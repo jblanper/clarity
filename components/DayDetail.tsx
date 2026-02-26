@@ -97,18 +97,20 @@ export default function DayDetail({ date, entry, onClose }: Props) {
         className="absolute bottom-0 left-0 right-0 max-h-[90vh] overflow-y-auto rounded-t-3xl bg-background transition-transform duration-300 ease-out"
       >
         {/* ── Close button — sticky so it stays reachable when content scrolls */}
-        <div className="sticky top-0 z-10 flex justify-end bg-background px-5 pt-5 pb-1">
-          <button
-            onClick={handleClose}
-            aria-label="Close"
-            className="flex min-h-[44px] min-w-[44px] items-center justify-end text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
-          >
-            ✕
-          </button>
+        <div className="sticky top-0 z-10 bg-background px-5 pt-5 pb-1">
+          <div className="mx-auto flex max-w-md justify-end">
+            <button
+              onClick={handleClose}
+              aria-label="Close"
+              className="flex min-h-[44px] min-w-[44px] items-center justify-end text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
+            >
+              ✕
+            </button>
+          </div>
         </div>
 
         {/* ── Content ────────────────────────────────────────────── */}
-        <div className="px-6 pb-10">
+        <div className="mx-auto max-w-md px-6 pb-10">
 
           {/* Date heading */}
           <h2 className="mb-6 text-lg font-light tracking-wide text-stone-800 dark:text-stone-200">

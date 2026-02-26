@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { exportEntries, importEntries } from "@/lib/transferData";
 import { getTheme, setTheme, type Theme } from "@/lib/theme";
 
@@ -14,6 +14,7 @@ type ImportStatus =
 type ExportStatus = "idle" | "error";
 
 export default function SettingsView() {
+  const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importStatus, setImportStatus] = useState<ImportStatus>({ kind: "idle" });
   const [exportStatus, setExportStatus] = useState<ExportStatus>("idle");
@@ -77,13 +78,13 @@ export default function SettingsView() {
 
       {/* ── Header ────────────────────────────────────────────────── */}
       <header className="mb-10 flex items-center gap-4">
-        <Link
-          href="/"
-          aria-label="Back to check-in"
+        <button
+          onClick={() => router.back()}
+          aria-label="Go back"
           className="text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
         >
           ←
-        </Link>
+        </button>
         <h1 className="text-xl font-light tracking-widest text-stone-800 dark:text-stone-200">
           Settings
         </h1>
