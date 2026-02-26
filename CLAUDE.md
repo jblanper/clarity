@@ -32,6 +32,8 @@ gamified. You open it once a day, log how things went, and close it.
   darker shade (e.g. `active:bg-stone-900`). No animations beyond simple transitions.
 
 ## Color Palette (globals.css)
+
+### Light Theme (default)
 | Variable       | Value     | Usage                        |
 |----------------|-----------|------------------------------|
 | `--background` | `#fafaf9` | Page background (warm white) |
@@ -40,8 +42,22 @@ gamified. You open it once a day, log how things went, and close it.
 | `--border`     | `#e7e5e4` | Dividers, input borders      |
 | `--accent`     | `#a8a29e` | Subtle accents               |
 
-The primary action button uses `bg-stone-800` (filled, dark) with `text-white`.
-Secondary/outline buttons use `border-stone-200 bg-white text-stone-700`.
+### Dark Theme
+| Variable       | Value     | Usage                             |
+|----------------|-----------|-----------------------------------|
+| `--background` | `#1c1917` | Page background (warm charcoal)   |
+| `--foreground` | `#fafaf9` | Primary text                      |
+| `--muted`      | `#a8a29e` | Secondary text                    |
+| `--border`     | `#292524` | Dividers, input borders           |
+| `--accent`     | `#57534e` | Subtle accents                    |
+
+The dark theme mirrors the light theme's stone palette — warm charcoal rather than cold black.
+It is **not** auto-applied based on system preference. The user selects it explicitly in Settings
+and the choice is stored in localStorage under the key `clarity-theme` (`"light"` | `"dark"`).
+Apply the `dark` class to the root `<html>` element and use Tailwind's `dark:` variants throughout.
+
+The primary action button uses `bg-stone-800 dark:bg-stone-200` with `text-white dark:text-stone-900`.
+Secondary/outline buttons use `border-stone-200 bg-white text-stone-700 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300`.
 
 ## Tech Stack
 - **Framework**: Next.js (App Router)
@@ -55,19 +71,24 @@ Secondary/outline buttons use `border-stone-200 bg-white text-stone-700`.
 ```
 app/                    # Next.js App Router
   page.tsx              # Home (check-in) — server component shell
+  history/page.tsx      # History — server component shell (Sprint 2)
   settings/page.tsx     # Settings — server component shell
-  globals.css           # CSS variables + Tailwind import
+  globals.css           # CSS variables + Tailwind import (light + dark themes)
   layout.tsx            # Root layout: Clarity metadata, Geist Sans, viewport
 components/
   CheckInForm.tsx       # Main check-in form (client) — orchestrates all sections
   HabitToggle.tsx       # iOS-style boolean toggle (client)
   NumberStepper.tsx     # −/input/+ numeric stepper with clamp (client)
   JoyTagChip.tsx        # Selectable pill chip (client)
-  SettingsView.tsx      # Export/import UI with 4 import states (client)
+  SettingsView.tsx      # Export/import + theme toggle UI (client)
+  CalendarHeatmap.tsx   # Month-by-month heatmap with year selector (client, Sprint 2)
+  DayDetail.tsx         # Day detail modal/bottom sheet (client, Sprint 2)
+  BottomNav.tsx         # Two-tab bottom navigation bar (client, Sprint 2)
 lib/
   storage.ts            # localStorage CRUD: saveEntry, getEntry, getAllEntries
   transferData.ts       # Export/import: prepareExportData, parseImportFile, mergeEntries, importEntries
   habits.ts             # Named constants: BOOLEAN_HABITS, NUMERIC_HABITS, DEFAULT_JOY_TAGS, EMPTY_ENTRY_FIELDS
+  theme.ts              # Theme helpers: getTheme, setTheme, applyTheme (Sprint 2)
   storage.test.ts       # 13 Jest tests for storage functions
   transferData.test.ts  # 17 Jest tests for transfer functions
 types/
@@ -87,6 +108,19 @@ types/
   floating-point drift (e.g. `0.1 + 0.2 = 0.30000000000000004`).
 - **FileReader over file.text()**: `importEntries` uses `FileReader.readAsText()` for jsdom
   compatibility in Jest tests.
+
+## Microcopy & Tone
+
+The words in the app should feel as considered as the design. Calm, human, never clinical.
+
+- Empty states: inviting, never guilt-inducing
+  - ✅ *"Nothing logged for this day yet"* / *"Nothing here yet"*
+  - ❌ *"No data found"* / *"You missed this day"*
+- Save confirmation: a brief, unobtrusive toast — no modal, no fanfare
+- Error messages: calm and specific — *"That file doesn't look right — try exporting a fresh backup"*
+- Settings labels: plain and human — *"Theme"*, *"Your data"*, not *"Appearance Settings"*
+- No all-caps except for the established `tracking-widest` section label pattern
+- No exclamation marks in UI copy
 
 ## Coding Standards
 

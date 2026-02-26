@@ -39,19 +39,19 @@ export default function HistoryView() {
     : null;
 
   return (
-    <div className="mx-auto max-w-md px-5 pt-10 pb-12">
+    <div className="mx-auto max-w-md px-5 pt-10 pb-28">
 
       {/* ── Header ────────────────────────────────────────────── */}
-      <header className="mb-6 flex items-center gap-4">
-        <Link
-          href="/"
-          className="text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
-        >
-          ← today
-        </Link>
+      <header className="mb-6 flex items-center justify-between">
         <h1 className="text-xl font-light tracking-widest text-stone-800 dark:text-stone-200">
           History
         </h1>
+        <Link
+          href="/settings"
+          className="text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
+        >
+          Settings
+        </Link>
       </header>
 
       {/* ── Heatmap ───────────────────────────────────────────── */}

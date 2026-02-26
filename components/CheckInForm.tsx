@@ -127,7 +127,7 @@ export default function CheckInForm({ date }: Props) {
   };
 
   return (
-    <form onSubmit={handleSave} className="mx-auto max-w-md px-5 pb-12 pt-10">
+    <form onSubmit={handleSave} className={`mx-auto max-w-md px-5 pt-10 ${isEditMode ? "pb-12" : "pb-28"}`}>
 
       {/* ── Header ─────────────────────────────────────────────────── */}
       <header className="mb-10 flex items-start justify-between">
@@ -147,19 +147,12 @@ export default function CheckInForm({ date }: Props) {
             </p>
           )}
         </div>
-        {isEditMode ? (
+        {isEditMode && (
           <Link
             href="/history"
             className="mt-2 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
           >
             ← history
-          </Link>
-        ) : (
-          <Link
-            href="/settings"
-            className="mt-2 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
-          >
-            Settings
           </Link>
         )}
       </header>
