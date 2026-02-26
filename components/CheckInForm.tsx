@@ -98,14 +98,14 @@ export default function CheckInForm() {
       {/* ── Header ─────────────────────────────────────────────────── */}
       <header className="mb-10 flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-light tracking-widest text-stone-800">
+          <h1 className="text-3xl font-light tracking-widest text-stone-800 dark:text-stone-200">
             Clarity
           </h1>
-          <p className="mt-1 text-sm text-stone-400">{formatDisplayDate(today)}</p>
+          <p className="mt-1 text-sm text-stone-400 dark:text-stone-500">{formatDisplayDate(today)}</p>
         </div>
         <Link
           href="/settings"
-          className="mt-2 text-xs uppercase tracking-widest text-stone-400 transition-colors hover:text-stone-600"
+          className="mt-2 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
         >
           Settings
         </Link>
@@ -113,10 +113,10 @@ export default function CheckInForm() {
 
       {/* ── Boolean habits ─────────────────────────────────────────── */}
       <section className="mb-10">
-        <h2 className="mb-1 text-xs uppercase tracking-widest text-stone-400">
+        <h2 className="mb-1 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
           Habits
         </h2>
-        <div className="divide-y divide-stone-100">
+        <div className="divide-y divide-stone-100 dark:divide-stone-800">
           {BOOLEAN_HABITS.map(({ key, label }) => (
             <HabitToggle
               key={key}
@@ -130,10 +130,10 @@ export default function CheckInForm() {
 
       {/* ── Numeric habits ─────────────────────────────────────────── */}
       <section className="mb-10">
-        <h2 className="mb-1 text-xs uppercase tracking-widest text-stone-400">
+        <h2 className="mb-1 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
           By the numbers
         </h2>
-        <div className="divide-y divide-stone-100">
+        <div className="divide-y divide-stone-100 dark:divide-stone-800">
           {NUMERIC_HABITS.map(({ key, label, unit, min, max, step }) => (
             <NumberStepper
               key={key}
@@ -151,7 +151,7 @@ export default function CheckInForm() {
 
       {/* ── Joy tags ───────────────────────────────────────────────── */}
       <section className="mb-10">
-        <h2 className="mb-3 text-xs uppercase tracking-widest text-stone-400">
+        <h2 className="mb-3 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
           Joy
         </h2>
         <div className="flex flex-wrap gap-2">
@@ -168,7 +168,7 @@ export default function CheckInForm() {
 
       {/* ── Reflection ─────────────────────────────────────────────── */}
       <section className="mb-10">
-        <h2 className="mb-3 text-xs uppercase tracking-widest text-stone-400">
+        <h2 className="mb-3 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
           Reflection
         </h2>
         <textarea
@@ -178,14 +178,14 @@ export default function CheckInForm() {
           }
           placeholder="Anything about today worth remembering?"
           rows={4}
-          className="w-full resize-none rounded-2xl border border-stone-200 bg-white px-4 py-3 text-stone-700 placeholder-stone-300 focus:border-stone-400 focus:outline-none"
+          className="w-full resize-none rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-3 text-stone-700 dark:text-stone-300 placeholder-stone-300 dark:placeholder-stone-600 focus:border-stone-400 dark:focus:border-stone-500 focus:outline-none"
         />
       </section>
 
       {/* ── Save ───────────────────────────────────────────────────── */}
       <button
         type="submit"
-        className="w-full rounded-2xl bg-stone-800 py-4 text-sm tracking-widest text-white transition-colors hover:bg-stone-700 active:bg-stone-900"
+        className="w-full rounded-2xl bg-stone-800 dark:bg-stone-200 py-4 text-sm tracking-widest text-white dark:text-stone-900 transition-colors hover:bg-stone-700 dark:hover:bg-stone-300 active:bg-stone-900 dark:active:bg-stone-100"
       >
         {saved ? "Saved ✓" : "Save"}
       </button>

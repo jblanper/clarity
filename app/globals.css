@@ -1,11 +1,22 @@
 @import "tailwindcss";
 
+/* Use the .dark class (not system prefers-color-scheme) to activate dark: variants. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #fafaf9;
   --foreground: #1c1917;
   --muted: #78716c;
   --border: #e7e5e4;
   --accent: #a8a29e;
+}
+
+.dark {
+  --background: #1c1917;
+  --foreground: #fafaf9;
+  --muted: #a8a29e;
+  --border: #292524;
+  --accent: #57534e;
 }
 
 @theme inline {

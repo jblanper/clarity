@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -24,8 +25,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} min-h-screen`}>{children}</body>
+    // suppressHydrationWarning prevents React warnings when the theme script
+    // adds the 'dark' class before hydration, causing a class mismatch.
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${geistSans.variable} min-h-screen`}>
+        {/* Runs before first paint to apply the saved theme without flash. */}
+        <Script src="/theme-init.js" strategy="beforeInteractive" />
+        {children}
+      </body>
     </html>
   );
 }

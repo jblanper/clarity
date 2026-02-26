@@ -9,14 +9,16 @@ interface Props {
 export default function HabitToggle({ label, checked, onChange }: Props) {
   return (
     <div className="flex items-center justify-between py-3.5">
-      <span className="text-stone-700">{label}</span>
+      <span className="text-stone-700 dark:text-stone-300">{label}</span>
       <button
         role="switch"
         aria-checked={checked}
         aria-label={label}
         onClick={() => onChange(!checked)}
         className={`relative h-7 w-12 flex-shrink-0 rounded-full transition-colors duration-200 focus:outline-none ${
-          checked ? "bg-stone-700" : "bg-stone-200"
+          checked
+            ? "bg-stone-500 dark:bg-stone-300"
+            : "bg-stone-200 dark:bg-stone-600"
         }`}
       >
         {/* Thumb: slides between left-1 (off) and left-6 (on).

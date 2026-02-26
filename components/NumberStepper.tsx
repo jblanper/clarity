@@ -60,8 +60,8 @@ export default function NumberStepper({
   return (
     <div className="flex items-center justify-between py-3.5">
       <div className="flex items-baseline gap-2">
-        <span className="text-stone-700">{label}</span>
-        <span className="text-xs text-stone-400">{unit}</span>
+        <span className="text-stone-700 dark:text-stone-300">{label}</span>
+        <span className="text-xs text-stone-400 dark:text-stone-500">{unit}</span>
       </div>
 
       <div className="flex items-center gap-2">
@@ -69,7 +69,7 @@ export default function NumberStepper({
           onClick={decrement}
           disabled={value <= min}
           aria-label={`Decrease ${label}`}
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-stone-100 text-stone-500 transition-colors active:bg-stone-200 disabled:opacity-30"
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-stone-200 dark:border-stone-700 text-stone-400 dark:text-stone-500 transition-colors hover:border-stone-300 dark:hover:border-stone-600 hover:text-stone-600 dark:hover:text-stone-300 active:bg-stone-50 dark:active:bg-stone-800 disabled:opacity-30"
         >
           −
         </button>
@@ -84,14 +84,14 @@ export default function NumberStepper({
           max={max}
           step={step}
           aria-label={label}
-          className="w-12 bg-transparent text-center text-stone-700 focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          className="w-12 bg-transparent text-center text-stone-700 dark:text-stone-300 focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
         />
 
         <button
           onClick={increment}
           disabled={value >= max}
           aria-label={`Increase ${label}`}
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-stone-100 text-stone-500 transition-colors active:bg-stone-200 disabled:opacity-30"
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-stone-200 dark:border-stone-700 text-stone-400 dark:text-stone-500 transition-colors hover:border-stone-300 dark:hover:border-stone-600 hover:text-stone-600 dark:hover:text-stone-300 active:bg-stone-50 dark:active:bg-stone-800 disabled:opacity-30"
         >
           +
         </button>
