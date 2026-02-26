@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import type { HabitEntry } from "@/types/entry";
 import { BOOLEAN_HABITS, NUMERIC_HABITS } from "@/lib/habits";
 
@@ -190,11 +191,14 @@ export default function DayDetail({ date, entry, onClose }: Props) {
             </>
           )}
 
-          {/* Edit — plain text link, not a filled button */}
+          {/* Edit — navigates to the edit page for this date */}
           <div className="mt-4">
-            <button className="text-sm text-stone-500 dark:text-stone-400 underline-offset-4 transition-colors hover:underline">
+            <Link
+              href={`/edit/${date}`}
+              className="text-sm text-stone-500 dark:text-stone-400 underline-offset-4 transition-colors hover:underline"
+            >
               Edit
-            </button>
+            </Link>
           </div>
 
           {/* Last edited — only when the timestamp is present */}

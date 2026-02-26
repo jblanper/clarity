@@ -15,6 +15,17 @@ export default function HistoryView() {
     setEntries(getAllEntries());
   }, []);
 
+  // When returning from the edit page (/history?open=YYYY-MM-DD),
+  // auto-reopen the DayDetail for that date, then clean the URL.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const openDate = params.get("open");
+    if (openDate) {
+      setSelectedDate(openDate);
+      window.history.replaceState({}, "", "/history");
+    }
+  }, []);
+
   const handleDayClick = (date: string) => {
     // Toggle selection: tapping the same date again closes the sheet
     setSelectedDate((prev) => (prev === date ? null : date));

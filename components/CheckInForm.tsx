@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { saveEntry, getEntry } from "@/lib/storage";
 import {
   BOOLEAN_HABITS,
@@ -15,6 +16,11 @@ import type { HabitEntry } from "@/types/entry";
 import HabitToggle from "@/components/HabitToggle";
 import NumberStepper from "@/components/NumberStepper";
 import JoyTagChip from "@/components/JoyTagChip";
+
+interface Props {
+  /** When provided, the form runs in edit mode for that specific date. */
+  date?: string;
+}
 
 /** Returns today's date as a YYYY-MM-DD string in local time. */
 function getTodayDate(): string {
@@ -36,8 +42,22 @@ function formatDisplayDate(dateStr: string): string {
   });
 }
 
+/** Formats a YYYY-MM-DD for the edit-mode label, e.g. "Monday, 24 February 2026". */
+function formatEditDate(dateStr: string): string {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  const d = new Date(year, month - 1, day);
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+  ];
+  const weekdays = [
+    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
+  ];
+  return `${weekdays[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+
 /** Strips the date key from a full HabitEntry so it can be used as form state. */
-function toFormFields(entry: HabitEntry): Omit<HabitEntry, "date"> {
+function toFormFields(entry: HabitEntry): Omit<HabitEntry, "date" | "lastEdited"> {
   return {
     meditation: entry.meditation,
     exercise: entry.exercise,
@@ -54,18 +74,22 @@ function toFormFields(entry: HabitEntry): Omit<HabitEntry, "date"> {
   };
 }
 
-export default function CheckInForm() {
+export default function CheckInForm({ date }: Props) {
+  const router = useRouter();
+  const isEditMode = !!date;
   const today = getTodayDate();
-  const [fields, setFields] = useState<Omit<HabitEntry, "date">>(EMPTY_ENTRY_FIELDS);
+  const targetDate = date ?? today;
+
+  const [fields, setFields] = useState<Omit<HabitEntry, "date" | "lastEdited">>(EMPTY_ENTRY_FIELDS);
   const [saved, setSaved] = useState(false);
 
-  // Pre-populate form if an entry for today already exists
+  // Pre-populate form with any existing entry for the target date
   useEffect(() => {
-    const existing = getEntry(today);
+    const existing = getEntry(targetDate);
     if (existing !== null) {
       setFields(toFormFields(existing));
     }
-  }, [today]);
+  }, [targetDate]);
 
   const setBooleanHabit = (key: BooleanHabitKey, value: boolean) => {
     setFields((prev) => ({ ...prev, [key]: value }));
@@ -86,10 +110,20 @@ export default function CheckInForm() {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    saveEntry({ date: today, ...fields });
-    setSaved(true);
-    // Reset the "Saved" label after a short delay
-    setTimeout(() => setSaved(false), 2000);
+
+    const entry: HabitEntry = { date: targetDate, ...fields };
+
+    if (isEditMode) {
+      // Record when the entry was last edited
+      entry.lastEdited = new Date().toISOString();
+      saveEntry(entry);
+      // Return to the History page and auto-reopen the day detail for this date
+      router.push(`/history?open=${targetDate}`);
+    } else {
+      saveEntry(entry);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    }
   };
 
   return (
@@ -98,17 +132,36 @@ export default function CheckInForm() {
       {/* ── Header ─────────────────────────────────────────────────── */}
       <header className="mb-10 flex items-start justify-between">
         <div>
+          {/* Edit-mode indicator label — same style as section labels */}
+          {isEditMode && (
+            <p className="mb-2 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
+              Editing {formatEditDate(targetDate)}
+            </p>
+          )}
           <h1 className="text-3xl font-light tracking-widest text-stone-800 dark:text-stone-200">
             Clarity
           </h1>
-          <p className="mt-1 text-sm text-stone-400 dark:text-stone-500">{formatDisplayDate(today)}</p>
+          {!isEditMode && (
+            <p className="mt-1 text-sm text-stone-400 dark:text-stone-500">
+              {formatDisplayDate(today)}
+            </p>
+          )}
         </div>
-        <Link
-          href="/settings"
-          className="mt-2 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
-        >
-          Settings
-        </Link>
+        {isEditMode ? (
+          <Link
+            href="/history"
+            className="mt-2 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
+          >
+            ← history
+          </Link>
+        ) : (
+          <Link
+            href="/settings"
+            className="mt-2 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
+          >
+            Settings
+          </Link>
+        )}
       </header>
 
       {/* ── Boolean habits ─────────────────────────────────────────── */}
@@ -187,7 +240,7 @@ export default function CheckInForm() {
         type="submit"
         className="w-full rounded-2xl bg-stone-800 dark:bg-stone-200 py-4 text-sm tracking-widest text-white dark:text-stone-900 transition-colors hover:bg-stone-700 dark:hover:bg-stone-300 active:bg-stone-900 dark:active:bg-stone-100"
       >
-        {saved ? "Saved ✓" : "Save"}
+        {!isEditMode && saved ? "Saved ✓" : "Save"}
       </button>
 
     </form>
