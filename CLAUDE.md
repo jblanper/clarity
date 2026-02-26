@@ -12,9 +12,14 @@ gamified. You open it once a day, log how things went, and close it.
 - **Joy tags** — a multi-select chip grid with 12 defaults (Time in nature, Great conversation, Good food, Calligraphy, Drawing, Poetry, Music listening, Music playing, Gardening, Making bread, Meditation, Time with friends)
 - **Reflection** — a free-text textarea for end-of-day notes
 - **Persistence** — all entries saved to localStorage, pre-populated on return visits
+- **History** — calendar heatmap (month view, year navigation) showing entry intensity by habits + joy
+- **Day detail** — bottom sheet showing a past day's logged data, with an Edit link
+- **Edit past entries** — full check-in form pre-filled with existing data; stamps `lastEdited` on save
+- **Dark/light theme** — user-selected, stored in localStorage, toggled in Settings
+- **Bottom navigation** — fixed two-tab bar (Today / History); hidden on Settings and Edit pages
 - **Export** — download all entries as a formatted `habits-backup.json` file
 - **Import** — upload a backup file and merge entries (existing dates are never overwritten)
-- **Settings page** — accessible from the home screen via a minimal "Settings" text link
+- **Settings** — theme toggle, export, and import; accessible from both Today and History headers
 
 ## Style & Vibes
 - **Calm and minimal** — no gamification, no streaks, no pressure. Just quiet logging.
@@ -67,47 +72,94 @@ Secondary/outline buttons use `border-stone-200 bg-white text-stone-700 dark:bor
 - **Storage**: localStorage
 - **Testing**: Jest + jest-environment-jsdom
 
+## Navigation Architecture
+
+```
+/           Today        BottomNav visible
+/history    History      BottomNav visible
+/settings   Settings     BottomNav hidden — back via router.back()
+/edit/[date] Edit        BottomNav hidden — back via ← history link
+```
+
+- **BottomNav** (`components/BottomNav.tsx`) — fixed bottom bar, 56px + safe-area inset.
+  Returns `null` on `/settings` and any `/edit/*` path. Uses `usePathname()` for active state.
+- **Settings** is reachable from both Today and History headers (top-right, same muted style).
+  Its back arrow uses `router.back()` so it always returns to the calling page.
+- **DayDetail → Edit** flow: Edit link navigates to `/edit/[date]`. On save, `router.push`
+  goes to `/history?open=[date]`. HistoryView reads `?open=` on mount, auto-opens DayDetail,
+  then cleans the URL with `window.history.replaceState`.
+
 ## Project Structure
 ```
 app/                    # Next.js App Router
-  page.tsx              # Home (check-in) — server component shell
-  history/page.tsx      # History — server component shell (Sprint 2)
+  page.tsx              # Home (Today) — server component shell
+  history/page.tsx      # History — server component shell
   settings/page.tsx     # Settings — server component shell
+  edit/[date]/page.tsx  # Edit a past entry — async params, server shell
   globals.css           # CSS variables + Tailwind import (light + dark themes)
-  layout.tsx            # Root layout: Clarity metadata, Geist Sans, viewport
+  layout.tsx            # Root layout: theme script, BottomNav, Geist Sans
 components/
-  CheckInForm.tsx       # Main check-in form (client) — orchestrates all sections
+  CheckInForm.tsx       # Check-in form (client) — today + edit mode via date? prop
   HabitToggle.tsx       # iOS-style boolean toggle (client)
   NumberStepper.tsx     # −/input/+ numeric stepper with clamp (client)
   JoyTagChip.tsx        # Selectable pill chip (client)
   SettingsView.tsx      # Export/import + theme toggle UI (client)
-  CalendarHeatmap.tsx   # Month-by-month heatmap with year selector (client, Sprint 2)
-  DayDetail.tsx         # Day detail modal/bottom sheet (client, Sprint 2)
-  BottomNav.tsx         # Two-tab bottom navigation bar (client, Sprint 2)
+  CalendarHeatmap.tsx   # Month heatmap with year/month nav, HSL color blend (client)
+  DayDetail.tsx         # Bottom sheet: read-only day summary + Edit link (client)
+  BottomNav.tsx         # Two-tab fixed bottom navigation (client)
 lib/
   storage.ts            # localStorage CRUD: saveEntry, getEntry, getAllEntries
   transferData.ts       # Export/import: prepareExportData, parseImportFile, mergeEntries, importEntries
   habits.ts             # Named constants: BOOLEAN_HABITS, NUMERIC_HABITS, DEFAULT_JOY_TAGS, EMPTY_ENTRY_FIELDS
-  theme.ts              # Theme helpers: getTheme, setTheme, applyTheme (Sprint 2)
+  theme.ts              # Theme helpers: getTheme, setTheme, applyTheme
   storage.test.ts       # 13 Jest tests for storage functions
   transferData.test.ts  # 17 Jest tests for transfer functions
+  theme.test.ts         # 12 Jest tests for theme functions
+public/
+  theme-init.js         # Inline script: applies saved theme class before first paint
 types/
   entry.ts              # HabitEntry interface — single source of truth for the data model
 ```
 
 ## Key Implementation Notes
+
+### General
 - **Page components are server components** that wrap a single `"use client"` view component.
   Never add interactivity directly to `app/` files.
 - **`lib/habits.ts` is the source of truth** for habit keys, labels, and config. If you add a
   new habit, add it there first and derive types/defaults from it.
-- **Toggle thumb positioning**: use explicit `left-1`/`left-6` on the thumb `<span>`, not
-  `translate-x-*`, to avoid Tailwind v4 CSS variable transform pipeline issues.
 - **Date handling**: build YYYY-MM-DD strings from `getFullYear()`/`getMonth()`/`getDate()`,
   never from `toISOString().split('T')[0]` (UTC offset causes wrong date in some timezones).
 - **Float precision in steppers**: use `Math.round((value + step) * 1000) / 1000` to prevent
   floating-point drift (e.g. `0.1 + 0.2 = 0.30000000000000004`).
 - **FileReader over file.text()**: `importEntries` uses `FileReader.readAsText()` for jsdom
   compatibility in Jest tests.
+- **Next.js dynamic route params are async**: use `params: Promise<{ date: string }>` and
+  `await params` in server components (Next.js 15+).
+
+### Tailwind v4
+- **Class-based dark mode**: Tailwind v4 defaults `dark:` variants to `prefers-color-scheme`.
+  To use the `.dark` class instead, add this to `globals.css`:
+  ```css
+  @custom-variant dark (&:where(.dark, .dark *));
+  ```
+- **Transform pipeline**: `translate-x-*` / `translate-y-*` can fail in Tailwind v4 due to
+  CSS variable composition. Use inline `style={{ transform: "..." }}` for animated transforms,
+  and explicit `left-1`/`left-6` for toggle thumb positioning.
+
+### Theme system
+- Theme is stored in localStorage under `clarity-theme` (`"light"` | `"dark"`).
+- `public/theme-init.js` is loaded via `<Script strategy="beforeInteractive">` in `layout.tsx`
+  to apply the saved theme class before first paint, preventing flash of unstyled content.
+- `suppressHydrationWarning` is set on `<html>` to suppress React's class-mismatch warning.
+- For components that need to react to theme changes at runtime, use the `useIsDark()` hook
+  in `CalendarHeatmap.tsx` as a reference — it uses a `MutationObserver` on `document.documentElement`.
+
+### URL state without useSearchParams
+- Avoid `useSearchParams()` in client components — it requires wrapping in `<Suspense>`.
+- For simple one-shot URL params (e.g. auto-opening a sheet after navigation), read
+  `window.location.search` directly in a `useEffect`, then clean up with
+  `window.history.replaceState({}, "", "/path")`.
 
 ## Microcopy & Tone
 
