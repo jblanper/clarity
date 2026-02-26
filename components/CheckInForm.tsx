@@ -132,14 +132,8 @@ export default function CheckInForm({ date }: Props) {
       {/* ── Header ─────────────────────────────────────────────────── */}
       <header className="mb-10 flex items-start justify-between">
         <div>
-          {/* Edit-mode indicator label — same style as section labels */}
-          {isEditMode && (
-            <p className="mb-2 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
-              Editing {formatEditDate(targetDate)}
-            </p>
-          )}
-          <h1 className="text-3xl font-light tracking-widest text-stone-800 dark:text-stone-200">
-            Clarity
+          <h1 className="text-xl font-light tracking-widest text-stone-800 dark:text-stone-200">
+            {isEditMode ? formatEditDate(targetDate) : "Today"}
           </h1>
           {!isEditMode && (
             <p className="mt-1 text-sm text-stone-400 dark:text-stone-500">
@@ -147,12 +141,19 @@ export default function CheckInForm({ date }: Props) {
             </p>
           )}
         </div>
-        {isEditMode && (
+        {isEditMode ? (
           <Link
             href="/history"
             className="mt-2 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
           >
             ← history
+          </Link>
+        ) : (
+          <Link
+            href="/settings"
+            className="mt-2 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
+          >
+            Settings
           </Link>
         )}
       </header>
