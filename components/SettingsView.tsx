@@ -98,18 +98,18 @@ export default function SettingsView() {
     <div className="mx-auto max-w-md px-5 pb-12 pt-10">
 
       {/* ── Header ────────────────────────────────────────────────── */}
-      <header className="mb-10 flex items-center gap-4">
+      <header className="mb-10 flex items-start justify-between">
+        <h1 className="text-xl font-light tracking-widest text-stone-800 dark:text-stone-200">
+          Settings
+        </h1>
         <button
           type="button"
           onClick={() => router.push(backDest)}
           aria-label="Go back"
-          className="text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
+          className="mt-2 text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
         >
-          ←
+          ← back
         </button>
-        <h1 className="text-xl font-light tracking-widest text-stone-800 dark:text-stone-200">
-          Settings
-        </h1>
       </header>
 
       {/* ── Theme ─────────────────────────────────────────────────── */}
@@ -313,10 +313,10 @@ export default function SettingsView() {
         </h2>
         <Link
           href="/manage"
-          className="flex items-center justify-between py-2 text-sm text-stone-700 dark:text-stone-300 transition-colors hover:text-stone-900 dark:hover:text-stone-100"
+          className="inline-flex items-center gap-2 py-2 text-sm text-stone-700 dark:text-stone-300 transition-colors hover:text-stone-900 dark:hover:text-stone-100"
         >
           <span>Habits and moments</span>
-          <span className="text-stone-400 dark:text-stone-500">→</span>
+          <span className="text-stone-500 dark:text-stone-400">→</span>
         </Link>
       </section>
 
