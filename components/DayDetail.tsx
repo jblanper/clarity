@@ -92,7 +92,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
   const checkedHabits = entry
     ? Object.entries(entry.habits)
         .filter(([, state]) => state.done)
-        .map(([id]) => ({ id, label: booleanHabitMap.get(id)?.label ?? id }))
+        .map(([id, state]) => ({ id, label: booleanHabitMap.get(id)?.label ?? id, joy: state.joy }))
     : [];
   const loggedNumbers = entry
     ? Object.entries(entry.numeric)
@@ -176,6 +176,9 @@ export default function DayDetail({ date, entry, onClose }: Props) {
                       <div key={h.id} className="flex items-center gap-2">
                         <span className="text-sm text-stone-500 dark:text-stone-500">✓</span>
                         <span className="text-sm text-stone-700 dark:text-stone-300">{h.label}</span>
+                        {h.joy && (
+                          <span className="text-sm text-amber-500 dark:text-amber-400">♥</span>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -206,7 +209,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
               {resolvedMoments.length > 0 && (
                 <section className="mb-6">
                   <h3 className="mb-3 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
-                    Joy
+                    Moments
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {resolvedMoments.map((label) => (
