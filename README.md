@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Clarity
 
-## Getting Started
+A personal daily habit tracker built as a mobile-first web app. The goal is to make daily self-reflection feel calm and effortless — open it once a day, log how things went, and close it.
 
-First, run the development server:
+## Features
+
+- **Daily check-in** — log boolean habits, numeric habits, joy tags, and a free-text reflection
+- **History** — calendar heatmap with month/year navigation showing entry intensity
+- **Day detail** — tap any day to review logged data; edit past entries from there
+- **Habit management** — add, rename, archive, and restore habits and joy tags
+- **Dark/light theme** — user-selected, stored locally
+- **Export/import** — back up and restore all data as a JSON file
+- No accounts, no sync, no server — all data stays in your browser's localStorage
+
+## Tech stack
+
+- [Next.js](https://nextjs.org) (App Router) — TypeScript, strict mode
+- [Tailwind CSS v4](https://tailwindcss.com)
+- [Jest](https://jestjs.io) + jest-environment-jsdom for unit tests
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command | Description |
+|---|---|
+| `npm run dev` | Start the development server |
+| `npm run build` | Build for production |
+| `npm run start` | Start the production server |
+| `npm run lint` | Run ESLint |
+| `npm test` | Run unit tests |
+| `npm run test:watch` | Run tests in watch mode |
 
-## Learn More
+## Project structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+app/          # Next.js App Router pages
+components/   # UI components
+lib/          # Storage, config, export/import, theme helpers
+types/        # TypeScript interfaces
+public/       # Static assets (theme init script)
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Data
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+All data is stored in `localStorage` under three keys:
 
-## Deploy on Vercel
+| Key | Contents |
+|---|---|
+| `clarity_entries` | All logged habit entries, keyed by date |
+| `clarity-configs` | Habit and joy tag configuration |
+| `clarity-theme` | `"light"` or `"dark"` |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Use **Settings → Your data → Export backup** to download a full JSON backup at any time.
