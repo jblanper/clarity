@@ -121,9 +121,10 @@ app/                    # Next.js App Router
 components/
   CheckInForm.tsx       # Check-in form (client) — today + edit mode via date? prop
   HabitToggle.tsx       # iOS-style boolean toggle (client)
-  NumberStepper.tsx     # −/input/+ numeric stepper with clamp (client)
+  NumberStepper.tsx     # −/input/+ numeric stepper; min/max optional (default 0/∞)
   JoyTagChip.tsx        # Selectable pill chip (client)
-  SettingsView.tsx      # Export/import + theme toggle UI (client)
+  ManageSection.tsx     # Habit + joy tag management (add/edit/archive/restore); used in SettingsView
+  SettingsView.tsx      # Settings page: Theme → Manage → Export → Import
   CalendarHeatmap.tsx   # Month heatmap with year/month nav, HSL color blend (client)
                         #   Cells: h-11 w-11 (44px), gap-1.5, rounded-md
                         #   Labels: year text-sm, month text-base, arrows text-xl
@@ -238,6 +239,32 @@ interface ExportFile {
 - `suppressHydrationWarning` is set on `<html>` to suppress React's class-mismatch warning.
 - For components that need to react to theme changes at runtime, use the `useIsDark()` hook
   in `CalendarHeatmap.tsx` as a reference — it uses a `MutationObserver` on `document.documentElement`.
+
+### Reading configs in client components
+Any component that needs `AppConfigs` should follow this SSR-safe pattern to avoid
+hydration mismatches and localStorage-during-SSR errors:
+
+```ts
+const [configs, setConfigs] = useState<AppConfigs>({
+  habits: DEFAULT_HABIT_CONFIGS,
+  joyTags: DEFAULT_JOY_TAG_CONFIGS,
+});
+useEffect(() => { setConfigs(getConfigs()); }, []);
+```
+
+Initialise with the module-level defaults (same values the server would produce),
+then replace with saved values on mount. Components using this pattern:
+`CheckInForm`, `DayDetail`, `CalendarHeatmap`, `ManageSection`.
+
+### ManageSection behaviour
+- All inline editors (edit habit, edit tag, add habit, add tag) are mutually exclusive —
+  opening any one closes all others via `closeAllEditors()`.
+- The `justArchivedId` state shows the "Archived. Past entries are preserved." note
+  on the most recently archived item; any other action clears it.
+- The Manage section label uses `text-stone-400` (not the usual `text-stone-500`).
+  This is intentional per the design spec for this section.
+- DayDetail resolves habits and joy tags from **all** configs (including archived) so
+  historical entries display correctly regardless of current archive state.
 
 ### URL state without useSearchParams
 - Avoid `useSearchParams()` in client components — it requires wrapping in `<Suspense>`.
