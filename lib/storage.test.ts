@@ -1,4 +1,4 @@
-import { saveEntry, getEntry, getAllEntries, sanitizeHabitState } from "@/lib/storage";
+import { saveEntry, getEntry, getAllEntries, clearAllEntries, sanitizeHabitState } from "@/lib/storage";
 import type { HabitEntry } from "@/types/entry";
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
@@ -132,6 +132,23 @@ describe("getAllEntries", () => {
 
     const dates = getAllEntries().map((e) => e.date);
     expect(dates).toEqual(["2026-02-23", "2026-02-24", "2026-02-25"]);
+  });
+});
+
+// ─── clearAllEntries ──────────────────────────────────────────────────────────
+
+describe("clearAllEntries", () => {
+  it("removes all saved entries so getAllEntries returns empty", () => {
+    saveEntry(makeEntry({ date: "2026-02-24" }));
+    saveEntry(makeEntry({ date: "2026-02-25" }));
+    clearAllEntries();
+    expect(getAllEntries()).toEqual([]);
+  });
+
+  it("leaves localStorage key absent after clearing", () => {
+    saveEntry(makeEntry());
+    clearAllEntries();
+    expect(localStorage.getItem("clarity_entries")).toBeNull();
   });
 });
 

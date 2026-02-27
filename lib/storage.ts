@@ -82,3 +82,9 @@ export function getAllEntries(): HabitEntry[] {
   const store = readStore();
   return Object.values(store).sort((a, b) => a.date.localeCompare(b.date));
 }
+
+/** Removes all saved entries from localStorage. */
+export function clearAllEntries(): void {
+  if (!isLocalStorageAvailable()) return;
+  localStorage.removeItem(STORAGE_KEY);
+}

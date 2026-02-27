@@ -4,6 +4,12 @@ import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { exportBackup, importBackup } from "@/lib/transferData";
+import { clearAllEntries } from "@/lib/storage";
+import {
+  saveConfigs,
+  DEFAULT_HABIT_CONFIGS,
+  DEFAULT_MOMENT_CONFIGS,
+} from "@/lib/habitConfig";
 import { getTheme, setTheme, type Theme } from "@/lib/theme";
 
 type ImportStatus =
@@ -20,6 +26,7 @@ export default function SettingsView() {
   const [importStatus, setImportStatus] = useState<ImportStatus>({ kind: "idle" });
   const [exportStatus, setExportStatus] = useState<ExportStatus>("idle");
   const [currentTheme, setCurrentTheme] = useState<Theme>("light");
+  const [resetConfirming, setResetConfirming] = useState(false);
   // Where to go when the user taps back — resolved from ?back= on mount
   const [backDest, setBackDest] = useState<"/" | "/history">("/");
 
@@ -77,6 +84,14 @@ export default function SettingsView() {
   const resetImport = () => {
     setImportStatus({ kind: "idle" });
     if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  // ── Factory reset ──────────────────────────────────────────────────────
+
+  const handleReset = () => {
+    clearAllEntries();
+    saveConfigs({ habits: DEFAULT_HABIT_CONFIGS, moments: DEFAULT_MOMENT_CONFIGS });
+    router.push("/");
   };
 
   return (
@@ -246,6 +261,44 @@ export default function SettingsView() {
               >
                 Try again
               </button>
+            </div>
+          )}
+        </div>
+
+        {/* Reset */}
+        <div className="mt-8">
+          <h3 className="mb-3 text-xs uppercase tracking-widest text-stone-400">
+            Reset
+          </h3>
+          {!resetConfirming ? (
+            <button
+              type="button"
+              onClick={() => setResetConfirming(true)}
+              className="text-sm text-amber-700 dark:text-amber-500 transition-colors hover:text-amber-900 dark:hover:text-amber-300"
+            >
+              Reset to factory defaults
+            </button>
+          ) : (
+            <div className="space-y-3">
+              <p className="text-xs text-stone-500 dark:text-stone-400">
+                This will delete all entries and restore default habits and moments.
+              </p>
+              <div className="flex gap-5">
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="text-sm text-amber-700 dark:text-amber-500 transition-colors hover:text-amber-900 dark:hover:text-amber-300"
+                >
+                  Yes, reset everything
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setResetConfirming(false)}
+                  className="text-sm text-stone-400 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           )}
         </div>
