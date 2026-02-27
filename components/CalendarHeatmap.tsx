@@ -153,45 +153,45 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick }: P
   return (
     <div>
       {/* ── Year selector ─────────────────────────────────────── */}
-      <div className="mb-1 flex items-center justify-center gap-5">
+      <div className="mb-1 flex items-center justify-center gap-8">
         <button
           onClick={prevYear}
           disabled={year <= minYear}
           aria-label="Previous year"
-          className="text-base text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300 disabled:opacity-30"
+          className="text-xl text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300 disabled:opacity-30"
         >
           ←
         </button>
-        <span className="min-w-[3rem] text-center text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
+        <span className="min-w-[4rem] text-center text-sm uppercase tracking-widest text-stone-500 dark:text-stone-500">
           {year}
         </span>
         <button
           onClick={nextYear}
           disabled={year >= currentYear}
           aria-label="Next year"
-          className="text-base text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300 disabled:opacity-30"
+          className="text-xl text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300 disabled:opacity-30"
         >
           →
         </button>
       </div>
 
       {/* ── Month navigation ──────────────────────────────────── */}
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-6 flex items-center justify-between">
         <button
           onClick={prevMonth}
           aria-label="Previous month"
-          className="min-h-[44px] flex items-center text-base text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
+          className="min-h-[44px] flex items-center text-xl text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
         >
           ←
         </button>
-        <h2 className="text-sm font-light tracking-widest text-stone-600 dark:text-stone-400">
+        <h2 className="text-base font-light tracking-widest text-stone-600 dark:text-stone-400">
           {MONTH_NAMES[month]}
         </h2>
         <button
           onClick={nextMonth}
           disabled={isAtCurrentMonth}
           aria-label="Next month"
-          className="min-h-[44px] flex items-center text-base text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300 disabled:opacity-30"
+          className="min-h-[44px] flex items-center text-xl text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300 disabled:opacity-30"
         >
           →
         </button>
@@ -199,14 +199,14 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick }: P
 
       {/* ── Calendar grid ─────────────────────────────────────── */}
       <div className="flex justify-center">
-        <div className="flex gap-1">
+        <div className="flex gap-1.5">
 
           {/* Day-of-week labels (M T W T F S S) as row labels on the left */}
-          <div className="mr-1 flex flex-col gap-1">
+          <div className="mr-2 flex flex-col gap-1.5">
             {DAY_LABELS.map((label, i) => (
               <div
                 key={i}
-                className="flex h-9 w-4 items-center justify-center text-xs uppercase tracking-widest text-stone-500 dark:text-stone-600"
+                className="flex h-11 w-5 items-center justify-center text-xs uppercase tracking-widest text-stone-500 dark:text-stone-600"
               >
                 {label}
               </div>
@@ -215,12 +215,12 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick }: P
 
           {/* Week columns — each column = one week, rows = Mon…Sun */}
           {weeks.map((week, w) => (
-            <div key={w} className="flex flex-col gap-1">
+            <div key={w} className="flex flex-col gap-1.5">
               {week.map((dateStr, d) => {
 
                 // Blank slot for days outside the current month
                 if (!dateStr) {
-                  return <div key={d} className="h-9 w-9" aria-hidden />;
+                  return <div key={d} className="h-11 w-11" aria-hidden />;
                 }
 
                 const entry = entryMap.get(dateStr) ?? null;
@@ -239,8 +239,8 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick }: P
                     aria-label={dateStr}
                     aria-pressed={isSelected}
                     className={[
-                      "flex h-9 w-9 items-start justify-end rounded-sm p-[3px] transition-colors",
-                      !cellBg ? "bg-stone-100 dark:bg-stone-800" : "",
+                      "flex h-11 w-11 items-start justify-end rounded-md p-1 transition-colors",
+                      !cellBg ? "bg-stone-200 dark:bg-stone-800" : "",
                       isSelected ? "ring-2 ring-stone-500 dark:ring-stone-500" : "",
                       isFuture ? "cursor-default opacity-25" : "cursor-pointer",
                     ]
@@ -248,8 +248,8 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick }: P
                       .join(" ")}
                     style={cellBg ? { backgroundColor: cellBg } : undefined}
                   >
-                    {/* Subtle date number in the corner */}
-                    <span className="text-[9px] leading-none text-black/35 dark:text-white/25">
+                    {/* Date number in the corner */}
+                    <span className="text-[11px] leading-none text-black/50 dark:text-white/35">
                       {dayNum}
                     </span>
                   </button>
