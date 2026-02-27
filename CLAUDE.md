@@ -263,8 +263,16 @@ then replace with saved values on mount. Components using this pattern:
   on the most recently archived item; any other action clears it.
 - The Manage section label uses `text-stone-400` (not the usual `text-stone-500`).
   This is intentional per the design spec for this section.
-- DayDetail resolves habits and joy tags from **all** configs (including archived) so
-  historical entries display correctly regardless of current archive state.
+
+### DayDetail resolution pattern
+DayDetail resolves habit and joy tag labels by **iterating the entry's stored UUIDs**
+(not the config list), then looking each up in an `id → config` Map. This ensures:
+- Archived habits are included (the Map is built from all configs, not just active ones).
+- Unknown IDs (e.g. from an imported backup with different defaults) are surfaced with
+  the raw UUID as a fallback label instead of being silently dropped.
+
+Always prefer this entry-first pattern over config-first filtering whenever displaying
+historical data whose IDs may not match the current config set.
 
 ### URL state without useSearchParams
 - Avoid `useSearchParams()` in client components — it requires wrapping in `<Suspense>`.
@@ -299,6 +307,11 @@ The words in the app should feel as considered as the design. Calm, human, never
 ### Component Structure
 - Keep components small and reusable. Separate UI from logic.
 - Store data helper functions in `lib/`.
+- **Always add `type="button"` to every `<button>` that is not a form submit.** In HTML,
+  `<button>` defaults to `type="submit"`, so any untyped button inside a `<form>` will
+  trigger form submission on click. This applies to toggle switches (`HabitToggle`),
+  chips (`JoyTagChip`), stepper arrows (`NumberStepper`), and any future interactive
+  button rendered inside `CheckInForm` or similar form wrappers.
 
 ### Comments
 - Add a short comment to any function that isn't immediately obvious.
