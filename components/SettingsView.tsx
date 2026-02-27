@@ -25,8 +25,7 @@ export default function SettingsView() {
 
   useEffect(() => {
     setCurrentTheme(getTheme());
-    const params = new URLSearchParams(window.location.search);
-    const back = params.get("back");
+    const back = sessionStorage.getItem("settings-back");
     if (back === "/" || back === "/history") {
       setBackDest(back);
     }
@@ -260,7 +259,7 @@ export default function SettingsView() {
           Manage
         </h2>
         <Link
-          href={`/manage?settingsBack=${backDest}`}
+          href="/manage"
           className="flex items-center justify-between py-2 text-sm text-stone-700 dark:text-stone-300 transition-colors hover:text-stone-900 dark:hover:text-stone-100"
         >
           <span>Habits and joy tags</span>

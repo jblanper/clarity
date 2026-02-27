@@ -74,16 +74,9 @@ export default function ManageView() {
   const [newTagLabel, setNewTagLabel] = useState("");
   // Holds the ID of the most recently archived item to show the confirmation note
   const [justArchivedId, setJustArchivedId] = useState<string | null>(null);
-  // Preserves the ?back= destination through the Settings → Manage → Settings chain
-  const [settingsHref, setSettingsHref] = useState("/settings");
 
   useEffect(() => {
     setConfigs(getConfigs());
-    const params = new URLSearchParams(window.location.search);
-    const back = params.get("settingsBack");
-    if (back === "/" || back === "/history") {
-      setSettingsHref(`/settings?back=${back}`);
-    }
   }, []);
 
   const activeHabits = configs.habits.filter((h) => !h.archived);
@@ -236,7 +229,7 @@ export default function ManageView() {
           Manage
         </h1>
         <Link
-          href={settingsHref}
+          href="/settings"
           className="text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
         >
           ← Settings
