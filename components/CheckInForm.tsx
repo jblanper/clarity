@@ -21,6 +21,8 @@ interface Props {
   date?: string;
 }
 
+type SaveState = "idle" | "saving" | "confirmed";
+
 type FormFields = {
   booleanHabits: Record<string, boolean>;
   numericHabits: Record<string, number>;
@@ -86,7 +88,7 @@ export default function CheckInForm({ date }: Props) {
   const targetDate = date ?? today;
 
   const [fields, setFields] = useState<FormFields>(emptyFields);
-  const [saved, setSaved] = useState(false);
+  const [saveState, setSaveState] = useState<SaveState>("idle");
   // Initialise with defaults so first render matches SSR; updated on mount.
   const [configs, setConfigs] = useState<AppConfigs>({
     habits: DEFAULT_HABIT_CONFIGS,
@@ -136,6 +138,9 @@ export default function CheckInForm({ date }: Props) {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
+    if (saveState !== "idle") return;
+
+    setSaveState("saving");
 
     const entry: HabitEntry = {
       date: targetDate,
@@ -146,16 +151,20 @@ export default function CheckInForm({ date }: Props) {
     };
 
     if (isEditMode) {
-      // Record when the entry was last edited
       entry.lastEdited = new Date().toISOString();
-      saveEntry(entry);
-      // Return to the History page and auto-reopen the day detail for this date
-      router.push(`/history?open=${targetDate}`);
-    } else {
-      saveEntry(entry);
-      setSaved(true);
-      setTimeout(() => setSaved(false), 2000);
     }
+
+    // Defer save to next tick so "Saving..." renders before the write
+    setTimeout(() => {
+      saveEntry(entry);
+      setSaveState("confirmed");
+
+      // Redirect 1200ms after confirmation
+      const destination = isEditMode
+        ? `/history?open=${targetDate}`
+        : "/history";
+      setTimeout(() => router.push(destination), 1200);
+    }, 0);
   };
 
   return (
@@ -262,9 +271,18 @@ export default function CheckInForm({ date }: Props) {
       {/* ── Save ───────────────────────────────────────────────────── */}
       <button
         type="submit"
-        className="w-full rounded-2xl bg-stone-800 dark:bg-stone-200 py-4 text-sm tracking-widest text-white dark:text-stone-900 transition-colors hover:bg-stone-700 dark:hover:bg-stone-300 active:bg-stone-900 dark:active:bg-stone-100"
+        disabled={saveState !== "idle"}
+        className={`w-full rounded-2xl py-4 text-sm tracking-widest transition-colors duration-500 ${
+          saveState === "confirmed"
+            ? "bg-stone-300 text-stone-700 dark:bg-stone-700 dark:text-stone-300"
+            : "bg-stone-800 text-white dark:bg-stone-200 dark:text-stone-900 hover:bg-stone-700 dark:hover:bg-stone-300 active:bg-stone-900 dark:active:bg-stone-100"
+        }`}
       >
-        {!isEditMode && saved ? "Saved ✓" : "Save"}
+        {saveState === "saving"
+          ? "Saving..."
+          : saveState === "confirmed"
+            ? "Day captured"
+            : "Save"}
       </button>
 
     </form>
