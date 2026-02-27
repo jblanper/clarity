@@ -4,9 +4,9 @@ import type { HabitEntry } from "@/types/entry";
 export function createEmptyEntry(date: string): HabitEntry {
   return {
     date,
-    booleanHabits: {},
-    numericHabits: {},
-    joyTags: [],
+    habits: {},
+    numeric: {},
+    moments: [],
     reflection: "",
   };
 }

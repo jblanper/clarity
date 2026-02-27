@@ -1,4 +1,4 @@
-import type { HabitEntry } from "@/types/entry";
+import type { HabitEntry, HabitState } from "@/types/entry";
 
 const STORAGE_KEY = "clarity_entries";
 
@@ -14,6 +14,16 @@ function isLocalStorageAvailable(): boolean {
   }
 }
 
+/**
+ * Coerces a potentially partial or corrupted habit state value into a valid HabitState.
+ * Enforces the invariant that joy: true always implies done: true.
+ */
+export function sanitizeHabitState(state: Partial<HabitState>): HabitState {
+  const joy = state.joy === true;
+  const done = joy || state.done === true; // joy implies done
+  return { done, joy };
+}
+
 /** Reads and parses the full entries map from localStorage. Returns an empty map on failure. */
 function readStore(): Record<string, HabitEntry> {
   if (!isLocalStorageAvailable()) return {};
@@ -27,7 +37,18 @@ function readStore(): Record<string, HabitEntry> {
       console.error("Clarity: stored data is malformed — resetting.");
       return {};
     }
-    return parsed as Record<string, HabitEntry>;
+    const store = parsed as Record<string, HabitEntry>;
+
+    // Sanitize all habit states to fix any corrupted or legacy data at read time
+    for (const entry of Object.values(store)) {
+      if (entry.habits && typeof entry.habits === "object") {
+        for (const [id, raw] of Object.entries(entry.habits)) {
+          entry.habits[id] = sanitizeHabitState(raw as Partial<HabitState>);
+        }
+      }
+    }
+
+    return store;
   } catch {
     console.error("Clarity: failed to parse stored data — resetting.");
     return {};

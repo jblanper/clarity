@@ -6,10 +6,10 @@ import {
   getConfigs,
   saveConfigs,
   DEFAULT_HABIT_CONFIGS,
-  DEFAULT_JOY_TAG_CONFIGS,
+  DEFAULT_MOMENT_CONFIGS,
   type AppConfigs,
   type HabitConfig,
-  type JoyTagConfig,
+  type MomentConfig,
 } from "@/lib/habitConfig";
 
 // ── Local state types ──────────────────────────────────────────────────────
@@ -64,7 +64,7 @@ export default function ManageView() {
   // useEffect replaces with saved configs on mount.
   const [configs, setConfigs] = useState<AppConfigs>({
     habits: DEFAULT_HABIT_CONFIGS,
-    joyTags: DEFAULT_JOY_TAG_CONFIGS,
+    moments: DEFAULT_MOMENT_CONFIGS,
   });
 
   const [editingHabit, setEditingHabit] = useState<EditingHabit | null>(null);
@@ -81,8 +81,8 @@ export default function ManageView() {
 
   const activeHabits = configs.habits.filter((h) => !h.archived);
   const archivedHabits = configs.habits.filter((h) => h.archived);
-  const activeTags = configs.joyTags.filter((t) => !t.archived);
-  const archivedTags = configs.joyTags.filter((t) => t.archived);
+  const activeTags = configs.moments.filter((m) => !m.archived);
+  const archivedTags = configs.moments.filter((m) => m.archived);
 
   // ── Config helpers ─────────────────────────────────────────────────────
 
@@ -120,7 +120,7 @@ export default function ManageView() {
       habits: configs.habits.map((h): HabitConfig => {
         if (h.id !== editingHabit.id) return h;
         if (h.type === "boolean") {
-          return { id: h.id, label: editingHabit.label, type: "boolean", archived: h.archived };
+          return { id: h.id, label: editingHabit.label, type: "boolean", joyByDefault: h.joyByDefault, archived: h.archived };
         }
         return {
           id: h.id,
@@ -161,7 +161,7 @@ export default function ManageView() {
     const id = crypto.randomUUID();
     const newHabit: HabitConfig =
       addHabit.stage === "form-boolean"
-        ? { id, label: addHabit.label.trim(), type: "boolean", archived: false }
+        ? { id, label: addHabit.label.trim(), type: "boolean", joyByDefault: false, archived: false }
         : { id, label: addHabit.label.trim(), type: "numeric", unit: addHabit.unit.trim(), step: addHabit.step, archived: false };
     applyConfigs({ ...configs, habits: [...configs.habits, newHabit] });
     setAddHabit(null);
@@ -169,7 +169,7 @@ export default function ManageView() {
 
   // ── Tag actions ────────────────────────────────────────────────────────
 
-  function startEditTag(t: JoyTagConfig) {
+  function startEditTag(t: MomentConfig) {
     closeAllEditors();
     setJustArchivedId(null);
     setEditingTag({ id: t.id, label: t.label });
@@ -179,8 +179,8 @@ export default function ManageView() {
     if (!editingTag) return;
     applyConfigs({
       ...configs,
-      joyTags: configs.joyTags.map((t) =>
-        t.id === editingTag.id ? { ...t, label: editingTag.label } : t
+      moments: configs.moments.map((m) =>
+        m.id === editingTag.id ? { ...m, label: editingTag.label } : m
       ),
     });
     setEditingTag(null);
@@ -190,8 +190,8 @@ export default function ManageView() {
     setEditingTag(null);
     applyConfigs({
       ...configs,
-      joyTags: configs.joyTags.map((t) =>
-        t.id === id ? { ...t, archived: true } : t
+      moments: configs.moments.map((m) =>
+        m.id === id ? { ...m, archived: true } : m
       ),
     });
     setJustArchivedId(id);
@@ -201,8 +201,8 @@ export default function ManageView() {
     setJustArchivedId(null);
     applyConfigs({
       ...configs,
-      joyTags: configs.joyTags.map((t) =>
-        t.id === id ? { ...t, archived: false } : t
+      moments: configs.moments.map((m) =>
+        m.id === id ? { ...m, archived: false } : m
       ),
     });
   }
@@ -212,7 +212,7 @@ export default function ManageView() {
     const id = crypto.randomUUID();
     applyConfigs({
       ...configs,
-      joyTags: [...configs.joyTags, { id, label: newTagLabel.trim(), archived: false }],
+      moments: [...configs.moments, { id, label: newTagLabel.trim(), archived: false }],
     });
     setAddingTag(false);
     setNewTagLabel("");

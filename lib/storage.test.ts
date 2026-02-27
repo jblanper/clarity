@@ -1,21 +1,18 @@
-import { saveEntry, getEntry, getAllEntries } from "@/lib/storage";
+import { saveEntry, getEntry, getAllEntries, sanitizeHabitState } from "@/lib/storage";
 import type { HabitEntry } from "@/types/entry";
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 
 const makeEntry = (overrides: Partial<HabitEntry> = {}): HabitEntry => ({
   date: "2026-02-25",
-  meditation: true,
-  exercise: false,
-  reading: true,
-  journaling: false,
-  drawing: false,
-  sleep: 7.5,
-  water: 6,
-  screenTime: 3,
-  coffee: 1,
-  decafCoffee: 2,
-  joyTags: ["walked outside", "cooked dinner"],
+  habits: {
+    "00000000-0000-4000-8000-000000000001": { done: true,  joy: true  },
+    "00000000-0000-4000-8000-000000000002": { done: false, joy: false },
+  },
+  numeric: {
+    "00000000-0000-4000-8000-000000000006": 7.5,
+  },
+  moments: ["00000000-0000-4000-8000-000000000011"],
   reflection: "Good day overall.",
   ...overrides,
 });
@@ -24,6 +21,26 @@ const makeEntry = (overrides: Partial<HabitEntry> = {}): HabitEntry => ({
 
 beforeEach(() => {
   localStorage.clear();
+});
+
+// ─── sanitizeHabitState ───────────────────────────────────────────────────────
+
+describe("sanitizeHabitState", () => {
+  it("returns { done: false, joy: false } for empty input", () => {
+    expect(sanitizeHabitState({})).toEqual({ done: false, joy: false });
+  });
+
+  it("returns { done: true, joy: false } when only done is true", () => {
+    expect(sanitizeHabitState({ done: true })).toEqual({ done: true, joy: false });
+  });
+
+  it("returns { done: true, joy: true } when joy is true", () => {
+    expect(sanitizeHabitState({ joy: true })).toEqual({ done: true, joy: true });
+  });
+
+  it("enforces done: true when joy: true even if done is explicitly false", () => {
+    expect(sanitizeHabitState({ done: false, joy: true })).toEqual({ done: true, joy: true });
+  });
 });
 
 // ─── saveEntry ───────────────────────────────────────────────────────────────

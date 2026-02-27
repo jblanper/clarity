@@ -1,16 +1,22 @@
+/** Three-state value for a boolean habit: not done, done, or done with joy. */
+export interface HabitState {
+  done: boolean;
+  joy: boolean;
+}
+
 /** A single day's habit tracking entry. The date field is the primary key. */
 export interface HabitEntry {
   // Primary key — format: YYYY-MM-DD
   date: string;
 
-  // Boolean habit values keyed by habit UUID
-  booleanHabits: Record<string, boolean>;
+  // Boolean habit states keyed by habit UUID
+  habits: Record<string, HabitState>;
 
   // Numeric habit values keyed by habit UUID
-  numericHabits: Record<string, number>;
+  numeric: Record<string, number>;
 
-  // UUIDs of the joy tags selected for this day
-  joyTags: string[];
+  // UUIDs of the moments selected for this day
+  moments: string[];
 
   // Free-text end-of-day reflection
   reflection: string;

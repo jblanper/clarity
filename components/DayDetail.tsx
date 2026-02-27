@@ -6,7 +6,7 @@ import type { HabitEntry } from "@/types/entry";
 import {
   getConfigs,
   DEFAULT_HABIT_CONFIGS,
-  DEFAULT_JOY_TAG_CONFIGS,
+  DEFAULT_MOMENT_CONFIGS,
   type AppConfigs,
   type NumericHabitConfig,
 } from "@/lib/habitConfig";
@@ -47,7 +47,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
   // Initialise with defaults so first render matches SSR; updated on mount.
   const [configs, setConfigs] = useState<AppConfigs>({
     habits: DEFAULT_HABIT_CONFIGS,
-    joyTags: DEFAULT_JOY_TAG_CONFIGS,
+    moments: DEFAULT_MOMENT_CONFIGS,
   });
 
   useEffect(() => {
@@ -85,17 +85,17 @@ export default function DayDetail({ date, entry, onClose }: Props) {
       .filter((h): h is NumericHabitConfig => h.type === "numeric")
       .map((h) => [h.id, h])
   );
-  const joyTagMap = new Map(configs.joyTags.map((t) => [t.id, t.label]));
+  const momentMap = new Map(configs.moments.map((m) => [m.id, m.label]));
 
   // Derive display-ready slices by iterating the stored IDs in the entry,
   // not the config list — this ensures unknown IDs are still surfaced.
   const checkedHabits = entry
-    ? Object.entries(entry.booleanHabits)
-        .filter(([, checked]) => checked)
+    ? Object.entries(entry.habits)
+        .filter(([, state]) => state.done)
         .map(([id]) => ({ id, label: booleanHabitMap.get(id)?.label ?? id }))
     : [];
   const loggedNumbers = entry
-    ? Object.entries(entry.numericHabits)
+    ? Object.entries(entry.numeric)
         .filter(([, value]) => value > 0)
         .map(([id, value]) => ({
           id,
@@ -104,8 +104,8 @@ export default function DayDetail({ date, entry, onClose }: Props) {
           value,
         }))
     : [];
-  const resolvedJoyTags = entry
-    ? entry.joyTags.map((id) => joyTagMap.get(id) ?? id)
+  const resolvedMoments = entry
+    ? entry.moments.map((id) => momentMap.get(id) ?? id)
     : [];
   const reflection = entry?.reflection ?? "";
 
@@ -113,7 +113,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
     !entry ||
     (checkedHabits.length === 0 &&
       loggedNumbers.length === 0 &&
-      resolvedJoyTags.length === 0 &&
+      resolvedMoments.length === 0 &&
       !reflection);
 
   return (
@@ -202,14 +202,14 @@ export default function DayDetail({ date, entry, onClose }: Props) {
                 </section>
               )}
 
-              {/* Joy tags — resolved from UUIDs to labels */}
-              {resolvedJoyTags.length > 0 && (
+              {/* Moments — resolved from UUIDs to labels */}
+              {resolvedMoments.length > 0 && (
                 <section className="mb-6">
                   <h3 className="mb-3 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
                     Joy
                   </h3>
                   <div className="flex flex-wrap gap-2">
-                    {resolvedJoyTags.map((label) => (
+                    {resolvedMoments.map((label) => (
                       <span
                         key={label}
                         className="rounded-full bg-stone-500 dark:bg-stone-300 px-4 py-2 text-sm text-white dark:text-stone-900"

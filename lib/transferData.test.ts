@@ -21,24 +21,24 @@ const mockedSaveConfigs = jest.mocked(saveConfigs);
 
 const makeEntry = (overrides: Partial<HabitEntry> = {}): HabitEntry => ({
   date: "2026-02-25",
-  booleanHabits: {
-    "00000000-0000-4000-8000-000000000001": true,
-    "00000000-0000-4000-8000-000000000002": false,
+  habits: {
+    "00000000-0000-4000-8000-000000000001": { done: true,  joy: true  },
+    "00000000-0000-4000-8000-000000000002": { done: false, joy: false },
   },
-  numericHabits: {
+  numeric: {
     "00000000-0000-4000-8000-000000000006": 7.5,
   },
-  joyTags: ["00000000-0000-4000-8000-000000000011"],
+  moments: ["00000000-0000-4000-8000-000000000011"],
   reflection: "Good day.",
   ...overrides,
 });
 
 const makeConfigs = (overrides: Partial<AppConfigs> = {}): AppConfigs => ({
   habits: [
-    { id: "00000000-0000-4000-8000-000000000001", label: "Meditation", type: "boolean", archived: false },
+    { id: "00000000-0000-4000-8000-000000000001", label: "Meditation", type: "boolean", joyByDefault: true, archived: false },
   ],
-  joyTags: [
-    { id: "00000000-0000-4000-8000-000000000011", label: "Time in nature", archived: false },
+  moments: [
+    { id: "00000000-0000-4000-8000-000000000011", label: "Good meal", archived: false },
   ],
   ...overrides,
 });
@@ -82,12 +82,12 @@ describe("prepareExportData", () => {
     expect(parsed.entries).toEqual([]);
   });
 
-  it("includes configs with habits and joyTags arrays", () => {
+  it("includes configs with habits and moments arrays", () => {
     const configs = makeConfigs();
     const parsed = JSON.parse(prepareExportData([], configs));
     expect(parsed.configs).toEqual(configs);
     expect(Array.isArray(parsed.configs.habits)).toBe(true);
-    expect(Array.isArray(parsed.configs.joyTags)).toBe(true);
+    expect(Array.isArray(parsed.configs.moments)).toBe(true);
   });
 });
 
@@ -124,11 +124,11 @@ describe("parseImportFile", () => {
     expect(() => parseImportFile(bad)).toThrow("Unrecognised file format");
   });
 
-  it("throws if configs is missing habits or joyTags arrays", () => {
+  it("throws if configs is missing habits or moments arrays", () => {
     const bad = JSON.stringify({
       version: 1,
       exportedAt: "2026-02-25",
-      configs: { habits: [] }, // missing joyTags
+      configs: { habits: [] }, // missing moments
       entries: [],
     });
     expect(() => parseImportFile(bad)).toThrow("Unrecognised file format");
@@ -136,7 +136,7 @@ describe("parseImportFile", () => {
 
   it("silently drops entries that fail validation and keeps the rest", () => {
     const valid = makeEntry({ date: "2026-02-25" });
-    const invalid = { date: "2026-02-24", booleanHabits: "not-an-object" };
+    const invalid = { date: "2026-02-24", habits: "not-an-object" };
     const json = JSON.stringify({
       version: 1,
       exportedAt: "2026-02-25T10:00:00.000Z",
@@ -153,7 +153,7 @@ describe("parseImportFile", () => {
       version: 1,
       exportedAt: "2026-02-25T10:00:00.000Z",
       configs: makeConfigs(),
-      entries: [{ date: "bad", booleanHabits: "nope" }],
+      entries: [{ date: "bad", habits: "nope" }],
     });
     expect(() => parseImportFile(json)).toThrow("No valid entries found");
   });

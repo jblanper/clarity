@@ -59,8 +59,8 @@ function buildMonthWeeks(year: number, month: number): (string | null)[][] {
  * Hues are weighted-averaged, so equal max scores blend toward green (~132°).
  */
 function computeCellColor(entry: HabitEntry, isDark: boolean, totalBooleanHabits: number): string {
-  const habitCount = Object.values(entry.booleanHabits).filter(Boolean).length;
-  const joyCount = entry.joyTags.length;
+  const habitCount = Object.values(entry.habits).filter((s) => s.done).length;
+  const joyCount = entry.moments.length;
 
   const b = habitCount / (totalBooleanHabits || 1); // 0–1, guard against divide-by-zero
   const y = Math.min(joyCount / 6, 1); // 0–1, saturates at 6 tags

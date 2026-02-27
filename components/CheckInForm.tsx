@@ -7,11 +7,12 @@ import { saveEntry, getEntry } from "@/lib/storage";
 import {
   getConfigs,
   DEFAULT_HABIT_CONFIGS,
-  DEFAULT_JOY_TAG_CONFIGS,
+  DEFAULT_MOMENT_CONFIGS,
   type AppConfigs,
+  type BooleanHabitConfig,
   type NumericHabitConfig,
 } from "@/lib/habitConfig";
-import type { HabitEntry } from "@/types/entry";
+import type { HabitEntry, HabitState } from "@/types/entry";
 import HabitToggle from "@/components/HabitToggle";
 import NumberStepper from "@/components/NumberStepper";
 import JoyTagChip from "@/components/JoyTagChip";
@@ -24,16 +25,16 @@ interface Props {
 type SaveState = "idle" | "saving" | "confirmed";
 
 type FormFields = {
-  booleanHabits: Record<string, boolean>;
-  numericHabits: Record<string, number>;
-  joyTags: string[];
+  habits: Record<string, HabitState>;
+  numeric: Record<string, number>;
+  moments: string[];
   reflection: string;
 };
 
 const emptyFields: FormFields = {
-  booleanHabits: {},
-  numericHabits: {},
-  joyTags: [],
+  habits: {},
+  numeric: {},
+  moments: [],
   reflection: "",
 };
 
@@ -74,9 +75,9 @@ function formatEditDate(dateStr: string): string {
 /** Extracts mutable form fields from a saved HabitEntry. */
 function toFormFields(entry: HabitEntry): FormFields {
   return {
-    booleanHabits: { ...entry.booleanHabits },
-    numericHabits: { ...entry.numericHabits },
-    joyTags: [...entry.joyTags],
+    habits: { ...entry.habits },
+    numeric: { ...entry.numeric },
+    moments: [...entry.moments],
     reflection: entry.reflection,
   };
 }
@@ -92,7 +93,7 @@ export default function CheckInForm({ date }: Props) {
   // Initialise with defaults so first render matches SSR; updated on mount.
   const [configs, setConfigs] = useState<AppConfigs>({
     habits: DEFAULT_HABIT_CONFIGS,
-    joyTags: DEFAULT_JOY_TAG_CONFIGS,
+    moments: DEFAULT_MOMENT_CONFIGS,
   });
 
   useEffect(() => {
@@ -107,32 +108,34 @@ export default function CheckInForm({ date }: Props) {
     }
   }, [targetDate]);
 
-  const activeBoolean = configs.habits.filter((h) => h.type === "boolean" && !h.archived);
+  const activeBoolean = configs.habits.filter(
+    (h): h is BooleanHabitConfig => h.type === "boolean" && !h.archived
+  );
   const activeNumeric = configs.habits.filter(
     (h): h is NumericHabitConfig => h.type === "numeric" && !h.archived
   );
-  const activeJoyTags = configs.joyTags.filter((t) => !t.archived);
+  const activeMoments = configs.moments.filter((m) => !m.archived);
 
-  const setBooleanHabit = (id: string, value: boolean) => {
+  const setHabit = (id: string, state: HabitState) => {
     setFields((prev) => ({
       ...prev,
-      booleanHabits: { ...prev.booleanHabits, [id]: value },
+      habits: { ...prev.habits, [id]: state },
     }));
   };
 
   const setNumericHabit = (id: string, value: number) => {
     setFields((prev) => ({
       ...prev,
-      numericHabits: { ...prev.numericHabits, [id]: value },
+      numeric: { ...prev.numeric, [id]: value },
     }));
   };
 
-  const toggleJoyTag = (id: string) => {
+  const toggleMoment = (id: string) => {
     setFields((prev) => ({
       ...prev,
-      joyTags: prev.joyTags.includes(id)
-        ? prev.joyTags.filter((t) => t !== id)
-        : [...prev.joyTags, id],
+      moments: prev.moments.includes(id)
+        ? prev.moments.filter((m) => m !== id)
+        : [...prev.moments, id],
     }));
   };
 
@@ -144,9 +147,9 @@ export default function CheckInForm({ date }: Props) {
 
     const entry: HabitEntry = {
       date: targetDate,
-      booleanHabits: fields.booleanHabits,
-      numericHabits: fields.numericHabits,
-      joyTags: fields.joyTags,
+      habits: fields.habits,
+      numeric: fields.numeric,
+      moments: fields.moments,
       reflection: fields.reflection,
     };
 
@@ -210,8 +213,10 @@ export default function CheckInForm({ date }: Props) {
             <HabitToggle
               key={h.id}
               label={h.label}
-              checked={fields.booleanHabits[h.id] ?? false}
-              onChange={(value) => setBooleanHabit(h.id, value)}
+              checked={fields.habits[h.id]?.done ?? false}
+              onChange={(done) =>
+                setHabit(h.id, { done, joy: done && h.joyByDefault })
+              }
             />
           ))}
         </div>
@@ -228,7 +233,7 @@ export default function CheckInForm({ date }: Props) {
               key={h.id}
               label={h.label}
               unit={h.unit}
-              value={fields.numericHabits[h.id] ?? 0}
+              value={fields.numeric[h.id] ?? 0}
               step={h.step}
               onChange={(value) => setNumericHabit(h.id, value)}
             />
@@ -236,18 +241,18 @@ export default function CheckInForm({ date }: Props) {
         </div>
       </section>
 
-      {/* ── Joy tags ───────────────────────────────────────────────── */}
+      {/* ── Moments ────────────────────────────────────────────────── */}
       <section className="mb-10">
         <h2 className="mb-3 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Joy
         </h2>
         <div className="flex flex-wrap gap-2">
-          {activeJoyTags.map((t) => (
+          {activeMoments.map((m) => (
             <JoyTagChip
-              key={t.id}
-              label={t.label}
-              selected={fields.joyTags.includes(t.id)}
-              onToggle={() => toggleJoyTag(t.id)}
+              key={m.id}
+              label={m.label}
+              selected={fields.moments.includes(m.id)}
+              onToggle={() => toggleMoment(m.id)}
             />
           ))}
         </div>

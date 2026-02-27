@@ -19,18 +19,23 @@ function isPlainObject(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null && !Array.isArray(v);
 }
 
+/** Returns true if v is a valid HabitState: a plain object with boolean done and joy fields. */
+function isHabitState(v: unknown): boolean {
+  return isPlainObject(v) && typeof v.done === "boolean" && typeof v.joy === "boolean";
+}
+
 /** Narrows an unknown value to HabitEntry, checking every required field. */
 function isHabitEntry(value: unknown): value is HabitEntry {
   if (!isPlainObject(value)) return false;
   return (
     typeof value.date === "string" &&
     typeof value.reflection === "string" &&
-    Array.isArray(value.joyTags) &&
-    (value.joyTags as unknown[]).every((t) => typeof t === "string") &&
-    isPlainObject(value.booleanHabits) &&
-    Object.values(value.booleanHabits).every((v) => typeof v === "boolean") &&
-    isPlainObject(value.numericHabits) &&
-    Object.values(value.numericHabits).every((v) => typeof v === "number")
+    Array.isArray(value.moments) &&
+    (value.moments as unknown[]).every((t) => typeof t === "string") &&
+    isPlainObject(value.habits) &&
+    Object.values(value.habits).every(isHabitState) &&
+    isPlainObject(value.numeric) &&
+    Object.values(value.numeric).every((v) => typeof v === "number")
   );
 }
 
@@ -42,7 +47,7 @@ function isExportFile(value: unknown): value is ExportFile {
     Array.isArray(value.entries) &&
     isPlainObject(value.configs) &&
     Array.isArray(value.configs.habits) &&
-    Array.isArray(value.configs.joyTags)
+    Array.isArray(value.configs.moments)
   );
 }
 

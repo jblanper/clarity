@@ -4,6 +4,8 @@ export interface BooleanHabitConfig {
   id: string;
   label: string;
   type: "boolean";
+  // When toggled on, default to done-with-joy
+  joyByDefault: boolean;
   archived: boolean;
 }
 
@@ -18,7 +20,7 @@ export interface NumericHabitConfig {
 
 export type HabitConfig = BooleanHabitConfig | NumericHabitConfig;
 
-export interface JoyTagConfig {
+export interface MomentConfig {
   id: string;
   label: string;
   archived: boolean;
@@ -26,42 +28,32 @@ export interface JoyTagConfig {
 
 export interface AppConfigs {
   habits: HabitConfig[];
-  joyTags: JoyTagConfig[];
+  moments: MomentConfig[];
 }
 
 // Defaults use stable hardcoded IDs so they're consistent across sessions and environments.
 // New user-created habits get IDs from crypto.randomUUID() at creation time.
 export const DEFAULT_HABIT_CONFIGS: HabitConfig[] = [
-  { id: "00000000-0000-4000-8000-000000000001", label: "Meditation",   type: "boolean", archived: false },
-  { id: "00000000-0000-4000-8000-000000000002", label: "Exercise",     type: "boolean", archived: false },
-  { id: "00000000-0000-4000-8000-000000000003", label: "Reading",      type: "boolean", archived: false },
-  { id: "00000000-0000-4000-8000-000000000004", label: "Journaling",   type: "boolean", archived: false },
-  { id: "00000000-0000-4000-8000-000000000005", label: "Drawing",      type: "boolean", archived: false },
+  { id: "00000000-0000-4000-8000-000000000001", label: "Meditation", type: "boolean", joyByDefault: true,  archived: false },
+  { id: "00000000-0000-4000-8000-000000000002", label: "Exercise",   type: "boolean", joyByDefault: false, archived: false },
+  { id: "00000000-0000-4000-8000-000000000003", label: "Reading",    type: "boolean", joyByDefault: true,  archived: false },
+  { id: "00000000-0000-4000-8000-000000000004", label: "Journaling", type: "boolean", joyByDefault: false, archived: false },
   { id: "00000000-0000-4000-8000-000000000006", label: "Sleep",        type: "numeric", unit: "hrs",     step: 0.5, archived: false },
   { id: "00000000-0000-4000-8000-000000000007", label: "Water",        type: "numeric", unit: "glasses", step: 1,   archived: false },
   { id: "00000000-0000-4000-8000-000000000008", label: "Screen time",  type: "numeric", unit: "hrs",     step: 0.5, archived: false },
   { id: "00000000-0000-4000-8000-000000000009", label: "Coffee",       type: "numeric", unit: "cups",    step: 1,   archived: false },
-  { id: "00000000-0000-4000-8000-000000000010", label: "Decaf coffee", type: "numeric", unit: "cups",    step: 1,   archived: false },
 ];
 
-export const DEFAULT_JOY_TAG_CONFIGS: JoyTagConfig[] = [
-  { id: "00000000-0000-4000-8000-000000000011", label: "Time in nature",     archived: false },
-  { id: "00000000-0000-4000-8000-000000000012", label: "Great conversation", archived: false },
-  { id: "00000000-0000-4000-8000-000000000013", label: "Good food",          archived: false },
-  { id: "00000000-0000-4000-8000-000000000014", label: "Calligraphy",        archived: false },
-  { id: "00000000-0000-4000-8000-000000000015", label: "Drawing",            archived: false },
-  { id: "00000000-0000-4000-8000-000000000016", label: "Poetry",             archived: false },
-  { id: "00000000-0000-4000-8000-000000000017", label: "Music listening",    archived: false },
-  { id: "00000000-0000-4000-8000-000000000018", label: "Music playing",      archived: false },
-  { id: "00000000-0000-4000-8000-000000000019", label: "Gardening",          archived: false },
-  { id: "00000000-0000-4000-8000-000000000020", label: "Making bread",       archived: false },
-  { id: "00000000-0000-4000-8000-000000000021", label: "Meditation",         archived: false },
-  { id: "00000000-0000-4000-8000-000000000022", label: "Time with friends",  archived: false },
+export const DEFAULT_MOMENT_CONFIGS: MomentConfig[] = [
+  { id: "00000000-0000-4000-8000-000000000011", label: "Good meal",                 archived: false },
+  { id: "00000000-0000-4000-8000-000000000012", label: "Interesting conversation",  archived: false },
+  { id: "00000000-0000-4000-8000-000000000013", label: "Inspiring song",            archived: false },
+  { id: "00000000-0000-4000-8000-000000000014", label: "Time in nature",            archived: false },
 ];
 
 const DEFAULT_CONFIGS: AppConfigs = {
   habits: DEFAULT_HABIT_CONFIGS,
-  joyTags: DEFAULT_JOY_TAG_CONFIGS,
+  moments: DEFAULT_MOMENT_CONFIGS,
 };
 
 function isLocalStorageAvailable(): boolean {
@@ -86,7 +78,7 @@ export function getConfigs(): AppConfigs {
       typeof parsed !== "object" ||
       parsed === null ||
       !Array.isArray((parsed as Record<string, unknown>).habits) ||
-      !Array.isArray((parsed as Record<string, unknown>).joyTags)
+      !Array.isArray((parsed as Record<string, unknown>).moments)
     ) {
       return DEFAULT_CONFIGS;
     }
