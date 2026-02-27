@@ -2,38 +2,54 @@ import {
   prepareExportData,
   parseImportFile,
   mergeEntries,
-  importEntries,
+  importBackup,
 } from "@/lib/transferData";
-import { getAllEntries, getEntry, saveEntry } from "@/lib/storage";
+import { getEntry, saveEntry, getAllEntries } from "@/lib/storage";
+import { saveConfigs } from "@/lib/habitConfig";
 import type { HabitEntry } from "@/types/entry";
+import type { AppConfigs } from "@/lib/habitConfig";
 
 jest.mock("@/lib/storage");
-const mockedGetAllEntries = jest.mocked(getAllEntries);
+jest.mock("@/lib/habitConfig");
+
 const mockedGetEntry = jest.mocked(getEntry);
 const mockedSaveEntry = jest.mocked(saveEntry);
+const mockedGetAllEntries = jest.mocked(getAllEntries);
+const mockedSaveConfigs = jest.mocked(saveConfigs);
 
 // ── Fixtures ─────────────────────────────────────────────────────────────────
 
 const makeEntry = (overrides: Partial<HabitEntry> = {}): HabitEntry => ({
   date: "2026-02-25",
-  meditation: true,
-  exercise: false,
-  reading: true,
-  journaling: false,
-  drawing: false,
-  sleep: 7.5,
-  water: 6,
-  screenTime: 3,
-  coffee: 1,
-  decafCoffee: 2,
-  joyTags: ["walked outside"],
+  booleanHabits: {
+    "00000000-0000-4000-8000-000000000001": true,
+    "00000000-0000-4000-8000-000000000002": false,
+  },
+  numericHabits: {
+    "00000000-0000-4000-8000-000000000006": 7.5,
+  },
+  joyTags: ["00000000-0000-4000-8000-000000000011"],
   reflection: "Good day.",
   ...overrides,
 });
 
-/** Wraps entries in the canonical export envelope. */
-const makeExportJson = (entries: HabitEntry[], version = 1): string =>
-  JSON.stringify({ version, exportedAt: "2026-02-25T10:00:00.000Z", entries }, null, 2);
+const makeConfigs = (overrides: Partial<AppConfigs> = {}): AppConfigs => ({
+  habits: [
+    { id: "00000000-0000-4000-8000-000000000001", label: "Meditation", type: "boolean", archived: false },
+  ],
+  joyTags: [
+    { id: "00000000-0000-4000-8000-000000000011", label: "Time in nature", archived: false },
+  ],
+  ...overrides,
+});
+
+/** Wraps entries and configs in the canonical export envelope. */
+const makeExportJson = (entries: HabitEntry[], configs = makeConfigs()): string =>
+  JSON.stringify(
+    { version: 1, exportedAt: "2026-02-25T10:00:00.000Z", configs, entries },
+    null,
+    2
+  );
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -43,38 +59,48 @@ beforeEach(() => {
 
 describe("prepareExportData", () => {
   it("produces valid JSON", () => {
-    const json = prepareExportData([makeEntry()]);
+    const json = prepareExportData([makeEntry()], makeConfigs());
     expect(() => JSON.parse(json)).not.toThrow();
   });
 
   it("includes version and exportedAt fields", () => {
-    const parsed = JSON.parse(prepareExportData([makeEntry()]));
+    const parsed = JSON.parse(prepareExportData([makeEntry()], makeConfigs()));
     expect(parsed.version).toBe(1);
     expect(typeof parsed.exportedAt).toBe("string");
   });
 
   it("includes all provided entries", () => {
     const entries = [makeEntry({ date: "2026-02-24" }), makeEntry({ date: "2026-02-25" })];
-    const parsed = JSON.parse(prepareExportData(entries));
+    const parsed = JSON.parse(prepareExportData(entries, makeConfigs()));
     expect(parsed.entries).toHaveLength(2);
     expect(parsed.entries[0]).toEqual(entries[0]);
     expect(parsed.entries[1]).toEqual(entries[1]);
   });
 
   it("produces an empty entries array when given no entries", () => {
-    const parsed = JSON.parse(prepareExportData([]));
+    const parsed = JSON.parse(prepareExportData([], makeConfigs()));
     expect(parsed.entries).toEqual([]);
+  });
+
+  it("includes configs with habits and joyTags arrays", () => {
+    const configs = makeConfigs();
+    const parsed = JSON.parse(prepareExportData([], configs));
+    expect(parsed.configs).toEqual(configs);
+    expect(Array.isArray(parsed.configs.habits)).toBe(true);
+    expect(Array.isArray(parsed.configs.joyTags)).toBe(true);
   });
 });
 
 // ── parseImportFile ───────────────────────────────────────────────────────────
 
 describe("parseImportFile", () => {
-  it("returns entries from a valid export file", () => {
+  it("returns entries and configs from a valid export file", () => {
     const entry = makeEntry();
-    const result = parseImportFile(makeExportJson([entry]));
-    expect(result).toHaveLength(1);
-    expect(result[0]).toEqual(entry);
+    const configs = makeConfigs();
+    const result = parseImportFile(makeExportJson([entry], configs));
+    expect(result.entries).toHaveLength(1);
+    expect(result.entries[0]).toEqual(entry);
+    expect(result.configs).toEqual(configs);
   });
 
   it("throws on malformed JSON", () => {
@@ -84,35 +110,63 @@ describe("parseImportFile", () => {
   });
 
   it("throws if the version field is missing or wrong", () => {
-    const bad = JSON.stringify({ entries: [makeEntry()] });
+    const bad = JSON.stringify({ configs: makeConfigs(), entries: [makeEntry()] });
     expect(() => parseImportFile(bad)).toThrow("Unrecognised file format");
   });
 
   it("throws if entries array is missing", () => {
-    const bad = JSON.stringify({ version: 1, exportedAt: "2026-02-25" });
+    const bad = JSON.stringify({ version: 1, exportedAt: "2026-02-25", configs: makeConfigs() });
+    expect(() => parseImportFile(bad)).toThrow("Unrecognised file format");
+  });
+
+  it("throws if configs field is missing", () => {
+    const bad = JSON.stringify({ version: 1, exportedAt: "2026-02-25", entries: [] });
+    expect(() => parseImportFile(bad)).toThrow("Unrecognised file format");
+  });
+
+  it("throws if configs is missing habits or joyTags arrays", () => {
+    const bad = JSON.stringify({
+      version: 1,
+      exportedAt: "2026-02-25",
+      configs: { habits: [] }, // missing joyTags
+      entries: [],
+    });
     expect(() => parseImportFile(bad)).toThrow("Unrecognised file format");
   });
 
   it("silently drops entries that fail validation and keeps the rest", () => {
     const valid = makeEntry({ date: "2026-02-25" });
-    const invalid = { date: "2026-02-24", meditation: "yes" }; // wrong type
+    const invalid = { date: "2026-02-24", booleanHabits: "not-an-object" };
     const json = JSON.stringify({
       version: 1,
       exportedAt: "2026-02-25T10:00:00.000Z",
+      configs: makeConfigs(),
       entries: [valid, invalid],
     });
     const result = parseImportFile(json);
-    expect(result).toHaveLength(1);
-    expect(result[0]).toEqual(valid);
+    expect(result.entries).toHaveLength(1);
+    expect(result.entries[0]).toEqual(valid);
   });
 
   it("throws if all entries fail validation", () => {
     const json = JSON.stringify({
       version: 1,
       exportedAt: "2026-02-25T10:00:00.000Z",
-      entries: [{ date: "bad", meditation: "nope" }],
+      configs: makeConfigs(),
+      entries: [{ date: "bad", booleanHabits: "nope" }],
     });
     expect(() => parseImportFile(json)).toThrow("No valid entries found");
+  });
+
+  it("succeeds with zero entries when the entries array is empty", () => {
+    const json = JSON.stringify({
+      version: 1,
+      exportedAt: "2026-02-25T10:00:00.000Z",
+      configs: makeConfigs(),
+      entries: [],
+    });
+    const result = parseImportFile(json);
+    expect(result.entries).toHaveLength(0);
   });
 });
 
@@ -160,7 +214,7 @@ describe("mergeEntries", () => {
   });
 });
 
-// ── importEntries ─────────────────────────────────────────────────────────────
+// ── importBackup ──────────────────────────────────────────────────────────────
 
 interface MockFileReader {
   onload: ((e: ProgressEvent<FileReader>) => void) | null;
@@ -182,23 +236,37 @@ function makeMockFileReader(content: string): MockFileReader {
   return reader;
 }
 
-describe("importEntries", () => {
+describe("importBackup", () => {
   afterEach(() => {
-    // Restore the real FileReader after each test
     (global as Record<string, unknown>).FileReader = globalThis.FileReader;
   });
 
-  it("reads a File, parses it, and merges entries", async () => {
+  it("reads a File, parses it, merges entries, and saves configs", async () => {
     mockedGetEntry.mockReturnValue(null);
     const entry = makeEntry();
+    const configs = makeConfigs();
     (global as Record<string, unknown>).FileReader = jest.fn(
-      () => makeMockFileReader(makeExportJson([entry]))
+      () => makeMockFileReader(makeExportJson([entry], configs))
     );
 
-    const result = await importEntries(new File([], "habits-backup.json"));
+    const result = await importBackup(new File([], "habits-backup.json"));
 
     expect(mockedSaveEntry).toHaveBeenCalledWith(entry);
+    expect(mockedSaveConfigs).toHaveBeenCalledWith(configs);
     expect(result).toEqual({ imported: 1, skipped: 0 });
+  });
+
+  it("replaces configs even when all entries are skipped", async () => {
+    mockedGetEntry.mockReturnValue(makeEntry());
+    const configs = makeConfigs();
+    (global as Record<string, unknown>).FileReader = jest.fn(
+      () => makeMockFileReader(makeExportJson([makeEntry()], configs))
+    );
+
+    const result = await importBackup(new File([], "habits-backup.json"));
+
+    expect(mockedSaveConfigs).toHaveBeenCalledWith(configs);
+    expect(result).toEqual({ imported: 0, skipped: 1 });
   });
 
   it("rejects with a user-friendly message for an invalid file", async () => {
@@ -206,20 +274,13 @@ describe("importEntries", () => {
       () => makeMockFileReader("not json{{{")
     );
 
-    await expect(importEntries(new File([], "bad.json"))).rejects.toThrow(
+    await expect(importBackup(new File([], "bad.json"))).rejects.toThrow(
       "not valid JSON"
     );
   });
 });
 
-// ── exportEntries (data layer only) ──────────────────────────────────────────
-
-describe("exportEntries — data preparation", () => {
-  it("throws a user-friendly message when there are no entries to export", () => {
-    mockedGetAllEntries.mockReturnValue([]);
-
-    // Import here so the mock is in place before the module-level call
-    const { exportEntries } = require("@/lib/transferData");
-    expect(() => exportEntries()).toThrow("No entries to export");
-  });
-});
+// ── unused import guard ───────────────────────────────────────────────────────
+// Silence the "unused variable" lint warning for mockedGetAllEntries —
+// it's mocked to prevent real localStorage calls during the test run.
+void mockedGetAllEntries;

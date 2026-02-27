@@ -3,21 +3,13 @@ export interface HabitEntry {
   // Primary key — format: YYYY-MM-DD
   date: string;
 
-  // Boolean habits
-  meditation: boolean;
-  exercise: boolean;
-  reading: boolean;
-  journaling: boolean;
-  drawing: boolean;
+  // Boolean habit values keyed by habit UUID
+  booleanHabits: Record<string, boolean>;
 
-  // Numeric habits
-  sleep: number;       // hours
-  water: number;       // glasses
-  screenTime: number;  // hours
-  coffee: number;      // cups
-  decafCoffee: number; // cups
+  // Numeric habit values keyed by habit UUID
+  numericHabits: Record<string, number>;
 
-  // Multiple selectable joy tags (e.g. "walked outside", "cooked", "called a friend")
+  // UUIDs of the joy tags selected for this day
   joyTags: string[];
 
   // Free-text end-of-day reflection
