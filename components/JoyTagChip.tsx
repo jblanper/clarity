@@ -9,6 +9,7 @@ interface Props {
 export default function JoyTagChip({ label, selected, onToggle }: Props) {
   return (
     <button
+      type="button"
       onClick={onToggle}
       aria-pressed={selected}
       className={`rounded-full px-4 py-2 text-sm transition-colors ${

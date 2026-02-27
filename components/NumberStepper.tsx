@@ -66,6 +66,7 @@ export default function NumberStepper({
 
       <div className="flex items-center gap-2">
         <button
+          type="button"
           onClick={decrement}
           disabled={value <= min}
           aria-label={`Decrease ${label}`}
@@ -88,6 +89,7 @@ export default function NumberStepper({
         />
 
         <button
+          type="button"
           onClick={increment}
           disabled={value >= max}
           aria-label={`Increase ${label}`}

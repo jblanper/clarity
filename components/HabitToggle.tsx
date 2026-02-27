@@ -11,6 +11,7 @@ export default function HabitToggle({ label, checked, onChange }: Props) {
     <div className="flex items-center justify-between py-3.5">
       <span className="text-stone-700 dark:text-stone-300">{label}</span>
       <button
+        type="button"
         role="switch"
         aria-checked={checked}
         aria-label={label}
