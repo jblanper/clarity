@@ -81,7 +81,7 @@ export default function SettingsView() {
         <button
           onClick={() => router.back()}
           aria-label="Go back"
-          className="text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
+          className="text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
         >
           ←
         </button>
@@ -92,7 +92,7 @@ export default function SettingsView() {
 
       {/* ── Theme ─────────────────────────────────────────────────── */}
       <section className="mb-10">
-        <h2 className="mb-4 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
+        <h2 className="mb-4 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Theme
         </h2>
         <div className="flex gap-6">
@@ -101,7 +101,7 @@ export default function SettingsView() {
             className={`text-sm transition-colors ${
               currentTheme === "light"
                 ? "font-medium text-stone-900 dark:text-stone-100"
-                : "text-stone-400"
+                : "text-stone-500 dark:text-stone-400"
             }`}
           >
             Light
@@ -111,7 +111,7 @@ export default function SettingsView() {
             className={`text-sm transition-colors ${
               currentTheme === "dark"
                 ? "font-medium text-stone-900 dark:text-stone-100"
-                : "text-stone-400"
+                : "text-stone-500 dark:text-stone-400"
             }`}
           >
             Dark
@@ -123,7 +123,7 @@ export default function SettingsView() {
 
       {/* ── Export ────────────────────────────────────────────────── */}
       <section className="mb-10">
-        <h2 className="mb-1 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
+        <h2 className="mb-1 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Export
         </h2>
         <p className="mb-4 text-sm text-stone-500 dark:text-stone-400">
@@ -136,7 +136,7 @@ export default function SettingsView() {
           Export backup
         </button>
         {exportStatus === "error" && (
-          <p className="mt-3 text-center text-sm text-red-400">
+          <p className="mt-3 text-center text-sm text-red-700 dark:text-red-400">
             Nothing to export yet. Start tracking first.
           </p>
         )}
@@ -146,7 +146,7 @@ export default function SettingsView() {
 
       {/* ── Import ────────────────────────────────────────────────── */}
       <section>
-        <h2 className="mb-1 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
+        <h2 className="mb-1 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Import
         </h2>
         <p className="mb-4 text-sm text-stone-500 dark:text-stone-400">
@@ -182,7 +182,7 @@ export default function SettingsView() {
               <button
                 onClick={resetImport}
                 aria-label="Remove selected file"
-                className="ml-3 flex-shrink-0 text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300"
+                className="ml-3 flex-shrink-0 text-stone-500 dark:text-stone-500 hover:text-stone-700 dark:hover:text-stone-300"
               >
                 ✕
               </button>
@@ -206,7 +206,7 @@ export default function SettingsView() {
                 </span>
               </p>
               {importStatus.skipped > 0 && (
-                <p className="mt-1 text-stone-400 dark:text-stone-500">
+                <p className="mt-1 text-stone-500 dark:text-stone-500">
                   {importStatus.skipped}{" "}
                   {importStatus.skipped === 1 ? "entry" : "entries"} already
                   existed and were kept.
@@ -224,7 +224,7 @@ export default function SettingsView() {
 
         {importStatus.kind === "error" && (
           <div className="space-y-3">
-            <p className="rounded-2xl border border-red-100 dark:border-red-900/30 bg-red-50 dark:bg-red-950/20 px-4 py-3 text-sm text-red-500 dark:text-red-400">
+            <p className="rounded-2xl border border-red-100 dark:border-red-900/30 bg-red-50 dark:bg-red-950/20 px-4 py-3 text-sm text-red-700 dark:text-red-400">
               {importStatus.message}
             </p>
             <button

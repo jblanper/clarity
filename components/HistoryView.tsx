@@ -48,7 +48,7 @@ export default function HistoryView() {
         </h1>
         <Link
           href="/settings"
-          className="text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
+          className="text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
         >
           Settings
         </Link>

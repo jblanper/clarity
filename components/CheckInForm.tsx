@@ -136,7 +136,7 @@ export default function CheckInForm({ date }: Props) {
             {isEditMode ? formatEditDate(targetDate) : "Today"}
           </h1>
           {!isEditMode && (
-            <p className="mt-1 text-sm text-stone-400 dark:text-stone-500">
+            <p className="mt-1 text-sm text-stone-500 dark:text-stone-500">
               {formatDisplayDate(today)}
             </p>
           )}
@@ -144,14 +144,14 @@ export default function CheckInForm({ date }: Props) {
         {isEditMode ? (
           <Link
             href="/history"
-            className="mt-2 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
+            className="mt-2 text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
           >
             ← history
           </Link>
         ) : (
           <Link
             href="/settings"
-            className="mt-2 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
+            className="mt-2 text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
           >
             Settings
           </Link>
@@ -160,7 +160,7 @@ export default function CheckInForm({ date }: Props) {
 
       {/* ── Boolean habits ─────────────────────────────────────────── */}
       <section className="mb-10">
-        <h2 className="mb-1 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
+        <h2 className="mb-1 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Habits
         </h2>
         <div className="divide-y divide-stone-100 dark:divide-stone-800">
@@ -177,7 +177,7 @@ export default function CheckInForm({ date }: Props) {
 
       {/* ── Numeric habits ─────────────────────────────────────────── */}
       <section className="mb-10">
-        <h2 className="mb-1 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
+        <h2 className="mb-1 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
           By the numbers
         </h2>
         <div className="divide-y divide-stone-100 dark:divide-stone-800">
@@ -198,7 +198,7 @@ export default function CheckInForm({ date }: Props) {
 
       {/* ── Joy tags ───────────────────────────────────────────────── */}
       <section className="mb-10">
-        <h2 className="mb-3 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
+        <h2 className="mb-3 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Joy
         </h2>
         <div className="flex flex-wrap gap-2">
@@ -215,7 +215,7 @@ export default function CheckInForm({ date }: Props) {
 
       {/* ── Reflection ─────────────────────────────────────────────── */}
       <section className="mb-10">
-        <h2 className="mb-3 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
+        <h2 className="mb-3 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Reflection
         </h2>
         <textarea
@@ -225,7 +225,7 @@ export default function CheckInForm({ date }: Props) {
           }
           placeholder="Anything about today worth remembering?"
           rows={4}
-          className="w-full resize-none rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-3 text-stone-700 dark:text-stone-300 placeholder-stone-300 dark:placeholder-stone-600 focus:border-stone-400 dark:focus:border-stone-500 focus:outline-none"
+          className="w-full resize-none rounded-2xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-3 text-stone-700 dark:text-stone-300 placeholder-stone-400 dark:placeholder-stone-600 focus:border-stone-500 dark:focus:border-stone-500 focus:outline-none"
         />
       </section>
 

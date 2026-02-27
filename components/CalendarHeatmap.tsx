@@ -158,18 +158,18 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick }: P
           onClick={prevYear}
           disabled={year <= minYear}
           aria-label="Previous year"
-          className="text-base text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300 disabled:opacity-30"
+          className="text-base text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300 disabled:opacity-30"
         >
           ←
         </button>
-        <span className="min-w-[3rem] text-center text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
+        <span className="min-w-[3rem] text-center text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
           {year}
         </span>
         <button
           onClick={nextYear}
           disabled={year >= currentYear}
           aria-label="Next year"
-          className="text-base text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300 disabled:opacity-30"
+          className="text-base text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300 disabled:opacity-30"
         >
           →
         </button>
@@ -180,7 +180,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick }: P
         <button
           onClick={prevMonth}
           aria-label="Previous month"
-          className="min-h-[44px] flex items-center text-base text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
+          className="min-h-[44px] flex items-center text-base text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
         >
           ←
         </button>
@@ -191,7 +191,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick }: P
           onClick={nextMonth}
           disabled={isAtCurrentMonth}
           aria-label="Next month"
-          className="min-h-[44px] flex items-center text-base text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300 disabled:opacity-30"
+          className="min-h-[44px] flex items-center text-base text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300 disabled:opacity-30"
         >
           →
         </button>
@@ -206,7 +206,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick }: P
             {DAY_LABELS.map((label, i) => (
               <div
                 key={i}
-                className="flex h-9 w-4 items-center justify-center text-xs uppercase tracking-widest text-stone-300 dark:text-stone-600"
+                className="flex h-9 w-4 items-center justify-center text-xs uppercase tracking-widest text-stone-500 dark:text-stone-600"
               >
                 {label}
               </div>
@@ -241,7 +241,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick }: P
                     className={[
                       "flex h-9 w-9 items-start justify-end rounded-sm p-[3px] transition-colors",
                       !cellBg ? "bg-stone-100 dark:bg-stone-800" : "",
-                      isSelected ? "ring-2 ring-stone-400 dark:ring-stone-500" : "",
+                      isSelected ? "ring-2 ring-stone-500 dark:ring-stone-500" : "",
                       isFuture ? "cursor-default opacity-25" : "cursor-pointer",
                     ]
                       .filter(Boolean)
@@ -249,7 +249,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick }: P
                     style={cellBg ? { backgroundColor: cellBg } : undefined}
                   >
                     {/* Subtle date number in the corner */}
-                    <span className="text-[9px] leading-none text-black/20 dark:text-white/25">
+                    <span className="text-[9px] leading-none text-black/35 dark:text-white/25">
                       {dayNum}
                     </span>
                   </button>

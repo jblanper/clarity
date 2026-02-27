@@ -102,7 +102,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
             <button
               onClick={handleClose}
               aria-label="Close"
-              className="flex min-h-[44px] min-w-[44px] items-center justify-end text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
+              className="flex min-h-[44px] min-w-[44px] items-center justify-end text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
             >
               ✕
             </button>
@@ -118,7 +118,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
           </h2>
 
           {hasNothingLogged ? (
-            <p className="py-8 text-center text-stone-400 dark:text-stone-500">
+            <p className="py-8 text-center text-stone-500 dark:text-stone-500">
               Nothing here yet
             </p>
           ) : (
@@ -126,13 +126,13 @@ export default function DayDetail({ date, entry, onClose }: Props) {
               {/* Boolean habits — only checked ones */}
               {checkedHabits.length > 0 && (
                 <section className="mb-6">
-                  <h3 className="mb-2 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
+                  <h3 className="mb-2 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
                     Habits
                   </h3>
                   <div className="space-y-1">
                     {checkedHabits.map(({ key, label }) => (
                       <div key={key} className="flex items-center gap-2">
-                        <span className="text-sm text-stone-400 dark:text-stone-500">✓</span>
+                        <span className="text-sm text-stone-500 dark:text-stone-500">✓</span>
                         <span className="text-sm text-stone-700 dark:text-stone-300">{label}</span>
                       </div>
                     ))}
@@ -143,7 +143,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
               {/* Numeric habits — only fields with a value > 0 */}
               {loggedNumbers.length > 0 && (
                 <section className="mb-6">
-                  <h3 className="mb-2 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
+                  <h3 className="mb-2 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
                     By the numbers
                   </h3>
                   <div className="space-y-1">
@@ -152,7 +152,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
                         <span className="text-sm font-medium text-stone-800 dark:text-stone-200">
                           {entry?.[key] ?? 0}
                         </span>
-                        <span className="text-xs text-stone-400 dark:text-stone-500">{unit}</span>
+                        <span className="text-xs text-stone-500 dark:text-stone-500">{unit}</span>
                         <span className="text-sm text-stone-600 dark:text-stone-400">{label}</span>
                       </div>
                     ))}
@@ -163,7 +163,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
               {/* Joy tags — read-only chips, same visual style as selected JoyTagChip */}
               {joyTags.length > 0 && (
                 <section className="mb-6">
-                  <h3 className="mb-3 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
+                  <h3 className="mb-3 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
                     Joy
                   </h3>
                   <div className="flex flex-wrap gap-2">
@@ -182,7 +182,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
               {/* Reflection — only when non-empty */}
               {reflection && (
                 <section className="mb-6">
-                  <h3 className="mb-2 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
+                  <h3 className="mb-2 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
                     Reflection
                   </h3>
                   <p className="text-sm font-light leading-relaxed text-stone-700 dark:text-stone-300">
@@ -205,7 +205,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
 
           {/* Last edited — only when the timestamp is present */}
           {entry?.lastEdited && (
-            <p className="mt-3 text-xs text-stone-400 dark:text-stone-500">
+            <p className="mt-3 text-xs text-stone-500 dark:text-stone-500">
               Last edited {formatLastEdited(entry.lastEdited)}
             </p>
           )}

@@ -18,7 +18,7 @@ export default function HabitToggle({ label, checked, onChange }: Props) {
         className={`relative h-7 w-12 flex-shrink-0 rounded-full transition-colors duration-200 focus:outline-none ${
           checked
             ? "bg-stone-500 dark:bg-stone-300"
-            : "bg-stone-200 dark:bg-stone-600"
+            : "bg-stone-300 dark:bg-stone-600"
         }`}
       >
         {/* Thumb: slides between left-1 (off) and left-6 (on).

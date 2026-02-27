@@ -31,7 +31,7 @@ export default function BottomNav() {
               className={`text-xs uppercase tracking-widest transition-colors ${
                 isActive
                   ? "font-medium text-stone-900 dark:text-stone-100"
-                  : "text-stone-400"
+                  : "text-stone-500 dark:text-stone-400"
               }`}
             >
               {label}
