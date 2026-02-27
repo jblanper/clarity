@@ -7,9 +7,10 @@ gamified. You open it once a day, log how things went, and close it.
 
 ## Features
 - **Daily check-in form** — log each day's habits, numbers, joy moments, and a reflection note
-- **Boolean habits** — toggle switches for Meditation, Exercise, Reading, Journaling, Drawing
-- **Numeric habits** — steppers for Sleep (hrs), Water (glasses), Screen time (hrs), Coffee (cups), Decaf coffee (cups)
-- **Joy tags** — a multi-select chip grid with 12 defaults (Time in nature, Great conversation, Good food, Calligraphy, Drawing, Poetry, Music listening, Music playing, Gardening, Making bread, Meditation, Time with friends)
+- **Boolean habits** — toggle switches (default: Meditation, Exercise, Reading, Journaling, Drawing)
+- **Numeric habits** — steppers with custom units (default: Sleep/hrs, Water/glasses, Screen time/hrs, Coffee/cups, Decaf coffee/cups)
+- **Joy tags** — a multi-select chip grid (12 defaults; fully customisable)
+- **Habit customisation** — add, rename, archive, and restore habits and joy tags in Settings
 - **Reflection** — a free-text textarea for end-of-day notes
 - **Persistence** — all entries saved to localStorage, pre-populated on return visits
 - **History** — calendar heatmap (month view, year navigation) showing entry intensity by habits + joy
@@ -17,9 +18,9 @@ gamified. You open it once a day, log how things went, and close it.
 - **Edit past entries** — full check-in form pre-filled with existing data; stamps `lastEdited` on save
 - **Dark/light theme** — user-selected, stored in localStorage, toggled in Settings
 - **Bottom navigation** — fixed two-tab bar (Today / History); hidden on Settings and Edit pages
-- **Export** — download all entries as a formatted `habits-backup.json` file
-- **Import** — upload a backup file and merge entries (existing dates are never overwritten)
-- **Settings** — theme toggle, export, and import; accessible from both Today and History headers
+- **Export** — download all entries and configs as a formatted `habits-backup.json` file
+- **Import** — upload a backup file; entries are merged (existing dates skipped), configs are replaced
+- **Settings** — theme toggle, export, import, and habit management; accessible from both Today and History headers
 
 ## Style & Vibes
 - **Calm and minimal** — no gamification, no streaks, no pressure. Just quiet logging.
@@ -130,11 +131,12 @@ components/
   BottomNav.tsx         # Two-tab fixed bottom navigation (client)
 lib/
   storage.ts            # localStorage CRUD: saveEntry, getEntry, getAllEntries
-  transferData.ts       # Export/import: prepareExportData, parseImportFile, mergeEntries, importEntries
-  habits.ts             # Named constants: BOOLEAN_HABITS, NUMERIC_HABITS, DEFAULT_JOY_TAGS, EMPTY_ENTRY_FIELDS
+  habitConfig.ts        # Config types, defaults, getConfigs(), saveConfigs() — single source of truth
+  transferData.ts       # Export/import: prepareExportData, parseImportFile, mergeEntries, exportBackup, importBackup
+  habits.ts             # createEmptyEntry() helper only
   theme.ts              # Theme helpers: getTheme, setTheme, applyTheme
   storage.test.ts       # 13 Jest tests for storage functions
-  transferData.test.ts  # 17 Jest tests for transfer functions
+  transferData.test.ts  # 21 Jest tests for transfer functions
   theme.test.ts         # 12 Jest tests for theme functions
 public/
   theme-init.js         # Inline script: applies saved theme class before first paint
@@ -142,18 +144,79 @@ types/
   entry.ts              # HabitEntry interface — single source of truth for the data model
 ```
 
+## Data Model (Sprint 3)
+
+### localStorage keys
+| Key | Contents |
+|-----|----------|
+| `clarity_entries` | `Record<string, HabitEntry>` — date-keyed map of all logged days |
+| `clarity-configs` | `AppConfigs` — habit and joy tag config; falls back to defaults if absent |
+| `clarity-theme` | `"light"` \| `"dark"` |
+
+### HabitEntry (`types/entry.ts`)
+Habit values are keyed by UUID, not by label. Only habits the user has touched are present
+(sparse records — never store zeroes for untouched habits).
+
+```ts
+interface HabitEntry {
+  date: string                        // YYYY-MM-DD, primary key
+  booleanHabits: Record<string, boolean>  // UUID → true/false
+  numericHabits: Record<string, number>   // UUID → value
+  joyTags: string[]                   // array of selected tag UUIDs
+  reflection: string
+  lastEdited?: string                 // ISO timestamp, set on edit
+}
+```
+
+### AppConfigs (`lib/habitConfig.ts`)
+```ts
+interface AppConfigs {
+  habits: HabitConfig[]     // BooleanHabitConfig | NumericHabitConfig
+  joyTags: JoyTagConfig[]
+}
+```
+- `getConfigs()` reads from `clarity-configs`, falls back to `DEFAULT_HABIT_CONFIGS` +
+  `DEFAULT_JOY_TAG_CONFIGS` if the key is absent or malformed.
+- `saveConfigs(configs)` writes the full object atomically.
+- **Never call `saveHabitConfigs` / `saveJoyTagConfigs` separately** — they don't exist.
+  Always read-modify-write the full `AppConfigs`.
+
+### Default UUIDs
+Default habits and tags use stable hardcoded IDs (`00000000-0000-4000-8000-00000000000X`)
+so entries always resolve to the right config across sessions. IDs 1–5 are boolean habits,
+6–10 are numeric habits, 11–22 are joy tags. User-created items get `crypto.randomUUID()`.
+
+### Archived configs
+Archived habits/tags (`archived: true`) are hidden from the check-in form but kept in
+storage so historical entries that reference their UUIDs remain valid. Never delete a config
+that has been used in an entry.
+
+### Export file shape (`lib/transferData.ts`)
+```ts
+interface ExportFile {
+  version: 1
+  exportedAt: string        // ISO timestamp
+  configs: AppConfigs       // full habit + joy tag config
+  entries: HabitEntry[]
+}
+```
+- `exportBackup()` — exports entries + current configs; no guard for empty entries.
+- `importBackup(file)` — merges entries (skip existing dates), **replaces configs entirely**.
+- `parseImportFile(content)` returns `{ entries, configs }`.
+
 ## Key Implementation Notes
 
 ### General
 - **Page components are server components** that wrap a single `"use client"` view component.
   Never add interactivity directly to `app/` files.
-- **`lib/habits.ts` is the source of truth** for habit keys, labels, and config. If you add a
-  new habit, add it there first and derive types/defaults from it.
+- **`lib/habitConfig.ts` is the source of truth** for habit and joy tag config. If you add or
+  change a default habit or tag, update it there first. `lib/habits.ts` now only contains
+  `createEmptyEntry()` and should not grow.
 - **Date handling**: build YYYY-MM-DD strings from `getFullYear()`/`getMonth()`/`getDate()`,
   never from `toISOString().split('T')[0]` (UTC offset causes wrong date in some timezones).
 - **Float precision in steppers**: use `Math.round((value + step) * 1000) / 1000` to prevent
   floating-point drift (e.g. `0.1 + 0.2 = 0.30000000000000004`).
-- **FileReader over file.text()**: `importEntries` uses `FileReader.readAsText()` for jsdom
+- **FileReader over file.text()**: `importBackup` uses `FileReader.readAsText()` for jsdom
   compatibility in Jest tests.
 - **Next.js dynamic route params are async**: use `params: Promise<{ date: string }>` and
   `await params` in server components (Next.js 15+).
