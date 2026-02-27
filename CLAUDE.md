@@ -170,7 +170,7 @@ types/
   entry.ts              # HabitEntry interface — single source of truth for the data model
 ```
 
-## Data Model (Sprint 3)
+## Data Model
 
 ### localStorage keys
 | Key | Contents |
