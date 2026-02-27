@@ -4,10 +4,18 @@ import { useState, useEffect } from "react";
 import type { HabitEntry } from "@/types/entry";
 import { getConfigs, DEFAULT_HABIT_CONFIGS } from "@/lib/habitConfig";
 
+/** Narrows the heatmap to a single habit or moment item. */
+export interface HeatmapFilter {
+  type: "boolean-habit" | "moment";
+  id: string;
+}
+
 interface Props {
   entries: HabitEntry[];
   selectedDate: string | null;
   onDayClick: (date: string) => void;
+  /** When set, colors each cell relative to that one item rather than the full overview. */
+  filter?: HeatmapFilter | null;
 }
 
 const MONTH_NAMES = [
@@ -52,23 +60,53 @@ function buildMonthWeeks(year: number, month: number): (string | null)[][] {
 }
 
 /**
- * Computes a cell background color by additively blending two HSL dimensions:
- *   - Blue  (hue 220): scales with boolean habits completed (0–totalBooleanHabits)
- *   - Yellow (hue 45): scales with joy tags selected (0–6+)
+ * Computes a cell background color.
  *
- * Hues are weighted-averaged, so equal max scores blend toward green (~132°).
+ * Overview mode (filter = null):
+ *   - Blue  (hue 220): scales with habits where done: true (0–totalBooleanHabits)
+ *   - Amber (hue 45):  scales with combined joy signals — habits where joy: true
+ *                      plus moments selected (0–6, saturates at 6)
+ *   Hues are weighted-averaged, so equal max scores blend toward green (~132°).
+ *
+ * Filter mode:
+ *   - boolean-habit: full blue when done: true, muted otherwise
+ *   - moment:        full amber when the moment UUID is present, muted otherwise
  */
-function computeCellColor(entry: HabitEntry, isDark: boolean, totalBooleanHabits: number): string {
+function computeCellColor(
+  entry: HabitEntry,
+  isDark: boolean,
+  totalBooleanHabits: number,
+  filter: HeatmapFilter | null,
+): string {
+  const muted = isDark ? "hsl(25, 6%, 35%)" : "hsl(25, 6%, 80%)";
+
+  // ── Filter mode ────────────────────────────────────────────────────────────
+  if (filter !== null) {
+    // Full-intensity lightness values match the overview mode at b=1 / y=1
+    const fullL = isDark ? 65 : 50;
+    if (filter.type === "boolean-habit") {
+      return (entry.habits[filter.id]?.done ?? false)
+        ? `hsl(220, 55%, ${fullL}%)`
+        : muted;
+    }
+    // moment
+    return entry.moments.includes(filter.id)
+      ? `hsl(45, 65%, ${fullL}%)`
+      : muted;
+  }
+
+  // ── Overview mode ──────────────────────────────────────────────────────────
   const habitCount = Object.values(entry.habits).filter((s) => s.done).length;
-  const joyCount = entry.moments.length;
+  // Joy signal: boolean habits with joy: true + moments selected (equal weight)
+  const joyCount =
+    Object.values(entry.habits).filter((s) => s.joy).length +
+    entry.moments.length;
 
   const b = habitCount / (totalBooleanHabits || 1); // 0–1, guard against divide-by-zero
-  const y = Math.min(joyCount / 6, 1); // 0–1, saturates at 6 tags
+  const y = Math.min(joyCount / 6, 1);              // 0–1, saturates at 6
 
   // Entry exists but nothing logged — muted neutral tint
-  if (b === 0 && y === 0) {
-    return isDark ? "hsl(25, 6%, 35%)" : "hsl(25, 6%, 80%)";
-  }
+  if (b === 0 && y === 0) return muted;
 
   // Each dimension drives lightness independently:
   // light mode: high intensity → lower lightness (richer color)
@@ -106,7 +144,7 @@ function useIsDark(): boolean {
   return isDark;
 }
 
-export default function CalendarHeatmap({ entries, selectedDate, onDayClick }: Props) {
+export default function CalendarHeatmap({ entries, selectedDate, onDayClick, filter = null }: Props) {
   const today = getTodayString();
   const now = new Date();
   const currentYear = now.getFullYear();
@@ -237,7 +275,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick }: P
                 const isFuture = dateStr > today;
                 const isSelected = dateStr === selectedDate;
                 const cellBg = entry && !isFuture
-                  ? computeCellColor(entry, isDark, activeHabitCount)
+                  ? computeCellColor(entry, isDark, activeHabitCount, filter)
                   : undefined;
                 const dayNum = parseInt(dateStr.split("-")[2], 10);
 
