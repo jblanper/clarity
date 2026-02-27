@@ -3,7 +3,13 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import type { HabitEntry } from "@/types/entry";
-import { BOOLEAN_HABITS, NUMERIC_HABITS } from "@/lib/habits";
+import {
+  getConfigs,
+  DEFAULT_HABIT_CONFIGS,
+  DEFAULT_JOY_TAG_CONFIGS,
+  type AppConfigs,
+  type NumericHabitConfig,
+} from "@/lib/habitConfig";
 
 interface Props {
   date: string;
@@ -38,6 +44,15 @@ function formatLastEdited(isoString: string): string {
 
 export default function DayDetail({ date, entry, onClose }: Props) {
   const [isVisible, setIsVisible] = useState(false);
+  // Initialise with defaults so first render matches SSR; updated on mount.
+  const [configs, setConfigs] = useState<AppConfigs>({
+    habits: DEFAULT_HABIT_CONFIGS,
+    joyTags: DEFAULT_JOY_TAG_CONFIGS,
+  });
+
+  useEffect(() => {
+    setConfigs(getConfigs());
+  }, []);
 
   // Trigger slide-up on next tick so the CSS transition fires from the initial state
   useEffect(() => {
@@ -57,21 +72,30 @@ export default function DayDetail({ date, entry, onClose }: Props) {
     setTimeout(onClose, 300);
   };
 
-  // Derive display-ready slices — each is empty when entry is null
+  // Derive display-ready slices from entry + configs.
+  // Include archived habits so historical entries display correctly.
+  const booleanHabits = configs.habits.filter((h) => h.type === "boolean");
+  const numericHabits = configs.habits.filter(
+    (h): h is NumericHabitConfig => h.type === "numeric"
+  );
+  const joyTagMap = new Map(configs.joyTags.map((t) => [t.id, t.label]));
+
   const checkedHabits = entry
-    ? BOOLEAN_HABITS.filter(({ key }) => entry[key])
+    ? booleanHabits.filter((h) => entry.booleanHabits[h.id] === true)
     : [];
   const loggedNumbers = entry
-    ? NUMERIC_HABITS.filter(({ key }) => entry[key] > 0)
+    ? numericHabits.filter((h) => (entry.numericHabits[h.id] ?? 0) > 0)
     : [];
-  const joyTags   = entry?.joyTags   ?? [];
+  const resolvedJoyTags = entry
+    ? entry.joyTags.map((id) => joyTagMap.get(id) ?? id)
+    : [];
   const reflection = entry?.reflection ?? "";
 
   const hasNothingLogged =
     !entry ||
     (checkedHabits.length === 0 &&
       loggedNumbers.length === 0 &&
-      joyTags.length === 0 &&
+      resolvedJoyTags.length === 0 &&
       !reflection);
 
   return (
@@ -130,10 +154,10 @@ export default function DayDetail({ date, entry, onClose }: Props) {
                     Habits
                   </h3>
                   <div className="space-y-1">
-                    {checkedHabits.map(({ key, label }) => (
-                      <div key={key} className="flex items-center gap-2">
+                    {checkedHabits.map((h) => (
+                      <div key={h.id} className="flex items-center gap-2">
                         <span className="text-sm text-stone-500 dark:text-stone-500">✓</span>
-                        <span className="text-sm text-stone-700 dark:text-stone-300">{label}</span>
+                        <span className="text-sm text-stone-700 dark:text-stone-300">{h.label}</span>
                       </div>
                     ))}
                   </div>
@@ -147,32 +171,32 @@ export default function DayDetail({ date, entry, onClose }: Props) {
                     By the numbers
                   </h3>
                   <div className="space-y-1">
-                    {loggedNumbers.map(({ key, label, unit }) => (
-                      <div key={key} className="flex items-baseline gap-2">
+                    {loggedNumbers.map((h) => (
+                      <div key={h.id} className="flex items-baseline gap-2">
                         <span className="text-sm font-medium text-stone-800 dark:text-stone-200">
-                          {entry?.[key] ?? 0}
+                          {entry?.numericHabits[h.id] ?? 0}
                         </span>
-                        <span className="text-xs text-stone-500 dark:text-stone-500">{unit}</span>
-                        <span className="text-sm text-stone-600 dark:text-stone-400">{label}</span>
+                        <span className="text-xs text-stone-500 dark:text-stone-500">{h.unit}</span>
+                        <span className="text-sm text-stone-600 dark:text-stone-400">{h.label}</span>
                       </div>
                     ))}
                   </div>
                 </section>
               )}
 
-              {/* Joy tags — read-only chips, same visual style as selected JoyTagChip */}
-              {joyTags.length > 0 && (
+              {/* Joy tags — resolved from UUIDs to labels */}
+              {resolvedJoyTags.length > 0 && (
                 <section className="mb-6">
                   <h3 className="mb-3 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
                     Joy
                   </h3>
                   <div className="flex flex-wrap gap-2">
-                    {joyTags.map((tag) => (
+                    {resolvedJoyTags.map((label) => (
                       <span
-                        key={tag}
+                        key={label}
                         className="rounded-full bg-stone-500 dark:bg-stone-300 px-4 py-2 text-sm text-white dark:text-stone-900"
                       >
-                        {tag}
+                        {label}
                       </span>
                     ))}
                   </div>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { HabitEntry } from "@/types/entry";
-import { BOOLEAN_HABITS } from "@/lib/habits";
+import { getConfigs, DEFAULT_HABIT_CONFIGS } from "@/lib/habitConfig";
 
 interface Props {
   entries: HabitEntry[];
@@ -16,8 +16,6 @@ const MONTH_NAMES = [
 ];
 
 const DAY_LABELS = ["M", "T", "W", "T", "F", "S", "S"];
-
-const HABIT_COUNT = BOOLEAN_HABITS.length; // 5
 
 /** Returns today's date as YYYY-MM-DD in local time. */
 function getTodayString(): string {
@@ -55,16 +53,16 @@ function buildMonthWeeks(year: number, month: number): (string | null)[][] {
 
 /**
  * Computes a cell background color by additively blending two HSL dimensions:
- *   - Blue  (hue 220): scales with boolean habits completed (0–5)
+ *   - Blue  (hue 220): scales with boolean habits completed (0–totalBooleanHabits)
  *   - Yellow (hue 45): scales with joy tags selected (0–6+)
  *
  * Hues are weighted-averaged, so equal max scores blend toward green (~132°).
  */
-function computeCellColor(entry: HabitEntry, isDark: boolean): string {
-  const habitCount = BOOLEAN_HABITS.filter(({ key }) => entry[key]).length;
+function computeCellColor(entry: HabitEntry, isDark: boolean, totalBooleanHabits: number): string {
+  const habitCount = Object.values(entry.booleanHabits).filter(Boolean).length;
   const joyCount = entry.joyTags.length;
 
-  const b = habitCount / HABIT_COUNT; // 0–1
+  const b = habitCount / (totalBooleanHabits || 1); // 0–1, guard against divide-by-zero
   const y = Math.min(joyCount / 6, 1); // 0–1, saturates at 6 tags
 
   // Entry exists but nothing logged — muted neutral tint
@@ -118,6 +116,18 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick }: P
   const [year, setYear] = useState(currentYear);
   const [month, setMonth] = useState(currentMonth);
   const isDark = useIsDark();
+
+  // Count of active boolean habits — used to normalise the heat intensity.
+  // Initialised from defaults so first render matches SSR; updated on mount.
+  const [activeHabitCount, setActiveHabitCount] = useState(
+    DEFAULT_HABIT_CONFIGS.filter((h) => h.type === "boolean" && !h.archived).length
+  );
+  useEffect(() => {
+    const configs = getConfigs();
+    setActiveHabitCount(
+      configs.habits.filter((h) => h.type === "boolean" && !h.archived).length
+    );
+  }, []);
 
   const entryMap = new Map(entries.map((e) => [e.date, e]));
   const weeks = buildMonthWeeks(year, month);
@@ -227,7 +237,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick }: P
                 const isFuture = dateStr > today;
                 const isSelected = dateStr === selectedDate;
                 const cellBg = entry && !isFuture
-                  ? computeCellColor(entry, isDark)
+                  ? computeCellColor(entry, isDark, activeHabitCount)
                   : undefined;
                 const dayNum = parseInt(dateStr.split("-")[2], 10);
 

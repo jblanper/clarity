@@ -2,7 +2,8 @@
 
 import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { exportEntries, importEntries } from "@/lib/transferData";
+import { exportBackup, importBackup } from "@/lib/transferData";
+import ManageSection from "@/components/ManageSection";
 import { getTheme, setTheme, type Theme } from "@/lib/theme";
 
 type ImportStatus =
@@ -36,7 +37,7 @@ export default function SettingsView() {
 
   const handleExport = () => {
     try {
-      exportEntries();
+      exportBackup();
       setExportStatus("idle");
     } catch (err) {
       setExportStatus("error");
@@ -57,7 +58,7 @@ export default function SettingsView() {
   const handleImport = async () => {
     if (importStatus.kind !== "ready") return;
     try {
-      const { imported, skipped } = await importEntries(importStatus.file);
+      const { imported, skipped } = await importBackup(importStatus.file);
       setImportStatus({ kind: "success", imported, skipped });
     } catch (err) {
       const message =
@@ -121,6 +122,13 @@ export default function SettingsView() {
 
       <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
 
+      {/* ── Manage ────────────────────────────────────────────────── */}
+      <div className="mb-10">
+        <ManageSection />
+      </div>
+
+      <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
+
       {/* ── Export ────────────────────────────────────────────────── */}
       <section className="mb-10">
         <h2 className="mb-1 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
@@ -137,7 +145,7 @@ export default function SettingsView() {
         </button>
         {exportStatus === "error" && (
           <p className="mt-3 text-center text-sm text-red-700 dark:text-red-400">
-            Nothing to export yet. Start tracking first.
+            Something went wrong. Please try again.
           </p>
         )}
       </section>

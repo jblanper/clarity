@@ -6,8 +6,8 @@ interface Props {
   label: string;
   unit: string;
   value: number;
-  min: number;
-  max: number;
+  min?: number;
+  max?: number;
   step: number;
   onChange: (value: number) => void;
 }
@@ -25,8 +25,8 @@ export default function NumberStepper({
   label,
   unit,
   value,
-  min,
-  max,
+  min = 0,
+  max = Infinity,
   step,
   onChange,
 }: Props) {
@@ -81,7 +81,7 @@ export default function NumberStepper({
           onChange={handleInputChange}
           onBlur={handleBlur}
           min={min}
-          max={max}
+          max={max === Infinity ? undefined : max}
           step={step}
           aria-label={label}
           className="w-12 bg-transparent text-center text-stone-700 dark:text-stone-300 focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"

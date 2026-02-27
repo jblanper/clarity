@@ -5,13 +5,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { saveEntry, getEntry } from "@/lib/storage";
 import {
-  BOOLEAN_HABITS,
-  NUMERIC_HABITS,
-  DEFAULT_JOY_TAGS,
-  EMPTY_ENTRY_FIELDS,
-  type BooleanHabitKey,
-  type NumericHabitKey,
-} from "@/lib/habits";
+  getConfigs,
+  DEFAULT_HABIT_CONFIGS,
+  DEFAULT_JOY_TAG_CONFIGS,
+  type AppConfigs,
+  type NumericHabitConfig,
+} from "@/lib/habitConfig";
 import type { HabitEntry } from "@/types/entry";
 import HabitToggle from "@/components/HabitToggle";
 import NumberStepper from "@/components/NumberStepper";
@@ -21,6 +20,20 @@ interface Props {
   /** When provided, the form runs in edit mode for that specific date. */
   date?: string;
 }
+
+type FormFields = {
+  booleanHabits: Record<string, boolean>;
+  numericHabits: Record<string, number>;
+  joyTags: string[];
+  reflection: string;
+};
+
+const emptyFields: FormFields = {
+  booleanHabits: {},
+  numericHabits: {},
+  joyTags: [],
+  reflection: "",
+};
 
 /** Returns today's date as a YYYY-MM-DD string in local time. */
 function getTodayDate(): string {
@@ -56,19 +69,11 @@ function formatEditDate(dateStr: string): string {
   return `${weekdays[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 
-/** Strips the date key from a full HabitEntry so it can be used as form state. */
-function toFormFields(entry: HabitEntry): Omit<HabitEntry, "date" | "lastEdited"> {
+/** Extracts mutable form fields from a saved HabitEntry. */
+function toFormFields(entry: HabitEntry): FormFields {
   return {
-    meditation: entry.meditation,
-    exercise: entry.exercise,
-    reading: entry.reading,
-    journaling: entry.journaling,
-    drawing: entry.drawing,
-    sleep: entry.sleep,
-    water: entry.water,
-    screenTime: entry.screenTime,
-    coffee: entry.coffee,
-    decafCoffee: entry.decafCoffee,
+    booleanHabits: { ...entry.booleanHabits },
+    numericHabits: { ...entry.numericHabits },
     joyTags: [...entry.joyTags],
     reflection: entry.reflection,
   };
@@ -80,8 +85,17 @@ export default function CheckInForm({ date }: Props) {
   const today = getTodayDate();
   const targetDate = date ?? today;
 
-  const [fields, setFields] = useState<Omit<HabitEntry, "date" | "lastEdited">>(EMPTY_ENTRY_FIELDS);
+  const [fields, setFields] = useState<FormFields>(emptyFields);
   const [saved, setSaved] = useState(false);
+  // Initialise with defaults so first render matches SSR; updated on mount.
+  const [configs, setConfigs] = useState<AppConfigs>({
+    habits: DEFAULT_HABIT_CONFIGS,
+    joyTags: DEFAULT_JOY_TAG_CONFIGS,
+  });
+
+  useEffect(() => {
+    setConfigs(getConfigs());
+  }, []);
 
   // Pre-populate form with any existing entry for the target date
   useEffect(() => {
@@ -91,27 +105,45 @@ export default function CheckInForm({ date }: Props) {
     }
   }, [targetDate]);
 
-  const setBooleanHabit = (key: BooleanHabitKey, value: boolean) => {
-    setFields((prev) => ({ ...prev, [key]: value }));
-  };
+  const activeBoolean = configs.habits.filter((h) => h.type === "boolean" && !h.archived);
+  const activeNumeric = configs.habits.filter(
+    (h): h is NumericHabitConfig => h.type === "numeric" && !h.archived
+  );
+  const activeJoyTags = configs.joyTags.filter((t) => !t.archived);
 
-  const setNumericHabit = (key: NumericHabitKey, value: number) => {
-    setFields((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const toggleJoyTag = (tag: string) => {
+  const setBooleanHabit = (id: string, value: boolean) => {
     setFields((prev) => ({
       ...prev,
-      joyTags: prev.joyTags.includes(tag)
-        ? prev.joyTags.filter((t) => t !== tag)
-        : [...prev.joyTags, tag],
+      booleanHabits: { ...prev.booleanHabits, [id]: value },
+    }));
+  };
+
+  const setNumericHabit = (id: string, value: number) => {
+    setFields((prev) => ({
+      ...prev,
+      numericHabits: { ...prev.numericHabits, [id]: value },
+    }));
+  };
+
+  const toggleJoyTag = (id: string) => {
+    setFields((prev) => ({
+      ...prev,
+      joyTags: prev.joyTags.includes(id)
+        ? prev.joyTags.filter((t) => t !== id)
+        : [...prev.joyTags, id],
     }));
   };
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const entry: HabitEntry = { date: targetDate, ...fields };
+    const entry: HabitEntry = {
+      date: targetDate,
+      booleanHabits: fields.booleanHabits,
+      numericHabits: fields.numericHabits,
+      joyTags: fields.joyTags,
+      reflection: fields.reflection,
+    };
 
     if (isEditMode) {
       // Record when the entry was last edited
@@ -164,12 +196,12 @@ export default function CheckInForm({ date }: Props) {
           Habits
         </h2>
         <div className="divide-y divide-stone-100 dark:divide-stone-800">
-          {BOOLEAN_HABITS.map(({ key, label }) => (
+          {activeBoolean.map((h) => (
             <HabitToggle
-              key={key}
-              label={label}
-              checked={fields[key]}
-              onChange={(value) => setBooleanHabit(key, value)}
+              key={h.id}
+              label={h.label}
+              checked={fields.booleanHabits[h.id] ?? false}
+              onChange={(value) => setBooleanHabit(h.id, value)}
             />
           ))}
         </div>
@@ -181,16 +213,14 @@ export default function CheckInForm({ date }: Props) {
           By the numbers
         </h2>
         <div className="divide-y divide-stone-100 dark:divide-stone-800">
-          {NUMERIC_HABITS.map(({ key, label, unit, min, max, step }) => (
+          {activeNumeric.map((h) => (
             <NumberStepper
-              key={key}
-              label={label}
-              unit={unit}
-              value={fields[key]}
-              min={min}
-              max={max}
-              step={step}
-              onChange={(value) => setNumericHabit(key, value)}
+              key={h.id}
+              label={h.label}
+              unit={h.unit}
+              value={fields.numericHabits[h.id] ?? 0}
+              step={h.step}
+              onChange={(value) => setNumericHabit(h.id, value)}
             />
           ))}
         </div>
@@ -202,12 +232,12 @@ export default function CheckInForm({ date }: Props) {
           Joy
         </h2>
         <div className="flex flex-wrap gap-2">
-          {DEFAULT_JOY_TAGS.map((tag) => (
+          {activeJoyTags.map((t) => (
             <JoyTagChip
-              key={tag}
-              label={tag}
-              selected={fields.joyTags.includes(tag)}
-              onToggle={() => toggleJoyTag(tag)}
+              key={t.id}
+              label={t.label}
+              selected={fields.joyTags.includes(t.id)}
+              onToggle={() => toggleJoyTag(t.id)}
             />
           ))}
         </div>
