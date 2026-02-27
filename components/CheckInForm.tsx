@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { saveEntry, getEntry } from "@/lib/storage";
+import { saveEntry, getEntry, sanitizeHabitState } from "@/lib/storage";
 import {
   getConfigs,
   DEFAULT_HABIT_CONFIGS,
@@ -145,9 +145,15 @@ export default function CheckInForm({ date }: Props) {
 
     setSaveState("saving");
 
+    // Apply joy→done constraint to every habit state before persisting
+    const sanitizedHabits: Record<string, HabitState> = {};
+    for (const [id, state] of Object.entries(fields.habits)) {
+      sanitizedHabits[id] = sanitizeHabitState(state);
+    }
+
     const entry: HabitEntry = {
       date: targetDate,
-      habits: fields.habits,
+      habits: sanitizedHabits,
       numeric: fields.numeric,
       moments: fields.moments,
       reflection: fields.reflection,
@@ -243,7 +249,7 @@ export default function CheckInForm({ date }: Props) {
       {/* ── Moments ────────────────────────────────────────────────── */}
       <section className="mb-10">
         <h2 className="mb-3 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
-          Joy
+          Moments
         </h2>
         <div className="flex flex-wrap gap-2">
           {activeMoments.map((m) => (

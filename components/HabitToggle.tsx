@@ -32,25 +32,26 @@ export default function HabitToggle({ label, value, joyByDefault, onChange }: Pr
     <div className="flex items-center justify-between py-3.5">
       <span className="text-stone-700 dark:text-stone-300">{label}</span>
       <div className="flex items-center gap-3">
-        {/* Heart — only rendered when done: true */}
-        {value.done && (
-          <button
-            type="button"
-            onClick={handleHeart}
-            aria-label={value.joy ? "Remove joy" : "Mark as done with joy"}
-            className="flex min-h-[44px] min-w-[44px] items-center justify-center transition-colors duration-150"
+        {/* Heart — always in the DOM to prevent layout shift; invisible when done: false */}
+        <button
+          type="button"
+          onClick={handleHeart}
+          aria-label={value.joy ? "Remove joy" : "Mark as done with joy"}
+          disabled={!value.done}
+          className={`flex min-h-[44px] min-w-[44px] items-center justify-center transition-opacity duration-150 ${
+            value.done ? "opacity-100" : "invisible"
+          }`}
+        >
+          <span
+            className={`text-lg leading-none ${
+              value.joy
+                ? "text-amber-500 dark:text-amber-400"
+                : "text-stone-400"
+            }`}
           >
-            <span
-              className={`text-lg leading-none ${
-                value.joy
-                  ? "text-amber-500 dark:text-amber-400"
-                  : "text-stone-400"
-              }`}
-            >
-              {value.joy ? "♥" : "♡"}
-            </span>
-          </button>
-        )}
+            {value.joy ? "♥" : "♡"}
+          </span>
+        </button>
         {/* Toggle switch — slides left (off) / right (on).
             Uses explicit `left` instead of translate to avoid transform
             initialisation issues in Tailwind v4. */}
