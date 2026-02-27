@@ -10,17 +10,18 @@ gamified. You open it once a day, log how things went, and close it.
 - **Boolean habits** — toggle switches (default: Meditation, Exercise, Reading, Journaling, Drawing)
 - **Numeric habits** — steppers with custom units (default: Sleep/hrs, Water/glasses, Screen time/hrs, Coffee/cups, Decaf coffee/cups)
 - **Joy tags** — a multi-select chip grid (12 defaults; fully customisable)
-- **Habit customisation** — add, rename, archive, and restore habits and joy tags in Settings
+- **Habit customisation** — add, rename, archive, and restore habits and joy tags in the Manage page
 - **Reflection** — a free-text textarea for end-of-day notes
 - **Persistence** — all entries saved to localStorage, pre-populated on return visits
 - **History** — calendar heatmap (month view, year navigation) showing entry intensity by habits + joy
 - **Day detail** — bottom sheet showing a past day's logged data, with an Edit link
 - **Edit past entries** — full check-in form pre-filled with existing data; stamps `lastEdited` on save
 - **Dark/light theme** — user-selected, stored in localStorage, toggled in Settings
-- **Bottom navigation** — fixed two-tab bar (Today / History); hidden on Settings and Edit pages
+- **Bottom navigation** — fixed two-tab bar (Today / History); hidden on Settings, Manage, and Edit pages
 - **Export** — download all entries and configs as a formatted `habits-backup.json` file
 - **Import** — upload a backup file; entries are merged (existing dates skipped), configs are replaced
-- **Settings** — theme toggle, export, import, and habit management; accessible from both Today and History headers
+- **Settings** — theme toggle and data export/import; accessible from both Today and History headers
+- **Manage** — dedicated page for habit and joy tag management; accessible only from Settings
 
 ## Style & Vibes
 - **Calm and minimal** — no gamification, no streaks, no pressure. Just quiet logging.
@@ -97,14 +98,20 @@ against the `#fafaf9` background. Verified contrast ratios:
 ```
 /           Today        BottomNav visible
 /history    History      BottomNav visible
-/settings   Settings     BottomNav hidden — back via router.back()
+/settings   Settings     BottomNav hidden — back via sessionStorage + router.push()
+/manage     Manage       BottomNav hidden — back via ← Settings link
 /edit/[date] Edit        BottomNav hidden — back via ← history link
 ```
 
 - **BottomNav** (`components/BottomNav.tsx`) — fixed bottom bar, 56px + safe-area inset.
-  Returns `null` on `/settings` and any `/edit/*` path. Uses `usePathname()` for active state.
+  Returns `null` on `/settings`, `/manage`, and any `/edit/*` path. Uses `usePathname()` for active state.
 - **Settings** is reachable from both Today and History headers (top-right, same muted style).
-  Its back arrow uses `router.back()` so it always returns to the calling page.
+  Its back button uses `router.push(backDest)` where `backDest` is read from `sessionStorage`
+  key `"settings-back"` on mount (written by the caller before navigating). Defaults to `"/"`.
+  This ensures the back button never lands on `/manage` even if that was the last history entry.
+- **Manage** is only reachable from the "Habits and joy tags →" row inside Settings.
+  Its `← Settings` link goes to plain `/settings`; the `sessionStorage` key already holds the
+  correct origin so Settings back nav resolves correctly without any extra params.
 - **DayDetail → Edit** flow: Edit link navigates to `/edit/[date]`. On save, `router.push`
   goes to `/history?open=[date]`. HistoryView reads `?open=` on mount, auto-opens DayDetail,
   then cleans the URL with `window.history.replaceState`.
@@ -115,6 +122,7 @@ app/                    # Next.js App Router
   page.tsx              # Home (Today) — server component shell
   history/page.tsx      # History — server component shell
   settings/page.tsx     # Settings — server component shell
+  manage/page.tsx       # Manage — server component shell
   edit/[date]/page.tsx  # Edit a past entry — async params, server shell
   globals.css           # CSS variables + Tailwind import (light + dark themes)
   layout.tsx            # Root layout: theme script, BottomNav, Geist Sans
@@ -123,8 +131,8 @@ components/
   HabitToggle.tsx       # iOS-style boolean toggle (client)
   NumberStepper.tsx     # −/input/+ numeric stepper; min/max optional (default 0/∞)
   JoyTagChip.tsx        # Selectable pill chip (client)
-  ManageSection.tsx     # Habit + joy tag management (add/edit/archive/restore); used in SettingsView
-  SettingsView.tsx      # Settings page: Theme → Manage → Export → Import
+  ManageView.tsx        # Habit + joy tag management page (add/edit/archive/restore)
+  SettingsView.tsx      # Settings page: Theme → Your Data → Manage nav row
   CalendarHeatmap.tsx   # Month heatmap with year/month nav, HSL color blend (client)
                         #   Cells: h-11 w-11 (44px), gap-1.5, rounded-md
                         #   Labels: year text-sm, month text-base, arrows text-xl
@@ -254,15 +262,36 @@ useEffect(() => { setConfigs(getConfigs()); }, []);
 
 Initialise with the module-level defaults (same values the server would produce),
 then replace with saved values on mount. Components using this pattern:
-`CheckInForm`, `DayDetail`, `CalendarHeatmap`, `ManageSection`.
+`CheckInForm`, `DayDetail`, `CalendarHeatmap`, `ManageView`.
 
-### ManageSection behaviour
+### ManageView behaviour
 - All inline editors (edit habit, edit tag, add habit, add tag) are mutually exclusive —
   opening any one closes all others via `closeAllEditors()`.
 - The `justArchivedId` state shows the "Archived. Past entries are preserved." note
   on the most recently archived item; any other action clears it.
-- The Manage section label uses `text-stone-400` (not the usual `text-stone-500`).
-  This is intentional per the design spec for this section.
+- Section labels use `text-stone-400` (not the usual `text-stone-500`). This is intentional
+  per the design spec for this page.
+- **Archive buttons** use `text-amber-700 dark:text-amber-500` to distinguish them from Edit
+  without implying danger (red would feel too destructive for a reversible action).
+- A "Jump to Joy Tags ↓" anchor link (`href="#joy-tags"`) sits below the header for quick
+  navigation when the habit list is long. The Joy Tags section has `id="joy-tags"`.
+
+### Save flow (CheckInForm)
+The Save button steps through three states on submit:
+
+| State | Label | Colors |
+|---|---|---|
+| `"idle"` | Save | `bg-stone-800 text-white dark:bg-stone-200 dark:text-stone-900` |
+| `"saving"` | Saving... | same as idle |
+| `"confirmed"` | Day captured | `bg-stone-300 text-stone-700 dark:bg-stone-700 dark:text-stone-300` |
+
+- The button is `disabled` during `"saving"` and `"confirmed"` to prevent double-taps.
+- The color transition uses `duration-500` for a smooth feel.
+- The `saveEntry()` call is deferred by one tick (`setTimeout(..., 0)`) so the `"saving"`
+  label actually renders before the synchronous localStorage write.
+- After `"confirmed"`, a 1200ms timeout fires `router.push()`:
+  - Today form → `/history`
+  - Edit form → `/history?open=${date}` (reopens the day detail)
 
 ### DayDetail resolution pattern
 DayDetail resolves habit and joy tag labels by **iterating the entry's stored UUIDs**
@@ -279,6 +308,17 @@ historical data whose IDs may not match the current config set.
 - For simple one-shot URL params (e.g. auto-opening a sheet after navigation), read
   `window.location.search` directly in a `useEffect`, then clean up with
   `window.history.replaceState({}, "", "/path")`.
+
+### sessionStorage for cross-page navigation intent
+Prefer `sessionStorage` over URL params when passing navigation intent between pages.
+It keeps URLs clean and doesn't require intermediate pages to propagate the value.
+
+Example — Settings back destination:
+- Today/History write `sessionStorage.setItem("settings-back", "/")` (or `"/history"`)
+  in the Settings link's `onClick` before navigating.
+- SettingsView reads `sessionStorage.getItem("settings-back")` on mount and calls
+  `router.push(backDest)` — never `router.back()`, which could land on an unintended page.
+- Manage doesn't need to know about this at all; the key survives the round-trip.
 
 ## Microcopy & Tone
 
