@@ -92,6 +92,23 @@ against the `#fafaf9` background. Verified contrast ratios:
 - **Font**: Geist Sans
 - **Storage**: localStorage
 - **Testing**: Jest + jest-environment-jsdom
+- **Deployment**: GitHub Pages — https://jblanper.github.io/clarity/
+
+## Deployment
+
+The app is deployed as a Next.js static export to GitHub Pages via GitHub Actions
+(`.github/workflows/deploy.yml`). Relevant `next.config.ts` settings:
+
+```ts
+output: "export"       // generate a static site in /out
+basePath: "/clarity"   // GitHub Pages serves under /clarity, not /
+images: { unoptimized: true }  // image optimisation requires a server
+```
+
+**Constraint**: no dynamic routes. Static export requires all routes to be known at
+build time, but entry dates only exist in the user's localStorage. Any page that needs
+runtime data must use a non-dynamic route and read query params via `window.location.search`
+in a `useEffect`. See `app/edit/page.tsx` as the established pattern.
 
 ## Navigation Architecture
 
@@ -104,7 +121,7 @@ against the `#fafaf9` background. Verified contrast ratios:
 ```
 
 - **BottomNav** (`components/BottomNav.tsx`) — fixed bottom bar, 56px + safe-area inset.
-  Returns `null` on `/settings`, `/manage`, and any `/edit/*` path. Uses `usePathname()` for active state.
+  Returns `null` on `/settings`, `/manage`, and `/edit`. Uses `usePathname()` for active state.
 - **Settings** is reachable from both Today and History headers (top-right, same muted style).
   Its back button uses `router.push(backDest)` where `backDest` is read from `sessionStorage`
   key `"settings-back"` on mount (written by the caller before navigating). Defaults to `"/"`.
@@ -217,7 +234,9 @@ interface ExportFile {
 
 ### General
 - **Page components are server components** that wrap a single `"use client"` view component.
-  Never add interactivity directly to `app/` files.
+  Never add interactivity directly to `app/` files. Exception: `app/edit/page.tsx` is itself
+  a client component because it must read `window.location.search` on mount (see static export
+  constraint below).
 - **`lib/habitConfig.ts` is the source of truth** for habit and joy tag config. If you add or
   change a default habit or tag, update it there first. `lib/habits.ts` now only contains
   `createEmptyEntry()` and should not grow.
@@ -227,8 +246,10 @@ interface ExportFile {
   floating-point drift (e.g. `0.1 + 0.2 = 0.30000000000000004`).
 - **FileReader over file.text()**: `importBackup` uses `FileReader.readAsText()` for jsdom
   compatibility in Jest tests.
-- **Next.js dynamic route params are async**: use `params: Promise<{ date: string }>` and
-  `await params` in server components (Next.js 15+).
+- **No dynamic routes** — the app is deployed as a static export (`output: 'export'` in
+  `next.config.ts`). Dynamic routes (e.g. `[date]`) require `generateStaticParams()`, which
+  is impossible when data lives only in localStorage. Use query params instead and read them
+  from `window.location.search` in a `useEffect`. The `/edit` page is the established pattern.
 
 ### Tailwind v4
 - **Class-based dark mode**: Tailwind v4 defaults `dark:` variants to `prefers-color-scheme`.
