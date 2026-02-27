@@ -262,7 +262,7 @@ export default function SettingsView() {
           href="/manage"
           className="flex items-center justify-between py-2 text-sm text-stone-700 dark:text-stone-300 transition-colors hover:text-stone-900 dark:hover:text-stone-100"
         >
-          <span>Habits and joy tags</span>
+          <span>Habits and moments</span>
           <span className="text-stone-400 dark:text-stone-500">→</span>
         </Link>
       </section>

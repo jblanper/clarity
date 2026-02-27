@@ -29,7 +29,7 @@ interface EditingTag {
 
 type AddHabitStep =
   | { stage: "type" }
-  | { stage: "form-boolean"; label: string }
+  | { stage: "form-boolean"; label: string; joyByDefault: boolean }
   | { stage: "form-numeric"; label: string; unit: string; step: number };
 
 // ── Shared style constants ─────────────────────────────────────────────────
@@ -156,12 +156,21 @@ export default function ManageView() {
     });
   }
 
+  function toggleJoyByDefault(id: string) {
+    applyConfigs({
+      ...configs,
+      habits: configs.habits.map((h) =>
+        h.id === id && h.type === "boolean" ? { ...h, joyByDefault: !h.joyByDefault } : h
+      ),
+    });
+  }
+
   function saveNewHabit() {
     if (!addHabit || addHabit.stage === "type") return;
     const id = crypto.randomUUID();
     const newHabit: HabitConfig =
       addHabit.stage === "form-boolean"
-        ? { id, label: addHabit.label.trim(), type: "boolean", joyByDefault: false, archived: false }
+        ? { id, label: addHabit.label.trim(), type: "boolean", joyByDefault: addHabit.joyByDefault, archived: false }
         : { id, label: addHabit.label.trim(), type: "numeric", unit: addHabit.unit.trim(), step: addHabit.step, archived: false };
     applyConfigs({ ...configs, habits: [...configs.habits, newHabit] });
     setAddHabit(null);
@@ -239,10 +248,10 @@ export default function ManageView() {
       {/* ── Jump link ───────────────────────────────────────────────── */}
       <div className="mb-10">
         <a
-          href="#joy-tags"
+          href="#moments"
           className="text-xs text-stone-400 underline-offset-4 hover:underline dark:text-stone-500"
         >
-          Jump to Joy Tags ↓
+          Jump to Moments ↓
         </a>
       </div>
 
@@ -255,10 +264,23 @@ export default function ManageView() {
           {activeHabits.map((h) => (
             <div key={h.id}>
               <div className="flex items-center justify-between gap-2 py-2">
-                <div className="flex min-w-0 items-baseline gap-2">
-                  <span className="text-sm text-stone-700 dark:text-stone-300">{h.label}</span>
-                  {h.type === "numeric" && (
-                    <span className="text-xs text-stone-400 dark:text-stone-500">{h.unit}</span>
+                <div className="flex min-w-0 flex-col gap-0.5">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-sm text-stone-700 dark:text-stone-300">{h.label}</span>
+                    {h.type === "numeric" && (
+                      <span className="text-xs text-stone-400 dark:text-stone-500">{h.unit}</span>
+                    )}
+                  </div>
+                  {h.type === "boolean" && (
+                    <button
+                      type="button"
+                      onClick={() => toggleJoyByDefault(h.id)}
+                      className="self-start text-left transition-colors"
+                    >
+                      <span className={`text-xs ${h.joyByDefault ? "text-amber-600 dark:text-amber-500" : "text-stone-400"}`}>
+                        {h.joyByDefault ? "♥ Brings joy by default" : "♡ Tap to mark as joyful by default"}
+                      </span>
+                    </button>
                   )}
                 </div>
                 <div className="flex shrink-0 gap-3">
@@ -370,7 +392,7 @@ export default function ManageView() {
             <div className="flex gap-5">
               <button
                 type="button"
-                onClick={() => setAddHabit({ stage: "form-boolean", label: "" })}
+                onClick={() => setAddHabit({ stage: "form-boolean", label: "", joyByDefault: false })}
                 className="text-sm text-stone-600 dark:text-stone-300 underline-offset-4 hover:underline"
               >
                 Boolean
@@ -401,6 +423,22 @@ export default function ManageView() {
                 className={TEXT_INPUT}
               />
             </div>
+            {addHabit.stage === "form-boolean" && (
+              <div>
+                <label className={FIELD_LABEL}>Joy by default</label>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setAddHabit({ ...addHabit, joyByDefault: !addHabit.joyByDefault })
+                  }
+                  className="self-start text-left transition-colors"
+                >
+                  <span className={`text-xs ${addHabit.joyByDefault ? "text-amber-600 dark:text-amber-500" : "text-stone-400"}`}>
+                    {addHabit.joyByDefault ? "♥ Brings joy by default" : "♡ Does not bring joy by default"}
+                  </span>
+                </button>
+              </div>
+            )}
             {addHabit.stage === "form-numeric" && (
               <>
                 <div>
@@ -448,9 +486,9 @@ export default function ManageView() {
         )}
       </section>
 
-      {/* ── Joy Tags ────────────────────────────────────────────────── */}
-      <section id="joy-tags">
-        <h2 className={SECTION_LABEL}>Joy Tags</h2>
+      {/* ── Moments ─────────────────────────────────────────────────── */}
+      <section id="moments">
+        <h2 className={SECTION_LABEL}>Moments</h2>
 
         <div className="space-y-0.5">
           {/* Active tags */}
@@ -526,7 +564,7 @@ export default function ManageView() {
             }}
             className="mt-3 text-sm text-stone-500 dark:text-stone-400 underline-offset-4 hover:underline transition-colors"
           >
-            + Add tag
+            + Add moment
           </button>
         ) : (
           <div className={`mt-3 ${INLINE_FORM}`}>
