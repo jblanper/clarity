@@ -30,8 +30,8 @@ gamified. You open it once a day, log how things went, and close it.
 - **Light weights** — headings use `font-light`, wide `tracking-widest`. Nothing feels heavy.
 - **Mobile-first** — designed for phone screens. Max width `max-w-md`, generous touch targets
   (`min-h-[44px]`), no horizontal scrolling.
-- **Section labels** — `text-xs uppercase tracking-widest text-stone-400` used consistently
-  for all section headers and navigation text. This pattern must be reused for any new sections.
+- **Section labels** — `text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500`
+  used consistently for all section headers. This pattern must be reused for any new sections.
 - **Rounded UI** — interactive elements use `rounded-2xl`. Avoid sharp corners.
 - **Subtle interactions** — `transition-colors` on hover/active. Active states use a slightly
   darker shade (e.g. `active:bg-stone-900`). No animations beyond simple transitions.
@@ -63,6 +63,25 @@ Apply the `dark` class to the root `<html>` element and use Tailwind's `dark:` v
 
 The primary action button uses `bg-stone-800 dark:bg-stone-200` with `text-white dark:text-stone-900`.
 Secondary/outline buttons use `border-stone-200 bg-white text-stone-700 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300`.
+
+### Light theme color-role hierarchy (WCAG AA compliant)
+All text in the light theme must meet WCAG AA (4.5:1 for normal text, 3:1 for UI components)
+against the `#fafaf9` background. Verified contrast ratios:
+
+| Role | Tailwind class | Contrast vs bg |
+|---|---|---|
+| Primary text | `text-stone-800` / `text-stone-900` | 12–15:1 ✅ |
+| Body / form labels | `text-stone-700` | ~9:1 ✅ |
+| Navigation links, arrows, close buttons | `text-stone-600` (hover: `stone-800`) | 7.3:1 ✅ |
+| Section labels, unit labels, timestamps | `text-stone-500` | 4.6:1 ✅ |
+| **stone-400 — do not use for light-mode text** | `text-stone-400` | 2.4:1 ❌ |
+| Error messages | `text-red-700 dark:text-red-400` | 6.2:1 ✅ |
+
+- `text-stone-400` is only acceptable as a `dark:` variant (on the dark bg it reaches ~7:1).
+- Interactive element borders use `border-stone-300` in light mode (improvement over stone-200;
+  strict 3:1 compliance would require stone-500 which is visually heavy).
+- Toggle off-state track: `bg-stone-300 dark:bg-stone-600`.
+- Empty calendar cells: `bg-stone-200 dark:bg-stone-800`.
 
 ## Tech Stack
 - **Framework**: Next.js (App Router)
@@ -105,6 +124,8 @@ components/
   JoyTagChip.tsx        # Selectable pill chip (client)
   SettingsView.tsx      # Export/import + theme toggle UI (client)
   CalendarHeatmap.tsx   # Month heatmap with year/month nav, HSL color blend (client)
+                        #   Cells: h-11 w-11 (44px), gap-1.5, rounded-md
+                        #   Labels: year text-sm, month text-base, arrows text-xl
   DayDetail.tsx         # Bottom sheet: read-only day summary + Edit link (client)
   BottomNav.tsx         # Two-tab fixed bottom navigation (client)
 lib/
