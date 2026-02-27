@@ -213,10 +213,9 @@ export default function CheckInForm({ date }: Props) {
             <HabitToggle
               key={h.id}
               label={h.label}
-              checked={fields.habits[h.id]?.done ?? false}
-              onChange={(done) =>
-                setHabit(h.id, { done, joy: done && h.joyByDefault })
-              }
+              value={fields.habits[h.id] ?? { done: false, joy: false }}
+              joyByDefault={h.joyByDefault}
+              onChange={(state) => setHabit(h.id, state)}
             />
           ))}
         </div>
