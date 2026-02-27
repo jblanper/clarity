@@ -100,7 +100,7 @@ against the `#fafaf9` background. Verified contrast ratios:
 /history    History      BottomNav visible
 /settings   Settings     BottomNav hidden — back via sessionStorage + router.push()
 /manage     Manage       BottomNav hidden — back via ← Settings link
-/edit/[date] Edit        BottomNav hidden — back via ← history link
+/edit       Edit         BottomNav hidden — back via ← history link
 ```
 
 - **BottomNav** (`components/BottomNav.tsx`) — fixed bottom bar, 56px + safe-area inset.
@@ -112,7 +112,7 @@ against the `#fafaf9` background. Verified contrast ratios:
 - **Manage** is only reachable from the "Habits and joy tags →" row inside Settings.
   Its `← Settings` link goes to plain `/settings`; the `sessionStorage` key already holds the
   correct origin so Settings back nav resolves correctly without any extra params.
-- **DayDetail → Edit** flow: Edit link navigates to `/edit/[date]`. On save, `router.push`
+- **DayDetail → Edit** flow: Edit link navigates to `/edit?date=[date]`. On save, `router.push`
   goes to `/history?open=[date]`. HistoryView reads `?open=` on mount, auto-opens DayDetail,
   then cleans the URL with `window.history.replaceState`.
 
@@ -123,7 +123,7 @@ app/                    # Next.js App Router
   history/page.tsx      # History — server component shell
   settings/page.tsx     # Settings — server component shell
   manage/page.tsx       # Manage — server component shell
-  edit/[date]/page.tsx  # Edit a past entry — async params, server shell
+  edit/page.tsx         # Edit a past entry — client component, reads ?date= from query
   globals.css           # CSS variables + Tailwind import (light + dark themes)
   layout.tsx            # Root layout: theme script, BottomNav, Geist Sans
 components/

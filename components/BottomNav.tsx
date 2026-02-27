@@ -12,7 +12,7 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   // Hide the nav on Settings, Manage, and Edit pages — those have their own back navigation
-  if (pathname === "/settings" || pathname === "/manage" || pathname.startsWith("/edit/")) {
+  if (pathname === "/settings" || pathname === "/manage" || pathname === "/edit") {
     return null;
   }
 
