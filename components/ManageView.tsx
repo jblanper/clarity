@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import {
   getConfigs,
@@ -36,6 +37,9 @@ type AddHabitStep =
 const ACTION_BTN =
   "text-xs text-stone-500 dark:text-stone-400 underline-offset-2 hover:underline transition-colors";
 
+const ARCHIVE_BTN =
+  "text-xs text-amber-700 dark:text-amber-500 underline-offset-2 hover:underline transition-colors";
+
 const TEXT_INPUT =
   "w-full rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 px-3 py-2 text-sm text-stone-800 dark:text-stone-200 placeholder:text-stone-400 dark:placeholder:text-stone-600 focus:outline-none focus:ring-2 focus:ring-stone-300 dark:focus:ring-stone-600";
 
@@ -50,12 +54,12 @@ const INLINE_FORM =
 
 const FIELD_LABEL = "mb-1 block text-xs text-stone-500 dark:text-stone-400";
 
-const SUBSECTION_LABEL =
+const SECTION_LABEL =
   "mb-3 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500";
 
-// ── ManageSection ──────────────────────────────────────────────────────────
+// ── ManageView ─────────────────────────────────────────────────────────────
 
-export default function ManageSection() {
+export default function ManageView() {
   // Initialise with defaults so SSR and first client render match;
   // useEffect replaces with saved configs on mount.
   const [configs, setConfigs] = useState<AppConfigs>({
@@ -70,9 +74,16 @@ export default function ManageSection() {
   const [newTagLabel, setNewTagLabel] = useState("");
   // Holds the ID of the most recently archived item to show the confirmation note
   const [justArchivedId, setJustArchivedId] = useState<string | null>(null);
+  // Preserves the ?back= destination through the Settings → Manage → Settings chain
+  const [settingsHref, setSettingsHref] = useState("/settings");
 
   useEffect(() => {
     setConfigs(getConfigs());
+    const params = new URLSearchParams(window.location.search);
+    const back = params.get("settingsBack");
+    if (back === "/" || back === "/history") {
+      setSettingsHref(`/settings?back=${back}`);
+    }
   }, []);
 
   const activeHabits = configs.habits.filter((h) => !h.archived);
@@ -80,7 +91,7 @@ export default function ManageSection() {
   const activeTags = configs.joyTags.filter((t) => !t.archived);
   const archivedTags = configs.joyTags.filter((t) => t.archived);
 
-  // ── Config helpers ────────────────────────────────────────────────────────
+  // ── Config helpers ─────────────────────────────────────────────────────
 
   function applyConfigs(next: AppConfigs) {
     saveConfigs(next);
@@ -95,7 +106,7 @@ export default function ManageSection() {
     setNewTagLabel("");
   }
 
-  // ── Habit actions ─────────────────────────────────────────────────────────
+  // ── Habit actions ──────────────────────────────────────────────────────
 
   function startEditHabit(h: HabitConfig) {
     closeAllEditors();
@@ -163,7 +174,7 @@ export default function ManageSection() {
     setAddHabit(null);
   }
 
-  // ── Tag actions ───────────────────────────────────────────────────────────
+  // ── Tag actions ────────────────────────────────────────────────────────
 
   function startEditTag(t: JoyTagConfig) {
     closeAllEditors();
@@ -214,17 +225,37 @@ export default function ManageSection() {
     setNewTagLabel("");
   }
 
-  // ── Render ─────────────────────────────────────────────────────────────────
+  // ── Render ─────────────────────────────────────────────────────────────
 
   return (
-    <section>
-      <h2 className="mb-6 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
-        Manage
-      </h2>
+    <div className="mx-auto max-w-md px-5 pb-12 pt-10">
 
-      {/* ── Habits ────────────────────────────────────────────────── */}
-      <div className="mb-8">
-        <h3 className={SUBSECTION_LABEL}>Habits</h3>
+      {/* ── Header ──────────────────────────────────────────────────── */}
+      <header className="mb-2 flex items-center justify-between">
+        <h1 className="text-xl font-light tracking-widest text-stone-800 dark:text-stone-200">
+          Manage
+        </h1>
+        <Link
+          href={settingsHref}
+          className="text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
+        >
+          ← Settings
+        </Link>
+      </header>
+
+      {/* ── Jump link ───────────────────────────────────────────────── */}
+      <div className="mb-10">
+        <a
+          href="#joy-tags"
+          className="text-xs text-stone-400 underline-offset-4 hover:underline dark:text-stone-500"
+        >
+          Jump to Joy Tags ↓
+        </a>
+      </div>
+
+      {/* ── Habits ──────────────────────────────────────────────────── */}
+      <section className="mb-10">
+        <h2 className={SECTION_LABEL}>Habits</h2>
 
         <div className="space-y-0.5">
           {/* Active habits */}
@@ -238,10 +269,10 @@ export default function ManageSection() {
                   )}
                 </div>
                 <div className="flex shrink-0 gap-3">
-                  <button onClick={() => startEditHabit(h)} className={ACTION_BTN}>
+                  <button type="button" onClick={() => startEditHabit(h)} className={ACTION_BTN}>
                     Edit
                   </button>
-                  <button onClick={() => archiveHabit(h.id)} className={ACTION_BTN}>
+                  <button type="button" onClick={() => archiveHabit(h.id)} className={ARCHIVE_BTN}>
                     Archive
                   </button>
                 </div>
@@ -287,13 +318,14 @@ export default function ManageSection() {
                   )}
                   <div className="flex gap-3 pt-1">
                     <button
+                      type="button"
                       onClick={saveEditHabit}
                       disabled={!editingHabit.label.trim()}
                       className={SAVE_BTN}
                     >
                       Save
                     </button>
-                    <button onClick={() => setEditingHabit(null)} className={CANCEL_BTN}>
+                    <button type="button" onClick={() => setEditingHabit(null)} className={CANCEL_BTN}>
                       Cancel
                     </button>
                   </div>
@@ -312,7 +344,7 @@ export default function ManageSection() {
                     <span className="text-xs text-stone-300 dark:text-stone-700">{h.unit}</span>
                   )}
                 </div>
-                <button onClick={() => restoreHabit(h.id)} className={ACTION_BTN}>
+                <button type="button" onClick={() => restoreHabit(h.id)} className={ACTION_BTN}>
                   Restore
                 </button>
               </div>
@@ -328,13 +360,14 @@ export default function ManageSection() {
         {/* Add habit flow */}
         {addHabit === null && (
           <button
+            type="button"
             onClick={() => {
               closeAllEditors();
               setAddHabit({ stage: "type" });
             }}
             className="mt-3 text-sm text-stone-500 dark:text-stone-400 underline-offset-4 hover:underline transition-colors"
           >
-            Add habit
+            + Add habit
           </button>
         )}
 
@@ -343,19 +376,21 @@ export default function ManageSection() {
             <p className="text-xs text-stone-500 dark:text-stone-400">What kind of habit?</p>
             <div className="flex gap-5">
               <button
+                type="button"
                 onClick={() => setAddHabit({ stage: "form-boolean", label: "" })}
                 className="text-sm text-stone-600 dark:text-stone-300 underline-offset-4 hover:underline"
               >
                 Boolean
               </button>
               <button
+                type="button"
                 onClick={() => setAddHabit({ stage: "form-numeric", label: "", unit: "", step: 1 })}
                 className="text-sm text-stone-600 dark:text-stone-300 underline-offset-4 hover:underline"
               >
                 Numeric
               </button>
             </div>
-            <button onClick={() => setAddHabit(null)} className={CANCEL_BTN}>
+            <button type="button" onClick={() => setAddHabit(null)} className={CANCEL_BTN}>
               Cancel
             </button>
           </div>
@@ -381,9 +416,7 @@ export default function ManageSection() {
                     type="text"
                     placeholder="e.g. km, pages, cups"
                     value={addHabit.unit}
-                    onChange={(e) =>
-                      setAddHabit({ ...addHabit, unit: e.target.value })
-                    }
+                    onChange={(e) => setAddHabit({ ...addHabit, unit: e.target.value })}
                     className={TEXT_INPUT}
                   />
                 </div>
@@ -404,6 +437,7 @@ export default function ManageSection() {
             )}
             <div className="flex gap-3 pt-1">
               <button
+                type="button"
                 onClick={saveNewHabit}
                 disabled={
                   !addHabit.label.trim() ||
@@ -413,17 +447,17 @@ export default function ManageSection() {
               >
                 Add
               </button>
-              <button onClick={() => setAddHabit(null)} className={CANCEL_BTN}>
+              <button type="button" onClick={() => setAddHabit(null)} className={CANCEL_BTN}>
                 Cancel
               </button>
             </div>
           </div>
         )}
-      </div>
+      </section>
 
-      {/* ── Joy Tags ──────────────────────────────────────────────── */}
-      <div>
-        <h3 className={SUBSECTION_LABEL}>Joy Tags</h3>
+      {/* ── Joy Tags ────────────────────────────────────────────────── */}
+      <section id="joy-tags">
+        <h2 className={SECTION_LABEL}>Joy Tags</h2>
 
         <div className="space-y-0.5">
           {/* Active tags */}
@@ -432,10 +466,10 @@ export default function ManageSection() {
               <div className="flex items-center justify-between gap-2 py-2">
                 <span className="text-sm text-stone-700 dark:text-stone-300">{t.label}</span>
                 <div className="flex shrink-0 gap-3">
-                  <button onClick={() => startEditTag(t)} className={ACTION_BTN}>
+                  <button type="button" onClick={() => startEditTag(t)} className={ACTION_BTN}>
                     Edit
                   </button>
-                  <button onClick={() => archiveTag(t.id)} className={ACTION_BTN}>
+                  <button type="button" onClick={() => archiveTag(t.id)} className={ARCHIVE_BTN}>
                     Archive
                   </button>
                 </div>
@@ -455,13 +489,14 @@ export default function ManageSection() {
                   </div>
                   <div className="flex gap-3 pt-1">
                     <button
+                      type="button"
                       onClick={saveEditTag}
                       disabled={!editingTag.label.trim()}
                       className={SAVE_BTN}
                     >
                       Save
                     </button>
-                    <button onClick={() => setEditingTag(null)} className={CANCEL_BTN}>
+                    <button type="button" onClick={() => setEditingTag(null)} className={CANCEL_BTN}>
                       Cancel
                     </button>
                   </div>
@@ -475,7 +510,7 @@ export default function ManageSection() {
             <div key={t.id}>
               <div className="flex items-center justify-between gap-2 py-2">
                 <span className="text-sm text-stone-400 dark:text-stone-600">{t.label}</span>
-                <button onClick={() => restoreTag(t.id)} className={ACTION_BTN}>
+                <button type="button" onClick={() => restoreTag(t.id)} className={ACTION_BTN}>
                   Restore
                 </button>
               </div>
@@ -491,13 +526,14 @@ export default function ManageSection() {
         {/* Add tag flow */}
         {!addingTag ? (
           <button
+            type="button"
             onClick={() => {
               closeAllEditors();
               setAddingTag(true);
             }}
             className="mt-3 text-sm text-stone-500 dark:text-stone-400 underline-offset-4 hover:underline transition-colors"
           >
-            Add tag
+            + Add tag
           </button>
         ) : (
           <div className={`mt-3 ${INLINE_FORM}`}>
@@ -513,6 +549,7 @@ export default function ManageSection() {
             </div>
             <div className="flex gap-3 pt-1">
               <button
+                type="button"
                 onClick={saveNewTag}
                 disabled={!newTagLabel.trim()}
                 className={SAVE_BTN}
@@ -520,6 +557,7 @@ export default function ManageSection() {
                 Add
               </button>
               <button
+                type="button"
                 onClick={() => {
                   setAddingTag(false);
                   setNewTagLabel("");
@@ -531,7 +569,7 @@ export default function ManageSection() {
             </div>
           </div>
         )}
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }

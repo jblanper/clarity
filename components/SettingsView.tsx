@@ -1,9 +1,9 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { exportBackup, importBackup } from "@/lib/transferData";
-import ManageSection from "@/components/ManageSection";
 import { getTheme, setTheme, type Theme } from "@/lib/theme";
 
 type ImportStatus =
@@ -20,20 +20,26 @@ export default function SettingsView() {
   const [importStatus, setImportStatus] = useState<ImportStatus>({ kind: "idle" });
   const [exportStatus, setExportStatus] = useState<ExportStatus>("idle");
   const [currentTheme, setCurrentTheme] = useState<Theme>("light");
+  // Where to go when the user taps back — resolved from ?back= on mount
+  const [backDest, setBackDest] = useState<"/" | "/history">("/");
 
-  // Read the saved theme on mount to reflect the active selection
   useEffect(() => {
     setCurrentTheme(getTheme());
+    const params = new URLSearchParams(window.location.search);
+    const back = params.get("back");
+    if (back === "/" || back === "/history") {
+      setBackDest(back);
+    }
   }, []);
 
-  // ── Theme ─────────────────────────────────────────────────────────
+  // ── Theme ─────────────────────────────────────────────────────────────
 
   const handleThemeChange = (theme: Theme) => {
     setTheme(theme);
     setCurrentTheme(theme);
   };
 
-  // ── Export ────────────────────────────────────────────────────────
+  // ── Export ────────────────────────────────────────────────────────────
 
   const handleExport = () => {
     try {
@@ -46,7 +52,7 @@ export default function SettingsView() {
     }
   };
 
-  // ── Import ────────────────────────────────────────────────────────
+  // ── Import ────────────────────────────────────────────────────────────
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -80,7 +86,8 @@ export default function SettingsView() {
       {/* ── Header ────────────────────────────────────────────────── */}
       <header className="mb-10 flex items-center gap-4">
         <button
-          onClick={() => router.back()}
+          type="button"
+          onClick={() => router.push(backDest)}
           aria-label="Go back"
           className="text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
         >
@@ -98,6 +105,7 @@ export default function SettingsView() {
         </h2>
         <div className="flex gap-6">
           <button
+            type="button"
             onClick={() => handleThemeChange("light")}
             className={`text-sm transition-colors ${
               currentTheme === "light"
@@ -108,6 +116,7 @@ export default function SettingsView() {
             Light
           </button>
           <button
+            type="button"
             onClick={() => handleThemeChange("dark")}
             className={`text-sm transition-colors ${
               currentTheme === "dark"
@@ -122,128 +131,143 @@ export default function SettingsView() {
 
       <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
 
-      {/* ── Manage ────────────────────────────────────────────────── */}
-      <div className="mb-10">
-        <ManageSection />
-      </div>
-
-      <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
-
-      {/* ── Export ────────────────────────────────────────────────── */}
+      {/* ── Your Data ─────────────────────────────────────────────── */}
       <section className="mb-10">
-        <h2 className="mb-1 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
-          Export
+        <h2 className="mb-4 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
+          Your data
         </h2>
-        <p className="mb-4 text-sm text-stone-500 dark:text-stone-400">
-          Download all your habit entries as a JSON backup file.
-        </p>
-        <button
-          onClick={handleExport}
-          className="w-full rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 py-4 text-sm tracking-widest text-stone-700 dark:text-stone-300 transition-colors hover:border-stone-300 dark:hover:border-stone-600 hover:bg-stone-50 dark:hover:bg-stone-800 active:bg-stone-100 dark:active:bg-stone-800"
-        >
-          Export backup
-        </button>
-        {exportStatus === "error" && (
-          <p className="mt-3 text-center text-sm text-red-700 dark:text-red-400">
-            Something went wrong. Please try again.
+
+        {/* Export */}
+        <div className="mb-6">
+          <p className="mb-4 text-sm text-stone-500 dark:text-stone-400">
+            Download all your habit entries as a JSON backup file.
           </p>
-        )}
-      </section>
-
-      <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
-
-      {/* ── Import ────────────────────────────────────────────────── */}
-      <section>
-        <h2 className="mb-1 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
-          Import
-        </h2>
-        <p className="mb-4 text-sm text-stone-500 dark:text-stone-400">
-          Restore entries from a backup file. Dates that already have an entry
-          will not be overwritten.
-        </p>
-
-        {/* Hidden file input — triggered by the styled button below */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".json,application/json"
-          onChange={handleFileChange}
-          className="sr-only"
-          aria-label="Choose a backup file"
-        />
-
-        {importStatus.kind === "idle" && (
           <button
-            onClick={() => fileInputRef.current?.click()}
+            type="button"
+            onClick={handleExport}
             className="w-full rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 py-4 text-sm tracking-widest text-stone-700 dark:text-stone-300 transition-colors hover:border-stone-300 dark:hover:border-stone-600 hover:bg-stone-50 dark:hover:bg-stone-800 active:bg-stone-100 dark:active:bg-stone-800"
           >
-            Choose file
+            Export backup
           </button>
-        )}
+          {exportStatus === "error" && (
+            <p className="mt-3 text-center text-sm text-red-700 dark:text-red-400">
+              Something went wrong. Please try again.
+            </p>
+          )}
+        </div>
 
-        {importStatus.kind === "ready" && (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between rounded-2xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 px-4 py-3">
-              <span className="truncate text-sm text-stone-600 dark:text-stone-400">
-                {importStatus.file.name}
-              </span>
+        {/* Import */}
+        <div>
+          <p className="mb-4 text-sm text-stone-500 dark:text-stone-400">
+            Restore entries from a backup file. Dates that already have an entry
+            will not be overwritten.
+          </p>
+
+          {/* Hidden file input — triggered by the styled button below */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json,application/json"
+            onChange={handleFileChange}
+            className="sr-only"
+            aria-label="Choose a backup file"
+          />
+
+          {importStatus.kind === "idle" && (
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="w-full rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 py-4 text-sm tracking-widest text-stone-700 dark:text-stone-300 transition-colors hover:border-stone-300 dark:hover:border-stone-600 hover:bg-stone-50 dark:hover:bg-stone-800 active:bg-stone-100 dark:active:bg-stone-800"
+            >
+              Choose file
+            </button>
+          )}
+
+          {importStatus.kind === "ready" && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between rounded-2xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 px-4 py-3">
+                <span className="truncate text-sm text-stone-600 dark:text-stone-400">
+                  {importStatus.file.name}
+                </span>
+                <button
+                  type="button"
+                  onClick={resetImport}
+                  aria-label="Remove selected file"
+                  className="ml-3 flex-shrink-0 text-stone-500 dark:text-stone-500 hover:text-stone-700 dark:hover:text-stone-300"
+                >
+                  ✕
+                </button>
+              </div>
               <button
-                onClick={resetImport}
-                aria-label="Remove selected file"
-                className="ml-3 flex-shrink-0 text-stone-500 dark:text-stone-500 hover:text-stone-700 dark:hover:text-stone-300"
+                type="button"
+                onClick={handleImport}
+                className="w-full rounded-2xl bg-stone-800 dark:bg-stone-200 py-4 text-sm tracking-widest text-white dark:text-stone-900 transition-colors hover:bg-stone-700 dark:hover:bg-stone-300 active:bg-stone-900 dark:active:bg-stone-100"
               >
-                ✕
+                Import
               </button>
             </div>
-            <button
-              onClick={handleImport}
-              className="w-full rounded-2xl bg-stone-800 dark:bg-stone-200 py-4 text-sm tracking-widest text-white dark:text-stone-900 transition-colors hover:bg-stone-700 dark:hover:bg-stone-300 active:bg-stone-900 dark:active:bg-stone-100"
-            >
-              Import
-            </button>
-          </div>
-        )}
+          )}
 
-        {importStatus.kind === "success" && (
-          <div className="space-y-3">
-            <div className="rounded-2xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 px-4 py-4 text-sm text-stone-600 dark:text-stone-400">
-              <p>
-                <span className="font-medium text-stone-800 dark:text-stone-200">
-                  {importStatus.imported}{" "}
-                  {importStatus.imported === 1 ? "entry" : "entries"} imported.
-                </span>
-              </p>
-              {importStatus.skipped > 0 && (
-                <p className="mt-1 text-stone-500 dark:text-stone-500">
-                  {importStatus.skipped}{" "}
-                  {importStatus.skipped === 1 ? "entry" : "entries"} already
-                  existed and were kept.
+          {importStatus.kind === "success" && (
+            <div className="space-y-3">
+              <div className="rounded-2xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 px-4 py-4 text-sm text-stone-600 dark:text-stone-400">
+                <p>
+                  <span className="font-medium text-stone-800 dark:text-stone-200">
+                    {importStatus.imported}{" "}
+                    {importStatus.imported === 1 ? "entry" : "entries"} imported.
+                  </span>
                 </p>
-              )}
+                {importStatus.skipped > 0 && (
+                  <p className="mt-1 text-stone-500 dark:text-stone-500">
+                    {importStatus.skipped}{" "}
+                    {importStatus.skipped === 1 ? "entry" : "entries"} already
+                    existed and were kept.
+                  </p>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={resetImport}
+                className="w-full rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 py-4 text-sm tracking-widest text-stone-700 dark:text-stone-300 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800"
+              >
+                Import another file
+              </button>
             </div>
-            <button
-              onClick={resetImport}
-              className="w-full rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 py-4 text-sm tracking-widest text-stone-700 dark:text-stone-300 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800"
-            >
-              Import another file
-            </button>
-          </div>
-        )}
+          )}
 
-        {importStatus.kind === "error" && (
-          <div className="space-y-3">
-            <p className="rounded-2xl border border-red-100 dark:border-red-900/30 bg-red-50 dark:bg-red-950/20 px-4 py-3 text-sm text-red-700 dark:text-red-400">
-              {importStatus.message}
-            </p>
-            <button
-              onClick={resetImport}
-              className="w-full rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 py-4 text-sm tracking-widest text-stone-700 dark:text-stone-300 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800"
-            >
-              Try again
-            </button>
-          </div>
-        )}
+          {importStatus.kind === "error" && (
+            <div className="space-y-3">
+              <p className="rounded-2xl border border-red-100 dark:border-red-900/30 bg-red-50 dark:bg-red-950/20 px-4 py-3 text-sm text-red-700 dark:text-red-400">
+                {importStatus.message}
+              </p>
+              <button
+                type="button"
+                onClick={resetImport}
+                className="w-full rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 py-4 text-sm tracking-widest text-stone-700 dark:text-stone-300 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800"
+              >
+                Try again
+              </button>
+            </div>
+          )}
+        </div>
       </section>
+
+      <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
+
+      {/* ── Manage ────────────────────────────────────────────────── */}
+      <section>
+        <h2 className="mb-4 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
+          Manage
+        </h2>
+        <Link
+          href={`/manage?settingsBack=${backDest}`}
+          className="flex items-center justify-between py-2 text-sm text-stone-700 dark:text-stone-300 transition-colors hover:text-stone-900 dark:hover:text-stone-100"
+        >
+          <span>Habits and joy tags</span>
+          <span className="text-stone-400 dark:text-stone-500">→</span>
+        </Link>
+      </section>
+
     </div>
   );
 }

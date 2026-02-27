@@ -11,8 +11,8 @@ const TABS = [
 export default function BottomNav() {
   const pathname = usePathname();
 
-  // Hide the nav on Settings and Edit pages — those have their own back navigation
-  if (pathname === "/settings" || pathname.startsWith("/edit/")) {
+  // Hide the nav on Settings, Manage, and Edit pages — those have their own back navigation
+  if (pathname === "/settings" || pathname === "/manage" || pathname.startsWith("/edit/")) {
     return null;
   }
 

@@ -47,7 +47,7 @@ export default function HistoryView() {
           History
         </h1>
         <Link
-          href="/settings"
+          href="/settings?back=/history"
           className="text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
         >
           Settings

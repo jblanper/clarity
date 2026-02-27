@@ -191,7 +191,7 @@ export default function CheckInForm({ date }: Props) {
           </Link>
         ) : (
           <Link
-            href="/settings"
+            href="/settings?back=/"
             className="mt-2 text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
           >
             Settings
