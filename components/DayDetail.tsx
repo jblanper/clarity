@@ -72,19 +72,37 @@ export default function DayDetail({ date, entry, onClose }: Props) {
     setTimeout(onClose, 300);
   };
 
-  // Derive display-ready slices from entry + configs.
-  // Include archived habits so historical entries display correctly.
-  const booleanHabits = configs.habits.filter((h) => h.type === "boolean");
-  const numericHabits = configs.habits.filter(
-    (h): h is NumericHabitConfig => h.type === "numeric"
+  // Build id → config lookup maps. Includes archived habits so historical
+  // entries display correctly. Unknown IDs (e.g. from imported backups) fall
+  // back to the raw ID string rather than being silently dropped.
+  const booleanHabitMap = new Map(
+    configs.habits
+      .filter((h) => h.type === "boolean")
+      .map((h) => [h.id, h])
+  );
+  const numericHabitMap = new Map(
+    configs.habits
+      .filter((h): h is NumericHabitConfig => h.type === "numeric")
+      .map((h) => [h.id, h])
   );
   const joyTagMap = new Map(configs.joyTags.map((t) => [t.id, t.label]));
 
+  // Derive display-ready slices by iterating the stored IDs in the entry,
+  // not the config list — this ensures unknown IDs are still surfaced.
   const checkedHabits = entry
-    ? booleanHabits.filter((h) => entry.booleanHabits[h.id] === true)
+    ? Object.entries(entry.booleanHabits)
+        .filter(([, checked]) => checked)
+        .map(([id]) => ({ id, label: booleanHabitMap.get(id)?.label ?? id }))
     : [];
   const loggedNumbers = entry
-    ? numericHabits.filter((h) => (entry.numericHabits[h.id] ?? 0) > 0)
+    ? Object.entries(entry.numericHabits)
+        .filter(([, value]) => value > 0)
+        .map(([id, value]) => ({
+          id,
+          label: numericHabitMap.get(id)?.label ?? id,
+          unit: numericHabitMap.get(id)?.unit ?? "",
+          value,
+        }))
     : [];
   const resolvedJoyTags = entry
     ? entry.joyTags.map((id) => joyTagMap.get(id) ?? id)
@@ -174,7 +192,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
                     {loggedNumbers.map((h) => (
                       <div key={h.id} className="flex items-baseline gap-2">
                         <span className="text-sm font-medium text-stone-800 dark:text-stone-200">
-                          {entry?.numericHabits[h.id] ?? 0}
+                          {h.value}
                         </span>
                         <span className="text-xs text-stone-500 dark:text-stone-500">{h.unit}</span>
                         <span className="text-sm text-stone-600 dark:text-stone-400">{h.label}</span>
