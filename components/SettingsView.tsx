@@ -310,7 +310,7 @@ export default function SettingsView() {
       <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
 
       {/* ── Manage ────────────────────────────────────────────────── */}
-      <section>
+      <section className="mb-10">
         <h2 className="mb-4 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
           Manage
         </h2>
@@ -319,6 +319,22 @@ export default function SettingsView() {
           className="inline-flex items-center gap-2 py-2 text-sm text-stone-700 dark:text-stone-300 transition-colors hover:text-stone-900 dark:hover:text-stone-100"
         >
           <span>Habits and moments</span>
+          <span className="text-stone-500 dark:text-stone-400"><Chevron direction="right" /></span>
+        </Link>
+      </section>
+
+      <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
+
+      {/* ── Help ──────────────────────────────────────────────────── */}
+      <section>
+        <h2 className="mb-4 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
+          Help
+        </h2>
+        <Link
+          href="/help"
+          className="inline-flex items-center gap-2 py-2 text-sm text-stone-700 dark:text-stone-300 transition-colors hover:text-stone-900 dark:hover:text-stone-100"
+        >
+          <span>How Clarity works</span>
           <span className="text-stone-500 dark:text-stone-400"><Chevron direction="right" /></span>
         </Link>
       </section>
