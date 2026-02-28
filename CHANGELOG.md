@@ -19,7 +19,7 @@
 
 ---
 
-## [v1.0.1] — 2026-01-??
+## [v1.0.1] — 2026-02-27
 
 ### Fixes & improvements
 - Replaced dynamic `/edit/[date]` route with `/edit?date=` query param for compatibility with static export
@@ -29,7 +29,7 @@
 
 ---
 
-## [v1.0.0] — 2026-01-??
+## [v1.0.0] — 2026-02-27
 
 ### Initial release
 - **Daily check-in form** — boolean habits, numeric habits, moments, and a free-text reflection
