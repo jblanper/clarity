@@ -5,7 +5,9 @@ import Link from "next/link";
 import { getAllEntries } from "@/lib/storage";
 import type { HabitEntry } from "@/types/entry";
 import CalendarHeatmap from "@/components/CalendarHeatmap";
+import type { HeatmapFilter } from "@/components/CalendarHeatmap";
 import DayDetail from "@/components/DayDetail";
+import FilterSheet from "@/components/FilterSheet";
 import FrequencyList, { type Period } from "@/components/FrequencyList";
 
 export default function HistoryView() {
@@ -15,6 +17,14 @@ export default function HistoryView() {
   const [viewedYear, setViewedYear] = useState(now.getFullYear());
   const [viewedMonth, setViewedMonth] = useState(now.getMonth());
   const [period, setPeriod] = useState<Period>("month");
+  const [activeFilter, setActiveFilter] = useState<HeatmapFilter | null>(null);
+  const [activeFilterLabel, setActiveFilterLabel] = useState("");
+  const [sheetOpen, setSheetOpen] = useState(false);
+
+  const handleFilterSelect = (filter: HeatmapFilter | null, label?: string) => {
+    setActiveFilter(filter);
+    setActiveFilterLabel(label ?? "");
+  };
 
   useEffect(() => {
     startTransition(() => setEntries(getAllEntries()));
@@ -65,13 +75,23 @@ export default function HistoryView() {
         entries={entries}
         selectedDate={selectedDate}
         onDayClick={handleDayClick}
+        filter={activeFilter}
         onMonthChange={(y, m) => { setViewedYear(y); setViewedMonth(m); }}
       />
 
       {/* ── Control row ──────────────────────────────────────── */}
       <div className="mt-6 flex items-center justify-between">
-        {/* TODO: habit/moment filter (Sprint 5b) */}
-        <div />
+        <button
+          type="button"
+          onClick={() => setSheetOpen(true)}
+          className={`max-w-[140px] truncate text-xs uppercase tracking-widest transition-colors ${
+            activeFilter
+              ? "text-amber-600 dark:text-amber-400"
+              : "text-stone-500 dark:text-stone-500 hover:text-stone-700 dark:hover:text-stone-300"
+          }`}
+        >
+          {activeFilter ? `${activeFilterLabel} ↓` : "All ↓"}
+        </button>
 
         {/* Period selector */}
         <div className="flex gap-4">
@@ -98,7 +118,16 @@ export default function HistoryView() {
         period={period}
         viewedYear={viewedYear}
         viewedMonth={viewedMonth}
+        activeFilter={activeFilter}
       />
+
+      {/* ── Filter sheet ──────────────────────────────────────── */}
+      {sheetOpen && (
+        <FilterSheet
+          onSelect={(f, label) => handleFilterSelect(f, label)}
+          onClose={() => setSheetOpen(false)}
+        />
+      )}
 
       {/* ── Day detail sheet ──────────────────────────────────── */}
       {selectedDate && (

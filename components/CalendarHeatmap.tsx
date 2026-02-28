@@ -7,7 +7,7 @@ import Chevron from "@/components/Chevron";
 
 /** Narrows the heatmap to a single habit or moment item. */
 export interface HeatmapFilter {
-  type: "boolean-habit" | "moment";
+  type: "boolean-habit" | "numeric-habit" | "moment";
   id: string;
 }
 
@@ -88,6 +88,11 @@ function computeCellColor(
     const fullL = isDark ? 65 : 50;
     if (filter.type === "boolean-habit") {
       return (entry.habits[filter.id]?.done ?? false)
+        ? `hsl(220, 55%, ${fullL}%)`
+        : muted;
+    }
+    if (filter.type === "numeric-habit") {
+      return (entry.numeric[filter.id] ?? 0) > 0
         ? `hsl(220, 55%, ${fullL}%)`
         : muted;
     }

@@ -8,6 +8,7 @@ import {
   DEFAULT_MOMENT_CONFIGS,
   type AppConfigs,
 } from "@/lib/habitConfig";
+import type { HeatmapFilter } from "@/components/CalendarHeatmap";
 
 export type Period = "month" | "3m" | "always";
 
@@ -16,6 +17,7 @@ interface Props {
   period: Period;
   viewedYear: number;
   viewedMonth: number;
+  activeFilter?: HeatmapFilter | null;
 }
 
 interface FrequencyItem {
@@ -25,7 +27,7 @@ interface FrequencyItem {
   count: number;
 }
 
-export default function FrequencyList({ entries, period, viewedYear, viewedMonth }: Props) {
+export default function FrequencyList({ entries, period, viewedYear, viewedMonth, activeFilter }: Props) {
   const [configs, setConfigs] = useState<AppConfigs>({
     habits: DEFAULT_HABIT_CONFIGS,
     moments: DEFAULT_MOMENT_CONFIGS,
@@ -93,14 +95,16 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
         </p>
       ) : (
         <ul>
-          {items.map((item) => (
+          {items.map((item) => {
+            const isActive = !!activeFilter && activeFilter.id === item.id;
+            return (
             <li key={item.id} className="py-3">
               <span
                 className={`text-sm ${
                   item.type === "moment"
                     ? "text-amber-700 dark:text-amber-400"
                     : "text-stone-700 dark:text-stone-300"
-                }`}
+                }${isActive ? " font-semibold border-b border-amber-500 dark:border-amber-400" : ""}`}
               >
                 {item.label}
               </span>
@@ -115,7 +119,8 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
                 />
               </div>
             </li>
-          ))}
+          );
+          })}
         </ul>
       )}
     </div>
