@@ -126,6 +126,23 @@ export default function CheckInForm({ date }: Props) {
   );
   const activeMoments = configs.moments.filter((m) => !m.archived);
 
+  // In edit mode: archived items that have recorded data for this day
+  const archivedBooleanWithData = isEditMode
+    ? configs.habits.filter(
+        (h): h is BooleanHabitConfig =>
+          h.type === "boolean" && h.archived && (fields.habits[h.id]?.done ?? false)
+      )
+    : [];
+  const archivedNumericWithData = isEditMode
+    ? configs.habits.filter(
+        (h): h is NumericHabitConfig =>
+          h.type === "numeric" && h.archived && (fields.numeric[h.id] ?? 0) > 0
+      )
+    : [];
+  const archivedMomentsWithData = isEditMode
+    ? configs.moments.filter((m) => m.archived && fields.moments.includes(m.id))
+    : [];
+
   const setHabit = (id: string, state: HabitState) => {
     setFields((prev) => ({
       ...prev,
@@ -267,6 +284,16 @@ export default function CheckInForm({ date }: Props) {
               onChange={(state) => setHabit(h.id, state)}
             />
           ))}
+          {archivedBooleanWithData.map((h) => (
+            <div key={h.id} className="pointer-events-none opacity-40">
+              <HabitToggle
+                label={h.label}
+                value={fields.habits[h.id] ?? { done: true, joy: false }}
+                joyByDefault={h.joyByDefault}
+                onChange={() => {}}
+              />
+            </div>
+          ))}
         </div>
       </section>
 
@@ -286,6 +313,17 @@ export default function CheckInForm({ date }: Props) {
               onChange={(value) => setNumericHabit(h.id, value)}
             />
           ))}
+          {archivedNumericWithData.map((h) => (
+            <div key={h.id} className="pointer-events-none opacity-40">
+              <NumberStepper
+                label={h.label}
+                unit={h.unit}
+                value={fields.numeric[h.id] ?? 0}
+                step={h.step}
+                onChange={() => {}}
+              />
+            </div>
+          ))}
         </div>
       </section>
 
@@ -302,6 +340,15 @@ export default function CheckInForm({ date }: Props) {
               selected={fields.moments.includes(m.id)}
               onToggle={() => toggleMoment(m.id)}
             />
+          ))}
+          {archivedMomentsWithData.map((m) => (
+            <div key={m.id} className="pointer-events-none opacity-40">
+              <MomentChip
+                label={m.label}
+                selected
+                onToggle={() => {}}
+              />
+            </div>
           ))}
 
           {isAddingMoment ? (
