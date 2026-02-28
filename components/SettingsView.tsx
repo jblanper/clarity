@@ -116,7 +116,7 @@ export default function SettingsView() {
       </header>
 
       {/* ── Theme ─────────────────────────────────────────────────── */}
-      <section className="mb-10">
+      <section className="mb-6">
         <h2 className="mb-4 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Theme
         </h2>
@@ -146,10 +146,10 @@ export default function SettingsView() {
         </div>
       </section>
 
-      <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
+      <div className="mb-6 border-t border-stone-100 dark:border-stone-800" />
 
       {/* ── Your Data ─────────────────────────────────────────────── */}
-      <section className="mb-10">
+      <section className="mb-6">
         <h2 className="mb-4 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Your data
         </h2>
@@ -307,10 +307,10 @@ export default function SettingsView() {
         </div>
       </section>
 
-      <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
+      <div className="mb-6 border-t border-stone-100 dark:border-stone-800" />
 
       {/* ── Manage ────────────────────────────────────────────────── */}
-      <section className="mb-10">
+      <section className="mb-6">
         <h2 className="mb-4 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
           Manage
         </h2>
@@ -323,7 +323,7 @@ export default function SettingsView() {
         </Link>
       </section>
 
-      <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
+      <div className="mb-6 border-t border-stone-100 dark:border-stone-800" />
 
       {/* ── Help ──────────────────────────────────────────────────── */}
       <section>
