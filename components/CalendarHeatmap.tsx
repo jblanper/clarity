@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, startTransition } from "react";
 import type { HabitEntry } from "@/types/entry";
 import { getConfigs, DEFAULT_HABIT_CONFIGS } from "@/lib/habitConfig";
 
@@ -132,11 +132,10 @@ function useIsDark(): boolean {
 
   useEffect(() => {
     const html = document.documentElement;
-    setIsDark(html.classList.contains("dark"));
+    const update = () => setIsDark(html.classList.contains("dark"));
 
-    const observer = new MutationObserver(() =>
-      setIsDark(html.classList.contains("dark"))
-    );
+    startTransition(update);
+    const observer = new MutationObserver(update);
     observer.observe(html, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
   }, []);
@@ -161,10 +160,12 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
     DEFAULT_HABIT_CONFIGS.filter((h) => h.type === "boolean" && !h.archived).length
   );
   useEffect(() => {
-    const configs = getConfigs();
-    setActiveHabitCount(
-      configs.habits.filter((h) => h.type === "boolean" && !h.archived).length
-    );
+    startTransition(() => {
+      const configs = getConfigs();
+      setActiveHabitCount(
+        configs.habits.filter((h) => h.type === "boolean" && !h.archived).length
+      );
+    });
   }, []);
 
   const entryMap = new Map(entries.map((e) => [e.date, e]));

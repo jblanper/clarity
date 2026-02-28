@@ -6,7 +6,7 @@ interface Props {
   onToggle: () => void;
 }
 
-export default function JoyTagChip({ label, selected, onToggle }: Props) {
+export default function MomentChip({ label, selected, onToggle }: Props) {
   return (
     <button
       type="button"

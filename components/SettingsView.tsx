@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, startTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { exportBackup, importBackup } from "@/lib/transferData";
@@ -31,11 +31,13 @@ export default function SettingsView() {
   const [backDest, setBackDest] = useState<"/" | "/history">("/");
 
   useEffect(() => {
-    setCurrentTheme(getTheme());
-    const back = sessionStorage.getItem("settings-back");
-    if (back === "/" || back === "/history") {
-      setBackDest(back);
-    }
+    startTransition(() => {
+      setCurrentTheme(getTheme());
+      const back = sessionStorage.getItem("settings-back");
+      if (back === "/" || back === "/history") {
+        setBackDest(back);
+      }
+    });
   }, []);
 
   // ── Theme ─────────────────────────────────────────────────────────────

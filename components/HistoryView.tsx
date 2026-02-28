@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, startTransition } from "react";
 import Link from "next/link";
 import { getAllEntries } from "@/lib/storage";
 import type { HabitEntry } from "@/types/entry";
@@ -12,7 +12,7 @@ export default function HistoryView() {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   useEffect(() => {
-    setEntries(getAllEntries());
+    startTransition(() => setEntries(getAllEntries()));
   }, []);
 
   // When returning from the edit page (/history?open=YYYY-MM-DD),
@@ -21,7 +21,7 @@ export default function HistoryView() {
     const params = new URLSearchParams(window.location.search);
     const openDate = params.get("open");
     if (openDate) {
-      setSelectedDate(openDate);
+      startTransition(() => setSelectedDate(openDate));
       window.history.replaceState({}, "", "/history");
     }
   }, []);

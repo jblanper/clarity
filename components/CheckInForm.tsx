@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, startTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { saveEntry, getEntry, sanitizeHabitState } from "@/lib/storage";
@@ -15,7 +15,7 @@ import {
 import type { HabitEntry, HabitState } from "@/types/entry";
 import HabitToggle from "@/components/HabitToggle";
 import NumberStepper from "@/components/NumberStepper";
-import JoyTagChip from "@/components/JoyTagChip";
+import MomentChip from "@/components/MomentChip";
 
 interface Props {
   /** When provided, the form runs in edit mode for that specific date. */
@@ -97,14 +97,14 @@ export default function CheckInForm({ date }: Props) {
   });
 
   useEffect(() => {
-    setConfigs(getConfigs());
+    startTransition(() => setConfigs(getConfigs()));
   }, []);
 
   // Pre-populate form with any existing entry for the target date
   useEffect(() => {
     const existing = getEntry(targetDate);
     if (existing !== null) {
-      setFields(toFormFields(existing));
+      startTransition(() => setFields(toFormFields(existing)));
     }
   }, [targetDate]);
 
@@ -253,7 +253,7 @@ export default function CheckInForm({ date }: Props) {
         </h2>
         <div className="flex flex-wrap gap-2">
           {activeMoments.map((m) => (
-            <JoyTagChip
+            <MomentChip
               key={m.id}
               label={m.label}
               selected={fields.moments.includes(m.id)}

@@ -9,8 +9,8 @@ gamified. You open it once a day, log how things went, and close it.
 - **Daily check-in form** — log each day's habits, numbers, joy moments, and a reflection note
 - **Boolean habits** — toggle switches (default: Meditation, Exercise, Reading, Journaling, Drawing)
 - **Numeric habits** — steppers with custom units (default: Sleep/hrs, Water/glasses, Screen time/hrs, Coffee/cups, Decaf coffee/cups)
-- **Joy tags** — a multi-select chip grid (12 defaults; fully customisable)
-- **Habit customisation** — add, rename, archive, and restore habits and joy tags in the Manage page
+- **Moments** — a multi-select chip grid (4 defaults; fully customisable)
+- **Habit customisation** — add, rename, archive, and restore habits and moments in the Manage page
 - **Reflection** — a free-text textarea for end-of-day notes
 - **Persistence** — all entries saved to localStorage, pre-populated on return visits
 - **History** — calendar heatmap (month view, year navigation) showing entry intensity by habits + joy
@@ -21,7 +21,7 @@ gamified. You open it once a day, log how things went, and close it.
 - **Export** — download all entries and configs as a formatted `habits-backup.json` file
 - **Import** — upload a backup file; entries are merged (existing dates skipped), configs are replaced
 - **Settings** — theme toggle and data export/import; accessible from both Today and History headers
-- **Manage** — dedicated page for habit and joy tag management; accessible only from Settings
+- **Manage** — dedicated page for habit and moment management; accessible only from Settings
 
 ## Style & Vibes
 - **Calm and minimal** — no gamification, no streaks, no pressure. Just quiet logging.
@@ -122,11 +122,14 @@ in a `useEffect`. See `app/edit/page.tsx` as the established pattern.
 
 - **BottomNav** (`components/BottomNav.tsx`) — fixed bottom bar, 56px + safe-area inset.
   Returns `null` on `/settings`, `/manage`, and `/edit`. Uses `usePathname()` for active state.
+- **Page headers** use `flex items-start justify-between` — title on the left, back/nav link
+  top-right in `text-xs uppercase tracking-widest text-stone-600` style (e.g. `← back`,
+  `← history`, `Settings`). This is the consistent pattern across Settings, Edit, and Today.
 - **Settings** is reachable from both Today and History headers (top-right, same muted style).
-  Its back button uses `router.push(backDest)` where `backDest` is read from `sessionStorage`
+  Its `← back` button uses `router.push(backDest)` where `backDest` is read from `sessionStorage`
   key `"settings-back"` on mount (written by the caller before navigating). Defaults to `"/"`.
   This ensures the back button never lands on `/manage` even if that was the last history entry.
-- **Manage** is only reachable from the "Habits and joy tags →" row inside Settings.
+- **Manage** is only reachable from the "Habits and moments →" row inside Settings.
   Its `← Settings` link goes to plain `/settings`; the `sessionStorage` key already holds the
   correct origin so Settings back nav resolves correctly without any extra params.
 - **DayDetail → Edit** flow: Edit link navigates to `/edit?date=[date]`. On save, `router.push`
@@ -147,8 +150,8 @@ components/
   CheckInForm.tsx       # Check-in form (client) — today + edit mode via date? prop
   HabitToggle.tsx       # iOS-style boolean toggle (client)
   NumberStepper.tsx     # −/input/+ numeric stepper; min/max optional (default 0/∞)
-  JoyTagChip.tsx        # Selectable pill chip (client)
-  ManageView.tsx        # Habit + joy tag management page (add/edit/archive/restore)
+  MomentChip.tsx        # Selectable pill chip (client)
+  ManageView.tsx        # Habit + moment management page (add/edit/archive/restore)
   SettingsView.tsx      # Settings page: Theme → Your Data → Manage nav row
   CalendarHeatmap.tsx   # Month heatmap with year/month nav, HSL color blend (client)
                         #   Cells: h-11 w-11 (44px), gap-1.5, rounded-md
@@ -176,7 +179,7 @@ types/
 | Key | Contents |
 |-----|----------|
 | `clarity_entries` | `Record<string, HabitEntry>` — date-keyed map of all logged days |
-| `clarity-configs` | `AppConfigs` — habit and joy tag config; falls back to defaults if absent |
+| `clarity-configs` | `AppConfigs` — habit and moment config; falls back to defaults if absent |
 | `clarity-theme` | `"light"` \| `"dark"` |
 
 ### HabitEntry (`types/entry.ts`)
@@ -184,11 +187,16 @@ Habit values are keyed by UUID, not by label. Only habits the user has touched a
 (sparse records — never store zeroes for untouched habits).
 
 ```ts
+interface HabitState {
+  done: boolean   // habit was completed
+  joy: boolean    // habit brought joy (subset of done)
+}
+
 interface HabitEntry {
   date: string                        // YYYY-MM-DD, primary key
-  booleanHabits: Record<string, boolean>  // UUID → true/false
-  numericHabits: Record<string, number>   // UUID → value
-  joyTags: string[]                   // array of selected tag UUIDs
+  habits: Record<string, HabitState>  // UUID → { done, joy }
+  numeric: Record<string, number>     // UUID → value
+  moments: string[]                   // array of selected moment UUIDs
   reflection: string
   lastEdited?: string                 // ISO timestamp, set on edit
 }
@@ -198,19 +206,18 @@ interface HabitEntry {
 ```ts
 interface AppConfigs {
   habits: HabitConfig[]     // BooleanHabitConfig | NumericHabitConfig
-  joyTags: JoyTagConfig[]
+  moments: MomentConfig[]
 }
 ```
 - `getConfigs()` reads from `clarity-configs`, falls back to `DEFAULT_HABIT_CONFIGS` +
-  `DEFAULT_JOY_TAG_CONFIGS` if the key is absent or malformed.
+  `DEFAULT_MOMENT_CONFIGS` if the key is absent or malformed.
 - `saveConfigs(configs)` writes the full object atomically.
-- **Never call `saveHabitConfigs` / `saveJoyTagConfigs` separately** — they don't exist.
-  Always read-modify-write the full `AppConfigs`.
+- Always read-modify-write the full `AppConfigs` — there are no partial save helpers.
 
 ### Default UUIDs
-Default habits and tags use stable hardcoded IDs (`00000000-0000-4000-8000-00000000000X`)
-so entries always resolve to the right config across sessions. IDs 1–5 are boolean habits,
-6–10 are numeric habits, 11–22 are joy tags. User-created items get `crypto.randomUUID()`.
+Default habits and moments use stable hardcoded IDs (`00000000-0000-4000-8000-00000000000X`)
+so entries always resolve to the right config across sessions. IDs 1–4 are boolean habits,
+6–9 are numeric habits, 11–14 are moments. User-created items get `crypto.randomUUID()`.
 
 ### Archived configs
 Archived habits/tags (`archived: true`) are hidden from the check-in form but kept in
@@ -222,7 +229,7 @@ that has been used in an entry.
 interface ExportFile {
   version: 1
   exportedAt: string        // ISO timestamp
-  configs: AppConfigs       // full habit + joy tag config
+  configs: AppConfigs       // full habit + moment config
   entries: HabitEntry[]
 }
 ```
@@ -237,8 +244,8 @@ interface ExportFile {
   Never add interactivity directly to `app/` files. Exception: `app/edit/page.tsx` is itself
   a client component because it must read `window.location.search` on mount (see static export
   constraint below).
-- **`lib/habitConfig.ts` is the source of truth** for habit and joy tag config. If you add or
-  change a default habit or tag, update it there first. `lib/habits.ts` now only contains
+- **`lib/habitConfig.ts` is the source of truth** for habit and moment config. If you add or
+  change a default habit or moment, update it there first. `lib/habits.ts` now only contains
   `createEmptyEntry()` and should not grow.
 - **Date handling**: build YYYY-MM-DD strings from `getFullYear()`/`getMonth()`/`getDate()`,
   never from `toISOString().split('T')[0]` (UTC offset causes wrong date in some timezones).
@@ -276,7 +283,7 @@ hydration mismatches and localStorage-during-SSR errors:
 ```ts
 const [configs, setConfigs] = useState<AppConfigs>({
   habits: DEFAULT_HABIT_CONFIGS,
-  joyTags: DEFAULT_JOY_TAG_CONFIGS,
+  moments: DEFAULT_MOMENT_CONFIGS,
 });
 useEffect(() => { setConfigs(getConfigs()); }, []);
 ```
@@ -286,7 +293,7 @@ then replace with saved values on mount. Components using this pattern:
 `CheckInForm`, `DayDetail`, `CalendarHeatmap`, `ManageView`.
 
 ### ManageView behaviour
-- All inline editors (edit habit, edit tag, add habit, add tag) are mutually exclusive —
+- All inline editors (edit habit, edit moment, add habit, add moment) are mutually exclusive —
   opening any one closes all others via `closeAllEditors()`.
 - The `justArchivedId` state shows the "Archived. Past entries are preserved." note
   on the most recently archived item; any other action clears it.
@@ -294,8 +301,8 @@ then replace with saved values on mount. Components using this pattern:
   per the design spec for this page.
 - **Archive buttons** use `text-amber-700 dark:text-amber-500` to distinguish them from Edit
   without implying danger (red would feel too destructive for a reversible action).
-- A "Jump to Joy Tags ↓" anchor link (`href="#joy-tags"`) sits below the header for quick
-  navigation when the habit list is long. The Joy Tags section has `id="joy-tags"`.
+- A "Jump to Moments ↓" anchor link (`href="#moments"`) sits below the header for quick
+  navigation when the habit list is long. The Moments section has `id="moments"`.
 
 ### Save flow (CheckInForm)
 The Save button steps through three states on submit:
@@ -315,7 +322,7 @@ The Save button steps through three states on submit:
   - Edit form → `/history?open=${date}` (reopens the day detail)
 
 ### DayDetail resolution pattern
-DayDetail resolves habit and joy tag labels by **iterating the entry's stored UUIDs**
+DayDetail resolves habit and moment labels by **iterating the entry's stored UUIDs**
 (not the config list), then looking each up in an `id → config` Map. This ensures:
 - Archived habits are included (the Map is built from all configs, not just active ones).
 - Unknown IDs (e.g. from an imported backup with different defaults) are surfaced with
@@ -371,7 +378,7 @@ The words in the app should feel as considered as the design. Calm, human, never
 - **Always add `type="button"` to every `<button>` that is not a form submit.** In HTML,
   `<button>` defaults to `type="submit"`, so any untyped button inside a `<form>` will
   trigger form submission on click. This applies to toggle switches (`HabitToggle`),
-  chips (`JoyTagChip`), stepper arrows (`NumberStepper`), and any future interactive
+  chips (`MomentChip`), stepper arrows (`NumberStepper`), and any future interactive
   button rendered inside `CheckInForm` or similar form wrappers.
 
 ### Comments

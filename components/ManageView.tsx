@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, startTransition } from "react";
 import {
   getConfigs,
   saveConfigs,
@@ -76,7 +76,7 @@ export default function ManageView() {
   const [justArchivedId, setJustArchivedId] = useState<string | null>(null);
 
   useEffect(() => {
-    setConfigs(getConfigs());
+    startTransition(() => setConfigs(getConfigs()));
   }, []);
 
   const activeHabits = configs.habits.filter((h) => !h.archived);

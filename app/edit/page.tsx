@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, startTransition } from "react";
 import CheckInForm from "@/components/CheckInForm";
 
 export default function EditPage() {
@@ -10,7 +10,7 @@ export default function EditPage() {
   // route, which is incompatible with Next.js static export.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    setDate(params.get("date"));
+    startTransition(() => setDate(params.get("date")));
   }, []);
 
   // Render nothing until the date is resolved to avoid a brief flash in

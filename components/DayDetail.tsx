@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, startTransition } from "react";
 import Link from "next/link";
 import type { HabitEntry } from "@/types/entry";
 import {
@@ -51,7 +51,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
   });
 
   useEffect(() => {
-    setConfigs(getConfigs());
+    startTransition(() => setConfigs(getConfigs()));
   }, []);
 
   // Trigger slide-up on next tick so the CSS transition fires from the initial state
