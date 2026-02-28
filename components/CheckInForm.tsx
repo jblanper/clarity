@@ -6,11 +6,13 @@ import { useRouter } from "next/navigation";
 import { saveEntry, getEntry, sanitizeHabitState } from "@/lib/storage";
 import {
   getConfigs,
+  saveConfigs,
   DEFAULT_HABIT_CONFIGS,
   DEFAULT_MOMENT_CONFIGS,
   type AppConfigs,
   type BooleanHabitConfig,
   type NumericHabitConfig,
+  type MomentConfig,
 } from "@/lib/habitConfig";
 import type { HabitEntry, HabitState } from "@/types/entry";
 import HabitToggle from "@/components/HabitToggle";
@@ -147,6 +149,41 @@ export default function CheckInForm({ date }: Props) {
     }));
   };
 
+  // ── Inline add-moment state ──────────────────────────────────────────────
+  const [isAddingMoment, setIsAddingMoment] = useState(false);
+  const [newMomentLabel, setNewMomentLabel] = useState("");
+  const [addMomentError, setAddMomentError] = useState<string | null>(null);
+
+  const dismissAddMoment = () => {
+    setIsAddingMoment(false);
+    setNewMomentLabel("");
+    setAddMomentError(null);
+  };
+
+  /** Validates, persists, and selects a new moment without leaving the form. */
+  const handleAddMoment = () => {
+    const label = newMomentLabel.trim();
+    if (!label) {
+      setAddMomentError("Please enter a name.");
+      return;
+    }
+    const isDuplicate = configs.moments.some(
+      (m) => m.label.toLowerCase() === label.toLowerCase()
+    );
+    if (isDuplicate) {
+      setAddMomentError("A moment with that name already exists.");
+      return;
+    }
+    const newMoment: MomentConfig = { id: crypto.randomUUID(), label, archived: false };
+    const updated: AppConfigs = { ...configs, moments: [...configs.moments, newMoment] };
+    saveConfigs(updated);
+    setConfigs(updated);
+    setFields((prev) => ({ ...prev, moments: [...prev.moments, newMoment.id] }));
+    setNewMomentLabel("");
+    setAddMomentError(null);
+    setIsAddingMoment(false);
+  };
+
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     if (saveState !== "idle") return;
@@ -266,6 +303,53 @@ export default function CheckInForm({ date }: Props) {
               onToggle={() => toggleMoment(m.id)}
             />
           ))}
+
+          {isAddingMoment ? (
+            <div className="basis-full mt-1 flex flex-col gap-1.5">
+              <div className="flex items-center gap-2">
+                <input
+                  autoFocus
+                  type="text"
+                  value={newMomentLabel}
+                  onChange={(e) => {
+                    setNewMomentLabel(e.target.value);
+                    setAddMomentError(null);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") { e.preventDefault(); handleAddMoment(); }
+                    if (e.key === "Escape") dismissAddMoment();
+                  }}
+                  placeholder="Moment name"
+                  className="flex-1 rounded-full border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-2 text-sm text-stone-700 dark:text-stone-300 placeholder-stone-400 dark:placeholder-stone-600 focus:border-stone-500 dark:focus:border-stone-500 focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={handleAddMoment}
+                  className="rounded-full bg-stone-800 dark:bg-stone-200 px-4 py-2 text-sm text-white dark:text-stone-900 transition-colors hover:bg-stone-700 dark:hover:bg-stone-300"
+                >
+                  Add
+                </button>
+                <button
+                  type="button"
+                  onClick={dismissAddMoment}
+                  className="text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
+                >
+                  ✕
+                </button>
+              </div>
+              {addMomentError && (
+                <p className="px-1 text-xs text-red-700 dark:text-red-400">{addMomentError}</p>
+              )}
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setIsAddingMoment(true)}
+              className="rounded-full border border-dashed border-stone-300 dark:border-stone-600 bg-transparent px-4 py-2 text-sm text-stone-400 dark:text-stone-500 transition-colors hover:border-stone-400 dark:hover:border-stone-500 hover:text-stone-500 dark:hover:text-stone-400"
+            >
+              ＋ New moment
+            </button>
+          )}
         </div>
       </section>
 
