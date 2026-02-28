@@ -1,5 +1,16 @@
 # Changelog
 
+## [v2.0.1] — 2026-02-28
+
+### Improvements
+- **Help page** — new page explaining how Clarity works, covering habits and moments, the joy layer, numeric habits, history, data storage, and design philosophy; accessible from Settings
+- **Settings section order** — sections now appear in the sequence: Manage, Theme, Your Data, Help, Reset
+- **Reset promoted** — Reset to factory defaults is now its own top-level section in Settings rather than a subsection of Your Data
+- **BottomNav hidden on Help** — the Help page follows the same navigation pattern as Settings and Manage: back link top-right, no bottom navigation bar
+- **Spacing refinements** — inter-section spacing adjusted on both the Settings and Help pages
+
+---
+
 ## [v2.0.0] — 2026-02-28
 
 ### New features
