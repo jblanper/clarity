@@ -26,7 +26,7 @@ export default function HelpView() {
       </header>
 
       {/* ── What is Clarity ───────────────────────────────────────── */}
-      <section className="mb-10">
+      <section className="mb-8">
         <h2 className={SECTION_LABEL}>What is Clarity</h2>
         <p className={BODY}>
           Clarity is a personal daily tracker for habits, numbers, moments, and
@@ -44,7 +44,7 @@ export default function HelpView() {
       <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
 
       {/* ── Habits and Moments ────────────────────────────────────── */}
-      <section className="mb-10">
+      <section className="mb-8">
         <h2 className={SECTION_LABEL}>Habits and Moments</h2>
         <p className={BODY}>
           The most important distinction in Clarity is between a Habit and a
@@ -72,7 +72,7 @@ export default function HelpView() {
       <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
 
       {/* ── The Joy Layer ─────────────────────────────────────────── */}
-      <section className="mb-10">
+      <section className="mb-8">
         <h2 className={SECTION_LABEL}>The Joy Layer</h2>
         <p className={BODY}>
           Boolean habits — the ones you either did or didn&apos;t do — have a third
@@ -95,7 +95,7 @@ export default function HelpView() {
       <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
 
       {/* ── Numeric Habits ────────────────────────────────────────── */}
-      <section className="mb-10">
+      <section className="mb-8">
         <h2 className={SECTION_LABEL}>Numeric Habits</h2>
         <p className={BODY}>
           Some things are better tracked with a number — hours of sleep, cups
@@ -108,7 +108,7 @@ export default function HelpView() {
       <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
 
       {/* ── The History View ──────────────────────────────────────── */}
-      <section className="mb-10">
+      <section className="mb-8">
         <h2 className={SECTION_LABEL}>The History View</h2>
         <p className={BODY}>
           The History page shows a calendar heatmap of your entries. Days are
@@ -128,7 +128,7 @@ export default function HelpView() {
       <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
 
       {/* ── Your Data ─────────────────────────────────────────────── */}
-      <section className="mb-10">
+      <section className="mb-8">
         <h2 className={SECTION_LABEL}>Your Data</h2>
         <p className={BODY}>
           Everything is stored on your device. Nothing is sent anywhere. You
@@ -147,7 +147,7 @@ export default function HelpView() {
       <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
 
       {/* ── A Note on Design ──────────────────────────────────────── */}
-      <section className="mb-10">
+      <section className="mb-8">
         <h2 className={SECTION_LABEL}>A Note on Design</h2>
         <p className={BODY}>
           Clarity was designed to feel like opening a beloved notebook — warm,

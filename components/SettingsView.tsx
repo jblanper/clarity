@@ -115,8 +115,24 @@ export default function SettingsView() {
         </button>
       </header>
 
+      {/* ── Manage ────────────────────────────────────────────────── */}
+      <section className="mb-8">
+        <h2 className="mb-4 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
+          Manage
+        </h2>
+        <Link
+          href="/manage"
+          className="inline-flex items-center gap-2 py-2 text-sm text-stone-700 dark:text-stone-300 transition-colors hover:text-stone-900 dark:hover:text-stone-100"
+        >
+          <span>Habits and moments</span>
+          <span className="text-stone-500 dark:text-stone-400"><Chevron direction="right" /></span>
+        </Link>
+      </section>
+
+      <div className="mb-8 border-t border-stone-100 dark:border-stone-800" />
+
       {/* ── Theme ─────────────────────────────────────────────────── */}
-      <section className="mb-6">
+      <section className="mb-8">
         <h2 className="mb-4 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Theme
         </h2>
@@ -146,10 +162,10 @@ export default function SettingsView() {
         </div>
       </section>
 
-      <div className="mb-6 border-t border-stone-100 dark:border-stone-800" />
+      <div className="mb-8 border-t border-stone-100 dark:border-stone-800" />
 
       {/* ── Your Data ─────────────────────────────────────────────── */}
-      <section className="mb-6">
+      <section className="mb-8">
         <h2 className="mb-4 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Your data
         </h2>
@@ -267,66 +283,12 @@ export default function SettingsView() {
             </div>
           )}
         </div>
-
-        {/* Reset */}
-        <div className="mt-8">
-          <h3 className="mb-3 text-xs uppercase tracking-widest text-stone-400">
-            Reset
-          </h3>
-          {!resetConfirming ? (
-            <button
-              type="button"
-              onClick={() => setResetConfirming(true)}
-              className="text-sm text-amber-700 dark:text-amber-500 transition-colors hover:text-amber-900 dark:hover:text-amber-300"
-            >
-              Reset to factory defaults
-            </button>
-          ) : (
-            <div className="space-y-3">
-              <p className="text-xs text-stone-500 dark:text-stone-400">
-                This will delete all entries and restore default habits and moments.
-              </p>
-              <div className="flex gap-5">
-                <button
-                  type="button"
-                  onClick={handleReset}
-                  className="text-sm text-amber-700 dark:text-amber-500 transition-colors hover:text-amber-900 dark:hover:text-amber-300"
-                >
-                  Yes, reset everything
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setResetConfirming(false)}
-                  className="text-sm text-stone-400 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
       </section>
 
-      <div className="mb-6 border-t border-stone-100 dark:border-stone-800" />
-
-      {/* ── Manage ────────────────────────────────────────────────── */}
-      <section className="mb-6">
-        <h2 className="mb-4 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
-          Manage
-        </h2>
-        <Link
-          href="/manage"
-          className="inline-flex items-center gap-2 py-2 text-sm text-stone-700 dark:text-stone-300 transition-colors hover:text-stone-900 dark:hover:text-stone-100"
-        >
-          <span>Habits and moments</span>
-          <span className="text-stone-500 dark:text-stone-400"><Chevron direction="right" /></span>
-        </Link>
-      </section>
-
-      <div className="mb-6 border-t border-stone-100 dark:border-stone-800" />
+      <div className="mb-8 border-t border-stone-100 dark:border-stone-800" />
 
       {/* ── Help ──────────────────────────────────────────────────── */}
-      <section>
+      <section className="mb-8">
         <h2 className="mb-4 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
           Help
         </h2>
@@ -337,6 +299,46 @@ export default function SettingsView() {
           <span>How Clarity works</span>
           <span className="text-stone-500 dark:text-stone-400"><Chevron direction="right" /></span>
         </Link>
+      </section>
+
+      <div className="mb-8 border-t border-stone-100 dark:border-stone-800" />
+
+      {/* ── Reset ─────────────────────────────────────────────────── */}
+      <section>
+        <h3 className="mb-3 text-xs uppercase tracking-widest text-stone-400">
+          Reset
+        </h3>
+        {!resetConfirming ? (
+          <button
+            type="button"
+            onClick={() => setResetConfirming(true)}
+            className="text-sm text-amber-700 dark:text-amber-500 transition-colors hover:text-amber-900 dark:hover:text-amber-300"
+          >
+            Reset to factory defaults
+          </button>
+        ) : (
+          <div className="space-y-3">
+            <p className="text-xs text-stone-500 dark:text-stone-400">
+              This will delete all entries and restore default habits and moments.
+            </p>
+            <div className="flex gap-5">
+              <button
+                type="button"
+                onClick={handleReset}
+                className="text-sm text-amber-700 dark:text-amber-500 transition-colors hover:text-amber-900 dark:hover:text-amber-300"
+              >
+                Yes, reset everything
+              </button>
+              <button
+                type="button"
+                onClick={() => setResetConfirming(false)}
+                className="text-sm text-stone-400 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
       </section>
 
     </div>
