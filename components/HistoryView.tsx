@@ -6,10 +6,15 @@ import { getAllEntries } from "@/lib/storage";
 import type { HabitEntry } from "@/types/entry";
 import CalendarHeatmap from "@/components/CalendarHeatmap";
 import DayDetail from "@/components/DayDetail";
+import FrequencyList, { type Period } from "@/components/FrequencyList";
 
 export default function HistoryView() {
   const [entries, setEntries] = useState<HabitEntry[]>([]);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const now = new Date();
+  const [viewedYear, setViewedYear] = useState(now.getFullYear());
+  const [viewedMonth, setViewedMonth] = useState(now.getMonth());
+  const [period, setPeriod] = useState<Period>("month");
 
   useEffect(() => {
     startTransition(() => setEntries(getAllEntries()));
@@ -60,6 +65,39 @@ export default function HistoryView() {
         entries={entries}
         selectedDate={selectedDate}
         onDayClick={handleDayClick}
+        onMonthChange={(y, m) => { setViewedYear(y); setViewedMonth(m); }}
+      />
+
+      {/* ── Control row ──────────────────────────────────────── */}
+      <div className="mt-6 flex items-center justify-between">
+        {/* TODO: habit/moment filter (Sprint 5b) */}
+        <div />
+
+        {/* Period selector */}
+        <div className="flex gap-4">
+          {(["month", "3m", "always"] as const).map((p) => (
+            <button
+              key={p}
+              type="button"
+              onClick={() => setPeriod(p)}
+              className={`text-xs uppercase tracking-widest transition-colors ${
+                period === p
+                  ? "text-amber-600 dark:text-amber-400"
+                  : "text-stone-500 dark:text-stone-500 hover:text-stone-700 dark:hover:text-stone-300"
+              }`}
+            >
+              {p === "month" ? "Month" : p === "3m" ? "3M" : "Always"}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Frequency list ────────────────────────────────────── */}
+      <FrequencyList
+        entries={entries}
+        period={period}
+        viewedYear={viewedYear}
+        viewedMonth={viewedMonth}
       />
 
       {/* ── Day detail sheet ──────────────────────────────────── */}

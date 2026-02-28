@@ -17,6 +17,7 @@ interface Props {
   onDayClick: (date: string) => void;
   /** When set, colors each cell relative to that one item rather than the full overview. */
   filter?: HeatmapFilter | null;
+  onMonthChange?: (year: number, month: number) => void;
 }
 
 const MONTH_NAMES = [
@@ -144,7 +145,7 @@ function useIsDark(): boolean {
   return isDark;
 }
 
-export default function CalendarHeatmap({ entries, selectedDate, onDayClick, filter = null }: Props) {
+export default function CalendarHeatmap({ entries, selectedDate, onDayClick, filter = null, onMonthChange }: Props) {
   const today = getTodayString();
   const now = new Date();
   const currentYear = now.getFullYear();
@@ -175,29 +176,37 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
 
   const prevMonth = () => {
     if (year <= minYear && month === 0) return;
-    if (month === 0) { setMonth(11); setYear((y) => y - 1); }
-    else setMonth((m) => m - 1);
+    const newYear = month === 0 ? year - 1 : year;
+    const newMonth = month === 0 ? 11 : month - 1;
+    setYear(newYear);
+    setMonth(newMonth);
+    onMonthChange?.(newYear, newMonth);
   };
 
   const nextMonth = () => {
     if (isAtCurrentMonth) return;
-    if (month === 11) { setMonth(0); setYear((y) => y + 1); }
-    else setMonth((m) => m + 1);
+    const newYear = month === 11 ? year + 1 : year;
+    const newMonth = month === 11 ? 0 : month + 1;
+    setYear(newYear);
+    setMonth(newMonth);
+    onMonthChange?.(newYear, newMonth);
   };
 
   const prevYear = () => {
     if (year <= minYear) return;
-    setYear((y) => y - 1);
+    const newYear = year - 1;
+    setYear(newYear);
+    onMonthChange?.(newYear, month);
   };
 
   const nextYear = () => {
     if (year >= currentYear) return;
     const newYear = year + 1;
-    setYear(newYear);
     // Clamp month if jumping into the current year past today's month
-    if (newYear === currentYear && month > currentMonth) {
-      setMonth(currentMonth);
-    }
+    const newMonth = newYear === currentYear && month > currentMonth ? currentMonth : month;
+    setYear(newYear);
+    setMonth(newMonth);
+    onMonthChange?.(newYear, newMonth);
   };
 
   return (
