@@ -18,16 +18,17 @@ interface Props {
   viewedYear: number;
   viewedMonth: number;
   activeFilter?: HeatmapFilter | null;
+  onFilterChange?: (filter: HeatmapFilter | null) => void;
 }
 
 interface FrequencyItem {
   id: string;
   label: string;
-  type: "habit" | "moment";
+  type: "boolean-habit" | "numeric-habit" | "moment";
   count: number;
 }
 
-export default function FrequencyList({ entries, period, viewedYear, viewedMonth, activeFilter }: Props) {
+export default function FrequencyList({ entries, period, viewedYear, viewedMonth, activeFilter, onFilterChange }: Props) {
   const [configs, setConfigs] = useState<AppConfigs>({
     habits: DEFAULT_HABIT_CONFIGS,
     moments: DEFAULT_MOMENT_CONFIGS,
@@ -68,13 +69,16 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
     }
   }
 
-  const habitMap = new Map(configs.habits.map((h) => [h.id, h.label]));
+  const habitLabelMap = new Map(configs.habits.map((h) => [h.id, h.label]));
+  const habitTypeMap = new Map(
+    configs.habits.map((h) => [h.id, h.type === "boolean" ? "boolean-habit" as const : "numeric-habit" as const])
+  );
   const momentMap = new Map(configs.moments.map((m) => [m.id, m.label]));
 
   const items: FrequencyItem[] = [];
   for (const [id, count] of counts.entries()) {
-    if (habitMap.has(id)) {
-      items.push({ id, label: habitMap.get(id)!, type: "habit", count });
+    if (habitLabelMap.has(id)) {
+      items.push({ id, label: habitLabelMap.get(id)!, type: habitTypeMap.get(id)!, count });
     } else if (momentMap.has(id)) {
       items.push({ id, label: momentMap.get(id)!, type: "moment", count });
     }
@@ -84,11 +88,7 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
   const maxCount = items[0]?.count ?? 1;
 
   return (
-    <div className="mt-8">
-      <p className="mb-4 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
-        Frequency
-      </p>
-
+    <>
       {items.length === 0 ? (
         <p className="text-sm text-stone-500 dark:text-stone-500">
           Nothing logged in this period
@@ -98,31 +98,35 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
           {items.map((item) => {
             const isActive = !!activeFilter && activeFilter.id === item.id;
             return (
-            <li key={item.id} className="py-3">
-              <span
-                className={`text-sm ${
-                  item.type === "moment"
-                    ? "text-amber-700 dark:text-amber-400"
-                    : "text-stone-700 dark:text-stone-300"
-                }${isActive ? " font-semibold border-b border-amber-500 dark:border-amber-400" : ""}`}
-              >
-                {item.label}
-              </span>
-              <div className="mt-1.5 h-0.5 w-full rounded-full bg-stone-100 dark:bg-stone-800">
-                <div
-                  className={`h-full rounded-full ${
-                    item.type === "moment"
-                      ? "bg-amber-400 dark:bg-amber-500"
-                      : "bg-stone-400 dark:bg-stone-600"
+              <li key={item.id}>
+                <button
+                  type="button"
+                  onClick={() =>
+                    onFilterChange?.(isActive ? null : { type: item.type, id: item.id })
+                  }
+                  className={`w-full text-left rounded-xl min-h-[44px] py-2 flex flex-col justify-center text-sm transition-colors active:bg-stone-100 dark:active:bg-stone-800 ${
+                    isActive
+                      ? "text-amber-700 dark:text-amber-500"
+                      : "text-stone-700 dark:text-stone-300"
                   }`}
-                  style={{ width: `${Math.round((item.count / maxCount) * 100)}%` }}
-                />
-              </div>
-            </li>
-          );
+                >
+                  {item.label}
+                  <div className="mt-1.5 h-0.5 w-full rounded-full bg-stone-100 dark:bg-stone-800">
+                    <div
+                      className={`h-full rounded-full ${
+                        item.type === "moment"
+                          ? "bg-amber-400 dark:bg-amber-500"
+                          : "bg-stone-400 dark:bg-stone-600"
+                      }`}
+                      style={{ width: `${Math.round((item.count / maxCount) * 38)}%` }}
+                    />
+                  </div>
+                </button>
+              </li>
+            );
           })}
         </ul>
       )}
-    </div>
+    </>
   );
 }

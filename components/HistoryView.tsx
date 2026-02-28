@@ -7,7 +7,6 @@ import type { HabitEntry } from "@/types/entry";
 import CalendarHeatmap from "@/components/CalendarHeatmap";
 import type { HeatmapFilter } from "@/components/CalendarHeatmap";
 import DayDetail from "@/components/DayDetail";
-import FilterSheet from "@/components/FilterSheet";
 import FrequencyList, { type Period } from "@/components/FrequencyList";
 
 export default function HistoryView() {
@@ -18,13 +17,7 @@ export default function HistoryView() {
   const [viewedMonth, setViewedMonth] = useState(now.getMonth());
   const [period, setPeriod] = useState<Period>("month");
   const [activeFilter, setActiveFilter] = useState<HeatmapFilter | null>(null);
-  const [activeFilterLabel, setActiveFilterLabel] = useState("");
-  const [sheetOpen, setSheetOpen] = useState(false);
-
-  const handleFilterSelect = (filter: HeatmapFilter | null, label?: string) => {
-    setActiveFilter(filter);
-    setActiveFilterLabel(label ?? "");
-  };
+  const [frequencyVisible, setFrequencyVisible] = useState(false);
 
   useEffect(() => {
     startTransition(() => setEntries(getAllEntries()));
@@ -79,55 +72,52 @@ export default function HistoryView() {
         onMonthChange={(y, m) => { setViewedYear(y); setViewedMonth(m); }}
       />
 
-      {/* ── Control row ──────────────────────────────────────── */}
-      <div className="mt-6 flex items-center justify-between">
-        <button
-          type="button"
-          onClick={() => setSheetOpen(true)}
-          className={`max-w-[140px] truncate text-xs uppercase tracking-widest transition-colors ${
-            activeFilter
-              ? "text-amber-600 dark:text-amber-400"
-              : "text-stone-500 dark:text-stone-500 hover:text-stone-700 dark:hover:text-stone-300"
-          }`}
-        >
-          {activeFilter ? `${activeFilterLabel} ↓` : "All ↓"}
-        </button>
+      {/* ── Section divider + Frequency ─────────────────────── */}
+      <div className="mt-10 border-t border-stone-100 dark:border-stone-800">
+        <div className="pt-8">
 
-        {/* Period selector */}
-        <div className="flex gap-4">
-          {(["month", "3m", "always"] as const).map((p) => (
-            <button
-              key={p}
-              type="button"
-              onClick={() => setPeriod(p)}
-              className={`text-xs uppercase tracking-widest transition-colors ${
-                period === p
-                  ? "text-amber-600 dark:text-amber-400"
-                  : "text-stone-500 dark:text-stone-500 hover:text-stone-700 dark:hover:text-stone-300"
-              }`}
-            >
-              {p === "month" ? "Month" : p === "3m" ? "3M" : "Always"}
-            </button>
-          ))}
+          {/* Toggle */}
+          <button
+            type="button"
+            onClick={() => setFrequencyVisible((v) => !v)}
+            className="w-full min-h-[44px] flex items-center text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500 transition-colors hover:text-stone-700 dark:hover:text-stone-400"
+          >
+            {frequencyVisible ? "Frequency ↑" : "Frequency ↓"}
+          </button>
+
+          {frequencyVisible && (
+            <>
+              {/* Period selector */}
+              <div className="mt-5 mb-6 flex items-center justify-center gap-3">
+                <button type="button" onClick={() => setPeriod("month")}
+                  className={`text-xs uppercase tracking-widest transition-colors ${period === "month" ? "text-stone-900 dark:text-stone-100" : "text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300"}`}>
+                  Month
+                </button>
+                <span className="text-stone-300 dark:text-stone-600">·</span>
+                <button type="button" onClick={() => setPeriod("3m")}
+                  className={`text-xs uppercase tracking-widest transition-colors ${period === "3m" ? "text-stone-900 dark:text-stone-100" : "text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300"}`}>
+                  3 Months
+                </button>
+                <span className="text-stone-300 dark:text-stone-600">·</span>
+                <button type="button" onClick={() => setPeriod("always")}
+                  className={`text-xs uppercase tracking-widest transition-colors ${period === "always" ? "text-stone-900 dark:text-stone-100" : "text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300"}`}>
+                  Always
+                </button>
+              </div>
+
+              {/* Frequency list */}
+              <FrequencyList
+                entries={entries}
+                period={period}
+                viewedYear={viewedYear}
+                viewedMonth={viewedMonth}
+                activeFilter={activeFilter}
+                onFilterChange={setActiveFilter}
+              />
+            </>
+          )}
         </div>
       </div>
-
-      {/* ── Frequency list ────────────────────────────────────── */}
-      <FrequencyList
-        entries={entries}
-        period={period}
-        viewedYear={viewedYear}
-        viewedMonth={viewedMonth}
-        activeFilter={activeFilter}
-      />
-
-      {/* ── Filter sheet ──────────────────────────────────────── */}
-      {sheetOpen && (
-        <FilterSheet
-          onSelect={(f, label) => handleFilterSelect(f, label)}
-          onClose={() => setSheetOpen(false)}
-        />
-      )}
 
       {/* ── Day detail sheet ──────────────────────────────────── */}
       {selectedDate && (

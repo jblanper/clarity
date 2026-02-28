@@ -61,76 +61,48 @@ function buildMonthWeeks(year: number, month: number): (string | null)[][] {
   return weeks;
 }
 
-/**
- * Computes a cell background color.
- *
- * Overview mode (filter = null):
- *   - Blue  (hue 220): scales with habits where done: true (0–totalBooleanHabits)
- *   - Amber (hue 45):  scales with combined joy signals — habits where joy: true
- *                      plus moments selected (0–6, saturates at 6)
- *   Hues are weighted-averaged, so equal max scores blend toward green (~132°).
- *
- * Filter mode:
- *   - boolean-habit: full blue when done: true, muted otherwise
- *   - moment:        full amber when the moment UUID is present, muted otherwise
- */
+const HABIT_H = 153;
+const HABIT_S_LIGHT = 16;
+const HABIT_S_DARK  = 17;
+const MOMENT_H = 36;
+const MOMENT_S_LIGHT = 47;
+const MOMENT_S_DARK  = 43;
+
 function computeCellColor(
   entry: HabitEntry,
   isDark: boolean,
   totalBooleanHabits: number,
-  filter: HeatmapFilter | null,
 ): string {
   const muted = isDark ? "hsl(25, 6%, 35%)" : "hsl(25, 6%, 80%)";
 
-  // ── Filter mode ────────────────────────────────────────────────────────────
-  if (filter !== null) {
-    // Full-intensity lightness values match the overview mode at b=1 / y=1
-    const fullL = isDark ? 65 : 50;
-    if (filter.type === "boolean-habit") {
-      return (entry.habits[filter.id]?.done ?? false)
-        ? `hsl(220, 55%, ${fullL}%)`
-        : muted;
-    }
-    if (filter.type === "numeric-habit") {
-      return (entry.numeric[filter.id] ?? 0) > 0
-        ? `hsl(220, 55%, ${fullL}%)`
-        : muted;
-    }
-    // moment
-    return entry.moments.includes(filter.id)
-      ? `hsl(45, 65%, ${fullL}%)`
-      : muted;
-  }
-
-  // ── Overview mode ──────────────────────────────────────────────────────────
   const habitCount = Object.values(entry.habits).filter((s) => s.done).length;
-  // Joy signal: boolean habits with joy: true + moments selected (equal weight)
   const joyCount =
     Object.values(entry.habits).filter((s) => s.joy).length +
     entry.moments.length;
+  const b = habitCount / (totalBooleanHabits || 1);
+  const y = Math.min(joyCount / 6, 1);
 
-  const b = habitCount / (totalBooleanHabits || 1); // 0–1, guard against divide-by-zero
-  const y = Math.min(joyCount / 6, 1);              // 0–1, saturates at 6
-
-  // Entry exists but nothing logged — muted neutral tint
   if (b === 0 && y === 0) return muted;
 
-  // Each dimension drives lightness independently:
-  // light mode: high intensity → lower lightness (richer color)
-  // dark mode:  high intensity → higher lightness (brighter against dark bg)
-  const blueL   = isDark ? 30 + 35 * b : 88 - 38 * b; // dark 30→65, light 88→50
-  const yellowL = isDark ? 30 + 35 * y : 88 - 38 * y;
+  const habitS  = isDark ? HABIT_S_DARK   : HABIT_S_LIGHT;
+  const momentS = isDark ? MOMENT_S_DARK  : MOMENT_S_LIGHT;
+  const habitL  = isDark ? 20 + 22 * b   : 80 - 25 * b;  // dark 20→42, light 80→55
+  const momentL = isDark ? 23 + 21 * y   : 81 - 25 * y;  // dark 23→44, light 81→56
 
-  if (y === 0) return `hsl(220, 55%, ${Math.round(blueL)}%)`;
-  if (b === 0) return `hsl(45, 65%, ${Math.round(yellowL)}%)`;
+  if (y === 0) return `hsl(${HABIT_H}, ${habitS}%, ${Math.round(habitL)}%)`;
+  if (b === 0) return `hsl(${MOMENT_H}, ${momentS}%, ${Math.round(momentL)}%)`;
 
-  // Both present: blend hue, saturation, and lightness by each dimension's weight
   const total = b + y;
-  const h = Math.round((220 * b + 45 * y) / total); // 220 → ~132 (green) → 45
-  const s = Math.round((55 * b + 65 * y) / total);
-  const l = Math.round((blueL * b + yellowL * y) / total);
-
+  const h = Math.round((HABIT_H * b + MOMENT_H * y) / total);
+  const s = Math.round((habitS * b + momentS * y) / total);
+  const l = Math.round((habitL * b + momentL * y) / total);
   return `hsl(${h}, ${s}%, ${l}%)`;
+}
+
+function doesEntryMatchFilter(entry: HabitEntry, filter: HeatmapFilter): boolean {
+  if (filter.type === "boolean-habit") return entry.habits[filter.id]?.done ?? false;
+  if (filter.type === "numeric-habit") return (entry.numeric[filter.id] ?? 0) > 0;
+  return entry.moments.includes(filter.id);
 }
 
 /** Subscribes to changes on the <html> class list to detect active theme. */
@@ -291,8 +263,9 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
                 const isFuture = dateStr > today;
                 const isSelected = dateStr === selectedDate;
                 const cellBg = entry && !isFuture
-                  ? computeCellColor(entry, isDark, activeHabitCount, filter)
+                  ? computeCellColor(entry, isDark, activeHabitCount)
                   : undefined;
+                const dimmed = !!filter && !!entry && !isFuture && !doesEntryMatchFilter(entry, filter);
                 const dayNum = parseInt(dateStr.split("-")[2], 10);
 
                 return (
@@ -310,7 +283,10 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
                     ]
                       .filter(Boolean)
                       .join(" ")}
-                    style={cellBg ? { backgroundColor: cellBg } : undefined}
+                    style={{
+                      ...(cellBg ? { backgroundColor: cellBg } : {}),
+                      ...(dimmed ? { opacity: 0.25 } : {}),
+                    }}
                   >
                     {/* Date number in the corner */}
                     <span className="text-[11px] leading-none text-black/50 dark:text-white/35">
