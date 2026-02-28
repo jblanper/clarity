@@ -1,114 +1,29 @@
 # Clarity — Project Guide
 
 ## What is Clarity?
-Clarity is a personal daily habit tracker built as a mobile-first Next.js web app.
-The goal is to make daily self-reflection feel calm and effortless — not clinical or
-gamified. You open it once a day, log how things went, and close it.
-
-## Features
-- **Daily check-in form** — log each day's habits, numbers, joy moments, and a reflection note
-- **Boolean habits** — toggle switches (default: Meditation, Exercise, Reading, Journaling, Drawing)
-- **Numeric habits** — steppers with custom units (default: Sleep/hrs, Water/glasses, Screen time/hrs, Coffee/cups, Decaf coffee/cups)
-- **Moments** — a multi-select chip grid (4 defaults; fully customisable)
-- **Habit customisation** — add, rename, archive, and restore habits and moments in the Manage page
-- **Reflection** — a free-text textarea for end-of-day notes
-- **Persistence** — all entries saved to localStorage, pre-populated on return visits
-- **History** — calendar heatmap (month view, year navigation) showing entry intensity by habits + joy
-- **Day detail** — bottom sheet showing a past day's logged data, with an Edit link
-- **Edit past entries** — full check-in form pre-filled with existing data; stamps `lastEdited` on save
-- **Dark/light theme** — user-selected, stored in localStorage, toggled in Settings
-- **Bottom navigation** — fixed two-tab bar (Today / History); hidden on Settings, Manage, and Edit pages
-- **Export** — download all entries and configs as a formatted `habits-backup.json` file
-- **Import** — upload a backup file; entries are merged (existing dates skipped), configs are replaced
-- **Settings** — theme toggle and data export/import; accessible from both Today and History headers
-- **Manage** — dedicated page for habit and moment management; accessible only from Settings
-
-## Style & Vibes
-- **Calm and minimal** — no gamification, no streaks, no pressure. Just quiet logging.
-- **Typographic** — the design language is almost entirely text-based. Navigation uses words
-  (← back, Settings), not icons or emojis.
-- **Stone palette** — warm off-white backgrounds, near-black text, muted stone grays for
-  secondary elements. No bright accent colours.
-- **Light weights** — headings use `font-light`, wide `tracking-widest`. Nothing feels heavy.
-- **Mobile-first** — designed for phone screens. Max width `max-w-md`, generous touch targets
-  (`min-h-[44px]`), no horizontal scrolling.
-- **Section labels** — `text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500`
-  used consistently for all section headers. This pattern must be reused for any new sections.
-- **Rounded UI** — interactive elements use `rounded-2xl`. Avoid sharp corners.
-- **Subtle interactions** — `transition-colors` on hover/active. Active states use a slightly
-  darker shade (e.g. `active:bg-stone-900`). No animations beyond simple transitions.
-
-## Color Palette (globals.css)
-
-### Light Theme (default)
-| Variable       | Value     | Usage                        |
-|----------------|-----------|------------------------------|
-| `--background` | `#fafaf9` | Page background (warm white) |
-| `--foreground` | `#1c1917` | Primary text                 |
-| `--muted`      | `#78716c` | Secondary text               |
-| `--border`     | `#e7e5e4` | Dividers, input borders      |
-| `--accent`     | `#a8a29e` | Subtle accents               |
-
-### Dark Theme
-| Variable       | Value     | Usage                             |
-|----------------|-----------|-----------------------------------|
-| `--background` | `#1c1917` | Page background (warm charcoal)   |
-| `--foreground` | `#fafaf9` | Primary text                      |
-| `--muted`      | `#a8a29e` | Secondary text                    |
-| `--border`     | `#292524` | Dividers, input borders           |
-| `--accent`     | `#57534e` | Subtle accents                    |
-
-The dark theme mirrors the light theme's stone palette — warm charcoal rather than cold black.
-It is **not** auto-applied based on system preference. The user selects it explicitly in Settings
-and the choice is stored in localStorage under the key `clarity-theme` (`"light"` | `"dark"`).
-Apply the `dark` class to the root `<html>` element and use Tailwind's `dark:` variants throughout.
-
-The primary action button uses `bg-stone-800 dark:bg-stone-200` with `text-white dark:text-stone-900`.
-Secondary/outline buttons use `border-stone-200 bg-white text-stone-700 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300`.
-
-### Light theme color-role hierarchy (WCAG AA compliant)
-All text in the light theme must meet WCAG AA (4.5:1 for normal text, 3:1 for UI components)
-against the `#fafaf9` background. Verified contrast ratios:
-
-| Role | Tailwind class | Contrast vs bg |
-|---|---|---|
-| Primary text | `text-stone-800` / `text-stone-900` | 12–15:1 ✅ |
-| Body / form labels | `text-stone-700` | ~9:1 ✅ |
-| Navigation links, arrows, close buttons | `text-stone-600` (hover: `stone-800`) | 7.3:1 ✅ |
-| Section labels, unit labels, timestamps | `text-stone-500` | 4.6:1 ✅ |
-| **stone-400 — do not use for light-mode text** | `text-stone-400` | 2.4:1 ❌ |
-| Error messages | `text-red-700 dark:text-red-400` | 6.2:1 ✅ |
-
-- `text-stone-400` is only acceptable as a `dark:` variant (on the dark bg it reaches ~7:1).
-- Interactive element borders use `border-stone-300` in light mode (improvement over stone-200;
-  strict 3:1 compliance would require stone-500 which is visually heavy).
-- Toggle off-state track: `bg-stone-300 dark:bg-stone-600`.
-- Empty calendar cells: `bg-stone-200 dark:bg-stone-800`.
+A mobile-first Next.js habit tracker. Log daily habits, numbers, moments, and reflections once a day. Calm and minimal — no gamification, no streaks.
 
 ## Tech Stack
-- **Framework**: Next.js (App Router)
-- **Language**: TypeScript (strict mode)
-- **Styling**: Tailwind CSS v4
-- **Font**: Geist Sans
-- **Storage**: localStorage
-- **Testing**: Jest + jest-environment-jsdom
-- **Deployment**: GitHub Pages — https://jblanper.github.io/clarity/
+Next.js App Router · TypeScript strict · Tailwind CSS v4 · localStorage · Jest · GitHub Pages (`https://jblanper.github.io/clarity/`)
 
-## Deployment
+## Style & Vibes
+- **Typographic** — text-based navigation (← back, Settings), no icons or emojis.
+- **Stone palette** — warm off-whites/near-blacks. No bright accent colours. See `globals.css`.
+- **Section labels** — `text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500` everywhere. Must be reused for any new section.
+- **Rounded UI** — `rounded-2xl` on interactive elements. `max-w-md`, `min-h-[44px]` touch targets.
+- **Subtle interactions** — `transition-colors` on hover/active. No animations beyond transitions.
+- Primary button: `bg-stone-800 dark:bg-stone-200 text-white dark:text-stone-900`.
+- Secondary button: `border-stone-200 bg-white text-stone-700 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300`.
 
-The app is deployed as a Next.js static export to GitHub Pages via GitHub Actions
-(`.github/workflows/deploy.yml`). Relevant `next.config.ts` settings:
-
-```ts
-output: "export"       // generate a static site in /out
-basePath: "/clarity"   // GitHub Pages serves under /clarity, not /
-images: { unoptimized: true }  // image optimisation requires a server
-```
-
-**Constraint**: no dynamic routes. Static export requires all routes to be known at
-build time, but entry dates only exist in the user's localStorage. Any page that needs
-runtime data must use a non-dynamic route and read query params via `window.location.search`
-in a `useEffect`. See `app/edit/page.tsx` as the established pattern.
+### Color-role hierarchy (WCAG AA, light theme)
+| Role | Class |
+|---|---|
+| Primary text | `text-stone-800` / `text-stone-900` |
+| Body / labels | `text-stone-700` |
+| Nav links, arrows | `text-stone-600` (hover: `stone-800`) |
+| Section labels, timestamps | `text-stone-500` |
+| **Never in light mode** | `text-stone-400` — only OK as `dark:` variant |
+| Errors | `text-red-700 dark:text-red-400` |
 
 ## Navigation Architecture
 
@@ -120,278 +35,74 @@ in a `useEffect`. See `app/edit/page.tsx` as the established pattern.
 /edit       Edit         BottomNav hidden — back via ← history link
 ```
 
-- **BottomNav** (`components/BottomNav.tsx`) — fixed bottom bar, 56px + safe-area inset.
-  Returns `null` on `/settings`, `/manage`, and `/edit`. Uses `usePathname()` for active state.
-- **Page headers** use `flex items-start justify-between` — title on the left, back/nav link
-  top-right in `text-xs uppercase tracking-widest text-stone-600` style (e.g. `← back`,
-  `← history`, `Settings`). This is the consistent pattern across Settings, Edit, and Today.
-- **Settings** is reachable from both Today and History headers (top-right, same muted style).
-  Its `← back` button uses `router.push(backDest)` where `backDest` is read from `sessionStorage`
-  key `"settings-back"` on mount (written by the caller before navigating). Defaults to `"/"`.
-  This ensures the back button never lands on `/manage` even if that was the last history entry.
-- **Manage** is only reachable from the "Habits and moments →" row inside Settings.
-  Its `← Settings` link goes to plain `/settings`; the `sessionStorage` key already holds the
-  correct origin so Settings back nav resolves correctly without any extra params.
-- **DayDetail → Edit** flow: Edit link navigates to `/edit?date=[date]`. On save, `router.push`
-  goes to `/history?open=[date]`. HistoryView reads `?open=` on mount, auto-opens DayDetail,
-  then cleans the URL with `window.history.replaceState`.
+- **Page headers** — `flex items-start justify-between`: title left, nav link top-right in `text-xs uppercase tracking-widest text-stone-600`.
+- **Settings back** — caller writes `sessionStorage.setItem("settings-back", "/")` before navigating; SettingsView reads it on mount and calls `router.push(backDest)`, never `router.back()`.
+- **DayDetail → Edit** — `/edit?date=[date]`; on save redirects to `/history?open=[date]`; HistoryView auto-opens DayDetail then cleans the URL with `replaceState`.
 
 ## Project Structure
 ```
-app/                    # Next.js App Router
-  page.tsx              # Home (Today) — server component shell
-  history/page.tsx      # History — server component shell
-  settings/page.tsx     # Settings — server component shell
-  manage/page.tsx       # Manage — server component shell
-  edit/page.tsx         # Edit a past entry — client component, reads ?date= from query
-  globals.css           # CSS variables + Tailwind import (light + dark themes)
-  layout.tsx            # Root layout: theme script, BottomNav, Geist Sans
+app/
+  page.tsx / history / settings / manage   # server component shells
+  edit/page.tsx                            # client component — reads ?date= query param
+  globals.css / layout.tsx
 components/
-  CheckInForm.tsx       # Check-in form (client) — today + edit mode via date? prop
-  HabitToggle.tsx       # iOS-style boolean toggle (client)
-  NumberStepper.tsx     # −/input/+ numeric stepper; min/max optional (default 0/∞)
-  MomentChip.tsx        # Selectable pill chip (client)
-  ManageView.tsx        # Habit + moment management page (add/edit/archive/restore)
-  SettingsView.tsx      # Settings page: Theme → Your Data → Manage nav row
-  CalendarHeatmap.tsx   # Month heatmap with year/month nav, HSL color blend (client)
-                        #   Cells: h-11 w-11 (44px), gap-1.5, rounded-md
-                        #   Labels: year text-sm, month text-base, arrows text-xl
-  DayDetail.tsx         # Bottom sheet: read-only day summary + Edit link (client)
-  BottomNav.tsx         # Two-tab fixed bottom navigation (client)
+  CheckInForm.tsx    # today + edit mode (date? prop)
+  HabitToggle.tsx / NumberStepper.tsx / MomentChip.tsx
+  ManageView.tsx / SettingsView.tsx / CalendarHeatmap.tsx
+  DayDetail.tsx / BottomNav.tsx
 lib/
-  storage.ts            # localStorage CRUD: saveEntry, getEntry, getAllEntries
-  habitConfig.ts        # Config types, defaults, getConfigs(), saveConfigs() — single source of truth
-  transferData.ts       # Export/import: prepareExportData, parseImportFile, mergeEntries, exportBackup, importBackup
-  habits.ts             # createEmptyEntry() helper only
-  theme.ts              # Theme helpers: getTheme, setTheme, applyTheme
-  storage.test.ts       # 13 Jest tests for storage functions
-  transferData.test.ts  # 21 Jest tests for transfer functions
-  theme.test.ts         # 12 Jest tests for theme functions
-public/
-  theme-init.js         # Inline script: applies saved theme class before first paint
+  storage.ts         # saveEntry, getEntry, getAllEntries
+  habitConfig.ts     # AppConfigs types, defaults, getConfigs(), saveConfigs()
+  transferData.ts    # exportBackup, importBackup, parseImportFile
+  habits.ts / theme.ts
+  *.test.ts          # Jest unit tests
 types/
-  entry.ts              # HabitEntry interface — single source of truth for the data model
+  entry.ts           # HabitEntry, HabitState — data model source of truth
 ```
 
 ## Data Model
+Types live in `types/entry.ts` (`HabitEntry`, `HabitState`) and `lib/habitConfig.ts` (`AppConfigs`, `HabitConfig`, `MomentConfig`).
 
-### localStorage keys
-| Key | Contents |
-|-----|----------|
-| `clarity_entries` | `Record<string, HabitEntry>` — date-keyed map of all logged days |
-| `clarity-configs` | `AppConfigs` — habit and moment config; falls back to defaults if absent |
+| localStorage key | Contents |
+|---|---|
+| `clarity_entries` | Date-keyed map of HabitEntry records |
+| `clarity-configs` | AppConfigs (habits + moments) |
 | `clarity-theme` | `"light"` \| `"dark"` |
 
-### HabitEntry (`types/entry.ts`)
-Habit values are keyed by UUID, not by label. Only habits the user has touched are present
-(sparse records — never store zeroes for untouched habits).
-
-```ts
-interface HabitState {
-  done: boolean   // habit was completed
-  joy: boolean    // habit brought joy (subset of done)
-}
-
-interface HabitEntry {
-  date: string                        // YYYY-MM-DD, primary key
-  habits: Record<string, HabitState>  // UUID → { done, joy }
-  numeric: Record<string, number>     // UUID → value
-  moments: string[]                   // array of selected moment UUIDs
-  reflection: string
-  lastEdited?: string                 // ISO timestamp, set on edit
-}
-```
-
-### AppConfigs (`lib/habitConfig.ts`)
-```ts
-interface AppConfigs {
-  habits: HabitConfig[]     // BooleanHabitConfig | NumericHabitConfig
-  moments: MomentConfig[]
-}
-```
-- `getConfigs()` reads from `clarity-configs`, falls back to `DEFAULT_HABIT_CONFIGS` +
-  `DEFAULT_MOMENT_CONFIGS` if the key is absent or malformed.
-- `saveConfigs(configs)` writes the full object atomically.
-- Always read-modify-write the full `AppConfigs` — there are no partial save helpers.
-
-### Default UUIDs
-Default habits and moments use stable hardcoded IDs (`00000000-0000-4000-8000-00000000000X`)
-so entries always resolve to the right config across sessions. IDs 1–4 are boolean habits,
-6–9 are numeric habits, 11–14 are moments. User-created items get `crypto.randomUUID()`.
-
-### Archived configs
-Archived habits/tags (`archived: true`) are hidden from the check-in form but kept in
-storage so historical entries that reference their UUIDs remain valid. Never delete a config
-that has been used in an entry.
-
-### Export file shape (`lib/transferData.ts`)
-```ts
-interface ExportFile {
-  version: 1
-  exportedAt: string        // ISO timestamp
-  configs: AppConfigs       // full habit + moment config
-  entries: HabitEntry[]
-}
-```
-- `exportBackup()` — exports entries + current configs; no guard for empty entries.
-- `importBackup(file)` — merges entries (skip existing dates), **replaces configs entirely**.
-- `parseImportFile(content)` returns `{ entries, configs }`.
+- **Habit values keyed by UUID**, not label. Sparse records — never store zeroes for untouched habits.
+- **Default UUIDs** — stable hardcoded IDs (`00000000-...`): 1–4 boolean, 6–9 numeric, 11–14 moments. User-created items use `crypto.randomUUID()`.
+- **Archived items** (`archived: true`) — kept in storage forever so historical UUIDs resolve correctly. Never delete a used config.
+- **AppConfigs** — always read-modify-write via `getConfigs()` / `saveConfigs()`. No partial helpers.
+- **Import** (`importBackup`) — merges entries (skips existing dates), **replaces configs entirely**.
 
 ## Key Implementation Notes
 
-### General
-- **Page components are server components** that wrap a single `"use client"` view component.
-  Never add interactivity directly to `app/` files. Exception: `app/edit/page.tsx` is itself
-  a client component because it must read `window.location.search` on mount (see static export
-  constraint below).
-- **`lib/habitConfig.ts` is the source of truth** for habit and moment config. If you add or
-  change a default habit or moment, update it there first. `lib/habits.ts` now only contains
-  `createEmptyEntry()` and should not grow.
-- **Date handling**: build YYYY-MM-DD strings from `getFullYear()`/`getMonth()`/`getDate()`,
-  never from `toISOString().split('T')[0]` (UTC offset causes wrong date in some timezones).
-- **Float precision in steppers**: use `Math.round((value + step) * 1000) / 1000` to prevent
-  floating-point drift (e.g. `0.1 + 0.2 = 0.30000000000000004`).
-- **FileReader over file.text()**: `importBackup` uses `FileReader.readAsText()` for jsdom
-  compatibility in Jest tests.
-- **No dynamic routes** — the app is deployed as a static export (`output: 'export'` in
-  `next.config.ts`). Dynamic routes (e.g. `[date]`) require `generateStaticParams()`, which
-  is impossible when data lives only in localStorage. Use query params instead and read them
-  from `window.location.search` in a `useEffect`. The `/edit` page is the established pattern.
-
-### Tailwind v4
-- **Class-based dark mode**: Tailwind v4 defaults `dark:` variants to `prefers-color-scheme`.
-  To use the `.dark` class instead, add this to `globals.css`:
-  ```css
-  @custom-variant dark (&:where(.dark, .dark *));
-  ```
-- **Transform pipeline**: `translate-x-*` / `translate-y-*` can fail in Tailwind v4 due to
-  CSS variable composition. Use inline `style={{ transform: "..." }}` for animated transforms,
-  and explicit `left-1`/`left-6` for toggle thumb positioning.
-
-### Theme system
-- Theme is stored in localStorage under `clarity-theme` (`"light"` | `"dark"`).
-- `public/theme-init.js` is loaded via `<Script strategy="beforeInteractive">` in `layout.tsx`
-  to apply the saved theme class before first paint, preventing flash of unstyled content.
-- `suppressHydrationWarning` is set on `<html>` to suppress React's class-mismatch warning.
-- For components that need to react to theme changes at runtime, use the `useIsDark()` hook
-  in `CalendarHeatmap.tsx` as a reference — it uses a `MutationObserver` on `document.documentElement`.
-
-### Reading configs in client components
-Any component that needs `AppConfigs` should follow this SSR-safe pattern to avoid
-hydration mismatches and localStorage-during-SSR errors:
-
-```ts
-const [configs, setConfigs] = useState<AppConfigs>({
-  habits: DEFAULT_HABIT_CONFIGS,
-  moments: DEFAULT_MOMENT_CONFIGS,
-});
-useEffect(() => { setConfigs(getConfigs()); }, []);
-```
-
-Initialise with the module-level defaults (same values the server would produce),
-then replace with saved values on mount. Components using this pattern:
-`CheckInForm`, `DayDetail`, `CalendarHeatmap`, `ManageView`.
-
-### ManageView behaviour
-- All inline editors (edit habit, edit moment, add habit, add moment) are mutually exclusive —
-  opening any one closes all others via `closeAllEditors()`.
-- The `justArchivedId` state shows the "Archived. Past entries are preserved." note
-  on the most recently archived item; any other action clears it.
-- Section labels use `text-stone-400` (not the usual `text-stone-500`). This is intentional
-  per the design spec for this page.
-- **Archive buttons** use `text-amber-700 dark:text-amber-500` to distinguish them from Edit
-  without implying danger (red would feel too destructive for a reversible action).
-- A "Jump to Moments ↓" anchor link (`href="#moments"`) sits below the header for quick
-  navigation when the habit list is long. The Moments section has `id="moments"`.
-
-### Save flow (CheckInForm)
-The Save button steps through three states on submit:
-
-| State | Label | Colors |
-|---|---|---|
-| `"idle"` | Save | `bg-stone-800 text-white dark:bg-stone-200 dark:text-stone-900` |
-| `"saving"` | Saving... | same as idle |
-| `"confirmed"` | Day captured | `bg-stone-300 text-stone-700 dark:bg-stone-700 dark:text-stone-300` |
-
-- The button is `disabled` during `"saving"` and `"confirmed"` to prevent double-taps.
-- The color transition uses `duration-500` for a smooth feel.
-- The `saveEntry()` call is deferred by one tick (`setTimeout(..., 0)`) so the `"saving"`
-  label actually renders before the synchronous localStorage write.
-- After `"confirmed"`, a 1200ms timeout fires `router.push()`:
-  - Today form → `/history`
-  - Edit form → `/history?open=${date}` (reopens the day detail)
-
-### DayDetail resolution pattern
-DayDetail resolves habit and moment labels by **iterating the entry's stored UUIDs**
-(not the config list), then looking each up in an `id → config` Map. This ensures:
-- Archived habits are included (the Map is built from all configs, not just active ones).
-- Unknown IDs (e.g. from an imported backup with different defaults) are surfaced with
-  the raw UUID as a fallback label instead of being silently dropped.
-
-Always prefer this entry-first pattern over config-first filtering whenever displaying
-historical data whose IDs may not match the current config set.
-
-### URL state without useSearchParams
-- Avoid `useSearchParams()` in client components — it requires wrapping in `<Suspense>`.
-- For simple one-shot URL params (e.g. auto-opening a sheet after navigation), read
-  `window.location.search` directly in a `useEffect`, then clean up with
-  `window.history.replaceState({}, "", "/path")`.
-
-### sessionStorage for cross-page navigation intent
-Prefer `sessionStorage` over URL params when passing navigation intent between pages.
-It keeps URLs clean and doesn't require intermediate pages to propagate the value.
-
-Example — Settings back destination:
-- Today/History write `sessionStorage.setItem("settings-back", "/")` (or `"/history"`)
-  in the Settings link's `onClick` before navigating.
-- SettingsView reads `sessionStorage.getItem("settings-back")` on mount and calls
-  `router.push(backDest)` — never `router.back()`, which could land on an unintended page.
-- Manage doesn't need to know about this at all; the key survives the round-trip.
+- **No dynamic routes** — static export means build-time routes only. Use query params + `window.location.search` in a `useEffect`. See `app/edit/page.tsx`.
+- **Page components are server components** wrapping a single `"use client"` view. Never add interactivity to `app/` files (except `edit/page.tsx`).
+- **Reading configs SSR-safely** — init `useState` with module-level defaults, then call `getConfigs()` inside a `useEffect` via `startTransition`. Avoids localStorage-during-SSR errors. Used in CheckInForm, DayDetail, CalendarHeatmap, ManageView.
+- **Date handling** — build YYYY-MM-DD from `getFullYear()`/`getMonth()`/`getDate()`, never `toISOString()` (UTC offset bug).
+- **Float precision** — use `Math.round((value + step) * 1000) / 1000` in steppers.
+- **Avoid `useSearchParams()`** — requires `<Suspense>`. Read `window.location.search` directly in a `useEffect` instead.
+- **sessionStorage for nav intent** — keeps URLs clean; survives round-trips without extra params.
+- **Tailwind v4 dark mode** — class-based via `@custom-variant dark` in `globals.css`. `translate-x-*` can fail; use inline `style` or explicit `left-*` positioning.
+- **Theme** — `public/theme-init.js` applies the class before first paint. `useIsDark()` in CalendarHeatmap uses a `MutationObserver` for runtime changes.
+- **DayDetail labels** — resolve by iterating the entry's UUIDs, not the config list, so archived and imported habits display correctly.
+- **ManageView** — all inline editors are mutually exclusive via `closeAllEditors()`. Archive buttons use `text-amber-700` (reversible, not destructive).
+- **Save flow** (CheckInForm) — three states: `idle → saving → confirmed`. `saveEntry()` deferred one tick so "Saving…" renders first. Redirects after 1200 ms.
+- **`lib/habitConfig.ts` is the source of truth** for config. `lib/habits.ts` contains only `createEmptyEntry()` and should not grow.
 
 ## Microcopy & Tone
+The words should feel as considered as the design — calm, human, never clinical.
 
-The words in the app should feel as considered as the design. Calm, human, never clinical.
-
-- Empty states: inviting, never guilt-inducing
-  - ✅ *"Nothing logged for this day yet"* / *"Nothing here yet"*
-  - ❌ *"No data found"* / *"You missed this day"*
-- Save confirmation: a brief, unobtrusive toast — no modal, no fanfare
-- Error messages: calm and specific — *"That file doesn't look right — try exporting a fresh backup"*
-- Settings labels: plain and human — *"Theme"*, *"Your data"*, not *"Appearance Settings"*
-- No all-caps except for the established `tracking-widest` section label pattern
-- No exclamation marks in UI copy
+- **Empty states** — inviting, never guilt-inducing. *"Nothing logged for this day yet"* ✅ / *"You missed this day"* ❌
+- **Error messages** — calm and specific. *"That file doesn't look right — try exporting a fresh backup"*
+- **Labels** — plain and human. *"Theme"*, *"Your data"*, not *"Appearance Settings"*
+- **Save confirmation** — brief and unobtrusive. No modal, no fanfare.
+- No exclamation marks. No all-caps except the `tracking-widest` section label pattern.
 
 ## Coding Standards
-
-### Code Quality
-- Write clean, readable code with meaningful variable and function names.
-- Avoid magic numbers — use named constants instead.
-- Keep functions small and focused on a single responsibility.
-
-### TypeScript
-- Use strict typing throughout. No `any` types.
-- Define interfaces for all data structures.
-
-### Component Structure
-- Keep components small and reusable. Separate UI from logic.
-- Store data helper functions in `lib/`.
-- **Always add `type="button"` to every `<button>` that is not a form submit.** In HTML,
-  `<button>` defaults to `type="submit"`, so any untyped button inside a `<form>` will
-  trigger form submission on click. This applies to toggle switches (`HabitToggle`),
-  chips (`MomentChip`), stepper arrows (`NumberStepper`), and any future interactive
-  button rendered inside `CheckInForm` or similar form wrappers.
-
-### Comments
-- Add a short comment to any function that isn't immediately obvious.
-- No need to comment every line.
-
-### Error Handling
-- Handle edge cases gracefully — if localStorage is unavailable or an imported JSON file is
-  malformed, show a user-friendly message rather than crashing.
-
-### Testing
-- For each utility function (`saveEntry`, `getEntry`, `getAllEntries`, `export`, `import`),
-  write a simple unit test using Jest. UI testing is not required for now.
-
-### Mobile-First
-- All components should be designed for small screens first. No horizontal scrolling.
+- Strict TypeScript — no `any`. Interfaces for all data structures.
+- **Always `type="button"` on non-submit buttons** — `<button>` defaults to `type="submit"` inside a `<form>`. Applies to HabitToggle, MomentChip, NumberStepper, and any button inside CheckInForm.
+- Small, focused functions. Named constants, no magic numbers. Comments only on non-obvious logic.
+- Jest unit tests for all `lib/` utilities. UI testing not required.
+- Mobile-first. No horizontal scrolling.
