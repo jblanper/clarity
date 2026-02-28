@@ -58,18 +58,25 @@ function formatDisplayDate(dateStr: string): string {
   });
 }
 
-/** Formats a YYYY-MM-DD for the edit-mode label, e.g. "Monday, 24 February 2026". */
-function formatEditDate(dateStr: string): string {
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+const WEEKDAYS = [
+  "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
+];
+
+/** Returns just the day name for the edit-mode primary title, e.g. "Monday". */
+function formatEditDayName(dateStr: string): string {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  return WEEKDAYS[new Date(year, month - 1, day).getDay()];
+}
+
+/** Returns the date subtitle for edit mode, e.g. "24 February 2026". */
+function formatEditSubtitle(dateStr: string): string {
   const [year, month, day] = dateStr.split("-").map(Number);
   const d = new Date(year, month - 1, day);
-  const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December",
-  ];
-  const weekdays = [
-    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
-  ];
-  return `${weekdays[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
 }
 
 /** Extracts mutable form fields from a saved HabitEntry. */
@@ -183,13 +190,11 @@ export default function CheckInForm({ date }: Props) {
       <header className="mb-10 flex items-start justify-between">
         <div>
           <h1 className="text-xl font-light tracking-widest text-stone-800 dark:text-stone-200">
-            {isEditMode ? formatEditDate(targetDate) : "Today"}
+            {isEditMode ? formatEditDayName(targetDate) : "Today"}
           </h1>
-          {!isEditMode && (
-            <p className="mt-1 text-sm text-stone-500 dark:text-stone-500">
-              {formatDisplayDate(today)}
-            </p>
-          )}
+          <p className="mt-1 text-sm text-stone-500 dark:text-stone-500">
+            {isEditMode ? formatEditSubtitle(targetDate) : formatDisplayDate(today)}
+          </p>
         </div>
         {isEditMode ? (
           <Link
