@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Chevron from "@/components/Chevron";
 import { useState, useEffect, startTransition } from "react";
 import {
   getConfigs,
@@ -241,7 +242,7 @@ export default function ManageView() {
           href="/settings"
           className="text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
         >
-          ← Settings
+          <Chevron direction="left" /> Settings
         </Link>
       </header>
 

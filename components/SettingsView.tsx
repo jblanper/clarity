@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect, startTransition } from "react";
+import Chevron from "@/components/Chevron";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { exportBackup, importBackup } from "@/lib/transferData";
@@ -110,7 +111,7 @@ export default function SettingsView() {
           aria-label="Go back"
           className="mt-2 text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
         >
-          ← back
+          <Chevron direction="left" /> back
         </button>
       </header>
 
@@ -318,7 +319,7 @@ export default function SettingsView() {
           className="inline-flex items-center gap-2 py-2 text-sm text-stone-700 dark:text-stone-300 transition-colors hover:text-stone-900 dark:hover:text-stone-100"
         >
           <span>Habits and moments</span>
-          <span className="text-stone-500 dark:text-stone-400">→</span>
+          <span className="text-stone-500 dark:text-stone-400"><Chevron direction="right" /></span>
         </Link>
       </section>
 

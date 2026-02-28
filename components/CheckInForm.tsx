@@ -16,6 +16,7 @@ import type { HabitEntry, HabitState } from "@/types/entry";
 import HabitToggle from "@/components/HabitToggle";
 import NumberStepper from "@/components/NumberStepper";
 import MomentChip from "@/components/MomentChip";
+import Chevron from "@/components/Chevron";
 
 interface Props {
   /** When provided, the form runs in edit mode for that specific date. */
@@ -201,7 +202,7 @@ export default function CheckInForm({ date }: Props) {
             href="/history"
             className="mt-2 text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
           >
-            ← history
+            <Chevron direction="left" /> history
           </Link>
         ) : (
           <Link

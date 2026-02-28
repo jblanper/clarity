@@ -3,6 +3,7 @@
 import { useState, useEffect, startTransition } from "react";
 import type { HabitEntry } from "@/types/entry";
 import { getConfigs, DEFAULT_HABIT_CONFIGS } from "@/lib/habitConfig";
+import Chevron from "@/components/Chevron";
 
 /** Narrows the heatmap to a single habit or moment item. */
 export interface HeatmapFilter {
@@ -209,7 +210,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
           aria-label="Previous year"
           className="text-xl text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300 disabled:opacity-30"
         >
-          ←
+          <Chevron direction="left" />
         </button>
         <span className="min-w-[4rem] text-center text-sm uppercase tracking-widest text-stone-500 dark:text-stone-500">
           {year}
@@ -220,7 +221,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
           aria-label="Next year"
           className="text-xl text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300 disabled:opacity-30"
         >
-          →
+          <Chevron direction="right" />
         </button>
       </div>
 
@@ -231,7 +232,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
           aria-label="Previous month"
           className="min-h-[44px] flex items-center text-xl text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
         >
-          ←
+          <Chevron direction="left" />
         </button>
         <h2 className="text-base font-light tracking-widest text-stone-600 dark:text-stone-400">
           {MONTH_NAMES[month]}
@@ -242,7 +243,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
           aria-label="Next month"
           className="min-h-[44px] flex items-center text-xl text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300 disabled:opacity-30"
         >
-          →
+          <Chevron direction="right" />
         </button>
       </div>
 
