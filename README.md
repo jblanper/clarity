@@ -4,10 +4,10 @@ A personal daily habit tracker built as a mobile-first web app. The goal is to m
 
 ## Features
 
-- **Daily check-in** — log boolean habits, numeric habits, joy tags, and a free-text reflection
-- **History** — calendar heatmap with month/year navigation showing entry intensity
-- **Day detail** — tap any day to review logged data; edit past entries from there
-- **Habit management** — add, rename, archive, and restore habits and joy tags
+- **Daily check-in** — log boolean habits, numeric habits, moments, and a free-text reflection; mark any completed habit as joyful
+- **History** — calendar heatmap with month/year navigation; frequency breakdown of habits and moments with period selector (month / 3 months / all time) and tap-to-filter
+- **Day detail** — tap any heatmap day to review logged data; edit past entries from there
+- **Habit management** — add, rename, archive, and restore habits and moments; inline moment creation directly from the check-in form
 - **Dark/light theme** — user-selected, stored locally
 - **Export/import** — back up and restore all data as a JSON file
 - No accounts, no sync, no server — all data stays in your browser's localStorage
@@ -50,12 +50,13 @@ public/       # Static assets (theme init script)
 
 ## Data
 
-All data is stored in `localStorage` under three keys:
+All data is stored in `localStorage` under four keys:
 
 | Key | Contents |
 |---|---|
 | `clarity_entries` | All logged habit entries, keyed by date |
-| `clarity-configs` | Habit and joy tag configuration |
+| `clarity-configs` | Habit and moment configuration |
 | `clarity-theme` | `"light"` or `"dark"` |
+| `clarity-frequency-hint-seen` | `"true"` once the frequency list filter hint has been dismissed |
 
 Use **Settings → Your data → Export backup** to download a full JSON backup at any time.

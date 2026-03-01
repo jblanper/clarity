@@ -14,7 +14,7 @@ Next.js App Router · TypeScript strict · Tailwind CSS v4 · localStorage · Je
 - **Stone palette** — warm off-whites/near-blacks. No bright accent colours. See `globals.css`.
 - **Section labels** — `text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500` everywhere. Must be reused for any new section.
 - **Rounded UI** — `rounded-2xl` on interactive elements. `max-w-md`, `min-h-[44px]` touch targets.
-- **Subtle interactions** — `transition-colors` on hover/active. No animations beyond transitions.
+- **Subtle interactions** — CSS transitions for hover/active states and layout changes (calendar slide, section reveals). No JS animation libraries. All transitions respect `prefers-reduced-motion`.
 - Primary button: `bg-stone-800 dark:bg-stone-200 text-white dark:text-stone-900`.
 - Secondary button: `border-stone-200 bg-white text-stone-700 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300`.
 
