@@ -48,6 +48,7 @@ app/
 components/
   CheckInForm.tsx    # today + edit mode (date? prop)
   HabitToggle.tsx / NumberStepper.tsx / MomentChip.tsx
+  BlossomIcon.tsx    # SVG blossom for joy marking (empty / filled states)
   ManageView.tsx / SettingsView.tsx / CalendarHeatmap.tsx
   DayDetail.tsx / BottomNav.tsx
 lib/
@@ -89,6 +90,8 @@ Types live in `types/entry.ts` (`HabitEntry`, `HabitState`) and `lib/habitConfig
 - **DayDetail labels** — resolve by iterating the entry's UUIDs, not the config list, so archived and imported habits display correctly.
 - **ManageView** — all inline editors are mutually exclusive via `closeAllEditors()`. Archive buttons use `text-amber-700` (reversible, not destructive).
 - **Save flow** (CheckInForm) — three states: `idle → saving → confirmed`. `saveEntry()` deferred one tick so "Saving…" renders first. Redirects after 1200 ms.
+- **Joy section** (CheckInForm) — appears between Moments and Reflection when at least one boolean habit is done. Lists done habits with `BlossomIcon` buttons to mark `joy` independently of `done`. `joyByDefault` on the config pre-fills joy when a habit is first toggled on. Factual logging (Habits) and emotional reflection (Joy) are intentionally separate moments in the form.
+- **DayDetail scroll lock** — uses `useLayoutEffect` (not `useEffect`) for `document.body.style.overflow = "hidden"`. The layout-effect cleanup runs synchronously during the React commit, so the lock is never left behind when the user navigates away mid-animation.
 - **`lib/habitConfig.ts` is the source of truth** for config. `lib/habits.ts` contains only `createEmptyEntry()` and should not grow.
 
 ## Microcopy & Tone
