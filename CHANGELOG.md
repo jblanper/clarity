@@ -1,5 +1,24 @@
 # Changelog
 
+## [v2.1.0] — 2026-03-01
+
+### New features
+- **Joy section** — a dedicated reflective section appears between Moments and Reflection whenever at least one boolean habit is marked done. Each done habit gets a blossom button to mark it as joyful, separating factual logging (did I do this?) from emotional reflection (did it feel good?).
+- **BlossomIcon** — new SVG component with empty (stroke-only, stone) and filled (amber) states; replaces the inline heart button that was part of HabitToggle.
+- **Frequency list** — collapsible ranked list below the history heatmap showing how often each habit, numeric habit, and moment was logged. Period selector: Month (tracks the viewed calendar month), 3 Months, All Time.
+- **Calendar filter** — tap any row in the frequency list to filter the heatmap to that single item. Non-matching days dim to 25 % opacity; matching days use the exact sunset palette colour. Tap again to clear.
+- **One-time filter hint** — a prompt ("Tap any item to filter the calendar") appears on first use of the frequency list and fades away permanently after the first tap.
+
+### Changes
+- **Heatmap palette** redesigned to a sunset two-axis blend: habits map to dusk blue (hsl 210), moments and joy to warm ember (hsl 23); both axes blend proportionally when a day has entries in both categories.
+- **HabitToggle** simplified: heart button removed. Joy is now captured in the dedicated Joy section; the toggle switch is the only interactive element.
+
+### Fixes
+- **DayDetail scroll lock** — `body.overflow` management moved from `useEffect` to `useLayoutEffect` so the lock is always released synchronously on navigation, preventing the Today page from being left non-scrollable.
+- **Frequency hint flash** — the one-time hint no longer flickers on first mount.
+
+---
+
 ## [v2.0.1] — 2026-02-28
 
 ### Improvements
