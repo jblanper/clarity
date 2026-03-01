@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.1.2] — 2026-03-01
+
+### Improvements
+- **History page animations** — calendar month navigation slides left/right with a heading crossfade; frequency section expands and collapses smoothly using a `grid-template-rows` transition (no max-height dead zone); frequency chevron rotates on open/close; heatmap and frequency list briefly dim when switching time periods; frequency bars grow from zero on period change. All transitions respect `prefers-reduced-motion`.
+- **Chevron component** — extended to support all four directions (`up`, `down`, `left`, `right`) via a single SVG polyline with CSS rotation; optional `size` prop added. Unicode arrows removed from HistoryView and ManageView.
+- **Favicon** — replaced the default Next.js favicon with a minimal amber dot SVG.
+- **Docs** — CLAUDE.md and README.md updated to reflect the frequency list, calendar filter, inline moment creation, and the correct localStorage key count.
+
 ## [v2.1.1] — 2026-03-01
 
 ### Improvements
