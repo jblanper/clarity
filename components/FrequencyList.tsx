@@ -9,6 +9,7 @@ import {
   type AppConfigs,
 } from "@/lib/habitConfig";
 import type { HeatmapFilter } from "@/components/CalendarHeatmap";
+import Chevron from "@/components/Chevron";
 
 export type Period = "month" | "3m" | "always";
 
@@ -104,22 +105,27 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
                   onClick={() =>
                     onFilterChange?.(isActive ? null : { type: item.type, id: item.id })
                   }
-                  className={`w-full text-left rounded-xl min-h-[44px] py-2 flex flex-col justify-center text-sm transition-colors active:bg-stone-100 dark:active:bg-stone-800 ${
+                  className={`w-full text-left rounded-xl min-h-[44px] py-2 flex items-center gap-2 text-sm transition-colors active:bg-stone-100 dark:active:bg-stone-800 ${
                     isActive
                       ? "text-amber-700 dark:text-amber-500"
                       : "text-stone-700 dark:text-stone-300"
                   }`}
                 >
-                  {item.label}
-                  <div className="mt-1.5 h-0.5 w-full rounded-full bg-stone-100 dark:bg-stone-800">
-                    <div
-                      className={`h-full rounded-full ${
-                        item.type === "moment"
-                          ? "bg-amber-400 dark:bg-amber-500"
-                          : "bg-stone-400 dark:bg-stone-600"
-                      }`}
-                      style={{ width: `${Math.round((item.count / maxCount) * 38)}%` }}
-                    />
+                  <span className={`flex-shrink-0 ${isActive ? "" : "invisible"}`}>
+                    <Chevron direction="right" />
+                  </span>
+                  <div className="flex-1 flex flex-col justify-center">
+                    <span>{item.label}</span>
+                    <div className="mt-1.5 h-0.5 w-full rounded-full bg-stone-100 dark:bg-stone-800">
+                      <div
+                        className={`h-full rounded-full ${
+                          isActive
+                            ? "bg-amber-400 dark:bg-amber-500"
+                            : "bg-stone-300 dark:bg-stone-600"
+                        }`}
+                        style={{ width: `${Math.round((item.count / maxCount) * 38)}%` }}
+                      />
+                    </div>
                   </div>
                 </button>
               </li>

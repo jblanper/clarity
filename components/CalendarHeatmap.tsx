@@ -61,12 +61,19 @@ function buildMonthWeeks(year: number, month: number): (string | null)[][] {
   return weeks;
 }
 
-const HABIT_H = 153;
-const HABIT_S_LIGHT = 16;
-const HABIT_S_DARK  = 17;
-const MOMENT_H = 36;
-const MOMENT_S_LIGHT = 47;
-const MOMENT_S_DARK  = 43;
+// Sunset palette — exact target colors at full intensity
+const HABIT_LIGHT  = "#7090b0"; // dusk blue  — hsl(210, 29%, 57%)
+const HABIT_DARK   = "#506880"; //              hsl(210, 23%, 41%)
+const MOMENT_LIGHT = "#c4784a"; // warm ember  — hsl(23, 51%, 53%)
+const MOMENT_DARK  = "#a05f38"; //              hsl(23, 48%, 42%)
+
+// HSL components for blended overview cells
+const HABIT_H        = 210;
+const HABIT_S_LIGHT  = 29;
+const HABIT_S_DARK   = 23;
+const MOMENT_H       = 23;
+const MOMENT_S_LIGHT = 51;
+const MOMENT_S_DARK  = 48;
 
 function computeCellColor(
   entry: HabitEntry,
@@ -86,8 +93,8 @@ function computeCellColor(
 
   const habitS  = isDark ? HABIT_S_DARK   : HABIT_S_LIGHT;
   const momentS = isDark ? MOMENT_S_DARK  : MOMENT_S_LIGHT;
-  const habitL  = isDark ? 20 + 22 * b   : 80 - 25 * b;  // dark 20→42, light 80→55
-  const momentL = isDark ? 23 + 21 * y   : 81 - 25 * y;  // dark 23→44, light 81→56
+  const habitL  = isDark ? 19 + 22 * b   : 80 - 23 * b;  // dark 19→41=HABIT_DARK,  light 80→57=HABIT_LIGHT
+  const momentL = isDark ? 23 + 19 * y   : 81 - 28 * y;  // dark 23→42=MOMENT_DARK, light 81→53=MOMENT_LIGHT
 
   if (y === 0) return `hsl(${HABIT_H}, ${habitS}%, ${Math.round(habitL)}%)`;
   if (b === 0) return `hsl(${MOMENT_H}, ${momentS}%, ${Math.round(momentL)}%)`;
@@ -103,6 +110,13 @@ function doesEntryMatchFilter(entry: HabitEntry, filter: HeatmapFilter): boolean
   if (filter.type === "boolean-habit") return entry.habits[filter.id]?.done ?? false;
   if (filter.type === "numeric-habit") return (entry.numeric[filter.id] ?? 0) > 0;
   return entry.moments.includes(filter.id);
+}
+
+/** Returns the exact palette color for a filter-match highlight. */
+function getFilterHighlightColor(filter: HeatmapFilter, isDark: boolean): string {
+  return filter.type === "moment"
+    ? (isDark ? MOMENT_DARK : MOMENT_LIGHT)
+    : (isDark ? HABIT_DARK  : HABIT_LIGHT);
 }
 
 /** Subscribes to changes on the <html> class list to detect active theme. */
@@ -262,10 +276,13 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
                 const entry = entryMap.get(dateStr) ?? null;
                 const isFuture = dateStr > today;
                 const isSelected = dateStr === selectedDate;
+                const matchesFilter = !!filter && !!entry && !isFuture && doesEntryMatchFilter(entry, filter);
                 const cellBg = entry && !isFuture
-                  ? computeCellColor(entry, isDark, activeHabitCount)
+                  ? (matchesFilter
+                      ? getFilterHighlightColor(filter, isDark)
+                      : computeCellColor(entry, isDark, activeHabitCount))
                   : undefined;
-                const dimmed = !!filter && !!entry && !isFuture && !doesEntryMatchFilter(entry, filter);
+                const dimmed = !!filter && !!entry && !isFuture && !matchesFilter;
                 const dayNum = parseInt(dateStr.split("-")[2], 10);
 
                 return (

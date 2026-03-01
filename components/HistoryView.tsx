@@ -73,8 +73,7 @@ export default function HistoryView() {
       />
 
       {/* ── Section divider + Frequency ─────────────────────── */}
-      <div className="mt-10 border-t border-stone-100 dark:border-stone-800">
-        <div className="pt-8">
+      <div className="mt-10 border-t border-stone-100 dark:border-stone-800 pt-8">
 
           {/* Toggle */}
           <button
@@ -90,17 +89,17 @@ export default function HistoryView() {
               {/* Period selector */}
               <div className="mt-5 mb-6 flex items-center justify-center gap-3">
                 <button type="button" onClick={() => setPeriod("month")}
-                  className={`text-xs uppercase tracking-widest transition-colors ${period === "month" ? "text-stone-900 dark:text-stone-100" : "text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300"}`}>
+                  className={`text-xs uppercase tracking-widest transition-colors ${period === "month" ? "text-stone-900 dark:text-stone-100 font-medium" : "text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300"}`}>
                   Month
                 </button>
                 <span className="text-stone-300 dark:text-stone-600">·</span>
                 <button type="button" onClick={() => setPeriod("3m")}
-                  className={`text-xs uppercase tracking-widest transition-colors ${period === "3m" ? "text-stone-900 dark:text-stone-100" : "text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300"}`}>
+                  className={`text-xs uppercase tracking-widest transition-colors ${period === "3m" ? "text-stone-900 dark:text-stone-100 font-medium" : "text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300"}`}>
                   3 Months
                 </button>
                 <span className="text-stone-300 dark:text-stone-600">·</span>
                 <button type="button" onClick={() => setPeriod("always")}
-                  className={`text-xs uppercase tracking-widest transition-colors ${period === "always" ? "text-stone-900 dark:text-stone-100" : "text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300"}`}>
+                  className={`text-xs uppercase tracking-widest transition-colors ${period === "always" ? "text-stone-900 dark:text-stone-100 font-medium" : "text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300"}`}>
                   Always
                 </button>
               </div>
@@ -116,7 +115,6 @@ export default function HistoryView() {
               />
             </>
           )}
-        </div>
       </div>
 
       {/* ── Day detail sheet ──────────────────────────────────── */}

@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calma — Design Language</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" referrerpolicy="no-referrer">
+<style>
+  /* ── Tokens ── */
+  :root {
+    --background: #fafaf9;
+    --foreground: #1c1917;
+    --muted:      #78716c;
+    --border:     #e7e5e4;
+    --accent:     #a8a29e;
+
+    --stone-50:  #fafaf9;
+    --stone-100: #f5f5f4;
+    --stone-200: #e7e5e4;
+    --stone-300: #d6d3d1;
+    --stone-400: #a8a29e;
+    --stone-500: #78716c;
+    --stone-600: #57534e;
+    --stone-700: #44403c;
+    --stone-800: #292524;
+    --stone-900: #1c1917;
+
+    --amber-100: #fef3c7;
+    --amber-400: #fbbf24;
+    --amber-500: #f59e0b;
+    --amber-700: #b45309;
+
+    --red-50:  #fef2f2;
+    --red-100: #fee2e2;
+    --red-400: #f87171;
+    --red-700: #b91c1c;
+
+    --radius-2xl: 1rem;
+    --radius-xl:  0.75rem;
+    --radius-full: 9999px;
+
+    --transition: 180ms ease;
+  }
+
+  [data-theme="dark"] {
+    --background: #1c1917;
+    --foreground: #fafaf9;
+    --muted:      #a8a29e;
+    --border:     #292524;
+    --accent:     #57534e;
+
+    --stone-50:  #292524;
+    --stone-100: #292524;
+    --stone-200: #3c3836;
+    --stone-300: #57534e;
+    --stone-400: #78716c;
+    --stone-500: #a8a29e;
+    --stone-600: #d6d3d1;
+    --stone-700: #e7e5e4;
+    --stone-800: #f5f5f4;
+    --stone-900: #fafaf9;
+
+    --amber-100: #2d1f04;
+    --amber-700: #fbbf24;
+  }
+
+  /* ── Reset ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    font-family: 'Lora', Georgia, serif;
+    font-weight: 300;
+    background: var(--background);
+    color: var(--foreground);
+    line-height: 1.7;
+    transition: background var(--transition), color var(--transition);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Layout ── */
+  .page {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 4rem 2rem 6rem;
+  }
+
+  /* ── Typography ── */
+  .page-title {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 1.75rem;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    color: var(--foreground);
+    line-height: 1.2;
+  }
+
+  .page-subtitle {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--stone-500);
+    margin-top: 0.5rem;
+  }
+
+  .section-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--stone-500);
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 1.1rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: var(--foreground);
+    margin-bottom: 0.75rem;
+    margin-top: 2.5rem;
+  }
+
+  h3 {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--stone-500);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: var(--stone-700);
+    margin-bottom: 1rem;
+    line-height: 1.8;
+  }
+
+  /* ── Sections ── */
+  .section {
+    margin-bottom: 4rem;
+  }
+
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 3.5rem 0;
+  }
+
+  /* ── Header ── */
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 4rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .theme-toggle {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone-500);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem 0;
+    transition: color var(--transition);
+    margin-top: 0.5rem;
+  }
+  .theme-toggle:hover { color: var(--stone-700); }
+
+  /* ── Example canvas ── */
+  .example {
+    background: var(--stone-50);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-2xl);
+    padding: 2rem;
+    margin: 1.5rem 0;
+  }
+
+  .example-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone-500);
+    margin-bottom: 1.25rem;
+  }
+
+  /* ── Color swatches ── */
+  .swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .swatch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .swatch-color {
+    width: 3rem;
+    height: 3rem;
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .swatch-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.05em;
+    color: var(--stone-500);
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .swatch-pair {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .swatch-color.light { border: 1px solid var(--border); }
+  .swatch-color.dark  { border: 1px solid rgba(255,255,255,0.08); }
+
+  /* ── Typography examples ── */
+  .type-row {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .type-row:last-child { border-bottom: none; }
+
+  .type-meta {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--stone-500);
+    min-width: 8rem;
+    flex-shrink: 0;
+  }
+
+  .t-page-title {
+    font-family: 'Lora', serif;
+    font-size: 1.4rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: var(--foreground);
+  }
+  .t-section-heading {
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    color: var(--stone-600);
+  }
+  .t-section-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--stone-500);
+  }
+  .t-body {
+    font-family: 'Lora', serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--stone-700);
+  }
+  .t-metadata {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    color: var(--stone-500);
+  }
+  .t-reflective {
+    font-family: 'Lora', serif;
+    font-size: 0.875rem;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.9;
+    color: var(--stone-700);
+  }
+
+  /* ── Button examples ── */
+  .btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .btn-primary {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: var(--stone-800);
+    color: var(--stone-50);
+    border: none;
+    border-radius: var(--radius-2xl);
+    padding: 0.9rem 2rem;
+    cursor: pointer;
+    transition: background var(--transition);
+    min-height: 44px;
+  }
+  .btn-primary:hover { background: var(--stone-700); }
+  .btn-primary:active { background: var(--stone-900); }
+
+  .btn-secondary {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: var(--background);
+    color: var(--stone-700);
+    border: 1px solid var(--stone-200);
+    border-radius: var(--radius-2xl);
+    padding: 0.9rem 2rem;
+    cursor: pointer;
+    transition: all var(--transition);
+    min-height: 44px;
+  }
+  .btn-secondary:hover { background: var(--stone-50); border-color: var(--stone-300); }
+
+  .btn-ghost {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--stone-500);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem 0;
+    text-decoration-offset: 3px;
+    transition: color var(--transition);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .btn-ghost:hover { text-decoration: underline; color: var(--stone-700); }
+
+  .btn-amber {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--amber-700);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem 0;
+    text-decoration-offset: 3px;
+    transition: color var(--transition);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .btn-amber:hover { text-decoration: underline; }
+
+  .btn-compact {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    background: var(--stone-800);
+    color: var(--stone-50);
+    border: none;
+    border-radius: var(--radius-xl);
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background var(--transition);
+    min-height: 44px;
+  }
+  .btn-compact:hover { background: var(--stone-700); }
+
+  .btn-pill {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    color: var(--stone-500);
+    background: none;
+    border: 1px dashed var(--stone-300);
+    border-radius: var(--radius-full);
+    padding: 0.4rem 1rem;
+    cursor: pointer;
+    transition: all var(--transition);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .btn-pill:hover { border-color: var(--stone-400); color: var(--stone-600); }
+
+  /* ── Chip examples ── */
+  .chip-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+  .chip {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.8rem;
+    padding: 0.4rem 1rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--stone-200);
+    background: var(--background);
+    color: var(--stone-600);
+    cursor: pointer;
+    transition: all var(--transition);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .chip:hover { border-color: var(--stone-400); }
+  .chip.selected {
+    background: var(--stone-600);
+    color: var(--stone-50);
+    border-color: var(--stone-600);
+  }
+
+  /* ── State table ── */
+  .state-demo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .state-item {
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .state-name {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--stone-500);
+  }
+
+  .state-value {
+    font-family: 'Lora', serif;
+    font-size: 0.875rem;
+    color: var(--stone-700);
+  }
+
+  .state-item.is-hover .state-value  { color: var(--stone-900); }
+  .state-item.is-active .state-value { color: var(--stone-900); font-weight: 500; }
+  .state-item.is-disabled .state-value { opacity: 0.35; }
+  .state-item.is-selected .state-value { color: var(--stone-900); font-weight: 500; }
+  .state-item.is-accent .state-value { color: var(--amber-700); }
+  .state-item.is-error .state-value { color: var(--red-700); }
+  .state-item.is-error { border-color: var(--red-100); background: var(--red-50); }
+
+  /* ── Form examples ── */
+  .input-example {
+    width: 100%;
+    font-family: 'Lora', serif;
+    font-size: 0.875rem;
+    font-weight: 300;
+    color: var(--stone-700);
+    background: var(--background);
+    border: 1px solid var(--stone-300);
+    border-radius: var(--radius-2xl);
+    padding: 0.75rem 1rem;
+    outline: none;
+    transition: border-color var(--transition);
+    margin-bottom: 0.75rem;
+  }
+  .input-example:focus { border-color: var(--stone-500); }
+  .input-example::placeholder { color: var(--stone-400); }
+
+  .textarea-example {
+    width: 100%;
+    font-family: 'Lora', serif;
+    font-size: 0.875rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--stone-700);
+    background: var(--background);
+    border: 1px solid var(--stone-300);
+    border-radius: var(--radius-2xl);
+    padding: 0.75rem 1rem;
+    outline: none;
+    resize: none;
+    transition: border-color var(--transition);
+  }
+  .textarea-example:focus { border-color: var(--stone-500); }
+  .textarea-example::placeholder { color: var(--stone-400); }
+
+  /* ── Page anatomy ── */
+  .anatomy {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    font-family: 'Jost', sans-serif;
+  }
+
+  .anatomy-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--stone-50);
+  }
+
+  .anatomy-title {
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: var(--foreground);
+  }
+
+  .anatomy-nav {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone-500);
+    margin-top: 0.2rem;
+  }
+
+  .anatomy-body { padding: 1.25rem 1.5rem; }
+
+  .anatomy-section { margin-bottom: 1.25rem; }
+
+  .anatomy-section-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone-500);
+    margin-bottom: 0.6rem;
+  }
+
+  .anatomy-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.8rem;
+    color: var(--stone-700);
+  }
+  .anatomy-item:last-child { border-bottom: none; }
+
+  .anatomy-toggle {
+    width: 2.2rem;
+    height: 1.2rem;
+    background: var(--stone-500);
+    border-radius: var(--radius-full);
+    position: relative;
+    flex-shrink: 0;
+  }
+  .anatomy-toggle::after {
+    content: '';
+    position: absolute;
+    width: 0.9rem;
+    height: 0.9rem;
+    background: white;
+    border-radius: 50%;
+    top: 0.15rem;
+    right: 0.15rem;
+  }
+  .anatomy-toggle.off {
+    background: var(--stone-300);
+  }
+  .anatomy-toggle.off::after { left: 0.15rem; right: auto; }
+
+  .anatomy-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border);
+    background: var(--stone-50);
+  }
+
+  /* ── Microcopy examples ── */
+  .microcopy-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .microcopy-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    padding: 0.875rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+  .microcopy-pair:last-child { border-bottom: none; }
+
+  .microcopy-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .microcopy-tag {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .microcopy-tag.avoid { color: var(--stone-500); }
+  .microcopy-tag.prefer { color: var(--amber-700); }
+
+  .microcopy-text {
+    font-family: 'Lora', serif;
+    font-size: 0.825rem;
+    font-style: italic;
+    line-height: 1.5;
+  }
+  .microcopy-text.avoid { color: var(--stone-500); }
+  .microcopy-text.prefer { color: var(--stone-700); }
+
+  /* ── Radius demo ── */
+  .radius-row {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .radius-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .radius-demo {
+    width: 3.5rem;
+    height: 3.5rem;
+    background: var(--stone-200);
+    border: 1px solid var(--stone-300);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .radius-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--stone-500);
+    text-align: center;
+  }
+
+  /* ── Spacing demo ── */
+  .spacing-demo {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .spacing-block {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .spacing-bar {
+    height: 1px;
+    flex: 1;
+    background: var(--border);
+  }
+
+  .spacing-fill {
+    background: var(--stone-100);
+    border-radius: var(--radius-xl);
+    height: 0.5rem;
+    flex: 1;
+  }
+
+  .spacing-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    color: var(--stone-500);
+    min-width: 4rem;
+    text-align: right;
+    text-transform: uppercase;
+  }
+
+  /* ── Not this section ── */
+  .not-this {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .not-this-item {
+    padding: 1rem;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    color: var(--stone-500);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .not-this-item::before {
+    content: '×';
+    font-size: 1rem;
+    color: var(--stone-300);
+    flex-shrink: 0;
+  }
+
+  /* ── Scroll fade in ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    .microcopy-row, .not-this, .state-demo { grid-template-columns: 1fr; }
+    .btn-row { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Header -->
+  <header class="header">
+    <div>
+      <div class="page-subtitle">Design Language</div>
+      <h1 class="page-title">Calma</h1>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+      ◐ Theme
+    </button>
+  </header>
+
+  <!-- Philosophy -->
+  <section class="section fade-in">
+    <div class="section-label">Philosophy</div>
+    <p>Every decision should pass one test: does this feel considered and human, or does it feel like software? Prefer the former. White space is not empty — it is calm. Typography is the primary design material. Color is used sparingly and always semantically.</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- Palette -->
+  <section class="section fade-in">
+    <div class="section-label">Palette</div>
+    <p>Built on the stone scale — warm off-whites and near-blacks rather than cold greys or pure blacks. Feels like paper and ink, not a screen. A single warm accent carries all emotional and action weight. Red is reserved for errors only.</p>
+
+    <h3>Base tokens</h3>
+    <div class="example">
+      <div class="example-label">Light · Dark</div>
+      <div class="swatches">
+        <div class="swatch">
+          <div class="swatch-pair">
+            <div class="swatch-color" style="background:#fafaf9;"></div>
+            <div class="swatch-color dark" style="background:#1c1917;"></div>
+          </div>
+          <div class="swatch-label">background</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-pair">
+            <div class="swatch-color" style="background:#1c1917;"></div>
+            <div class="swatch-color dark" style="background:#fafaf9;"></div>
+          </div>
+          <div class="swatch-label">foreground</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-pair">
+            <div class="swatch-color" style="background:#78716c;"></div>
+            <div class="swatch-color dark" style="background:#a8a29e;"></div>
+          </div>
+          <div class="swatch-label">muted</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-pair">
+            <div class="swatch-color" style="background:#e7e5e4;"></div>
+            <div class="swatch-color dark" style="background:#292524;"></div>
+          </div>
+          <div class="swatch-label">border</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-pair">
+            <div class="swatch-color" style="background:#a8a29e;"></div>
+            <div class="swatch-color dark" style="background:#57534e;"></div>
+          </div>
+          <div class="swatch-label">accent</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-pair">
+            <div class="swatch-color" style="background:#b45309;"></div>
+            <div class="swatch-color dark" style="background:#fbbf24;"></div>
+          </div>
+          <div class="swatch-label">amber</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-pair">
+            <div class="swatch-color" style="background:#b91c1c;"></div>
+            <div class="swatch-color dark" style="background:#f87171;"></div>
+          </div>
+          <div class="swatch-label">error</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Stone scale</h3>
+    <div class="example">
+      <div class="example-label">50 → 900</div>
+      <div class="swatches">
+        <div class="swatch"><div class="swatch-color" style="background:#fafaf9;"></div><div class="swatch-label">50</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#f5f5f4;"></div><div class="swatch-label">100</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#e7e5e4;"></div><div class="swatch-label">200</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#d6d3d1;"></div><div class="swatch-label">300</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#a8a29e;"></div><div class="swatch-label">400</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#78716c;"></div><div class="swatch-label">500</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#57534e;"></div><div class="swatch-label">600</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#44403c;"></div><div class="swatch-label">700</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#292524;"></div><div class="swatch-label">800</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#1c1917;"></div><div class="swatch-label">900</div></div>
+      </div>
+    </div>
+
+    <h3>Semantic rules</h3>
+    <div class="example">
+      <div class="example-label">Color by role</div>
+      <div class="anatomy-item"><span>Page title</span><span style="color:var(--stone-800);font-family:'Lora',serif;font-size:0.8rem;">stone-800</span></div>
+      <div class="anatomy-item"><span>Body text</span><span style="color:var(--stone-700);font-family:'Lora',serif;font-size:0.8rem;">stone-700</span></div>
+      <div class="anatomy-item"><span>Section labels</span><span style="color:var(--stone-500);font-family:'Jost',sans-serif;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;">stone-500</span></div>
+      <div class="anatomy-item"><span>Metadata</span><span style="color:var(--stone-400);font-family:'Jost',sans-serif;font-size:0.7rem;">stone-400</span></div>
+      <div class="anatomy-item"><span>Accent · joy · selection</span><span style="color:var(--amber-700);font-family:'Jost',sans-serif;font-size:0.7rem;">amber-700</span></div>
+      <div class="anatomy-item" style="border-bottom:none;"><span>Error</span><span style="color:var(--red-700);font-family:'Jost',sans-serif;font-size:0.7rem;">red-700</span></div>
+    </div>
+
+    <p style="font-size:0.8rem;color:var(--stone-500);margin-top:0.5rem;"><strong style="color:var(--stone-700);">Accessibility note:</strong> stone-400 fails WCAG AA on a light background (2.4:1 ratio). Never use it as body text in light mode.</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- Typography -->
+  <section class="section fade-in">
+    <div class="section-label">Typography</div>
+    <p>A single typeface throughout. Nothing competes. Headings use light weight and wide tracking — nothing feels heavy or urgent.</p>
+
+    <h3>Type scale</h3>
+    <div class="example">
+      <div class="example-label">Scale in use</div>
+      <div class="type-row">
+        <div class="type-meta">Page title</div>
+        <div class="t-page-title">History</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">Section heading</div>
+        <div class="t-section-heading">February 2026</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">Section label</div>
+        <div class="t-section-label">Habits</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">Body</div>
+        <div class="t-body">Meditation · 18 min</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">Metadata</div>
+        <div class="t-metadata">Last edited 3 Feb</div>
+      </div>
+      <div class="type-row" style="border-bottom:none;">
+        <div class="type-meta">Reflective</div>
+        <div class="t-reflective">Walked at dusk. The light came through the trees.</div>
+      </div>
+    </div>
+
+    <h3>The section label</h3>
+    <p>The single most consistent typographic element. Every section of every page uses it without exception. Uppercase, widest tracking, muted color. It creates a visual rhythm that unifies the whole system.</p>
+    <div class="example">
+      <div class="example-label">In context</div>
+      <div class="anatomy-section-label">Moments</div>
+      <div class="chip-row">
+        <div class="chip selected">Good meal</div>
+        <div class="chip">Inspiring song</div>
+        <div class="chip selected">Time in nature</div>
+        <div class="chip">Good conversation</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- Spacing & Layout -->
+  <section class="section fade-in">
+    <div class="section-label">Spacing &amp; Layout</div>
+    <p>Sections breathe. Use generous vertical space — cramped layouts feel anxious. Major thematic breaks use a hairline border divider with equal padding on either side.</p>
+
+    <h3>Page anatomy</h3>
+    <div class="example">
+      <div class="example-label">Page structure</div>
+      <div class="anatomy">
+        <div class="anatomy-header">
+          <div class="anatomy-title">Today</div>
+          <div class="anatomy-nav">Settings</div>
+        </div>
+        <div class="anatomy-body">
+          <div class="anatomy-section">
+            <div class="anatomy-section-label">Habits</div>
+            <div class="anatomy-item"><span>Meditation</span><div class="anatomy-toggle"></div></div>
+            <div class="anatomy-item"><span>Reading</span><div class="anatomy-toggle off"></div></div>
+            <div class="anatomy-item"><span>Exercise</span><div class="anatomy-toggle"></div></div>
+          </div>
+          <div class="anatomy-section" style="margin-top:1.25rem;">
+            <div class="anatomy-section-label">Moments</div>
+            <div class="chip-row">
+              <div class="chip selected" style="font-size:0.7rem;padding:0.3rem 0.75rem;min-height:36px;">Good meal</div>
+              <div class="chip" style="font-size:0.7rem;padding:0.3rem 0.75rem;min-height:36px;">Inspiring song</div>
+            </div>
+          </div>
+        </div>
+        <div class="anatomy-footer">
+          <button class="btn-primary" style="width:100%;font-size:0.7rem;padding:0.75rem;">Save — Day captured</button>
+        </div>
+      </div>
+    </div>
+
+    <h3>Mobile-first</h3>
+    <p>Max content width: 448px. Horizontal padding: 20px. Lines stay short and readable on any phone without feeling cramped on larger screens.</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- Interaction -->
+  <section class="section fade-in">
+    <div class="section-label">Interaction</div>
+    <p>Every interactive element transitions its colors on hover and active. Motion is subtle — color shifts only, no movement. Hover always shifts darker in light mode, lighter in dark mode.</p>
+
+    <h3>Buttons</h3>
+    <div class="example">
+      <div class="example-label">Variants</div>
+      <div class="btn-row">
+        <button class="btn-primary">Save</button>
+        <button class="btn-secondary">Export backup</button>
+        <button class="btn-compact">Rename</button>
+        <button class="btn-ghost">Edit</button>
+        <button class="btn-amber">Archive</button>
+        <button class="btn-pill">＋ New moment</button>
+      </div>
+    </div>
+
+    <h3>States</h3>
+    <div class="example">
+      <div class="example-label">Interaction states</div>
+      <div class="state-demo">
+        <div class="state-item is-hover">
+          <div class="state-name">Hover</div>
+          <div class="state-value">One step darker</div>
+        </div>
+        <div class="state-item is-active">
+          <div class="state-name">Active / pressed</div>
+          <div class="state-value">Two steps darker</div>
+        </div>
+        <div class="state-item is-disabled">
+          <div class="state-name">Disabled</div>
+          <div class="state-value">40% opacity</div>
+        </div>
+        <div class="state-item is-selected">
+          <div class="state-name">Selected</div>
+          <div class="state-value">stone-900 · strong</div>
+        </div>
+        <div class="state-item is-accent">
+          <div class="state-name">Accent selection</div>
+          <div class="state-value">amber-700 only</div>
+        </div>
+        <div class="state-item is-error">
+          <div class="state-name">Error</div>
+          <div class="state-value">Calm, specific</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Form elements</h3>
+    <div class="example">
+      <div class="example-label">Inputs</div>
+      <input class="input-example" type="text" placeholder="Habit name…">
+      <textarea class="textarea-example" rows="3" placeholder="How did today feel?"></textarea>
+    </div>
+
+    <h3>Symbols &amp; states</h3>
+    <p>When a symbol needs to communicate two states — resting and active — use an outlined form for the default and a filled amber form for the selected state. The transition between them should feel considered, not mechanical. Any simple shape can carry this pattern: the example below uses a five-petal form. Tap to toggle.</p>
+    <div class="example">
+      <div class="example-label">Resting · Active</div>
+      <div style="display:flex;gap:2rem;align-items:center;">
+        <button onclick="toggleBlossom(this)" style="background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:0.5rem;min-width:44px;min-height:44px;transition:transform 150ms ease;" onmousedown="this.style.transform='scale(0.88)'" onmouseup="this.style.transform='scale(1)'" onmouseleave="this.style.transform='scale(1)'">
+          <svg id="blossom-empty" width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <ellipse cx="12" cy="5.5" rx="2.2" ry="3.5" stroke="var(--stone-400)" stroke-width="1.3" opacity="0.5"/>
+            <ellipse cx="12" cy="5.5" rx="2.2" ry="3.5" stroke="var(--stone-400)" stroke-width="1.3" opacity="0.5" transform="rotate(72 12 12)"/>
+            <ellipse cx="12" cy="5.5" rx="2.2" ry="3.5" stroke="var(--stone-400)" stroke-width="1.3" opacity="0.5" transform="rotate(144 12 12)"/>
+            <ellipse cx="12" cy="5.5" rx="2.2" ry="3.5" stroke="var(--stone-400)" stroke-width="1.3" opacity="0.5" transform="rotate(216 12 12)"/>
+            <ellipse cx="12" cy="5.5" rx="2.2" ry="3.5" stroke="var(--stone-400)" stroke-width="1.3" opacity="0.5" transform="rotate(288 12 12)"/>
+            <circle cx="12" cy="12" r="2" fill="var(--stone-200)"/>
+          </svg>
+          <svg id="blossom-filled" width="28" height="28" viewBox="0 0 24 24" fill="none" style="display:none;">
+            <ellipse cx="12" cy="5.5" rx="2.2" ry="3.5" fill="#fbbf24" stroke="#f59e0b" stroke-width="0.75" opacity="0.9"/>
+            <ellipse cx="12" cy="5.5" rx="2.2" ry="3.5" fill="#fbbf24" stroke="#f59e0b" stroke-width="0.75" opacity="0.9" transform="rotate(72 12 12)"/>
+            <ellipse cx="12" cy="5.5" rx="2.2" ry="3.5" fill="#fbbf24" stroke="#f59e0b" stroke-width="0.75" opacity="0.9" transform="rotate(144 12 12)"/>
+            <ellipse cx="12" cy="5.5" rx="2.2" ry="3.5" fill="#fbbf24" stroke="#f59e0b" stroke-width="0.75" opacity="0.9" transform="rotate(216 12 12)"/>
+            <ellipse cx="12" cy="5.5" rx="2.2" ry="3.5" fill="#fbbf24" stroke="#f59e0b" stroke-width="0.75" opacity="0.9" transform="rotate(288 12 12)"/>
+            <circle cx="12" cy="12" r="2.2" fill="#f59e0b"/>
+            <circle cx="12" cy="12" r="1" fill="#fef3c7"/>
+          </svg>
+        </button>
+        <div style="font-family:'Lora',serif;font-size:0.825rem;font-style:italic;color:var(--stone-500);line-height:1.7;">
+          Outlined at rest — present<br>but undemanding. Amber<br>when active.
+        </div>
+      </div>
+    </div>
+
+    <h3>Touch targets</h3>
+    <p>Minimum 44×44px on all tappable elements. Disabled elements are dimmed, never hidden — absence without explanation is confusing.</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- Shape -->
+  <section class="section fade-in">
+    <div class="section-label">Shape</div>
+    <p>Border radius follows a simple hierarchy based on element scale. Consistency matters more than the specific values — the system should feel rounded and approachable, never boxy, never so round it feels playful.</p>
+
+    <div class="example">
+      <div class="example-label">Radius scale</div>
+      <div class="radius-row">
+        <div class="radius-box">
+          <div class="radius-demo" style="border-radius:1rem;"></div>
+          <div class="radius-label">2xl<br>page-level</div>
+        </div>
+        <div class="radius-box">
+          <div class="radius-demo" style="border-radius:0.75rem;"></div>
+          <div class="radius-label">xl<br>compact</div>
+        </div>
+        <div class="radius-box">
+          <div class="radius-demo" style="border-radius:9999px;"></div>
+          <div class="radius-label">full<br>pills</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- Writing & Microcopy -->
+  <section class="section fade-in">
+    <div class="section-label">Writing &amp; Microcopy</div>
+    <p>Words are design material. They should feel as considered as any visual element. No exclamation marks. No all-caps except the section label pattern. Labels are plain and human.</p>
+
+    <h3>Examples</h3>
+    <div class="example">
+      <div class="example-label">Avoid · Prefer</div>
+      <div class="microcopy-list">
+        <div class="microcopy-pair">
+          <div class="microcopy-col">
+            <div class="microcopy-tag avoid">Avoid</div>
+            <div class="microcopy-text avoid">You missed this day</div>
+          </div>
+          <div class="microcopy-col">
+            <div class="microcopy-tag prefer">Prefer</div>
+            <div class="microcopy-text prefer">Nothing here yet</div>
+          </div>
+        </div>
+        <div class="microcopy-pair">
+          <div class="microcopy-col">
+            <div class="microcopy-tag avoid">Avoid</div>
+            <div class="microcopy-text avoid">Saved successfully!</div>
+          </div>
+          <div class="microcopy-col">
+            <div class="microcopy-tag prefer">Prefer</div>
+            <div class="microcopy-text prefer">Day captured</div>
+          </div>
+        </div>
+        <div class="microcopy-pair">
+          <div class="microcopy-col">
+            <div class="microcopy-tag avoid">Avoid</div>
+            <div class="microcopy-text avoid">Appearance Settings</div>
+          </div>
+          <div class="microcopy-col">
+            <div class="microcopy-tag prefer">Prefer</div>
+            <div class="microcopy-text prefer">Theme</div>
+          </div>
+        </div>
+        <div class="microcopy-pair">
+          <div class="microcopy-col">
+            <div class="microcopy-tag avoid">Avoid</div>
+            <div class="microcopy-text avoid">Invalid file format detected</div>
+          </div>
+          <div class="microcopy-col">
+            <div class="microcopy-tag prefer">Prefer</div>
+            <div class="microcopy-text prefer">That file doesn't look right — try exporting a fresh backup</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- What this is not -->
+  <section class="section fade-in">
+    <div class="section-label">What this system is not</div>
+    <div class="not-this">
+      <div class="not-this-item">A productivity aesthetic</div>
+      <div class="not-this-item">Minimal for its own sake</div>
+      <div class="not-this-item">Icon-driven navigation</div>
+      <div class="not-this-item">Bright accent colors</div>
+      <div class="not-this-item">Progress bars or streaks</div>
+      <div class="not-this-item">Cold greys or pure blacks</div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border);">
+    <p style="font-size:0.7rem;color:var(--stone-400);font-family:'Jost',sans-serif;letter-spacing:0.1em;">Calma · Design Language · v1.0</p>
+  </footer>
+
+</div>
+
+<script>
+  // Theme toggle
+  function toggleTheme() {
+    const html = document.documentElement;
+    html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+  }
+
+  // Blossom toggle
+  function toggleBlossom(btn) {
+    const empty  = btn.querySelector('#blossom-empty');
+    const filled = btn.querySelector('#blossom-filled');
+    const showFilled = empty.style.display !== 'none';
+    empty.style.display  = showFilled ? 'none'  : 'block';
+    filled.style.display = showFilled ? 'block' : 'none';
+  }
+
+  // Scroll-triggered fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
