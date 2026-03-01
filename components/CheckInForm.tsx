@@ -19,6 +19,7 @@ import HabitToggle from "@/components/HabitToggle";
 import NumberStepper from "@/components/NumberStepper";
 import MomentChip from "@/components/MomentChip";
 import Chevron from "@/components/Chevron";
+import BlossomIcon from "@/components/BlossomIcon";
 
 interface Props {
   /** When provided, the form runs in edit mode for that specific date. */
@@ -399,6 +400,39 @@ export default function CheckInForm({ date }: Props) {
           )}
         </div>
       </section>
+
+      {/* ── Joy ───────────────────────────────────────────────────── */}
+      {(() => {
+        const joyHabits = activeBoolean.filter(h => fields.habits[h.id]?.done);
+        if (joyHabits.length === 0) return null;
+        return (
+          <section className="mb-10">
+            <h2 className="mb-3 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
+              What felt particularly good today?
+            </h2>
+            <div className="rounded-2xl bg-stone-50 dark:bg-stone-800/50 border border-stone-100 dark:border-stone-800 px-4 py-4">
+              {joyHabits.map(h => {
+                const joyValue = fields.habits[h.id]?.joy ?? false;
+                return (
+                  <div key={h.id} className="flex items-center justify-between py-2">
+                    <span className="text-sm text-stone-700 dark:text-stone-300">
+                      {h.label}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setHabit(h.id, { done: true, joy: !joyValue })}
+                      aria-label={joyValue ? "Remove joy" : "Mark as joyful"}
+                      className="min-h-[44px] min-w-[44px] flex items-center justify-end transition-transform active:scale-90"
+                    >
+                      <BlossomIcon filled={joyValue} />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        );
+      })()}
 
       {/* ── Reflection ─────────────────────────────────────────────── */}
       <section className="mb-10">

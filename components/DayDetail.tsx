@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, startTransition } from "react";
+import { useState, useEffect, useLayoutEffect, startTransition } from "react";
 import Link from "next/link";
 import type { HabitEntry } from "@/types/entry";
 import {
@@ -60,8 +60,10 @@ export default function DayDetail({ date, entry, onClose }: Props) {
     return () => clearTimeout(id);
   }, []);
 
-  // Prevent body scroll while the sheet is open
-  useEffect(() => {
+  // Prevent body scroll while the sheet is open.
+  // useLayoutEffect ensures cleanup runs synchronously during navigation so the
+  // lock is never left behind when the user switches pages mid-animation.
+  useLayoutEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
   }, []);
