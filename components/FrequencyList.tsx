@@ -36,7 +36,9 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
     habits: DEFAULT_HABIT_CONFIGS,
     moments: DEFAULT_MOMENT_CONFIGS,
   });
-  const [hintSeen, setHintSeen] = useState(false);
+  // null = not yet read from localStorage (don't render hint until known)
+  const [hintSeen, setHintSeen] = useState<boolean | null>(null);
+  const [hintDismissing, setHintDismissing] = useState(false);
 
   useEffect(() => {
     startTransition(() => setConfigs(getConfigs()));
@@ -49,8 +51,10 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
   }, []);
 
   const dismissHint = () => {
+    setHintDismissing(true);
     localStorage.setItem(HINT_KEY, "true");
-    setHintSeen(true);
+    // Remove from DOM after the fade-out completes
+    setTimeout(() => setHintSeen(true), 300);
   };
 
   // Filter entries by period
@@ -110,10 +114,19 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
         </p>
       ) : (
         <>
-          {!hintSeen && (
-            <p className="text-xs text-stone-500 dark:text-stone-400 mb-4">
-              Tap any item to filter the calendar
-            </p>
+          {hintSeen === false && (
+            <div
+              className="overflow-hidden transition-all duration-300"
+              style={{
+                opacity: hintDismissing ? 0 : 1,
+                maxHeight: hintDismissing ? "0px" : "2rem",
+                marginBottom: hintDismissing ? "0px" : "1rem",
+              }}
+            >
+              <p className="text-xs text-stone-500 dark:text-stone-400">
+                Tap any item to filter the calendar
+              </p>
+            </div>
           )}
           <ul>
           {items.map((item) => {
