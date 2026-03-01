@@ -28,9 +28,61 @@
   --font-sans: var(--font-geist-sans);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+/* ── Month slide ──────────────────────────────────────── */
+.calendar-grid-wrap { overflow: hidden; }
+.calendar-grid { transition: transform 220ms ease-out, opacity 220ms ease-out; }
+.calendar-grid.slide-exit-left  { transform: translateX(-60px); opacity: 0; }
+.calendar-grid.slide-exit-right { transform: translateX( 60px); opacity: 0; }
+.calendar-grid.slide-enter-left  { transform: translateX(-60px); opacity: 0; transition: none; }
+.calendar-grid.slide-enter-right { transform: translateX( 60px); opacity: 0; transition: none; }
+.month-heading { transition: opacity 110ms ease; }
+.month-heading.fading { opacity: 0; }
+
+/* ── Frequency open / close ───────────────────────────── */
+/* grid-template-rows transitions the *actual* content height, not an
+   arbitrary max-height ceiling, so the easing maps directly to what
+   is visible — no dead zone at the start of the collapse. */
+.frequency-body {
+  display: grid; grid-template-rows: 0fr; opacity: 0;
+  transition: grid-template-rows 320ms ease-out, opacity 250ms ease-out;
+}
+/* Direct child must be overflow:hidden for the grid row trick to work */
+.frequency-body > div { overflow: hidden; }
+.frequency-body.is-open    { grid-template-rows: 1fr; opacity: 1; }
+.frequency-body.is-closing {
+  grid-template-rows: 0fr; opacity: 0;
+  transition: grid-template-rows 600ms ease-in-out, opacity 200ms ease-in;
+}
+.frequency-chevron { transition: transform 200ms ease; }
+.frequency-chevron.is-open { transform: rotate(180deg); }
+
+/* ── Time-period fade pulse ───────────────────────────── */
+.heatmap-grid, .frequency-list { transition: opacity 120ms ease-in; }
+.heatmap-grid.is-updating, .frequency-list.is-updating { opacity: 0.35; }
+
+/* ── Frequency bar growth ─────────────────────────────── */
+.frequency-bar { transition: width 250ms ease-out; }
+/* Instantly zero bars then let the transition grow them back in */
+.bars-resetting .frequency-bar { width: 0% !important; transition: none; }
+
+/* ── Reduced motion ───────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .calendar-grid,
+  .month-heading,
+  .frequency-body, .frequency-body > div, .frequency-body.is-open, .frequency-body.is-closing,
+  .frequency-chevron,
+  .heatmap-grid, .frequency-list,
+  .frequency-bar,
+  .bars-resetting .frequency-bar { transition: none; animation: none; }
 }

@@ -252,7 +252,7 @@ export default function ManageView() {
           href="#moments"
           className="text-xs text-stone-400 underline-offset-4 hover:underline dark:text-stone-500"
         >
-          Jump to Moments ↓
+          Jump to Moments <Chevron direction="down" size={13} />
         </a>
       </div>
 

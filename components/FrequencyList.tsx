@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, startTransition } from "react";
+import { useState, useEffect, useRef, startTransition } from "react";
 import type { HabitEntry } from "@/types/entry";
 import {
   getConfigs,
@@ -39,6 +39,10 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
   // null = not yet read from localStorage (don't render hint until known)
   const [hintSeen, setHintSeen] = useState<boolean | null>(null);
   const [hintDismissing, setHintDismissing] = useState(false);
+  // DOM ref for the bar list — used to apply .bars-resetting class directly
+  // (avoids setState-in-effect; CSS handles the 0%→target% growth animation)
+  const barsListRef = useRef<HTMLUListElement>(null);
+  const prevPeriodRef = useRef(period);
 
   useEffect(() => {
     startTransition(() => setConfigs(getConfigs()));
@@ -49,6 +53,20 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
       setHintSeen(localStorage.getItem(HINT_KEY) === "true");
     });
   }, []);
+
+  // When period changes: briefly add .bars-resetting so bars start at 0%,
+  // then remove it to let the CSS transition grow them back to their target width.
+  useEffect(() => {
+    if (prevPeriodRef.current !== period) {
+      prevPeriodRef.current = period;
+      const el = barsListRef.current;
+      if (!el) return;
+      el.classList.add("bars-resetting");
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        el.classList.remove("bars-resetting");
+      }));
+    }
+  }, [period]);
 
   const dismissHint = () => {
     setHintDismissing(true);
@@ -128,7 +146,7 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
               </p>
             </div>
           )}
-          <ul>
+          <ul ref={barsListRef}>
           {items.map((item) => {
             const isActive = !!activeFilter && activeFilter.id === item.id;
             return (
@@ -150,9 +168,9 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
                   </span>
                   <div className="flex-1 flex flex-col justify-center">
                     <span>{item.label}</span>
-                    <div className="mt-1.5 h-0.5 w-full rounded-full bg-stone-100 dark:bg-stone-800">
+                    <div className="mt-1.5 h-0.5 w-full rounded-full">
                       <div
-                        className={`h-full rounded-full ${
+                        className={`h-full rounded-full frequency-bar ${
                           isActive
                             ? "bg-amber-400 dark:bg-amber-500"
                             : "bg-stone-300 dark:bg-stone-600"

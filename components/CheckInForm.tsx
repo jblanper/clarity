@@ -42,6 +42,12 @@ const emptyFields: FormFields = {
   reflection: "",
 };
 
+// Stable reference used to detect when configs have been loaded from localStorage
+const DEFAULT_CONFIGS: AppConfigs = {
+  habits: DEFAULT_HABIT_CONFIGS,
+  moments: DEFAULT_MOMENT_CONFIGS,
+};
+
 /** Returns today's date as a YYYY-MM-DD string in local time. */
 function getTodayDate(): string {
   const now = new Date();
@@ -101,11 +107,9 @@ export default function CheckInForm({ date }: Props) {
 
   const [fields, setFields] = useState<FormFields>(emptyFields);
   const [saveState, setSaveState] = useState<SaveState>("idle");
-  // Initialise with defaults so first render matches SSR; updated on mount.
-  const [configs, setConfigs] = useState<AppConfigs>({
-    habits: DEFAULT_HABIT_CONFIGS,
-    moments: DEFAULT_MOMENT_CONFIGS,
-  });
+  // Initialise with DEFAULT_CONFIGS (stable reference) so configs === DEFAULT_CONFIGS
+  // on first render; after setConfigs(getConfigs()) the reference changes.
+  const [configs, setConfigs] = useState<AppConfigs>(DEFAULT_CONFIGS);
 
   useEffect(() => {
     startTransition(() => setConfigs(getConfigs()));
@@ -403,15 +407,15 @@ export default function CheckInForm({ date }: Props) {
 
       {/* ── Joy ───────────────────────────────────────────────────── */}
       {(() => {
-        const joyHabits = activeBoolean.filter(h => fields.habits[h.id]?.done);
-        if (joyHabits.length === 0) return null;
+        const doneHabits = activeBoolean.filter((h) => fields.habits[h.id]?.done);
+        if (doneHabits.length === 0) return null;
         return (
           <section className="mb-10">
             <h2 className="mb-3 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
               What felt particularly good today?
             </h2>
             <div className="rounded-2xl bg-stone-50 dark:bg-stone-800/50 border border-stone-100 dark:border-stone-800 px-4 py-4">
-              {joyHabits.map(h => {
+              {doneHabits.map((h) => {
                 const joyValue = fields.habits[h.id]?.joy ?? false;
                 return (
                   <div key={h.id} className="flex items-center justify-between py-2">

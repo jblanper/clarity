@@ -1,29 +1,34 @@
 interface Props {
-  direction: "left" | "right";
+  direction: "up" | "down" | "left" | "right";
+  size?: number;
   className?: string;
 }
 
-/** Inline SVG chevron. Inherits color from parent via currentColor. Sizes to 1em. */
-export default function Chevron({ direction, className = "" }: Props) {
-  const d =
-    direction === "left"
-      ? "M 11 3 L 5 8 L 11 13"
-      : "M 5 3 L 11 8 L 5 13";
+const ROTATIONS: Record<Props["direction"], number> = {
+  up: 0,
+  right: 90,
+  down: 180,
+  left: 270,
+};
 
+/** Inline SVG chevron. Inherits color from parent via currentColor. Sizes to 1em by default. */
+export default function Chevron({ direction, size, className = "" }: Props) {
+  const rotation = ROTATIONS[direction];
   return (
     <svg
-      viewBox="0 0 16 16"
-      width="1em"
-      height="1em"
+      viewBox="0 0 24 24"
+      width={size ?? "1em"}
+      height={size ?? "1em"}
       fill="none"
       stroke="currentColor"
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
+      style={{ transform: `rotate(${rotation}deg)` }}
       className={`inline-block align-[-0.125em] opacity-50 dark:opacity-100 ${className}`}
     >
-      <path d={d} />
+      <polyline points="18 15 12 9 6 15" />
     </svg>
   );
 }
