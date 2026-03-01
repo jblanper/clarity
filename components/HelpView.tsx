@@ -25,139 +25,65 @@ export default function HelpView() {
         </Link>
       </header>
 
-      {/* ── What is Clarity ───────────────────────────────────────── */}
+      {/* ── A Place for Clarity ───────────────────────────────────── */}
       <section className="mb-8">
-        <h2 className={SECTION_LABEL}>What is Clarity</h2>
+        <h2 className={SECTION_LABEL}>A Place for Clarity</h2>
         <p className={BODY}>
-          Clarity is a personal daily tracker for habits, numbers, moments, and
-          reflections. It is designed to be used in the evening — a quiet
-          end-of-day ritual rather than an all-day monitor. The goal is not to
-          optimise or perform, but to notice: what you did, what brought you
-          joy, what felt worth remembering.
-        </p>
-        <p className={`${BODY} mt-4`}>
-          Over time, the entries build into something like a diary — a record of
-          what your days were actually made of.
+          Clarity is a quiet space for daily noticing. It is built for a single 
+          end-of-day entry: a record of the habits you chose, the moments that 
+          arrived, and the reflections worth keeping. It is a tool for seeing 
+          what your days are made of, without judgment or urgency.
         </p>
       </section>
 
       <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
 
-      {/* ── Habits and Moments ────────────────────────────────────── */}
+      {/* ── Logging ───────────────────────────────────────────────── */}
       <section className="mb-8">
-        <h2 className={SECTION_LABEL}>Habits and Moments</h2>
+        <h2 className={SECTION_LABEL}>Logging</h2>
         <p className={BODY}>
-          The most important distinction in Clarity is between a Habit and a
-          Moment.
-        </p>
-        <p className={`${BODY} mt-4`}>
-          A Habit is something intentional and recurring — an action you chose
-          to do, or tried to do. Meditating, exercising, reading, journalling.
-          Habits repeat by design. Some days you do them out of discipline,
-          other days they genuinely lift your mood. Clarity captures both.
-        </p>
-        <p className={`${BODY} mt-4`}>
-          A Moment is something unplanned that brought joy — something that
-          happened to you rather than something you set out to do. A good meal,
-          an interesting conversation, time in nature, an inspiring piece of
-          music. Moments don&apos;t repeat on a schedule. They arrive.
-        </p>
-        <p className={`${BODY} mt-4`}>
-          The distinction matters because mixing them up flattens the picture.
-          Discipline and delight are both worth tracking, but they&apos;re different
-          things.
+          Distinguish between intentional habits and unplanned moments to see 
+          the balance of discipline and surprise. Mark habits with a joy blossom, 
+          use custom steps for numeric counters, and set &quot;Joy by default&quot; in 
+          Manage for activities that always lift your mood.
         </p>
       </section>
 
       <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
 
-      {/* ── The Joy Layer ─────────────────────────────────────────── */}
+      {/* ── History & Insights ────────────────────────────────────── */}
       <section className="mb-8">
-        <h2 className={SECTION_LABEL}>The Joy Layer</h2>
+        <h2 className={SECTION_LABEL}>History & Insights</h2>
         <p className={BODY}>
-          Boolean habits — the ones you either did or didn&apos;t do — have a third
-          state beyond done and not done: done with joy. A heart indicator on
-          the check-in form captures this. When a habit is done, an outlined
-          heart appears. Tapping it marks the habit as done with joy.
-        </p>
-        <p className={`${BODY} mt-4`}>
-          Some habits default to joy (like Meditation or Reading), others
-          default to done without joy (like Exercise or Journalling). You can
-          change the default for any habit in Manage, and you can always
-          override it on any given day.
-        </p>
-        <p className={`${BODY} mt-4`}>
-          The distinction is honest. Some days meditation is a delight. Other
-          days it is a discipline. Both are valid. Both are worth knowing.
+          The heatmap blends habit completion (Dusk Blue) with emotional intensity 
+          (Warm Ember). Any day in your history can be opened and edited at any 
+          time. Tap any item in the list below the calendar to filter the view 
+          and find correlations in your life.
         </p>
       </section>
 
       <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
 
-      {/* ── Numeric Habits ────────────────────────────────────────── */}
+      {/* ── Ownership & Archiving ─────────────────────────────────── */}
       <section className="mb-8">
-        <h2 className={SECTION_LABEL}>Numeric Habits</h2>
+        <h2 className={SECTION_LABEL}>Ownership & Archiving</h2>
         <p className={BODY}>
-          Some things are better tracked with a number — hours of sleep, cups
-          of coffee, pages read. Numeric habits use a stepper with a unit
-          label. Each one has a custom step size so the increments feel natural
-          for what you&apos;re counting.
+          Your data never leaves your device. Archive habits or moments to hide 
+          them from your daily form without losing their historical records. 
+          Use Settings to export backups, import data, or perform a factory 
+          reset to start fresh.
         </p>
       </section>
 
       <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
 
-      {/* ── The History View ──────────────────────────────────────── */}
+      {/* ── Calma ─────────────────────────────────────────────────── */}
       <section className="mb-8">
-        <h2 className={SECTION_LABEL}>The History View</h2>
+        <h2 className={SECTION_LABEL}>Calma</h2>
         <p className={BODY}>
-          The History page shows a calendar heatmap of your entries. Days are
-          coloured by a blend of two signals: how many habits you completed, and
-          how many moments you experienced. Tapping any day opens a detail view
-          showing everything logged for that day.
-        </p>
-        <p className={`${BODY} mt-4`}>
-          Any past entry — or future one — can be edited. There is no
-          restriction. Clarity is a private tool with no leaderboard to game.
-          Life happens: you forget to log, you travel, you remember something at
-          2am. A last-edited timestamp appears on edited entries, quietly,
-          without judgement.
-        </p>
-      </section>
-
-      <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
-
-      {/* ── Your Data ─────────────────────────────────────────────── */}
-      <section className="mb-8">
-        <h2 className={SECTION_LABEL}>Your Data</h2>
-        <p className={BODY}>
-          Everything is stored on your device. Nothing is sent anywhere. You
-          can export a full backup as a JSON file at any time from Settings, and
-          import it again if you change devices or want to keep a local copy.
-          The file is human-readable and can be opened in any text editor.
-        </p>
-        <p className={`${BODY} mt-4`}>
-          Nothing in Clarity is ever permanently deleted. Habits and moments you
-          no longer want on your check-in form can be archived — they disappear
-          from the form but remain in all past entries. You can restore them at
-          any time from Manage.
-        </p>
-      </section>
-
-      <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
-
-      {/* ── A Note on Design ──────────────────────────────────────── */}
-      <section className="mb-8">
-        <h2 className={SECTION_LABEL}>A Note on Design</h2>
-        <p className={BODY}>
-          Clarity was designed to feel like opening a beloved notebook — warm,
-          unhurried, personal. There are no streaks, no badges, no reminders,
-          no scores. The app does not reward you for using it and does not
-          punish you for stepping away.
-        </p>
-        <p className={`${BODY} mt-4`}>
-          Some days are full entries. Some days are a single moment and a line
-          of reflection. Both are enough.
+          Clarity follows the Calma system: warm tones, paper-like typography, 
+          and zero urgency. No streaks, no scores, no guilt. Both full entries 
+          and single lines of reflection are enough.
         </p>
       </section>
 

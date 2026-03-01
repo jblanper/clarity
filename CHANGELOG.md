@@ -1,5 +1,15 @@
 # Changelog
 
+## [v2.1.1] — 2026-03-01
+
+### Improvements
+- **Help page update** — content condensed and refined for better flow and tone; now includes specific details on heatmap coloring (Dusk Blue for habits, Warm Ember for joy/moments) and pattern filtering.
+- **Documentation** — added a new `docs/help.md` file with the refined help content for easier reference.
+- **A Place for Clarity** — renamed the introductory section of the Help page to better reflect the app's reflective nature.
+
+### Fixes
+- **Functional Clarity** — help content now explicitly mentions the ability to edit past entries from the history page and how archiving preserves historical data.
+
 ## [v2.1.0] — 2026-03-01
 
 ### New features
