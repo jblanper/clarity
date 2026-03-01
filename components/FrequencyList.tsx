@@ -29,15 +29,29 @@ interface FrequencyItem {
   count: number;
 }
 
+const HINT_KEY = "clarity-frequency-hint-seen";
+
 export default function FrequencyList({ entries, period, viewedYear, viewedMonth, activeFilter, onFilterChange }: Props) {
   const [configs, setConfigs] = useState<AppConfigs>({
     habits: DEFAULT_HABIT_CONFIGS,
     moments: DEFAULT_MOMENT_CONFIGS,
   });
+  const [hintSeen, setHintSeen] = useState(false);
 
   useEffect(() => {
     startTransition(() => setConfigs(getConfigs()));
   }, []);
+
+  useEffect(() => {
+    startTransition(() => {
+      setHintSeen(localStorage.getItem(HINT_KEY) === "true");
+    });
+  }, []);
+
+  const dismissHint = () => {
+    localStorage.setItem(HINT_KEY, "true");
+    setHintSeen(true);
+  };
 
   // Filter entries by period
   const filtered = (() => {
@@ -95,16 +109,23 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
           Nothing logged in this period
         </p>
       ) : (
-        <ul>
+        <>
+          {!hintSeen && (
+            <p className="text-xs text-stone-500 dark:text-stone-400 mb-4">
+              Tap any item to filter the calendar
+            </p>
+          )}
+          <ul>
           {items.map((item) => {
             const isActive = !!activeFilter && activeFilter.id === item.id;
             return (
               <li key={item.id}>
                 <button
                   type="button"
-                  onClick={() =>
-                    onFilterChange?.(isActive ? null : { type: item.type, id: item.id })
-                  }
+                  onClick={() => {
+                    dismissHint();
+                    onFilterChange?.(isActive ? null : { type: item.type, id: item.id });
+                  }}
                   className={`w-full text-left rounded-xl min-h-[44px] py-2 flex items-center gap-2 text-sm transition-colors active:bg-stone-100 dark:active:bg-stone-800 ${
                     isActive
                       ? "text-amber-700 dark:text-amber-500"
@@ -131,7 +152,8 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
               </li>
             );
           })}
-        </ul>
+          </ul>
+        </>
       )}
     </>
   );
