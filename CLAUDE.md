@@ -7,6 +7,9 @@ A mobile-first Next.js habit tracker. Log daily habits, numbers, moments, and re
 Next.js App Router · TypeScript strict · Tailwind CSS v4 · localStorage · Jest · GitHub Pages (`https://jblanper.github.io/clarity/`)
 
 ## Style & Vibes
+
+> The full design language spec lives in **`docs/calma-design-language.md`** (system: Calma). Follow it for all new UI work. The notes below are a practical summary; the doc is the source of truth for palette, typography, spacing, interaction, and microcopy principles.
+
 - **Typographic** — text-based navigation (← back, Settings), no icons or emojis.
 - **Stone palette** — warm off-whites/near-blacks. No bright accent colours. See `globals.css`.
 - **Section labels** — `text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500` everywhere. Must be reused for any new section.
@@ -32,11 +35,12 @@ Next.js App Router · TypeScript strict · Tailwind CSS v4 · localStorage · Je
 /history    History      BottomNav visible
 /settings   Settings     BottomNav hidden — back via sessionStorage + router.push()
 /manage     Manage       BottomNav hidden — back via ← Settings link
+/help       Help         BottomNav hidden — back via ← Settings link
 /edit       Edit         BottomNav hidden — back via ← history link
 ```
 
 - **Page headers** — `flex items-start justify-between`: title left, nav link top-right in `text-xs uppercase tracking-widest text-stone-600`.
-- **Settings back** — caller writes `sessionStorage.setItem("settings-back", "/")` before navigating; SettingsView reads it on mount and calls `router.push(backDest)`, never `router.back()`.
+- **Settings back** — caller writes `sessionStorage.setItem("settings-back", "/" | "/history")` before navigating; SettingsView reads it on mount and calls `router.push(backDest)`, never `router.back()`. Today sets `"/"`, HistoryView sets `"/history"`.
 - **DayDetail → Edit** — `/edit?date=[date]`; on save redirects to `/history?open=[date]`; HistoryView auto-opens DayDetail then cleans the URL with `replaceState`.
 
 ## Project Structure
@@ -49,7 +53,7 @@ components/
   CheckInForm.tsx    # today + edit mode (date? prop)
   HabitToggle.tsx / NumberStepper.tsx / MomentChip.tsx
   BlossomIcon.tsx    # SVG blossom for joy marking (empty / filled states)
-  ManageView.tsx / SettingsView.tsx / CalendarHeatmap.tsx
+  ManageView.tsx / SettingsView.tsx / HelpView.tsx / CalendarHeatmap.tsx
   FrequencyList.tsx  # ranked habit/moment count list with period selector and calendar filter
   DayDetail.tsx / BottomNav.tsx
 lib/
