@@ -50,6 +50,7 @@ components/
   HabitToggle.tsx / NumberStepper.tsx / MomentChip.tsx
   BlossomIcon.tsx    # SVG blossom for joy marking (empty / filled states)
   ManageView.tsx / SettingsView.tsx / CalendarHeatmap.tsx
+  FrequencyList.tsx  # ranked habit/moment count list with period selector and calendar filter
   DayDetail.tsx / BottomNav.tsx
 lib/
   storage.ts         # saveEntry, getEntry, getAllEntries
@@ -69,6 +70,7 @@ Types live in `types/entry.ts` (`HabitEntry`, `HabitState`) and `lib/habitConfig
 | `clarity_entries` | Date-keyed map of HabitEntry records |
 | `clarity-configs` | AppConfigs (habits + moments) |
 | `clarity-theme` | `"light"` \| `"dark"` |
+| `clarity-frequency-hint-seen` | `"true"` once the FrequencyList filter hint has been dismissed |
 
 - **Habit values keyed by UUID**, not label. Sparse records — never store zeroes for untouched habits.
 - **Default UUIDs** — stable hardcoded IDs (`00000000-...`): 1–4 boolean, 6–9 numeric, 11–14 moments. User-created items use `crypto.randomUUID()`.
@@ -87,6 +89,9 @@ Types live in `types/entry.ts` (`HabitEntry`, `HabitState`) and `lib/habitConfig
 - **sessionStorage for nav intent** — keeps URLs clean; survives round-trips without extra params.
 - **Tailwind v4 dark mode** — class-based via `@custom-variant dark` in `globals.css`. `translate-x-*` can fail; use inline `style` or explicit `left-*` positioning.
 - **Theme** — `public/theme-init.js` applies the class before first paint. `useIsDark()` in CalendarHeatmap uses a `MutationObserver` for runtime changes.
+- **Heatmap palette** — "sunset" two-axis blend. `b` = fraction of boolean habits done (0–1); `y` = (joy count + moments count) / 6, capped at 1. Habits map to dusk blue (hsl 210), moments/joy map to warm ember (hsl 23). When both are non-zero the hue, saturation, and lightness are blended proportionally by weight. Empty/zero days use a muted stone tone.
+- **HeatmapFilter** — exported type `{ type: "boolean-habit" | "numeric-habit" | "moment"; id: string }` from `CalendarHeatmap.tsx`. When set, non-matching cells drop to 25% opacity; matching cells use the exact palette colour for their type. Filter is owned by `HistoryView` state and passed to both `CalendarHeatmap` and `FrequencyList`.
+- **FrequencyList** — collapsible section below the heatmap (toggle button). Counts occurrences per UUID across the selected period (`Period = "month" | "3m" | "always"`). The `"month"` period follows the calendar's currently viewed month via `viewedYear`/`viewedMonth` props (synced through `CalendarHeatmap`'s `onMonthChange` callback). Tapping a row sets or clears the `HeatmapFilter`. A one-time hint ("Tap any item to filter the calendar") fades out on first tap and is persisted to `clarity-frequency-hint-seen`.
 - **DayDetail labels** — resolve by iterating the entry's UUIDs, not the config list, so archived and imported habits display correctly.
 - **ManageView** — all inline editors are mutually exclusive via `closeAllEditors()`. Archive buttons use `text-amber-700` (reversible, not destructive).
 - **Save flow** (CheckInForm) — three states: `idle → saving → confirmed`. `saveEntry()` deferred one tick so "Saving…" renders first. Redirects after 1200 ms.
