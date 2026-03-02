@@ -14,7 +14,7 @@ Next.js App Router · TypeScript strict · Tailwind CSS v4 · localStorage · Je
 - **Stone palette** — warm off-whites/near-blacks. No bright accent colours. See `globals.css`.
 - **Section labels** — `text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500` everywhere. Must be reused for any new section.
 - **Rounded UI** — `rounded-2xl` on interactive elements. `max-w-md`, `min-h-[44px]` touch targets.
-- **Subtle interactions** — CSS transitions for hover/active states and layout changes (calendar slide, section reveals). No JS animation libraries. All transitions respect `prefers-reduced-motion`.
+- **Subtle interactions** — Motion library (`motion/react`) for enter/exit animations (height reveals, directional slides, opacity fades). CSS transitions for hover/active states and simple colour changes. All animations respect `prefers-reduced-motion` via `MotionConfig reducedMotion="user"` in `MotionProvider`.
 - Primary button: `bg-stone-800 dark:bg-stone-200 text-white dark:text-stone-900`.
 - Secondary button: `border-stone-200 bg-white text-stone-700 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300`.
 
@@ -53,6 +53,7 @@ components/
   CheckInForm.tsx    # today + edit mode (date? prop)
   HabitToggle.tsx / NumberStepper.tsx / MomentChip.tsx
   BlossomIcon.tsx    # SVG blossom for joy marking (empty / filled states)
+  MotionProvider.tsx # LazyMotion + domAnimation + MotionConfig reducedMotion="user"
   ManageView.tsx / SettingsView.tsx / HelpView.tsx / CalendarHeatmap.tsx
   FrequencyList.tsx  # ranked habit/moment count list with period selector and calendar filter
   DayDetail.tsx / BottomNav.tsx
@@ -100,6 +101,8 @@ Types live in `types/entry.ts` (`HabitEntry`, `HabitState`) and `lib/habitConfig
 - **ManageView** — all inline editors are mutually exclusive via `closeAllEditors()`. Archive buttons use `text-amber-700` (reversible, not destructive).
 - **Save flow** (CheckInForm) — three states: `idle → saving → confirmed`. `saveEntry()` deferred one tick so "Saving…" renders first. Redirects after 1200 ms.
 - **Joy section** (CheckInForm) — appears between Moments and Reflection when at least one boolean habit is done. Lists done habits with `BlossomIcon` buttons to mark `joy` independently of `done`. `joyByDefault` on the config pre-fills joy when a habit is first toggled on. Factual logging (Habits) and emotional reflection (Joy) are intentionally separate moments in the form.
+- **Motion animations** — use `LazyMotion + domAnimation` (~17 KB) via `MotionProvider`. For height reveals use `animate={{ height: "auto" }}` with `style={{ overflow: "hidden" }}`. For directional slides (e.g. calendar) use named `variants` + `custom` prop on both `AnimatePresence` and `m.*` — inline function syntax on `initial`/`exit` is NOT called with `custom` and must not be used. Duration ≤ 320 ms, ease-out for enters, ease-in for exits.
+- **Exit animation snap** — when `exit={{ height: 0 }}` is on an element that has padding or margin via className, those must also be animated to 0 in `exit` (e.g. `paddingTop: 0, paddingBottom: 0, marginBottom: 0`). With `box-sizing: border-box`, `height: 0` does not collapse `py-*` padding; the element stays visible at `paddingTop + paddingBottom` height until unmount, causing a snap.
 - **DayDetail scroll lock** — uses `useLayoutEffect` (not `useEffect`) for `document.body.style.overflow = "hidden"`. The layout-effect cleanup runs synchronously during the React commit, so the lock is never left behind when the user navigates away mid-animation.
 - **`lib/habitConfig.ts` is the source of truth** for config. `lib/habits.ts` contains only `createEmptyEntry()` and should not grow.
 
