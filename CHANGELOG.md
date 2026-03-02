@@ -1,5 +1,12 @@
 # Changelog
 
+## [v2.1.3] — 2026-03-02
+
+### Improvements
+- **Motion library** — replaced custom CSS/setTimeout animation orchestration with the `motion/react` library (`LazyMotion + domAnimation`, ~17 KB). All height reveals, directional slides, and exit animations now use `AnimatePresence` and `m.*` components. `MotionConfig reducedMotion="user"` centralises reduced-motion support across the entire app.
+- **Animation polish** — fixed a visual snap at the end of close animations in ManageView (habit/moment edit forms) and CheckInForm (joy section, add-moment form). Root cause: `box-sizing: border-box` does not collapse `py-*` padding when `height: 0`; padding and margin now animate to zero in sync with height.
+- **Calendar direction** — fixed a stale-closure bug where reversing navigation direction (← then →) caused the exit animation to slide the wrong way. Resolved by using named `variants` with `custom` prop on `AnimatePresence`, which forwards the current direction value to the exiting element at animation time.
+
 ## [v2.1.2] — 2026-03-01
 
 ### Improvements
