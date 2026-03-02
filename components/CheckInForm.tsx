@@ -372,7 +372,7 @@ export default function CheckInForm({ date }: Props) {
                 className="basis-full mt-1 flex flex-col gap-1.5"
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
+                exit={{ height: 0, opacity: 0, marginTop: 0 }}
                 transition={{ duration: 0.22, ease: "easeOut" }}
                 style={{ overflow: "hidden" }}
               >
@@ -425,7 +425,7 @@ export default function CheckInForm({ date }: Props) {
               <m.section
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
+                exit={{ height: 0, opacity: 0, marginBottom: 0 }}
                 transition={{ duration: 0.28, ease: "easeOut" }}
                 style={{ overflow: "hidden" }}
                 className="mb-10"

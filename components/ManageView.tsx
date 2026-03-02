@@ -302,7 +302,7 @@ export default function ManageView() {
                     className={INLINE_FORM}
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
+                    exit={{ height: 0, opacity: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0 }}
                     transition={{ duration: 0.22, ease: "easeOut" }}
                     style={{ overflow: "hidden" }}
                   >
@@ -403,7 +403,7 @@ export default function ManageView() {
               className="mt-3 space-y-2"
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
+              exit={{ height: 0, opacity: 0, marginTop: 0 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
               style={{ overflow: "hidden" }}
             >
@@ -437,7 +437,7 @@ export default function ManageView() {
             className={`mt-3 ${INLINE_FORM}`}
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
+            exit={{ height: 0, opacity: 0, marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
             style={{ overflow: "hidden" }}
           >
@@ -542,7 +542,7 @@ export default function ManageView() {
                     className={INLINE_FORM}
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
+                    exit={{ height: 0, opacity: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0 }}
                     transition={{ duration: 0.22, ease: "easeOut" }}
                     style={{ overflow: "hidden" }}
                   >
@@ -611,7 +611,7 @@ export default function ManageView() {
               className={`mt-3 ${INLINE_FORM}`}
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
+              exit={{ height: 0, opacity: 0, marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
               style={{ overflow: "hidden" }}
             >
