@@ -137,6 +137,13 @@ function useIsDark(): boolean {
   return isDark;
 }
 
+/** Variants that receive the slide direction (1=forward, -1=back) via custom. */
+const gridVariants = {
+  enter: (d: number) => ({ x: d * 40, opacity: 0 }),
+  center: { x: 0, opacity: 1 },
+  exit: (d: number) => ({ x: d * -40, opacity: 0 }),
+};
+
 export default function CalendarHeatmap({ entries, selectedDate, onDayClick, filter = null, onMonthChange }: Props) {
   const today = getTodayString();
   const now = new Date();
@@ -268,12 +275,17 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
       </div>
 
       {/* ── Calendar grid — slides in the direction of navigation ── */}
-      <AnimatePresence mode="wait" initial={false}>
+      {/* custom + variants: Motion calls the variant function with the    */}
+      {/* current custom value at animation time, so reversing direction   */}
+      {/* always uses the latest dir even for the exiting element.         */}
+      <AnimatePresence mode="wait" initial={false} custom={dir}>
         <m.div
           key={`${year}-${month}`}
-          initial={{ x: dir * 40, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: dir * -40, opacity: 0 }}
+          custom={dir}
+          variants={gridVariants}
+          initial="enter"
+          animate="center"
+          exit="exit"
           transition={{ duration: 0.22, ease: "easeOut" }}
           style={{ overflow: "hidden" }}
         >
