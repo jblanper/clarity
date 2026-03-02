@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef, startTransition } from "react";
+import { useState, useEffect, startTransition } from "react";
+import { AnimatePresence, m } from "motion/react";
 import type { HabitEntry } from "@/types/entry";
 import {
   getConfigs,
@@ -38,11 +39,6 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
   });
   // null = not yet read from localStorage (don't render hint until known)
   const [hintSeen, setHintSeen] = useState<boolean | null>(null);
-  const [hintDismissing, setHintDismissing] = useState(false);
-  // DOM ref for the bar list — used to apply .bars-resetting class directly
-  // (avoids setState-in-effect; CSS handles the 0%→target% growth animation)
-  const barsListRef = useRef<HTMLUListElement>(null);
-  const prevPeriodRef = useRef(period);
 
   useEffect(() => {
     startTransition(() => setConfigs(getConfigs()));
@@ -54,25 +50,9 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
     });
   }, []);
 
-  // When period changes: briefly add .bars-resetting so bars start at 0%,
-  // then remove it to let the CSS transition grow them back to their target width.
-  useEffect(() => {
-    if (prevPeriodRef.current !== period) {
-      prevPeriodRef.current = period;
-      const el = barsListRef.current;
-      if (!el) return;
-      el.classList.add("bars-resetting");
-      requestAnimationFrame(() => requestAnimationFrame(() => {
-        el.classList.remove("bars-resetting");
-      }));
-    }
-  }, [period]);
-
   const dismissHint = () => {
-    setHintDismissing(true);
     localStorage.setItem(HINT_KEY, "true");
-    // Remove from DOM after the fade-out completes
-    setTimeout(() => setHintSeen(true), 300);
+    setHintSeen(true);
   };
 
   // Filter entries by period
@@ -132,23 +112,25 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
         </p>
       ) : (
         <>
-          {hintSeen === false && (
-            <div
-              className="overflow-hidden transition-all duration-300"
-              style={{
-                opacity: hintDismissing ? 0 : 1,
-                maxHeight: hintDismissing ? "0px" : "2rem",
-                marginBottom: hintDismissing ? "0px" : "1rem",
-              }}
-            >
-              <p className="text-xs text-stone-500 dark:text-stone-400">
-                Tap any item to filter the calendar
-              </p>
-            </div>
-          )}
-          <ul ref={barsListRef}>
+          {/* One-time filter hint — exits with a height collapse */}
+          <AnimatePresence initial={false}>
+            {hintSeen === false && (
+              <m.div
+                exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                transition={{ duration: 0.3 }}
+                style={{ overflow: "hidden", marginBottom: "1rem" }}
+              >
+                <p className="text-xs text-stone-500 dark:text-stone-400">
+                  Tap any item to filter the calendar
+                </p>
+              </m.div>
+            )}
+          </AnimatePresence>
+
+          <ul>
           {items.map((item) => {
             const isActive = !!activeFilter && activeFilter.id === item.id;
+            const barWidth = `${Math.round((item.count / maxCount) * 38)}%`;
             return (
               <li key={item.id}>
                 <button
@@ -169,13 +151,16 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
                   <div className="flex-1 flex flex-col justify-center">
                     <span>{item.label}</span>
                     <div className="mt-1.5 h-0.5 w-full rounded-full">
-                      <div
-                        className={`h-full rounded-full frequency-bar ${
+                      {/* Bar grows from 0 on first render; animates to new width on period change */}
+                      <m.div
+                        className={`h-full rounded-full ${
                           isActive
                             ? "bg-amber-400 dark:bg-amber-500"
                             : "bg-stone-300 dark:bg-stone-600"
                         }`}
-                        style={{ width: `${Math.round((item.count / maxCount) * 38)}%` }}
+                        initial={{ width: "0%" }}
+                        animate={{ width: barWidth }}
+                        transition={{ duration: 0.25, ease: "easeOut" }}
                       />
                     </div>
                   </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, startTransition } from "react";
+import { AnimatePresence, m } from "motion/react";
 import Link from "next/link";
 import { getAllEntries } from "@/lib/storage";
 import type { HabitEntry } from "@/types/entry";
@@ -18,9 +19,7 @@ export default function HistoryView() {
   const [viewedMonth, setViewedMonth] = useState(now.getMonth());
   const [period, setPeriod] = useState<Period>("month");
   const [activeFilter, setActiveFilter] = useState<HeatmapFilter | null>(null);
-  const [frequencyMounted, setFrequencyMounted] = useState(false);
   const [frequencyOpen, setFrequencyOpen] = useState(false);
-  const [frequencyClosing, setFrequencyClosing] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
@@ -49,17 +48,6 @@ export default function HistoryView() {
   const selectedEntry = selectedDate
     ? (entries.find((e) => e.date === selectedDate) ?? null)
     : null;
-
-  const toggleFrequency = () => {
-    if (frequencyOpen) {
-      setFrequencyClosing(true);
-      setFrequencyOpen(false);
-      setTimeout(() => { setFrequencyMounted(false); setFrequencyClosing(false); }, 600);
-    } else {
-      setFrequencyMounted(true);
-      requestAnimationFrame(() => requestAnimationFrame(() => setFrequencyOpen(true)));
-    }
-  };
 
   const handlePeriodChange = (p: Period) => {
     if (p === period) return;
@@ -98,18 +86,25 @@ export default function HistoryView() {
       {/* ── Section divider + Frequency ─────────────────────── */}
       <div className="mt-10 border-t border-stone-100 dark:border-stone-800 pt-8">
 
-          {/* Toggle */}
-          <button
-            type="button"
-            onClick={toggleFrequency}
-            className="w-full min-h-[44px] flex items-center gap-1.5 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500 transition-colors hover:text-stone-700 dark:hover:text-stone-400"
-          >
-            <span>Frequency</span>
-            <Chevron direction="down" className={`frequency-chevron${frequencyOpen ? " is-open" : ""}`} />
-          </button>
+        {/* Toggle */}
+        <button
+          type="button"
+          onClick={() => setFrequencyOpen((o) => !o)}
+          className="w-full min-h-[44px] flex items-center gap-1.5 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500 transition-colors hover:text-stone-700 dark:hover:text-stone-400"
+        >
+          <span>Frequency</span>
+          <Chevron direction="down" className={`frequency-chevron${frequencyOpen ? " is-open" : ""}`} />
+        </button>
 
-          {frequencyMounted && (
-            <div className={`frequency-body${frequencyOpen ? " is-open" : ""}${frequencyClosing ? " is-closing" : ""}`}>
+        <AnimatePresence initial={false}>
+          {frequencyOpen && (
+            <m.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.28, ease: "easeOut" }}
+              style={{ overflow: "hidden" }}
+            >
               <div className={`frequency-list${isUpdating ? " is-updating" : ""}`}>
 
                 {/* Period selector */}
@@ -141,8 +136,9 @@ export default function HistoryView() {
                 />
 
               </div>
-            </div>
+            </m.div>
           )}
+        </AnimatePresence>
       </div>
 
       {/* ── Day detail sheet ──────────────────────────────────── */}

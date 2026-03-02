@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef, startTransition } from "react";
+import { useState, useEffect, startTransition } from "react";
+import { AnimatePresence, m } from "motion/react";
 import type { HabitEntry } from "@/types/entry";
 import { getConfigs, DEFAULT_HABIT_CONFIGS } from "@/lib/habitConfig";
 import Chevron from "@/components/Chevron";
@@ -136,8 +137,6 @@ function useIsDark(): boolean {
   return isDark;
 }
 
-type SlidePhase = "idle" | "exit-left" | "exit-right" | "enter-left" | "enter-right";
-
 export default function CalendarHeatmap({ entries, selectedDate, onDayClick, filter = null, onMonthChange }: Props) {
   const today = getTodayString();
   const now = new Date();
@@ -149,9 +148,10 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
   const [month, setMonth] = useState(currentMonth);
   const isDark = useIsDark();
 
-  const [slidePhase, setSlidePhase] = useState<SlidePhase>("idle");
-  const [headingFading, setHeadingFading] = useState(false);
-  const isAnimating = useRef(false);
+  // +1 = forward (slide left), -1 = back (slide right).
+  // Stored as state (not a ref) so it can be safely read during render.
+  // React 18 batches it with the year/month updates into a single commit.
+  const [dir, setDir] = useState<1 | -1>(1);
 
   // Count of active boolean habits — used to normalise the heat intensity.
   // Initialised from defaults so first render matches SSR; updated on mount.
@@ -167,57 +167,46 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
     });
   }, []);
 
-  function animateToMonth(newYear: number, newMonth: number, dir: "next" | "prev") {
-    if (isAnimating.current) return;
-    isAnimating.current = true;
-    const exitPhase: SlidePhase = dir === "next" ? "exit-left" : "exit-right";
-    const enterPhase: SlidePhase = dir === "next" ? "enter-right" : "enter-left";
-    setSlidePhase(exitPhase);
-    setHeadingFading(true);
-    setTimeout(() => {
-      setMonth(newMonth);
-      setYear(newYear);
-      onMonthChange?.(newYear, newMonth);
-      setSlidePhase(enterPhase);
-      setHeadingFading(false);
-      requestAnimationFrame(() => requestAnimationFrame(() => {
-        setSlidePhase("idle");
-        isAnimating.current = false;
-      }));
-    }, 220);
-  }
-
   const entryMap = new Map(entries.map((e) => [e.date, e]));
   const weeks = buildMonthWeeks(year, month);
   const isAtCurrentMonth = year === currentYear && month === currentMonth;
 
   const prevMonth = () => {
     if (year <= minYear && month === 0) return;
+    setDir(-1);
     const newYear = month === 0 ? year - 1 : year;
     const newMonth = month === 0 ? 11 : month - 1;
-    animateToMonth(newYear, newMonth, "prev");
+    setYear(newYear);
+    setMonth(newMonth);
+    onMonthChange?.(newYear, newMonth);
   };
 
   const nextMonth = () => {
     if (isAtCurrentMonth) return;
+    setDir(1);
     const newYear = month === 11 ? year + 1 : year;
     const newMonth = month === 11 ? 0 : month + 1;
-    animateToMonth(newYear, newMonth, "next");
+    setYear(newYear);
+    setMonth(newMonth);
+    onMonthChange?.(newYear, newMonth);
   };
 
   const prevYear = () => {
     if (year <= minYear) return;
-    animateToMonth(year - 1, month, "prev");
+    setDir(-1);
+    setYear(year - 1);
+    onMonthChange?.(year - 1, month);
   };
 
   const nextYear = () => {
     if (year >= currentYear) return;
-    // Clamp month if jumping into the current year past today's month
+    setDir(1);
     const newMonth = year + 1 === currentYear && month > currentMonth ? currentMonth : month;
-    animateToMonth(year + 1, newMonth, "next");
+    const newYear = year + 1;
+    setYear(newYear);
+    setMonth(newMonth);
+    onMonthChange?.(newYear, newMonth);
   };
-
-  const slideClass = slidePhase !== "idle" ? `slide-${slidePhase}` : "";
 
   return (
     <div>
@@ -253,9 +242,21 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
         >
           <Chevron direction="left" />
         </button>
-        <h2 className={`text-base font-light tracking-widest text-stone-600 dark:text-stone-400 month-heading${headingFading ? " fading" : ""}`}>
-          {MONTH_NAMES[month]}
-        </h2>
+
+        {/* Month heading crossfades on change */}
+        <AnimatePresence mode="wait" initial={false}>
+          <m.h2
+            key={`${year}-${month}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.11 }}
+            className="text-base font-light tracking-widest text-stone-600 dark:text-stone-400"
+          >
+            {MONTH_NAMES[month]}
+          </m.h2>
+        </AnimatePresence>
+
         <button
           onClick={nextMonth}
           disabled={isAtCurrentMonth}
@@ -266,78 +267,87 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
         </button>
       </div>
 
-      {/* ── Calendar grid ─────────────────────────────────────── */}
-      <div className="calendar-grid-wrap">
-        <div className="flex justify-center">
-          <div className={`flex gap-1.5 calendar-grid${slideClass ? ` ${slideClass}` : ""}`}>
+      {/* ── Calendar grid — slides in the direction of navigation ── */}
+      <AnimatePresence mode="wait" initial={false}>
+        <m.div
+          key={`${year}-${month}`}
+          initial={{ x: dir * 40, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: dir * -40, opacity: 0 }}
+          transition={{ duration: 0.22, ease: "easeOut" }}
+          style={{ overflow: "hidden" }}
+        >
+          <div className="flex justify-center">
+            <div className="flex gap-1.5">
 
-            {/* Day-of-week labels (M T W T F S S) as row labels on the left */}
-            <div className="mr-2 flex flex-col gap-1.5">
-              {DAY_LABELS.map((label, i) => (
-                <div
-                  key={i}
-                  className="flex h-11 w-5 items-center justify-center text-xs uppercase tracking-widest text-stone-500 dark:text-stone-600"
-                >
-                  {label}
+              {/* Day-of-week labels (M T W T F S S) as row labels on the left */}
+              <div className="mr-2 flex flex-col gap-1.5">
+                {DAY_LABELS.map((label, i) => (
+                  <div
+                    key={i}
+                    className="flex h-11 w-5 items-center justify-center text-xs uppercase tracking-widest text-stone-500 dark:text-stone-600"
+                  >
+                    {label}
+                  </div>
+                ))}
+              </div>
+
+              {/* Week columns — each column = one week, rows = Mon…Sun */}
+              {weeks.map((week, w) => (
+                <div key={w} className="flex flex-col gap-1.5">
+                  {week.map((dateStr, d) => {
+
+                    // Blank slot for days outside the current month
+                    if (!dateStr) {
+                      return <div key={d} className="h-11 w-11" aria-hidden />;
+                    }
+
+                    const entry = entryMap.get(dateStr) ?? null;
+                    const isFuture = dateStr > today;
+                    const isSelected = dateStr === selectedDate;
+                    const matchesFilter = !!filter && !!entry && !isFuture && doesEntryMatchFilter(entry, filter);
+                    const cellBg = entry && !isFuture
+                      ? (matchesFilter
+                          ? getFilterHighlightColor(filter, isDark)
+                          : computeCellColor(entry, isDark, activeHabitCount))
+                      : undefined;
+                    const dimmed = !!filter && !!entry && !isFuture && !matchesFilter;
+                    const dayNum = parseInt(dateStr.split("-")[2], 10);
+
+                    return (
+                      <button
+                        key={d}
+                        onClick={() => !isFuture && onDayClick(dateStr)}
+                        disabled={isFuture}
+                        aria-label={dateStr}
+                        aria-pressed={isSelected}
+                        className={[
+                          "flex h-11 w-11 items-start justify-end rounded-md p-1 transition-colors",
+                          !cellBg ? "bg-stone-200 dark:bg-stone-800" : "",
+                          isSelected ? "ring-2 ring-stone-500 dark:ring-stone-500" : "",
+                          isFuture ? "cursor-default opacity-25" : "cursor-pointer",
+                        ]
+                          .filter(Boolean)
+                          .join(" ")}
+                        style={{
+                          ...(cellBg ? { backgroundColor: cellBg } : {}),
+                          ...(dimmed ? { opacity: 0.25 } : {}),
+                        }}
+                      >
+                        {/* Date number in the corner */}
+                        <span className="text-[11px] leading-none text-black/50 dark:text-white/35">
+                          {dayNum}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               ))}
+
             </div>
-
-            {/* Week columns — each column = one week, rows = Mon…Sun */}
-            {weeks.map((week, w) => (
-              <div key={w} className="flex flex-col gap-1.5">
-                {week.map((dateStr, d) => {
-
-                  // Blank slot for days outside the current month
-                  if (!dateStr) {
-                    return <div key={d} className="h-11 w-11" aria-hidden />;
-                  }
-
-                  const entry = entryMap.get(dateStr) ?? null;
-                  const isFuture = dateStr > today;
-                  const isSelected = dateStr === selectedDate;
-                  const matchesFilter = !!filter && !!entry && !isFuture && doesEntryMatchFilter(entry, filter);
-                  const cellBg = entry && !isFuture
-                    ? (matchesFilter
-                        ? getFilterHighlightColor(filter, isDark)
-                        : computeCellColor(entry, isDark, activeHabitCount))
-                    : undefined;
-                  const dimmed = !!filter && !!entry && !isFuture && !matchesFilter;
-                  const dayNum = parseInt(dateStr.split("-")[2], 10);
-
-                  return (
-                    <button
-                      key={d}
-                      onClick={() => !isFuture && onDayClick(dateStr)}
-                      disabled={isFuture}
-                      aria-label={dateStr}
-                      aria-pressed={isSelected}
-                      className={[
-                        "flex h-11 w-11 items-start justify-end rounded-md p-1 transition-colors",
-                        !cellBg ? "bg-stone-200 dark:bg-stone-800" : "",
-                        isSelected ? "ring-2 ring-stone-500 dark:ring-stone-500" : "",
-                        isFuture ? "cursor-default opacity-25" : "cursor-pointer",
-                      ]
-                        .filter(Boolean)
-                        .join(" ")}
-                      style={{
-                        ...(cellBg ? { backgroundColor: cellBg } : {}),
-                        ...(dimmed ? { opacity: 0.25 } : {}),
-                      }}
-                    >
-                      {/* Date number in the corner */}
-                      <span className="text-[11px] leading-none text-black/50 dark:text-white/35">
-                        {dayNum}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            ))}
-
           </div>
-        </div>
-      </div>
+        </m.div>
+      </AnimatePresence>
     </div>
   );
 }

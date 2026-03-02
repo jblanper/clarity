@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, startTransition } from "react";
+import { AnimatePresence, m } from "motion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { saveEntry, getEntry, sanitizeHabitState } from "@/lib/storage";
@@ -356,44 +357,7 @@ export default function CheckInForm({ date }: Props) {
             </div>
           ))}
 
-          {isAddingMoment ? (
-            <div className="basis-full mt-1 flex flex-col gap-1.5">
-              <div className="flex items-center gap-2">
-                <input
-                  autoFocus
-                  type="text"
-                  value={newMomentLabel}
-                  onChange={(e) => {
-                    setNewMomentLabel(e.target.value);
-                    setAddMomentError(null);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") { e.preventDefault(); handleAddMoment(); }
-                    if (e.key === "Escape") dismissAddMoment();
-                  }}
-                  placeholder="Moment name"
-                  className="flex-1 rounded-full border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-2 text-sm text-stone-700 dark:text-stone-300 placeholder-stone-400 dark:placeholder-stone-600 focus:border-stone-500 dark:focus:border-stone-500 focus:outline-none"
-                />
-                <button
-                  type="button"
-                  onClick={handleAddMoment}
-                  className="rounded-full bg-stone-800 dark:bg-stone-200 px-4 py-2 text-sm text-white dark:text-stone-900 transition-colors hover:bg-stone-700 dark:hover:bg-stone-300"
-                >
-                  Add
-                </button>
-                <button
-                  type="button"
-                  onClick={dismissAddMoment}
-                  className="text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
-                >
-                  ✕
-                </button>
-              </div>
-              {addMomentError && (
-                <p className="px-1 text-xs text-red-700 dark:text-red-400">{addMomentError}</p>
-              )}
-            </div>
-          ) : (
+          {!isAddingMoment && (
             <button
               type="button"
               onClick={() => setIsAddingMoment(true)}
@@ -402,39 +366,105 @@ export default function CheckInForm({ date }: Props) {
               ＋ New moment
             </button>
           )}
+          <AnimatePresence initial={false}>
+            {isAddingMoment && (
+              <m.div
+                className="basis-full mt-1 flex flex-col gap-1.5"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+                style={{ overflow: "hidden" }}
+              >
+                <div className="flex items-center gap-2">
+                  <input
+                    autoFocus
+                    type="text"
+                    value={newMomentLabel}
+                    onChange={(e) => {
+                      setNewMomentLabel(e.target.value);
+                      setAddMomentError(null);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") { e.preventDefault(); handleAddMoment(); }
+                      if (e.key === "Escape") dismissAddMoment();
+                    }}
+                    placeholder="Moment name"
+                    className="flex-1 rounded-full border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-2 text-sm text-stone-700 dark:text-stone-300 placeholder-stone-400 dark:placeholder-stone-600 focus:border-stone-500 dark:focus:border-stone-500 focus:outline-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddMoment}
+                    className="rounded-full bg-stone-800 dark:bg-stone-200 px-4 py-2 text-sm text-white dark:text-stone-900 transition-colors hover:bg-stone-700 dark:hover:bg-stone-300"
+                  >
+                    Add
+                  </button>
+                  <button
+                    type="button"
+                    onClick={dismissAddMoment}
+                    className="text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
+                  >
+                    ✕
+                  </button>
+                </div>
+                {addMomentError && (
+                  <p className="px-1 text-xs text-red-700 dark:text-red-400">{addMomentError}</p>
+                )}
+              </m.div>
+            )}
+          </AnimatePresence>
         </div>
       </section>
 
       {/* ── Joy ───────────────────────────────────────────────────── */}
       {(() => {
         const doneHabits = activeBoolean.filter((h) => fields.habits[h.id]?.done);
-        if (doneHabits.length === 0) return null;
         return (
-          <section className="mb-10">
-            <h2 className="mb-3 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
-              What felt particularly good today?
-            </h2>
-            <div className="rounded-2xl bg-stone-50 dark:bg-stone-800/50 border border-stone-100 dark:border-stone-800 px-4 py-4">
-              {doneHabits.map((h) => {
-                const joyValue = fields.habits[h.id]?.joy ?? false;
-                return (
-                  <div key={h.id} className="flex items-center justify-between py-2">
-                    <span className="text-sm text-stone-700 dark:text-stone-300">
-                      {h.label}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setHabit(h.id, { done: true, joy: !joyValue })}
-                      aria-label={joyValue ? "Remove joy" : "Mark as joyful"}
-                      className="min-h-[44px] min-w-[44px] flex items-center justify-end transition-transform active:scale-90"
-                    >
-                      <BlossomIcon filled={joyValue} />
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
+          <AnimatePresence initial={false}>
+            {doneHabits.length > 0 && (
+              <m.section
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.28, ease: "easeOut" }}
+                style={{ overflow: "hidden" }}
+                className="mb-10"
+              >
+                <h2 className="mb-3 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
+                  What felt particularly good today?
+                </h2>
+                <div className="rounded-2xl bg-stone-50 dark:bg-stone-800/50 border border-stone-100 dark:border-stone-800 px-4 py-4">
+                  <AnimatePresence initial={false}>
+                    {doneHabits.map((h) => {
+                      const joyValue = fields.habits[h.id]?.joy ?? false;
+                      return (
+                        <m.div
+                          key={h.id}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.16 }}
+                          className="flex items-center justify-between py-2"
+                        >
+                          <span className="text-sm text-stone-700 dark:text-stone-300">
+                            {h.label}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setHabit(h.id, { done: true, joy: !joyValue })}
+                            aria-label={joyValue ? "Remove joy" : "Mark as joyful"}
+                            className="min-h-[44px] min-w-[44px] flex items-center justify-end transition-transform active:scale-90"
+                          >
+                            <BlossomIcon filled={joyValue} />
+                          </button>
+                        </m.div>
+                      );
+                    })}
+                  </AnimatePresence>
+                </div>
+              </m.section>
+            )}
+          </AnimatePresence>
         );
       })()}
 

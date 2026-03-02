@@ -3,6 +3,7 @@ import { Geist } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import BottomNav from "@/components/BottomNav";
+import MotionProvider from "@/components/MotionProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,8 +33,10 @@ export default function RootLayout({
       <body className={`${geistSans.variable} min-h-screen`}>
         {/* Runs before first paint to apply the saved theme without flash. */}
         <Script src="/theme-init.js" strategy="beforeInteractive" />
-        {children}
-        <BottomNav />
+        <MotionProvider>
+          {children}
+          <BottomNav />
+        </MotionProvider>
       </body>
     </html>
   );

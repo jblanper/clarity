@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Chevron from "@/components/Chevron";
 import { useState, useEffect, startTransition } from "react";
+import { AnimatePresence, m } from "motion/react";
 import {
   getConfigs,
   saveConfigs,
@@ -295,58 +296,67 @@ export default function ManageView() {
               </div>
 
               {/* Inline edit form */}
-              {editingHabit?.id === h.id && (
-                <div className={INLINE_FORM}>
-                  <div>
-                    <label className={FIELD_LABEL}>Label</label>
-                    <input
-                      type="text"
-                      value={editingHabit.label}
-                      onChange={(e) => setEditingHabit({ ...editingHabit, label: e.target.value })}
-                      className={TEXT_INPUT}
-                    />
-                  </div>
-                  {h.type === "numeric" && (
-                    <>
-                      <div>
-                        <label className={FIELD_LABEL}>Unit</label>
-                        <input
-                          type="text"
-                          value={editingHabit.unit}
-                          onChange={(e) => setEditingHabit({ ...editingHabit, unit: e.target.value })}
-                          className={TEXT_INPUT}
-                        />
-                      </div>
-                      <div>
-                        <label className={FIELD_LABEL}>Step</label>
-                        <input
-                          type="number"
-                          min={0.01}
-                          step={0.01}
-                          value={editingHabit.step}
-                          onChange={(e) =>
-                            setEditingHabit({ ...editingHabit, step: parseFloat(e.target.value) || 1 })
-                          }
-                          className={TEXT_INPUT}
-                        />
-                      </div>
-                    </>
-                  )}
-                  <div className="flex gap-3 pt-1">
-                    <button
-                      type="button"
-                      onClick={saveEditHabit}
-                      disabled={!editingHabit.label.trim()}
-                      className={SAVE_BTN}
-                    >
-                      Save
-                    </button>
-                    <button type="button" onClick={() => setEditingHabit(null)} className={CANCEL_BTN}>
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              )}
+              <AnimatePresence initial={false}>
+                {editingHabit?.id === h.id && (
+                  <m.div
+                    className={INLINE_FORM}
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.22, ease: "easeOut" }}
+                    style={{ overflow: "hidden" }}
+                  >
+                    <div>
+                      <label className={FIELD_LABEL}>Label</label>
+                      <input
+                        type="text"
+                        value={editingHabit.label}
+                        onChange={(e) => setEditingHabit({ ...editingHabit, label: e.target.value })}
+                        className={TEXT_INPUT}
+                      />
+                    </div>
+                    {h.type === "numeric" && (
+                      <>
+                        <div>
+                          <label className={FIELD_LABEL}>Unit</label>
+                          <input
+                            type="text"
+                            value={editingHabit.unit}
+                            onChange={(e) => setEditingHabit({ ...editingHabit, unit: e.target.value })}
+                            className={TEXT_INPUT}
+                          />
+                        </div>
+                        <div>
+                          <label className={FIELD_LABEL}>Step</label>
+                          <input
+                            type="number"
+                            min={0.01}
+                            step={0.01}
+                            value={editingHabit.step}
+                            onChange={(e) =>
+                              setEditingHabit({ ...editingHabit, step: parseFloat(e.target.value) || 1 })
+                            }
+                            className={TEXT_INPUT}
+                          />
+                        </div>
+                      </>
+                    )}
+                    <div className="flex gap-3 pt-1">
+                      <button
+                        type="button"
+                        onClick={saveEditHabit}
+                        disabled={!editingHabit.label.trim()}
+                        className={SAVE_BTN}
+                      >
+                        Save
+                      </button>
+                      <button type="button" onClick={() => setEditingHabit(null)} className={CANCEL_BTN}>
+                        Cancel
+                      </button>
+                    </div>
+                  </m.div>
+                )}
+              </AnimatePresence>
             </div>
           ))}
 
@@ -387,33 +397,50 @@ export default function ManageView() {
           </button>
         )}
 
-        {addHabit?.stage === "type" && (
-          <div className="mt-3 space-y-2">
-            <p className="text-xs text-stone-500 dark:text-stone-400">What kind of habit?</p>
-            <div className="flex gap-5">
-              <button
-                type="button"
-                onClick={() => setAddHabit({ stage: "form-boolean", label: "", joyByDefault: false })}
-                className="text-sm text-stone-600 dark:text-stone-300 underline-offset-4 hover:underline"
-              >
-                Boolean
+        <AnimatePresence initial={false}>
+          {addHabit?.stage === "type" && (
+            <m.div
+              className="mt-3 space-y-2"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
+              style={{ overflow: "hidden" }}
+            >
+              <p className="text-xs text-stone-500 dark:text-stone-400">What kind of habit?</p>
+              <div className="flex gap-5">
+                <button
+                  type="button"
+                  onClick={() => setAddHabit({ stage: "form-boolean", label: "", joyByDefault: false })}
+                  className="text-sm text-stone-600 dark:text-stone-300 underline-offset-4 hover:underline"
+                >
+                  Boolean
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAddHabit({ stage: "form-numeric", label: "", unit: "", step: 1 })}
+                  className="text-sm text-stone-600 dark:text-stone-300 underline-offset-4 hover:underline"
+                >
+                  Numeric
+                </button>
+              </div>
+              <button type="button" onClick={() => setAddHabit(null)} className={CANCEL_BTN}>
+                Cancel
               </button>
-              <button
-                type="button"
-                onClick={() => setAddHabit({ stage: "form-numeric", label: "", unit: "", step: 1 })}
-                className="text-sm text-stone-600 dark:text-stone-300 underline-offset-4 hover:underline"
-              >
-                Numeric
-              </button>
-            </div>
-            <button type="button" onClick={() => setAddHabit(null)} className={CANCEL_BTN}>
-              Cancel
-            </button>
-          </div>
-        )}
+            </m.div>
+          )}
+        </AnimatePresence>
 
+        <AnimatePresence initial={false}>
         {(addHabit?.stage === "form-boolean" || addHabit?.stage === "form-numeric") && (
-          <div className={`mt-3 ${INLINE_FORM}`}>
+          <m.div
+            className={`mt-3 ${INLINE_FORM}`}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            style={{ overflow: "hidden" }}
+          >
             <div>
               <label className={FIELD_LABEL}>Label</label>
               <input
@@ -483,8 +510,9 @@ export default function ManageView() {
                 Cancel
               </button>
             </div>
-          </div>
+          </m.div>
         )}
+        </AnimatePresence>
       </section>
 
       {/* ── Moments ─────────────────────────────────────────────────── */}
@@ -508,32 +536,41 @@ export default function ManageView() {
               </div>
 
               {/* Inline edit form */}
-              {editingTag?.id === t.id && (
-                <div className={INLINE_FORM}>
-                  <div>
-                    <label className={FIELD_LABEL}>Label</label>
-                    <input
-                      type="text"
-                      value={editingTag.label}
-                      onChange={(e) => setEditingTag({ ...editingTag, label: e.target.value })}
-                      className={TEXT_INPUT}
-                    />
-                  </div>
-                  <div className="flex gap-3 pt-1">
-                    <button
-                      type="button"
-                      onClick={saveEditTag}
-                      disabled={!editingTag.label.trim()}
-                      className={SAVE_BTN}
-                    >
-                      Save
-                    </button>
-                    <button type="button" onClick={() => setEditingTag(null)} className={CANCEL_BTN}>
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              )}
+              <AnimatePresence initial={false}>
+                {editingTag?.id === t.id && (
+                  <m.div
+                    className={INLINE_FORM}
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.22, ease: "easeOut" }}
+                    style={{ overflow: "hidden" }}
+                  >
+                    <div>
+                      <label className={FIELD_LABEL}>Label</label>
+                      <input
+                        type="text"
+                        value={editingTag.label}
+                        onChange={(e) => setEditingTag({ ...editingTag, label: e.target.value })}
+                        className={TEXT_INPUT}
+                      />
+                    </div>
+                    <div className="flex gap-3 pt-1">
+                      <button
+                        type="button"
+                        onClick={saveEditTag}
+                        disabled={!editingTag.label.trim()}
+                        className={SAVE_BTN}
+                      >
+                        Save
+                      </button>
+                      <button type="button" onClick={() => setEditingTag(null)} className={CANCEL_BTN}>
+                        Cancel
+                      </button>
+                    </div>
+                  </m.div>
+                )}
+              </AnimatePresence>
             </div>
           ))}
 
@@ -556,7 +593,7 @@ export default function ManageView() {
         </div>
 
         {/* Add tag flow */}
-        {!addingTag ? (
+        {!addingTag && (
           <button
             type="button"
             onClick={() => {
@@ -567,40 +604,50 @@ export default function ManageView() {
           >
             + Add moment
           </button>
-        ) : (
-          <div className={`mt-3 ${INLINE_FORM}`}>
-            <div>
-              <label className={FIELD_LABEL}>Label</label>
-              <input
-                type="text"
-                placeholder="e.g. Long walk"
-                value={newTagLabel}
-                onChange={(e) => setNewTagLabel(e.target.value)}
-                className={TEXT_INPUT}
-              />
-            </div>
-            <div className="flex gap-3 pt-1">
-              <button
-                type="button"
-                onClick={saveNewTag}
-                disabled={!newTagLabel.trim()}
-                className={SAVE_BTN}
-              >
-                Add
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setAddingTag(false);
-                  setNewTagLabel("");
-                }}
-                className={CANCEL_BTN}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
         )}
+        <AnimatePresence initial={false}>
+          {addingTag && (
+            <m.div
+              className={`mt-3 ${INLINE_FORM}`}
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
+              style={{ overflow: "hidden" }}
+            >
+              <div>
+                <label className={FIELD_LABEL}>Label</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Long walk"
+                  value={newTagLabel}
+                  onChange={(e) => setNewTagLabel(e.target.value)}
+                  className={TEXT_INPUT}
+                />
+              </div>
+              <div className="flex gap-3 pt-1">
+                <button
+                  type="button"
+                  onClick={saveNewTag}
+                  disabled={!newTagLabel.trim()}
+                  className={SAVE_BTN}
+                >
+                  Add
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAddingTag(false);
+                    setNewTagLabel("");
+                  }}
+                  className={CANCEL_BTN}
+                >
+                  Cancel
+                </button>
+              </div>
+            </m.div>
+          )}
+        </AnimatePresence>
       </section>
     </div>
   );
