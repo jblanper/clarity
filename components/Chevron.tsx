@@ -26,7 +26,7 @@ export default function Chevron({ direction, size, className = "" }: Props) {
       strokeLinejoin="round"
       aria-hidden="true"
       style={{ transform: `rotate(${rotation}deg)` }}
-      className={`inline-block align-[-0.125em] opacity-50 dark:opacity-100 ${className}`}
+      className={`inline-block align-[-0.125em] opacity-70 dark:opacity-100 ${className}`}
     >
       <polyline points="18 15 12 9 6 15" />
     </svg>

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import BlossomIcon from "@/components/BlossomIcon";
 import Chevron from "@/components/Chevron";
 
 const SECTION_LABEL =
@@ -25,53 +26,66 @@ export default function HelpView() {
         </Link>
       </header>
 
-      {/* ── A Place for Clarity ───────────────────────────────────── */}
+      {/* ── One entry a day ───────────────────────────────────────── */}
       <section className="mb-8">
-        <h2 className={SECTION_LABEL}>A Place for Clarity</h2>
+        <h2 className={SECTION_LABEL}>One entry a day</h2>
         <p className={BODY}>
-          Clarity is a quiet space for daily noticing. It is built for a single 
-          end-of-day entry: a record of the habits you chose, the moments that 
-          arrived, and the reflections worth keeping. It is a tool for seeing 
-          what your days are made of, without judgment or urgency.
+          Clarity is built around a single daily record: the habits you chose,
+          the moments that came, and a line or two about how it felt. There is
+          no score to beat, no streak to protect, nothing to catch up on.
+          Opening the form once at the end of the day is all that is needed.
         </p>
       </section>
 
       <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
 
-      {/* ── Logging ───────────────────────────────────────────────── */}
+      {/* ── The daily form ────────────────────────────────────────── */}
       <section className="mb-8">
-        <h2 className={SECTION_LABEL}>Logging</h2>
+        <h2 className={SECTION_LABEL}>The daily form</h2>
         <p className={BODY}>
-          Distinguish between intentional habits and unplanned moments to see 
-          the balance of discipline and surprise. Mark habits with a joy blossom, 
-          use custom steps for numeric counters, and set &quot;Joy by default&quot; in 
-          Manage for activities that always lift your mood.
+          Habits are deliberate — things you chose to do and track over time.
+          Moments are unplanned — things that arrived and were worth noting.
+          Reflection is yours to use however it fits: a sentence, a name,
+          a passing thought.
+        </p>
+        <p className={`${BODY} mt-3`}>
+          When a habit was done and it also felt good, the blossom marks that
+          separately. Completion and joy are different things, and keeping them
+          apart lets you see the difference over time.
+        </p>
+        <div className="mt-4 flex items-center gap-4 pl-0.5">
+          <BlossomIcon filled={false} size={22} />
+          <BlossomIcon filled={true} size={22} />
+        </div>
+      </section>
+
+      <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
+
+      {/* ── Looking back ──────────────────────────────────────────── */}
+      <section className="mb-8">
+        <h2 className={SECTION_LABEL}>Looking back</h2>
+        <p className={BODY}>
+          Each day on the calendar carries two signals: how much was completed,
+          and how much felt good. Cool tones show completion; warm tones show
+          joy and moments. Days where both are strong find a color somewhere
+          between.
+        </p>
+        <p className={`${BODY} mt-3`}>
+          The list below the calendar shows how often each habit and moment
+          appeared. Tap any item to filter the calendar to match. Any past
+          day can be opened and edited.
         </p>
       </section>
 
       <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
 
-      {/* ── History & Insights ────────────────────────────────────── */}
+      {/* ── Your data ─────────────────────────────────────────────── */}
       <section className="mb-8">
-        <h2 className={SECTION_LABEL}>History & Insights</h2>
+        <h2 className={SECTION_LABEL}>Your data</h2>
         <p className={BODY}>
-          The heatmap blends habit completion (Dusk Blue) with emotional intensity 
-          (Warm Ember). Any day in your history can be opened and edited at any 
-          time. Tap any item in the list below the calendar to filter the view 
-          and find correlations in your life.
-        </p>
-      </section>
-
-      <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
-
-      {/* ── Ownership & Archiving ─────────────────────────────────── */}
-      <section className="mb-8">
-        <h2 className={SECTION_LABEL}>Ownership & Archiving</h2>
-        <p className={BODY}>
-          Your data never leaves your device. Archive habits or moments to hide 
-          them from your daily form without losing their historical records. 
-          Use Settings to export backups, import data, or perform a factory 
-          reset to start fresh.
+          Everything stays on your device. Export a backup from Settings before
+          making large changes. Archive a habit or moment to remove it from the
+          daily form without erasing its history.
         </p>
       </section>
 
@@ -81,9 +95,8 @@ export default function HelpView() {
       <section className="mb-8">
         <h2 className={SECTION_LABEL}>Calma</h2>
         <p className={BODY}>
-          Clarity follows the Calma system: warm tones, paper-like typography,
-          and zero urgency. No streaks, no scores, no guilt. Both full entries
-          and single lines of reflection are enough.
+          The look and feel follows a quiet design system called Calma — warm
+          tones, generous space, nothing competing for attention.
         </p>
         <a
           href="/clarity/calma-design-language.html"
@@ -91,7 +104,7 @@ export default function HelpView() {
           rel="noopener noreferrer"
           className="text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500 hover:text-stone-800 dark:hover:text-stone-300 transition-colors"
         >
-          Design language →
+          Design language <Chevron direction="right" />
         </a>
       </section>
 
