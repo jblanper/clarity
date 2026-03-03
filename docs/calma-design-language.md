@@ -66,6 +66,12 @@ Dark mode is always user-selected, never system-inferred. Respect the user's del
 - **Red** signals: errors and permanent destructive actions only.
 - **Never use red for reversible actions.** Amber communicates "significant but recoverable." Red communicates "gone."
 
+### Two-axis blend
+
+When a view carries two kinds of meaning at once — one structural, one felt — give each its own color. Cool tones hold presence and completion. Warm tones hold feeling and spontaneity. Where both signals appear together, the colors meet in proportion: neither overwhelms.
+
+The poles are Dusk Blue and Warm Ember.
+
 ---
 
 ## Typography
@@ -120,7 +126,7 @@ Max content width: 448px. Horizontal padding: 20px. This keeps lines short and r
 
 ### Principles
 
-- Every interactive element transitions its colors on hover and active. No exceptions. Motion is subtle — color shifts only, no movement.
+- Every interactive element transitions its colors on hover and active. No exceptions. Color transitions are subtle — one step along the scale. Spatial motion is reserved for layout changes.
 - Hover always shifts darker in light mode, lighter in dark mode.
 - Disabled elements are dimmed (40–50% opacity), never hidden. Absence without explanation is confusing.
 - Touch targets are minimum 44×44px on all tappable elements.
@@ -145,6 +151,23 @@ When a symbol needs to communicate two states — resting and active — use an 
 - The choice of symbol should carry meaning relevant to the context — avoid generic icon library defaults
 
 This pattern works with any simple shape: circles, leaves, petals, sparks. The system does not prescribe a specific symbol — only the two-state principle.
+
+---
+
+## Motion
+
+Motion in Calma is restrained. It confirms actions and clarifies spatial relationships — it does not entertain or celebrate.
+
+### Principles
+
+- Motion reveals or removes. It does not decorate.
+- Entering elements ease out — they arrive unhurried. Exiting elements ease in — they leave quickly, without ceremony.
+- Directional motion follows spatial logic.
+- Elements that change in place fade — they do not move.
+- Transitions are short. Nothing should last long enough to feel like waiting.
+- Reduced motion is a first-class constraint, not a fallback.
+
+Motion that draws attention to itself has already failed.
 
 ---
 

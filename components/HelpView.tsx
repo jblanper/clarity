@@ -81,10 +81,18 @@ export default function HelpView() {
       <section className="mb-8">
         <h2 className={SECTION_LABEL}>Calma</h2>
         <p className={BODY}>
-          Clarity follows the Calma system: warm tones, paper-like typography, 
-          and zero urgency. No streaks, no scores, no guilt. Both full entries 
+          Clarity follows the Calma system: warm tones, paper-like typography,
+          and zero urgency. No streaks, no scores, no guilt. Both full entries
           and single lines of reflection are enough.
         </p>
+        <a
+          href="/clarity/calma-design-language.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500 hover:text-stone-800 dark:hover:text-stone-300 transition-colors"
+        >
+          Design language →
+        </a>
       </section>
 
     </div>

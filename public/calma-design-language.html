@@ -81,7 +81,7 @@
 
   /* ── Layout ── */
   .page {
-    max-width: 680px;
+    max-width: 560px;
     margin: 0 auto;
     padding: 4rem 2rem 6rem;
   }
@@ -108,7 +108,7 @@
 
   .section-label {
     font-family: 'Jost', sans-serif;
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     font-weight: 500;
     letter-spacing: 0.25em;
     text-transform: uppercase;
@@ -128,8 +128,8 @@
 
   h3 {
     font-family: 'Jost', sans-serif;
-    font-size: 0.58rem;
-    font-weight: 400;
+    font-size: 0.7rem;
+    font-weight: 500;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--stone-500);
@@ -167,7 +167,7 @@
 
   .theme-toggle {
     font-family: 'Jost', sans-serif;
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     font-weight: 400;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -192,7 +192,7 @@
 
   .example-label {
     font-family: 'Jost', sans-serif;
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--stone-500);
@@ -223,7 +223,7 @@
 
   .swatch-label {
     font-family: 'Jost', sans-serif;
-    font-size: 0.55rem;
+    font-size: 0.7rem;
     letter-spacing: 0.05em;
     color: var(--stone-500);
     text-align: center;
@@ -251,11 +251,11 @@
 
   .type-meta {
     font-family: 'Jost', sans-serif;
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--stone-500);
-    min-width: 8rem;
+    min-width: 9rem;
     flex-shrink: 0;
   }
 
@@ -429,9 +429,9 @@
   }
   .chip:hover { border-color: var(--stone-400); }
   .chip.selected {
-    background: var(--stone-600);
+    background: var(--stone-700);
     color: var(--stone-50);
-    border-color: var(--stone-600);
+    border-color: var(--stone-700);
   }
 
   /* ── State table ── */
@@ -452,7 +452,7 @@
 
   .state-name {
     font-family: 'Jost', sans-serif;
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--stone-500);
@@ -534,7 +534,7 @@
   }
 
   .anatomy-nav {
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--stone-500);
@@ -546,7 +546,7 @@
   .anatomy-section { margin-bottom: 1.25rem; }
 
   .anatomy-section-label {
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--stone-500);
@@ -618,7 +618,7 @@
 
   .microcopy-tag {
     font-family: 'Jost', sans-serif;
-    font-size: 0.55rem;
+    font-size: 0.7rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
   }
@@ -661,7 +661,7 @@
 
   .radius-label {
     font-family: 'Jost', sans-serif;
-    font-size: 0.55rem;
+    font-size: 0.7rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--stone-500);
@@ -696,7 +696,7 @@
 
   .spacing-label {
     font-family: 'Jost', sans-serif;
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     letter-spacing: 0.12em;
     color: var(--stone-500);
     min-width: 4rem;
@@ -716,9 +716,9 @@
     border-radius: var(--radius-xl);
     border: 1px solid var(--border);
     font-family: 'Jost', sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.05em;
-    color: var(--stone-500);
+    font-size: 0.875rem;
+    letter-spacing: 0.02em;
+    color: var(--stone-700);
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -727,23 +727,76 @@
   .not-this-item::before {
     content: '×';
     font-size: 1rem;
-    color: var(--stone-300);
+    color: var(--stone-400);
     flex-shrink: 0;
   }
 
   /* ── Scroll fade in ── */
   .fade-in {
     opacity: 0;
-    transform: translateY(12px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
+    transform: translateY(8px);
+    transition: opacity 0.38s ease-out, transform 0.38s ease-out;
   }
   .fade-in.visible {
     opacity: 1;
     transform: none;
   }
 
+  /* ── Motion section ── */
+  .motion-principles {
+    display: flex;
+    flex-direction: column;
+    margin: 0.5rem 0 1.25rem;
+  }
+  .motion-principle {
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--border);
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.875rem;
+    color: var(--stone-700);
+    line-height: 1.7;
+  }
+  .motion-principle:last-child { border-bottom: none; }
+
+  .motion-demo-panel {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 280ms ease-out, opacity 260ms ease-out;
+  }
+  .motion-demo-panel.open { max-height: 200px; opacity: 1; }
+  .motion-demo-panel.closing {
+    transition: max-height 200ms ease-in, opacity 180ms ease-in;
+  }
+
+  #blossom-empty  { transition: opacity 160ms ease-in; }
+  #blossom-filled { transition: opacity 160ms ease-out; }
+
+  /* ── Sunset gradient ── */
+  .sunset-gradient {
+    height: 2rem;
+    border-radius: var(--radius-xl);
+    background: linear-gradient(to right, #7090b0, hsl(117,40%,68%), #c4784a);
+    margin-bottom: 1.5rem;
+  }
+  [data-theme="dark"] .sunset-gradient {
+    background: linear-gradient(to right, #506880, hsl(117,36%,31%), #a05f38);
+  }
+
+  /* ── Reduced motion ── */
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in,
+    .motion-demo-panel,
+    .motion-demo-panel.open,
+    .motion-demo-panel.closing,
+    #blossom-empty,
+    #blossom-filled { transition: none; }
+  }
+
   /* ── Responsive ── */
   @media (max-width: 600px) {
+    .page { padding: 2rem 1.25rem 4rem; }
+    .example { padding: 1.25rem; }
     .microcopy-row, .not-this, .state-demo { grid-template-columns: 1fr; }
     .btn-row { flex-direction: column; align-items: flex-start; }
   }
@@ -862,6 +915,36 @@
     </div>
 
     <p style="font-size:0.8rem;color:var(--stone-500);margin-top:0.5rem;"><strong style="color:var(--stone-700);">Accessibility note:</strong> stone-400 fails WCAG AA on a light background (2.4:1 ratio). Never use it as body text in light mode.</p>
+
+    <h3>Two-axis blend</h3>
+    <p>When a view carries two kinds of meaning at once — one structural, one felt — give each its own color. Cool tones hold presence and completion; warm tones hold feeling and spontaneity. Where both appear together, the colors meet in proportion to each signal's weight.</p>
+    <div class="example">
+      <div class="example-label">Cool · Blend · Warm</div>
+      <div class="sunset-gradient"></div>
+      <div class="swatches">
+        <div class="swatch">
+          <div class="swatch-pair">
+            <div class="swatch-color light" style="background:#7090b0;"></div>
+            <div class="swatch-color dark" style="background:#506880;"></div>
+          </div>
+          <div class="swatch-label">Dusk Blue<br>structure</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-pair">
+            <div class="swatch-color light" style="background:hsl(117,40%,68%);"></div>
+            <div class="swatch-color dark" style="background:hsl(117,36%,31%);"></div>
+          </div>
+          <div class="swatch-label">Blend<br>both present</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-pair">
+            <div class="swatch-color light" style="background:#c4784a;"></div>
+            <div class="swatch-color dark" style="background:#a05f38;"></div>
+          </div>
+          <div class="swatch-label">Warm Ember<br>feeling</div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <hr class="section-divider">
@@ -959,7 +1042,7 @@
   <!-- Interaction -->
   <section class="section fade-in">
     <div class="section-label">Interaction</div>
-    <p>Every interactive element transitions its colors on hover and active. Motion is subtle — color shifts only, no movement. Hover always shifts darker in light mode, lighter in dark mode.</p>
+    <p>Every interactive element transitions its colors on hover and active. Color transitions are subtle — one step along the scale. Spatial motion is reserved for layout changes. Hover always shifts darker in light mode, lighter in dark mode.</p>
 
     <h3>Buttons</h3>
     <div class="example">
@@ -1018,6 +1101,7 @@
       <div class="example-label">Resting · Active</div>
       <div style="display:flex;gap:2rem;align-items:center;">
         <button onclick="toggleBlossom(this)" style="background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:0.5rem;min-width:44px;min-height:44px;transition:transform 150ms ease;" onmousedown="this.style.transform='scale(0.88)'" onmouseup="this.style.transform='scale(1)'" onmouseleave="this.style.transform='scale(1)'">
+          <div style="position:relative;width:28px;height:28px;">
           <svg id="blossom-empty" width="28" height="28" viewBox="0 0 24 24" fill="none">
             <ellipse cx="12" cy="5.5" rx="2.2" ry="3.5" stroke="var(--stone-400)" stroke-width="1.3" opacity="0.5"/>
             <ellipse cx="12" cy="5.5" rx="2.2" ry="3.5" stroke="var(--stone-400)" stroke-width="1.3" opacity="0.5" transform="rotate(72 12 12)"/>
@@ -1026,7 +1110,7 @@
             <ellipse cx="12" cy="5.5" rx="2.2" ry="3.5" stroke="var(--stone-400)" stroke-width="1.3" opacity="0.5" transform="rotate(288 12 12)"/>
             <circle cx="12" cy="12" r="2" fill="var(--stone-200)"/>
           </svg>
-          <svg id="blossom-filled" width="28" height="28" viewBox="0 0 24 24" fill="none" style="display:none;">
+          <svg id="blossom-filled" width="28" height="28" viewBox="0 0 24 24" fill="none" style="position:absolute;top:0;left:0;opacity:0;">
             <ellipse cx="12" cy="5.5" rx="2.2" ry="3.5" fill="#fbbf24" stroke="#f59e0b" stroke-width="0.75" opacity="0.9"/>
             <ellipse cx="12" cy="5.5" rx="2.2" ry="3.5" fill="#fbbf24" stroke="#f59e0b" stroke-width="0.75" opacity="0.9" transform="rotate(72 12 12)"/>
             <ellipse cx="12" cy="5.5" rx="2.2" ry="3.5" fill="#fbbf24" stroke="#f59e0b" stroke-width="0.75" opacity="0.9" transform="rotate(144 12 12)"/>
@@ -1035,6 +1119,7 @@
             <circle cx="12" cy="12" r="2.2" fill="#f59e0b"/>
             <circle cx="12" cy="12" r="1" fill="#fef3c7"/>
           </svg>
+          </div>
         </button>
         <div style="font-family:'Lora',serif;font-size:0.825rem;font-style:italic;color:var(--stone-500);line-height:1.7;">
           Outlined at rest — present<br>but undemanding. Amber<br>when active.
@@ -1044,6 +1129,46 @@
 
     <h3>Touch targets</h3>
     <p>Minimum 44×44px on all tappable elements. Disabled elements are dimmed, never hidden — absence without explanation is confusing.</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- Motion -->
+  <section class="section fade-in">
+    <div class="section-label">Motion</div>
+    <p>Motion in Calma is restrained. It confirms actions and clarifies spatial relationships — it does not entertain or celebrate. Every transition should feel like a physical consequence of something the user did, not a performance in its own right.</p>
+
+    <h3>Principles</h3>
+    <div class="motion-principles">
+      <div class="motion-principle">Motion reveals or removes. It does not decorate.</div>
+      <div class="motion-principle">Entering elements ease out — they arrive unhurried. Exiting elements ease in — they leave quickly, without ceremony.</div>
+      <div class="motion-principle">Directional motion follows spatial logic.</div>
+      <div class="motion-principle">Elements that change in place fade — they do not move.</div>
+      <div class="motion-principle">Transitions are short. Nothing should last long enough to feel like waiting.</div>
+      <div class="motion-principle">Reduced motion is a first-class constraint, not a fallback.</div>
+    </div>
+
+    <h3>Reveal</h3>
+    <div class="example">
+      <div class="example-label">Height reveal</div>
+      <div style="display:flex;flex-direction:column;gap:0.75rem;">
+        <button class="btn-ghost" onclick="toggleMotionPanel(this)" style="align-self:flex-start;min-height:auto;padding:0.25rem 0;font-size:0.75rem;letter-spacing:0.12em;">
+          Show note
+        </button>
+        <div class="motion-demo-panel">
+          <div style="padding:1rem;border-radius:var(--radius-xl);border:1px solid var(--border);background:var(--background);">
+            <div style="font-family:'Lora',Georgia,serif;font-size:0.825rem;font-style:italic;color:var(--stone-600);line-height:1.8;">
+              Walked at dusk. The light came through the trees without announcing itself.
+            </div>
+            <div style="margin-top:0.75rem;font-family:'Jost',sans-serif;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--stone-400);">
+              Reflection · Tuesday
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p style="font-size:0.875rem;color:var(--stone-500);margin-top:1.5rem;font-style:italic;">Motion that draws attention to itself has already failed.</p>
   </section>
 
   <hr class="section-divider">
@@ -1144,7 +1269,7 @@
 
   <!-- Footer -->
   <footer style="margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border);">
-    <p style="font-size:0.7rem;color:var(--stone-400);font-family:'Jost',sans-serif;letter-spacing:0.1em;">Calma · Design Language · v1.0</p>
+    <p style="font-size:0.7rem;color:var(--stone-400);font-family:'Jost',sans-serif;letter-spacing:0.1em;">Calma · Design Language · v1.1</p>
   </footer>
 
 </div>
@@ -1160,9 +1285,24 @@
   function toggleBlossom(btn) {
     const empty  = btn.querySelector('#blossom-empty');
     const filled = btn.querySelector('#blossom-filled');
-    const showFilled = empty.style.display !== 'none';
-    empty.style.display  = showFilled ? 'none'  : 'block';
-    filled.style.display = showFilled ? 'block' : 'none';
+    const showFilled = filled.style.opacity !== '1';
+    empty.style.opacity  = showFilled ? '0' : '1';
+    filled.style.opacity = showFilled ? '1' : '0';
+  }
+
+  // Motion panel reveal
+  function toggleMotionPanel(btn) {
+    const panel = btn.nextElementSibling;
+    const isOpen = panel.classList.contains('open');
+    if (isOpen) {
+      panel.classList.add('closing');
+      panel.classList.remove('open');
+      setTimeout(() => panel.classList.remove('closing'), 220);
+      btn.textContent = 'Show note';
+    } else {
+      panel.classList.add('open');
+      btn.textContent = 'Hide note';
+    }
   }
 
   // Scroll-triggered fade-in
