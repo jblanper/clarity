@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clarity — Project Vision</title>
+    <style>
+        :root {
+            /* Stone Palette (Light Mode) */
+            --bg: #fafaf9;
+            --surface: #ffffff;
+            --surface-subtle: #f5f5f4;
+            
+            --stone-900: #1c1917;
+            --stone-800: #292524;
+            --stone-700: #44403c;
+            --stone-500: #78716c;
+            --stone-400: #a8a29e;
+            --stone-300: #d6d3d1;
+            --stone-200: #e7e5e4;
+            --stone-100: #f5f5f4;
+            
+            --amber-500: #f59e0b;
+            --amber-700: #b45309;
+            
+            --red-100: #fee2e2;
+            --red-700: #b91c1c;
+            
+            --habit-color: #7090b0;
+            --moment-color: #c4784a;
+
+            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+            --radius-full: 9999px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--stone-700);
+            font-family: var(--font-stack);
+            font-size: 16px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            padding: 4rem 1.5rem;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: var(--stone-800);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--stone-500);
+            font-weight: 400;
+            margin-bottom: 5rem;
+        }
+
+        h2 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 600;
+            color: var(--stone-500);
+            margin-top: 6rem;
+            margin-bottom: 2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--stone-200);
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 400; /* Lighter weight for headers */
+            color: var(--stone-800);
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--stone-700);
+        }
+        
+        strong {
+            font-weight: 600;
+            color: var(--stone-900);
+        }
+
+        /* Feature Cards */
+        .feature-grid {
+            display: grid;
+            gap: 2.5rem;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--stone-200);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-visual {
+            background: var(--surface-subtle);
+            padding: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--stone-100);
+            min-height: 240px;
+        }
+
+        .card-content {
+            padding: 2rem 2.5rem;
+        }
+
+        .card-content ul {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+        
+        .card-content li {
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+            color: var(--stone-500);
+            position: relative;
+            padding-left: 1.25rem;
+        }
+
+        .card-content li::before {
+            content: "—"; /* Em dash style */
+            position: absolute;
+            left: 0;
+            color: var(--stone-300);
+        }
+
+        /* UI Recreation: Mobile Shell */
+        .mobile-ui {
+            background: var(--surface);
+            border: 1px solid var(--stone-200);
+            border-radius: var(--radius-lg);
+            width: 280px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        
+        .ui-section-header {
+            margin-bottom: 1rem;
+        }
+        
+        .ui-divider {
+            height: 4px; 
+            width: 40px; 
+            background: var(--stone-200); 
+            margin-bottom: 1rem;
+        }
+        
+        .ui-title {
+            font-weight: 600; 
+            letter-spacing: 0.1em; 
+            text-transform: uppercase; 
+            font-size: 0.7rem; 
+            color: var(--stone-400); 
+            margin-bottom: 0.5rem;
+        }
+
+        /* UI Recreation: Habit Toggle */
+        .ui-habit-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--stone-100);
+        }
+        .ui-habit-row:last-child { border-bottom: none; }
+        .ui-label { font-size: 0.875rem; color: var(--stone-700); }
+        .ui-toggle {
+            width: 44px; height: 32px;
+            border-radius: 99px;
+            background: var(--stone-200);
+            position: relative;
+        }
+        .ui-toggle::after {
+            content: "";
+            position: absolute;
+            top: 2px; left: 2px;
+            width: 28px; height: 28px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+        .ui-toggle.on { background: var(--stone-800); }
+        .ui-toggle.on::after { left: auto; right: 2px; } /* Simple CSS toggle sim */
+        
+        /* UI Recreation: Numeric Stepper */
+        .ui-stepper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ui-step-btn {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            border: 1px solid var(--stone-300);
+            color: var(--stone-500);
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 1rem;
+        }
+        .ui-val { font-size: 0.875rem; font-variant-numeric: tabular-nums; }
+
+        /* UI Recreation: Heatmap */
+        .ui-heatmap {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+        .ui-cell {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 4px;
+            background: var(--stone-200);
+        }
+        .ui-cell.l1 { background: #cbd5e1; } /* Light Blue */
+        .ui-cell.l2 { background: var(--habit-color); } /* Habit Blue */
+        .ui-cell.m1 { background: #e0d0c5; } /* Light Moment */
+        .ui-cell.m2 { background: var(--moment-color); } /* Moment Amber */
+        
+        /* UI Recreation: Moments */
+        .ui-moments {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .ui-chip {
+            font-size: 0.75rem;
+            padding: 0.35rem 0.85rem;
+            border-radius: 99px;
+            border: 1px solid var(--stone-300);
+            color: var(--stone-500);
+            background: white;
+        }
+        .ui-chip.active {
+            background: var(--stone-800);
+            color: white;
+            border-color: var(--stone-800);
+        }
+        
+        /* UI Recreation: Manage List */
+        .ui-manage-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--stone-100);
+        }
+        .ui-manage-actions {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            gap: 0.75rem;
+        }
+        .ui-link { color: var(--stone-500); text-decoration: underline; }
+        .ui-link-danger { color: var(--amber-700); text-decoration: underline; }
+
+        /* UI Recreation: Settings Button */
+        .ui-btn {
+            width: 100%;
+            padding: 0.875rem;
+            border-radius: 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+        .ui-btn-primary { background: var(--stone-800); color: white; }
+        .ui-btn-outline { border: 1px solid var(--stone-200); background: white; color: var(--stone-700); }
+
+        /* Journeys */
+        .journey-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4rem;
+        }
+        .journey-item h3 {
+            font-size: 1.125rem;
+            letter-spacing: 0.02em;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .journey-badge {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            background: var(--stone-100);
+            color: var(--stone-500);
+            border: 1px solid var(--stone-200);
+        }
+        
+        .journey-steps {
+            border-left: 1px solid var(--stone-200);
+            padding-left: 2rem;
+            position: relative;
+        }
+        
+        .step {
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            position: relative;
+        }
+        
+        .step::before {
+            content: "";
+            position: absolute;
+            left: -2.35rem; /* Align with border */
+            top: 0.6rem;
+            width: 0.7rem;
+            height: 1px;
+            background: var(--stone-300);
+        }
+
+        .step:last-child { margin-bottom: 0; }
+        
+        .step-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--stone-400);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 8rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--stone-200);
+            color: var(--stone-400);
+            font-size: 0.875rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        @media (max-width: 640px) {
+            h1 { font-size: 2rem; }
+            .card-visual { padding: 1.5rem; }
+            .mobile-ui { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Clarity</h1>
+        <p class="subtitle">A calm, minimal daily habit tracker.</p>
+    </header>
+
+    <section>
+        <h2>The Vision</h2>
+        <p style="font-size: 1.125rem; line-height: 1.7; color: var(--stone-800);">
+            Clarity is an antidote to the anxiety of modern productivity tools. 
+            It avoids streaks, gamification, and notifications. 
+            Instead, it focuses on honest self-reflection and long-term consistency.
+            Built "local-first," it ensures your data never leaves your device.
+        </p>
+    </section>
+
+    <section>
+        <h2>Core Features</h2>
+        
+        <div class="feature-grid">
+            
+            <!-- Card 1: Check-in -->
+            <div class="card">
+                <div class="card-visual">
+                    <div class="mobile-ui">
+                        <div class="ui-section-header">
+                            <div class="ui-divider"></div>
+                            <div class="ui-title">Check-in</div>
+                        </div>
+                        <div class="ui-habit-row">
+                            <span class="ui-label">Meditation</span>
+                            <div class="ui-toggle on"></div>
+                        </div>
+                        <div class="ui-habit-row">
+                            <span class="ui-label">Reading</span>
+                            <div class="ui-toggle"></div>
+                        </div>
+                        <div class="ui-habit-row">
+                            <span class="ui-label">Water</span>
+                            <div class="ui-stepper">
+                                <span class="ui-step-btn">-</span>
+                                <span class="ui-val">5</span>
+                                <span class="ui-step-btn">+</span>
+                            </div>
+                        </div>
+                         <div style="margin-top: 1.5rem;">
+                            <div class="ui-title">Moments</div>
+                            <div class="ui-moments">
+                                <span class="ui-chip active">Nature</span>
+                                <span class="ui-chip">Good Meal</span>
+                                <span class="ui-chip active">Music</span>
+                                <span class="ui-chip" style="border-style: dashed; color: var(--stone-400);">+ New</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3>1. Daily Check-in</h3>
+                    <p>The primary interface is a distraction-free form designed for end-of-day reflection.</p>
+                    <ul>
+                        <li><strong>Boolean Habits:</strong> Simple "done" / "not done" toggles.</li>
+                        <li><strong>Joy Tracking:</strong> Completed habits can be marked as "joyful," adding qualitative data.</li>
+                        <li><strong>Numeric Habits:</strong> Track quantifiable goals (e.g. "Water: 5 cups") with custom units.</li>
+                        <li><strong>Moments:</strong> A tag-based system to capture daily highlights (e.g. "Good meal", "Nature").</li>
+                        <li><strong>Reflection:</strong> A simple text area for journaling thoughts.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: History -->
+            <div class="card">
+                <div class="card-visual">
+                    <div class="mobile-ui">
+                         <div class="ui-section-header">
+                            <div class="ui-title">History</div>
+                        </div>
+                        <div class="ui-heatmap" style="margin-bottom: 1.5rem;">
+                            <!-- Row 1 -->
+                            <div class="ui-cell"></div><div class="ui-cell l1"></div><div class="ui-cell l2"></div><div class="ui-cell"></div><div class="ui-cell l2"></div><div class="ui-cell m2"></div><div class="ui-cell l1"></div>
+                            <!-- Row 2 -->
+                            <div class="ui-cell l2"></div><div class="ui-cell l2"></div><div class="ui-cell m1"></div><div class="ui-cell l2"></div><div class="ui-cell"></div><div class="ui-cell l1"></div><div class="ui-cell l2"></div>
+                            <!-- Row 3 -->
+                            <div class="ui-cell m2"></div><div class="ui-cell l1"></div><div class="ui-cell"></div><div class="ui-cell l2"></div><div class="ui-cell l2"></div><div class="ui-cell m2"></div><div class="ui-cell l1"></div>
+                             <!-- Row 4 -->
+                             <div class="ui-cell l1"></div><div class="ui-cell l2"></div><div class="ui-cell l2"></div><div class="ui-cell m1"></div><div class="ui-cell l1"></div><div class="ui-cell"></div><div class="ui-cell l2"></div>
+                        </div>
+                         <div class="ui-section-header">
+                            <div class="ui-divider"></div>
+                            <div class="ui-title">Frequency</div>
+                        </div>
+                        <div class="ui-habit-row">
+                            <span class="ui-label">Meditation</span>
+                            <span class="ui-label" style="color: var(--stone-400);">64%</span>
+                        </div>
+                        <div class="ui-habit-row">
+                            <span class="ui-label">Reading</span>
+                            <span class="ui-label" style="color: var(--stone-400);">42%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3>2. History & Visualization</h3>
+                    <p>A powerful retrospective view that emphasizes patterns over streaks.</p>
+                    <ul>
+                        <li><strong>Calendar Heatmap:</strong> Blends colors based on habit completion (Blue) and joy (Amber).</li>
+                        <li><strong>Interactive Filtering:</strong> Tap a specific habit to see only its history on the grid.</li>
+                        <li><strong>Frequency Analysis:</strong> Statistical breakdown of consistency over configurable periods.</li>
+                        <li><strong>Day Detail:</strong> Slide-over sheet to review past entries without full edit mode.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 3: System Config -->
+            <div class="card">
+                <div class="card-visual">
+                    <div class="mobile-ui">
+                        <div class="ui-section-header">
+                            <div class="ui-title">Manage Habits</div>
+                        </div>
+                        <div class="ui-manage-item">
+                            <span class="ui-label">Meditation</span>
+                            <div class="ui-manage-actions">
+                                <span class="ui-link">Edit</span>
+                                <span class="ui-link-danger">Archive</span>
+                            </div>
+                        </div>
+                        <div class="ui-manage-item">
+                            <span class="ui-label">Coffee (cups)</span>
+                            <div class="ui-manage-actions">
+                                <span class="ui-link">Edit</span>
+                                <span class="ui-link-danger">Archive</span>
+                            </div>
+                        </div>
+                        <div class="ui-manage-item" style="border-bottom: none; padding-top: 1rem; color: var(--stone-400);">
+                            <span class="ui-label">+ Add habit</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3>3. System Configuration</h3>
+                    <p>Complete control over the tracking model without losing historical data.</p>
+                    <ul>
+                        <li><strong>Custom Habits:</strong> Create boolean or numeric habits with custom units.</li>
+                        <li><strong>Archiving:</strong> Archive habits to remove them from the daily view while preserving history.</li>
+                        <li><strong>Joy Configuration:</strong> Set habits to "Joy by default" (e.g. Meditation is always joyful).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 4: Data & Settings -->
+             <div class="card">
+                <div class="card-visual">
+                    <div class="mobile-ui">
+                        <div class="ui-section-header">
+                            <div class="ui-title">Your Data</div>
+                        </div>
+                        <div class="ui-btn ui-btn-outline">
+                            Export backup
+                        </div>
+                        <div class="ui-btn ui-btn-primary">
+                            Import from file
+                        </div>
+                         <div class="ui-section-header" style="margin-top: 1.5rem;">
+                            <div class="ui-title">Theme</div>
+                        </div>
+                         <div style="display: flex; gap: 1rem;">
+                            <span class="ui-label" style="font-weight: 600;">Light</span>
+                            <span class="ui-label" style="color: var(--stone-400);">Dark</span>
+                         </div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3>4. Data & Settings</h3>
+                    <p>Privacy-first design with full control over your information.</p>
+                    <ul>
+                        <li><strong>Privacy First:</strong> All data lives in LocalStorage. No servers.</li>
+                        <li><strong>Backup & Restore:</strong> Full JSON export/import for data portability between devices.</li>
+                        <li><strong>Theming:</strong> First-class Dark Mode support (Stone/Charcoal palette).</li>
+                        <li><strong>Factory Reset:</strong> Option to wipe all data and return to a clean slate.</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section>
+        <h2>User Journeys</h2>
+        <div class="journey-list">
+            
+            <div class="journey-item">
+                <h3>01. The Daily Reflection <span class="journey-badge">Happy Path</span></h3>
+                <div class="journey-steps">
+                    <div class="step">
+                        <span class="step-label">Open</span>
+                        Alex opens Clarity. The date defaults to "Today".
+                    </div>
+                    <div class="step">
+                        <span class="step-label">Track</span>
+                        Toggles "Exercise" to <strong>Done</strong>. Toggles "Reading" to <strong>Done</strong> and taps the flower icon to mark it as <strong>Joyful</strong>. Increments "Water" to 6 cups.
+                    </div>
+                    <div class="step">
+                        <span class="step-label">Capture</span>
+                        Selects "Nature" from Moments. Realizes they also cooked a meal, so they tap <strong>+ New moment</strong>, type "Cooking", and add it instantly.
+                    </div>
+                    <div class="step">
+                        <span class="step-label">Reflect</span>
+                        In the reflection box, Alex types: <em>"Felt more energetic today after the run."</em>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">Save</span>
+                        Taps "Save". The button transitions to "Day captured", and the app gently redirects to the History view.
+                    </div>
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <h3>02. Reviewing Patterns <span class="journey-badge">Analysis</span></h3>
+                <div class="journey-steps">
+                    <div class="step">
+                        <span class="step-label">Navigate</span>
+                        Sam taps "History". They see the heatmap—some days are blue (productive), some amber (joyful), most a blend.
+                    </div>
+                    <div class="step">
+                        <span class="step-label">Filter</span>
+                        Sam wonders, <em>"How often have I been running?"</em> They tap "Frequency" to open the stats list, then tap "Running".
+                    </div>
+                    <div class="step">
+                        <span class="step-label">Visualize</span>
+                        The heatmap updates. Only days with "Running" checked are lit up. Sam sees they run mostly on Tuesdays and Thursdays.
+                    </div>
+                    <div class="step">
+                        <span class="step-label">Detail</span>
+                        They tap a specific bright cell from last week. A sheet slides up showing that on that day, they also had "Good sleep", revealing a correlation.
+                    </div>
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <h3>03. Adapting the System <span class="journey-badge">Config</span></h3>
+                <div class="journey-steps">
+                    <div class="step">
+                        <span class="step-label">Intent</span>
+                        Jordan is stopping "Coffee" tracking and starting "Meditation".
+                    </div>
+                    <div class="step">
+                        <span class="step-label">Archive</span>
+                        In Settings > Manage, Jordan finds "Coffee" and taps <strong>Archive</strong>. It vanishes from the active list but remains in history.
+                    </div>
+                    <div class="step">
+                        <span class="step-label">Create</span>
+                        Taps <strong>+ Add habit</strong>. Selects "Boolean", names it "Meditation", and sets "Joy by default" to true.
+                    </div>
+                    <div class="step">
+                        <span class="step-label">Verify</span>
+                        Jordan returns to the Home screen. "Meditation" is now at the top of the list, ready for tonight.
+                    </div>
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <h3>04. Data Safety & Migration <span class="journey-badge">Utility</span></h3>
+                <div class="journey-steps">
+                    <div class="step">
+                        <span class="step-label">Export</span>
+                        On the old phone, Casey goes to "Settings" > "Your data" and taps <strong>Export backup</strong>. A JSON file is saved.
+                    </div>
+                    <div class="step">
+                        <span class="step-label">Transfer</span>
+                        Casey sends this file to their new phone.
+                    </div>
+                    <div class="step">
+                        <span class="step-label">Import</span>
+                        On the new phone, Casey opens Clarity, goes to "Settings", and taps <strong>Import from file</strong>.
+                    </div>
+                    <div class="step">
+                        <span class="step-label">Success</span>
+                        The app confirms: <em>"342 entries imported"</em>. Casey goes to "History" and sees their entire year's grid instantly populated.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <span>Clarity 2026</span>
+        <span>Local-first. Privacy-focused.</span>
+    </footer>
+</div>
+
+</body>
+</html>

@@ -2,5 +2,27 @@
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,
     "playwright@claude-plugins-official": true
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'git rev-parse --git-dir > /dev/null 2>&1 && echo \"Branch: $(git branch --show-current)\" && git status --short || echo \"Warning: not a git repository\"'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'if git rev-parse --git-dir > /dev/null 2>&1; then npx tsc --noEmit 2>&1 | head -20; fi'"
+          }
+        ]
+      }
+    ]
   }
 }

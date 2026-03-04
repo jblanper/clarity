@@ -1,32 +1,99 @@
 # Clarity — Project Guide
 
+## Project Stack
+Next.js App Router · TypeScript strict · Tailwind CSS v4 · localStorage · Jest · GitHub Pages (`https://jblanper.github.io/clarity/`)
+
+- Dynamic routes require `generateStaticParams` for static export
+- Always run `npm run lint && npm test && npm run build` after changes to verify nothing is broken
+
+## Git & Commits
+- Always verify the current directory is a git repository before running git commands (`git rev-parse --git-dir`)
+- When committing, stage and commit in one step unless told otherwise
+
+## Audits & Reports
+Use the dedicated audit skills rather than writing audits from scratch.
+Severity levels across all audit files: **critical** · **high** · **medium** · **low**
+
+| Skill | What it audits | Output |
+|---|---|---|
+| `/audit-colour` | WCAG contrast, stone palette, dark mode completeness | `docs/audit-colour.md` |
+| `/audit-typography` | Type scale, section label pattern, spacing rhythm | `docs/audit-typography.md` |
+| `/audit-interaction` | Motion library usage, transitions, reduced motion | `docs/audit-interaction.md` |
+| `/audit-microcopy` | Tone, technical language, error messages, copy | `docs/audit-microcopy.md` |
+| `/audit-design-overall` | Holistic coherence review across all pages | `docs/audit-design-overall.md` |
+| `/audit-triage` | Consolidates all five reports into a chunked implementation plan | `docs/audit-implementation-plan.md` |
+| `/audit-all` | Runs all six in the correct order (first four in parallel, then design-overall, then triage) | All of the above |
+
+## Sprint workflow
+
+Sprint documents live in `docs/sprints/`. Each sprint produces two files:
+a brief (`sprint-NN-brief.md`) that evolves through planning, and a final
+doc (`sprint-NN.md`) that drives execution.
+
+**Rules:** Sprint brief and documents are owned by the Product Owner role.
+One release per sprint if possible.
+
+### Planning
+| Skill | Role | When to use |
+|---|---|---|
+| `/sprint-brief` | Product Owner | Start here — back-and-forth discussion, produces the brief |
+| `/sprint-ux` | UX/UI Designer | Reviews brief with you; flags which audits to run at validation |
+| `/sprint-arch` | Senior Architect | Reviews brief with you, technical feasibility and risks |
+| `/sprint-review` | PO mediator | Runs UX + Arch in parallel, you mediate conflicts |
+| `/sprint-plan` | Product Owner | Produces the final executable sprint doc |
+
+### Execution
+| Skill | When to use |
+|---|---|
+| `/sprint-arch-review` | After coding — lint + tests + code review against CLAUDE.md |
+| `/sprint-validate` | After coding — archives pre-sprint audits, runs fresh audits, reports regressions |
+| `/sprint-qa` | After coding — runs Playwright regression suite, writes new tests, manual checklist |
+
+### Closure
+| Skill | When to use |
+|---|---|
+| `/calma-sync` | After validation — review whether Calma spec needs updating |
+| `/deploy` | After you manually validate — full release pipeline |
+| `/sprint-retro` | After release — retrospective appended to sprint doc |
+
+### Anytime
+| Skill | When to use |
+|---|---|
+| `/sprint-kickoff` | Start of any coding session mid-sprint — git status, tasks done/pending, what to work on next |
+| `/retro-report` | Analyse all past retrospectives, produce process recommendations |
+| `/project-health` | Between sprints — security audit, outdated deps, test suite health, docs integrity |
+
+### Full execution order
+```
+PLANNING:   /sprint-brief → /sprint-ux → /sprint-arch → /sprint-plan
+                                or
+            /sprint-brief → /sprint-review → /sprint-plan
+
+EXECUTION:  /sprint-kickoff → [code] → /sprint-arch-review → /sprint-validate → /sprint-qa → [you validate]
+
+CLOSURE:    /calma-sync → /deploy → /sprint-retro
+```
+
+## Releases
+Use `/deploy` for the full release pipeline: lint → tests → build → version bump (patch / minor / major) → changelog → commit + tag → GitHub release.
+
 ## What is Clarity?
 A mobile-first Next.js habit tracker. Log daily habits, numbers, moments, and reflections once a day. Calm and minimal — no gamification, no streaks.
 
-## Tech Stack
-Next.js App Router · TypeScript strict · Tailwind CSS v4 · localStorage · Jest · GitHub Pages (`https://jblanper.github.io/clarity/`)
+## Design
 
-## Style & Vibes
+All design decisions — palette, typography, spacing, motion, interaction, and microcopy — are in `docs/calma-design-language.md` (system: Calma). It is the single source of truth. Read it before any UI work.
 
-> The full design language spec lives in **`docs/calma-design-language.md`** (system: Calma). Follow it for all new UI work. The notes below are a practical summary; the doc is the source of truth for palette, typography, spacing, interaction, and microcopy principles.
+### Tailwind implementation tokens
 
-- **Typographic** — text-based navigation (← back, Settings), no icons or emojis.
-- **Stone palette** — warm off-whites/near-blacks. No bright accent colours. See `globals.css`.
-- **Section labels** — `text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500` everywhere. Must be reused for any new section.
-- **Rounded UI** — `rounded-2xl` on interactive elements. `max-w-md`, `min-h-[44px]` touch targets.
-- **Subtle interactions** — Motion library (`motion/react`) for enter/exit animations (height reveals, directional slides, opacity fades). CSS transitions for hover/active states and simple colour changes. All animations respect `prefers-reduced-motion` via `MotionConfig reducedMotion="user"` in `MotionProvider`.
-- Primary button: `bg-stone-800 dark:bg-stone-200 text-white dark:text-stone-900`.
-- Secondary button: `border-stone-200 bg-white text-stone-700 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300`.
+These translate the Calma spec to concrete Tailwind classes. The spec defines the principles; these define the code.
 
-### Color-role hierarchy (WCAG AA, light theme)
-| Role | Class |
-|---|---|
-| Primary text | `text-stone-800` / `text-stone-900` |
-| Body / labels | `text-stone-700` |
-| Nav links, arrows | `text-stone-600` (hover: `stone-800`) |
-| Section labels, timestamps | `text-stone-500` |
-| **Never in light mode** | `text-stone-400` — only OK as `dark:` variant |
-| Errors | `text-red-700 dark:text-red-400` |
+- **Section label** — `text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500` — all six parts required. `font-medium` is commonly omitted by mistake.
+- **Primary button** — `bg-stone-800 dark:bg-stone-200 text-white dark:text-stone-900`
+- **Secondary button** — `border-stone-200 bg-white text-stone-700 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300`
+- **Interactive elements** — `rounded-2xl`, `min-h-[44px]` touch targets, `max-w-md` content width
+- **Critical WCAG constraint** — never `text-stone-400` as foreground in light mode (2.4:1, fails AA). Safe only as `dark:` variant.
+- **Errors** — `text-red-700 dark:text-red-400`
 
 ## Navigation Architecture
 
@@ -105,15 +172,6 @@ Types live in `types/entry.ts` (`HabitEntry`, `HabitState`) and `lib/habitConfig
 - **Exit animation snap** — when `exit={{ height: 0 }}` is on an element that has padding or margin via className, those must also be animated to 0 in `exit` (e.g. `paddingTop: 0, paddingBottom: 0, marginBottom: 0`). With `box-sizing: border-box`, `height: 0` does not collapse `py-*` padding; the element stays visible at `paddingTop + paddingBottom` height until unmount, causing a snap.
 - **DayDetail scroll lock** — uses `useLayoutEffect` (not `useEffect`) for `document.body.style.overflow = "hidden"`. The layout-effect cleanup runs synchronously during the React commit, so the lock is never left behind when the user navigates away mid-animation.
 - **`lib/habitConfig.ts` is the source of truth** for config. `lib/habits.ts` contains only `createEmptyEntry()` and should not grow.
-
-## Microcopy & Tone
-The words should feel as considered as the design — calm, human, never clinical.
-
-- **Empty states** — inviting, never guilt-inducing. *"Nothing logged for this day yet"* ✅ / *"You missed this day"* ❌
-- **Error messages** — calm and specific. *"That file doesn't look right — try exporting a fresh backup"*
-- **Labels** — plain and human. *"Theme"*, *"Your data"*, not *"Appearance Settings"*
-- **Save confirmation** — brief and unobtrusive. No modal, no fanfare.
-- No exclamation marks. No all-caps except the `tracking-widest` section label pattern.
 
 ## Coding Standards
 - Strict TypeScript — no `any`. Interfaces for all data structures.
