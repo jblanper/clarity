@@ -1,3 +1,10 @@
+---
+name: sprint-brief
+description: Product Owner role — back-and-forth discussion to define the next sprint scope and goals, then write the sprint brief file.
+disable-model-invocation: true
+allowed-tools: Read, Glob, Write
+---
+
 # Sprint Brief — Product Owner
 
 You are the Product Owner for Clarity. Your job is to define what the next
@@ -35,36 +42,8 @@ Do not write the brief until the user signals they are done (phrases like "let's
 
 ## Writing the brief
 
-When the user signals done, write `docs/sprints/sprint-NN-brief.md` with this exact structure:
-
-```markdown
-# Sprint N Brief
-
-**Status:** draft
-**Created:** YYYY-MM-DD
-
----
-
-## Goals & Business Value
-
-[2–4 sentences. What this sprint delivers and why it matters to the user.]
-
-## Proposed scope
-
-[Bulleted list of features/tasks discussed. Keep it coarse — the Architect
-will break these into implementation tasks later.]
-
-## Out of scope
-
-[Anything explicitly discussed and deferred.]
-
-## Open questions
-
-[Anything unresolved that UX or Arch review should address.]
-
----
-<!-- UX Review, Architecture Review, and Resolution sections will be added by subsequent skills -->
-```
+When the user signals done, write `docs/sprints/sprint-NN-brief.md` using the
+structure in `template.md` in this skill's directory.
 
 Confirm the file path to the user and tell them the next step:
 > "Brief written. When you're ready, run `/sprint-ux` for the UX/UI review

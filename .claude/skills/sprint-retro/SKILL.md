@@ -1,3 +1,10 @@
+---
+name: sprint-retro
+description: Facilitate a short sprint retrospective via four guided questions, then record the findings in the sprint document.
+disable-model-invocation: true
+allowed-tools: Read, Glob, Edit
+---
+
 # Sprint Retrospective
 
 Facilitate a short retrospective for the completed sprint and record it in
@@ -40,25 +47,8 @@ worth noting.
 
 ## Recording the retrospective
 
-Append the following to the sprint doc, replacing the placeholder comment:
-
-```markdown
-## Retrospective
-
-**Date:** YYYY-MM-DD
-
-### What went well
-[Bullet points from the discussion]
-
-### What was harder than expected
-[Bullet points]
-
-### Process improvements for next sprint
-[Bullet points — these are the most important output. Be specific.]
-
-### Planning accuracy
-[1–2 sentences on whether the scope, ordering, and estimates were right]
-```
+Append the section defined in `fragment.md` in this skill's directory
+to the sprint doc, replacing the placeholder comment.
 
 ## Closing
 

@@ -1,3 +1,10 @@
+---
+name: sprint-validate
+description: Archive pre-sprint audit snapshots, run fresh audits, compare before/after findings, and report any regressions in the sprint document.
+disable-model-invocation: true
+allowed-tools: Read, Grep, Glob, Write, Edit
+---
+
 # Sprint Validate — Audit-Based Validation
 
 Run the audits relevant to this sprint, compare against pre-sprint snapshots,
@@ -21,9 +28,9 @@ and report progress in the sprint document.
 ## Phase 1 — Archive pre-sprint snapshots
 
 For each audit to run, if the audit file already exists:
-- Create `docs/archive/` if it doesn't exist
-- Copy `docs/audit-[name].md` to `docs/archive/audit-[name]-YYYY-MM-DD.md`
-  using today's date
+- Read `docs/audit-[name].md` and Write its contents to
+  `docs/archive/audit-[name]-YYYY-MM-DD.md` using today's date
+  (Write creates parent directories automatically)
 - Report: "Archived pre-sprint snapshots to docs/archive/"
 
 If an audit file doesn't exist yet, note "no pre-sprint baseline for [name]".
@@ -59,28 +66,8 @@ Produce a summary table:
 
 ## Phase 4 — Update the sprint doc
 
-Append a Validation section to the sprint doc:
-
-```markdown
-## Validation
-
-**Date:** YYYY-MM-DD
-
-### Audit results
-
-| Audit | Before | After | Fixed | Regressions |
-|---|---|---|---|---|
-| colour | … | … | … | … |
-
-### Remaining findings
-[List any open findings from the new audit files that the sprint was
-expected to address but didn't. These should be triaged — fixed now,
-deferred to next sprint, or accepted as known.]
-
-### Regressions
-[Any new findings introduced by this sprint's changes. These must be
-fixed before `/deploy` runs.]
-```
+Append the section defined in `fragment.md` in this skill's directory
+to the sprint doc.
 
 ## Close
 

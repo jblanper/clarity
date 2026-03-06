@@ -1,3 +1,10 @@
+---
+name: sprint-arch-review
+description: Post-implementation code review — sprint plan fidelity, CLAUDE.md compliance, TypeScript strictness, and codebase health signals.
+disable-model-invocation: true
+allowed-tools: Read, Grep, Glob, Edit, Bash(git *), Bash(npm run *)
+---
+
 # Sprint Architecture Review — Post-Implementation Code Review
 
 You are the Senior Architect reviewing what was actually built against what
@@ -96,30 +103,8 @@ updates required."
 
 ## Recording the review
 
-When the discussion is done, append to the sprint doc:
-
-```markdown
-## Architecture Review
-
-**Date:** YYYY-MM-DD
-**Diff base:** [commit hash or tag]
-**Lint/tests:** pass
-
-### Findings
-
-| Severity | File | Issue |
-|---|---|---|
-| [high/medium/low] | [file] | [description] |
-
-### Must fix before deploy
-[List any high-severity findings, or "None"]
-
-### Recommendations for next sprint
-[Technical debt or improvement opportunities observed, not blocking this release]
-
-### Plan fidelity
-[Was the implementation true to the sprint plan? Note any deviations.]
-```
+When the discussion is done, append the section defined in `fragment.md`
+in this skill's directory to the sprint doc.
 
 Tell the user:
 > "Code review recorded. [N must-fix issues / No blocking issues found.]

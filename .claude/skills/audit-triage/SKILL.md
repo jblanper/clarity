@@ -1,3 +1,10 @@
+---
+name: audit-triage
+description: Consolidate all five audit reports into a prioritised, chunked implementation plan. Requires all five audit docs/ files to exist first. Outputs docs/audit-implementation-plan.md.
+disable-model-invocation: true
+allowed-tools: Read, Write
+---
+
 # Audit Triage & Implementation Plan
 
 Consolidate all five audit reports into a single prioritised implementation
@@ -80,35 +87,13 @@ but do not include them in the implementation chunks.
 ## Step 3 — Write the chunked implementation plan
 
 For every Tier 1 finding and every qualifying Tier 2 finding that has
-a concrete code change, write one numbered chunk using this exact format:
-
-```
-### Chunk N — [Short descriptive title]
-
-Files: FileName.tsx, globals.css  (max 3 files per chunk)
-
-Findings addressed:
-- [One line per finding, naming the source audit]
-
-What to do:
-[Two to five sentences. Specific enough that a fresh Claude Code session
-with only CLAUDE.md, calma-design-language.md, and the listed files
-could execute this correctly without reading the audit reports.]
-
-Effort: trivial / small / medium
-```
+a concrete code change, write one numbered chunk using the format in
+`template.md` in this skill's directory.
 
 For Tier 2 findings from `audit-design-overall.md` that are design
 intent rather than code fixes, do not write a chunk. Instead, collect
-them in a separate section titled:
-
-```
-### Design intent to carry forward
-
-[Bulleted list of observations that should inform future design decisions
-even if they require no immediate code change. These are not tasks — they
-are context.]
-```
+them in a "Design intent to carry forward" section as defined in
+`template.md`.
 
 ---
 
@@ -127,11 +112,4 @@ microcopy concerns separate within each chunk.
 
 ## Step 4 — Close with a summary table
 
-```
-| Chunk | Title | Files | Tier | Effort |
-|-------|-------|-------|------|--------|
-| 1     | …     | …     | 1    | trivial |
-
-Tier 1 chunks: N  ·  Tier 2 chunks: N  ·  Tier 3 deferred: N
-Design intent notes carried forward: N
-```
+Use the summary table format in `template.md` in this skill's directory.

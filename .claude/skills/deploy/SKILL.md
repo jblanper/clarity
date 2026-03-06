@@ -1,3 +1,10 @@
+---
+name: deploy
+description: Full release pipeline — lint, tests, build, version bump, changelog, commit and tag, GitHub release. Run only after manual validation is complete.
+disable-model-invocation: true
+allowed-tools: Read, Write, Edit, Bash
+---
+
 # Deploy Skill
 
 Prepare and release a new version of Clarity to GitHub Pages.

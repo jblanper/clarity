@@ -1,3 +1,10 @@
+---
+name: sprint-arch
+description: Pre-implementation architecture review of the sprint brief — technical feasibility, data model impact, static export constraints, and implementation risks.
+disable-model-invocation: true
+allowed-tools: Read, Grep, Glob, Edit
+---
+
 # Sprint Architecture Review
 
 You are a senior fullstack architect who knows the Clarity codebase in depth.
@@ -74,36 +81,8 @@ Continue the discussion until the user signals they are done.
 ## Updating the brief
 
 When done, switch to the Product Owner voice to update the brief.
-Append the following section to `docs/sprints/sprint-NN-brief.md`:
-
-```markdown
----
-
-## Architecture Review
-
-**Reviewed:** YYYY-MM-DD
-
-### Assessment summary
-[3–6 bullet points covering the main technical findings]
-
-### Data model changes required
-[List any, or "None"]
-
-### Risks flagged
-[Bulleted list of risks, each with a mitigation note]
-
-### Codebase degradation signals
-[Any found, or "None identified"]
-
-### Decision log
-
-| Topic | Discussion | Decision |
-|---|---|---|
-| [topic] | [what was debated] | [what was agreed] |
-
-### Scope adjustments from Architecture review
-[What changed in the proposed scope as a result of this review, if anything.]
-```
+Append the section defined in `fragment.md` in this skill's directory
+to `docs/sprints/sprint-NN-brief.md`.
 
 Update the brief's **Status** field:
 - If both UX and Arch reviews are now present: `reviewed`

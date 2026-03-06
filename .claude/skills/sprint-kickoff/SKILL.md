@@ -1,3 +1,10 @@
+---
+name: sprint-kickoff
+description: Session-start standup — reads the active sprint doc and git status, then tells you exactly what to work on next.
+disable-model-invocation: true
+allowed-tools: Read, Glob, Bash(git *)
+---
+
 # Sprint Kickoff — Session Start Standup
 
 Orient yourself at the start of a coding session mid-sprint. Read what's done,

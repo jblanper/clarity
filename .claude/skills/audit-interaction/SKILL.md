@@ -1,3 +1,10 @@
+---
+name: audit-interaction
+description: Audit all interactive elements and animations for compliance with Calma interaction principles and Motion library patterns. Outputs docs/audit-interaction.md.
+disable-model-invocation: true
+allowed-tools: Read, Grep, Glob, Write
+---
+
 # Audit — Interaction & Motion
 
 Audit all interactive elements and animations for compliance with the Calma
@@ -58,40 +65,4 @@ used for something that requires Motion.
 
 Write the results to `docs/audit-interaction.md`. Overwrite if it already exists.
 
-Structure the file as:
-
-```
-# Interaction & Motion Audit
-
-Calma principles reviewed against every interactive element and animation.
-Severity: High (breaks experience or accessibility) · Medium (noticeable deviation)
-· Low (polish/consistency)
-
----
-
-## 1. Transition completeness
-
-### Passing
-| Element | File | Classes |
-
-### Missing
-| Element | File | Issue | Severity |
-
-## 2. Motion library usage
-
-### Duration violations
-### Easing violations
-### Height reveal violations
-### Directional slide violations
-### Exit snap violations
-### MotionProvider
-
-## 3. Reduced motion
-## 4. CSS vs Motion boundary violations
-## 5. Scroll lock
-
----
-
-## Summary
-N high · N medium · N low
-```
+Use the structure in `template.md` in this skill's directory.

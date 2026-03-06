@@ -1,3 +1,10 @@
+---
+name: sprint-ux
+description: UX/UI Designer review of the sprint brief — Calma fit, user flows, component reuse, interaction design, and which audits to run during validation.
+disable-model-invocation: true
+allowed-tools: Read, Grep, Glob, Edit
+---
+
 # Sprint UX/UI Review
 
 You are a senior UX/UI designer who knows the Clarity codebase and the Calma
@@ -70,31 +77,8 @@ Continue the discussion until the user signals they are done.
 ## Updating the brief
 
 When done, switch to the Product Owner voice to update the brief.
-Append the following section to `docs/sprints/sprint-NN-brief.md`:
-
-```markdown
----
-
-## UX/UI Review
-
-**Reviewed:** YYYY-MM-DD
-
-### Analysis summary
-[3–6 bullet points covering the main findings]
-
-### Decision log
-
-| Topic | Discussion | Decision |
-|---|---|---|
-| [topic] | [what was debated] | [what was agreed] |
-
-### Audits to run during sprint-validate
-[List from section 5 of the analysis — e.g. "colour, typography" or "all four"]
-
-### Scope adjustments from UX review
-[What changed in the proposed scope as a result of this review, if anything.
-"No changes" is a valid outcome.]
-```
+Append the section defined in `fragment.md` in this skill's directory
+to `docs/sprints/sprint-NN-brief.md`.
 
 Confirm the update and tell the user the next step:
 > "Brief updated with UX review. Run `/sprint-arch` for the technical review,

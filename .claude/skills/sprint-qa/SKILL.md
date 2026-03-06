@@ -1,3 +1,10 @@
+---
+name: sprint-qa
+description: Run the Playwright regression suite, write new tests for this sprint's features, and produce a manual checklist for what automation cannot cover.
+disable-model-invocation: true
+allowed-tools: Read, Grep, Glob, Write, Edit, Bash
+---
+
 # Sprint QA
 
 Run the existing Playwright regression suite, write new tests for this sprint's
@@ -90,19 +97,8 @@ Update or delete stale tests. Record what was changed and why.
 
 ## Phase 4 — Manual checklist
 
-Produce a checklist for things Playwright cannot reliably validate:
-
-```markdown
-### Manual checks
-
-- [ ] Animations feel smooth on enter and exit
-- [ ] Dark mode: no invisible text, no layout shifts
-- [ ] Mobile (390px): no horizontal overflow, touch targets feel reachable
-- [ ] Reduced motion: enable in OS settings, verify animations are suppressed
-- [ ] [Sprint-specific item from sprint tasks]
-- [ ] [Sprint-specific item]
-```
-
+Produce a checklist for things Playwright cannot reliably validate, using the
+manual checks structure in `fragment.md` in this skill's directory.
 Derive sprint-specific items from the sprint doc's validation steps.
 
 ---
@@ -117,32 +113,8 @@ kill $(lsof -ti:3000) 2>/dev/null || true
 
 ## Recording results
 
-Append to the sprint doc:
-
-```markdown
-## QA Results
-
-**Date:** YYYY-MM-DD
-
-### Regression suite
-[N tests passed · N failed · N stale tests updated]
-
-### New tests written
-[List of new e2e/ files created or updated this sprint]
-
-### Failures found
-[Any regressions with reproduction steps, or "None"]
-
-### Stale tests updated
-[What changed and why, or "None"]
-
-### Manual checklist
-- [ ] Animations feel smooth
-- [ ] Dark mode rendering
-- [ ] Mobile viewport (390px)
-- [ ] Reduced motion
-- [ ] [Sprint-specific items]
-```
+Append the section defined in `fragment.md` in this skill's directory
+to the sprint doc.
 
 Tell the user:
 > "QA complete. Regression suite: N tests. [N failures to fix / All passing.]

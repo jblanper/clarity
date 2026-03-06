@@ -1,3 +1,10 @@
+---
+name: audit-all
+description: Run all five design audits in parallel then produce the triage implementation plan. Outputs six docs/ files.
+disable-model-invocation: true
+allowed-tools: Read, Glob, Write, Agent, Task
+---
+
 # Audit — Full Suite
 
 Run all five audit skills and then produce the triage implementation plan.

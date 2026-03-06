@@ -1,3 +1,10 @@
+---
+name: calma-sync
+description: Post-sprint review of whether sprint changes require updates to the Calma design language spec and its HTML counterpart. Run after sprint-validate, before sprint-retro.
+disable-model-invocation: true
+allowed-tools: Read, Grep, Glob, Edit, Bash(git *)
+---
+
 # Calma Sync — Post-Sprint Design Language Review
 
 Review whether the sprint's changes require an update to the Calma design
@@ -78,23 +85,8 @@ After all changes are made, show a summary of what was updated across all files.
 
 ## Recording
 
-Append to the sprint doc:
-
-```markdown
-## Calma Sync
-
-**Date:** YYYY-MM-DD
-
-### Spec changes made
-[Bulleted list of what was updated in calma-design-language.md and
-calma-design-language.html, or "None"]
-
-### CLAUDE.md token updates
-[Any Tailwind implementation token changes, or "None"]
-
-### Open design decisions identified
-[Any spec gaps noted for future consideration, or "None"]
-```
+Append the section defined in `fragment.md` in this skill's directory
+to the sprint doc.
 
 Tell the user:
 > "Calma sync complete. Run `/sprint-retro` to close out the sprint."

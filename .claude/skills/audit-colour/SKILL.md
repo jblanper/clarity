@@ -1,3 +1,10 @@
+---
+name: audit-colour
+description: Audit all components and pages for colour and contrast compliance against the Calma design language and WCAG AA. Outputs docs/audit-colour.md.
+disable-model-invocation: true
+allowed-tools: Read, Grep, Glob, Write
+---
+
 # Audit — Colour & Contrast
 
 Audit all components and pages for colour and contrast compliance against
@@ -47,37 +54,7 @@ amber (archive action only in ManageView), or the heatmap palette.
 
 Write the results to `docs/audit-colour.md`. Overwrite if it already exists.
 
-Structure the file as:
-
-```
-# Colour & Contrast Audit
-
-Audited: [list of files read]
-Reference: docs/calma-design-language.md
-Date: [today]
-
----
-
-## 1. Stone-400 violations
-
-### 1a. Full violations — no dark pairing
-| Component | Line | Current value | Expected | Severity |
-
-### 1b. Light-mode violations — dark pairing present, base still fails
-| Component | Line | Current value | Expected | Severity |
-
-## 2. Colour-role hierarchy violations
-| Component | Line | Element / role | Current colour | Expected colour | Severity |
-
-## 3. Missing dark mode variants
-| Component | Line | Current | Missing dark variant | Severity |
-
-## 4. Non-stone accent colours
-| Component | Line | Value | Notes | Severity |
-
-## Summary
-N critical · N high · N medium · N low
-```
+Use the structure in `template.md` in this skill's directory.
 
 Severity key: **Critical** = WCAG AA failure · **High** = spec contradiction
 · **Medium** = missing detail · **Low** = minor inconsistency

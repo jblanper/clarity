@@ -1,3 +1,10 @@
+---
+name: audit-microcopy
+description: Audit all user-facing text for tone violations, technical language, vague messages, and Calma microcopy compliance. Outputs docs/audit-microcopy.md.
+disable-model-invocation: true
+allowed-tools: Read, Grep, Glob, Write
+---
+
 # Audit — Microcopy & Tone
 
 Audit all user-facing text for compliance with Clarity's voice and the
@@ -56,44 +63,4 @@ The save flow states are `idle → saving → confirmed`. Verify:
 
 Write the results to `docs/audit-microcopy.md`. Overwrite if it already exists.
 
-Structure the file as:
-
-```
-# Microcopy & Tone Audit
-
-Audited files: [list]
-
----
-
-## 1. Tone violations
-
-### Technical language
-| Location | Current copy | Issue |
-
-### Vague / generic
-| Location | Current copy | Issue |
-
-### Accusatory or guilt-inducing
-| Location | Current copy | Issue |
-
-### Exclamation marks / ALL CAPS
-| Location | Current copy | Issue |
-
-## 2. Flat or functional phrasing (lower severity)
-| Location | Current copy | Suggested direction |
-
-## 3. Save / confirmation copy
-[Pass or flag]
-
----
-
-## Suggested rewrites
-For every high-severity finding, provide a suggested replacement.
-
-| Location | Current | Suggested |
-
----
-
-## Summary
-N high · N medium · N low
-```
+Use the structure in `template.md` in this skill's directory.

@@ -1,3 +1,10 @@
+---
+name: project-health
+description: Between-sprint housekeeping — security audit, outdated dependencies, test suite health, and docs integrity check.
+disable-model-invocation: true
+allowed-tools: Read, Grep, Glob, Bash(npm *), Bash(npx *)
+---
+
 # Project Health — Periodic Housekeeping
 
 Run a full health check across security, dependencies, tests, and documentation.

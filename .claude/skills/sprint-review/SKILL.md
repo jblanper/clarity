@@ -1,3 +1,10 @@
+---
+name: sprint-review
+description: Run UX/UI and Architecture reviews in parallel as background agents, then mediate conflicts as Product Owner and update the sprint brief.
+disable-model-invocation: true
+allowed-tools: Read, Glob, Edit, Agent, Task
+---
+
 # Sprint Parallel Review — UX/UI + Architecture
 
 Run the UX/UI and Architecture reviews simultaneously as background agents,
@@ -67,25 +74,8 @@ Continue until all conflicts and open questions are resolved.
 ## Phase 4 — Update the brief
 
 Once all decisions are made, append both review sections to the brief
-(using the same format as `/sprint-ux` and `/sprint-arch`), plus a
-mediation summary:
-
-```markdown
----
-
-## Parallel Review Mediation
-
-**Reviewed:** YYYY-MM-DD
-
-### Conflicts resolved
-
-| Topic | UX position | Arch position | Decision |
-|---|---|---|---|
-| [topic] | [ux view] | [arch view] | [decision] |
-
-### Final scope after review
-[Updated bulleted scope list reflecting all decisions]
-```
+(using the same format as `/sprint-ux` and `/sprint-arch`), plus the
+mediation summary defined in `fragment.md` in this skill's directory.
 
 Update the brief's **Status** field to `reviewed`.
 
