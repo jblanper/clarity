@@ -19,7 +19,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'if git rev-parse --git-dir > /dev/null 2>&1; then npx tsc --noEmit 2>&1 | head -20; fi'"
+            "command": "bash -c 'if git rev-parse --git-dir > /dev/null 2>&1 && git diff --name-only | grep -qE \"\\.(ts|tsx)$\"; then npx tsc --noEmit 2>&1 | head -20; fi'"
           }
         ]
       }

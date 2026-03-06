@@ -1,0 +1,42 @@
+{
+  "scripting": [
+    {
+      "pattern": "sprint-",
+      "script_name": "scripts/sprint_manager.js",
+      "priority": "Low",
+      "description": "Deterministic file creation for sprints. (Excluded semantic tasks: review, judgment)."
+    },
+    {
+      "pattern": "shared-logic",
+      "script_name": "scripts/cli_utils.js",
+      "priority": "Medium",
+      "description": "Standardize 'Phase 1' output formatting across all skills to ensure audit consistency."
+    }
+  ],
+  "hooks": [
+    {
+      "pattern": "tsc --noEmit",
+      "issue": "Unconditional execution adds 3-5s of latency to session exits.",
+      "recommendation": "Use conditional: `if git diff --name-only | grep -qE '\\.(ts|tsx)$'; then npx tsc --noEmit; fi`.",
+      "impact": "High Latency"
+    },
+    {
+      "pattern": "npm install",
+      "issue": "Redundant dependency checks on session start.",
+      "recommendation": "Only run if `package-lock.json` hash changed.",
+      "impact": "Medium Latency"
+    }
+  ],
+  "memory": [
+    {
+      "pattern": "YAML headers",
+      "action": "Add `disable-model-invocation: true` to all 21 skills.",
+      "reason": "Zeros out the description-context tax for manually-invoked commands."
+    },
+    {
+      "pattern": "CLAUDE.md consistency",
+      "action": "Ensure tables point to correct /slash-commands and docs/ filenames.",
+      "reason": "Earned Context: Essential for correct tool and path discovery."
+    }
+  ]
+}
