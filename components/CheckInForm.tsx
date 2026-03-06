@@ -440,23 +440,24 @@ export default function CheckInForm({ date }: Props) {
                       return (
                         <m.div
                           key={h.id}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          transition={{ duration: 0.16 }}
-                          className="flex items-center justify-between py-2"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto", transition: { duration: 0.16, ease: "easeOut" } }}
+                          exit={{ opacity: 0, height: 0, transition: { duration: 0.14, ease: "easeIn" } }}
+                          style={{ overflow: "hidden" }}
                         >
-                          <span className="text-sm text-stone-700 dark:text-stone-300">
-                            {h.label}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => setHabit(h.id, { done: true, joy: !joyValue })}
-                            aria-label={joyValue ? "Remove joy" : "Mark as joyful"}
-                            className="min-h-[44px] min-w-[44px] flex items-center justify-end transition-transform active:scale-90"
-                          >
-                            <BlossomIcon filled={joyValue} />
-                          </button>
+                          <div className="flex items-center justify-between py-2">
+                            <span className="text-sm text-stone-700 dark:text-stone-300">
+                              {h.label}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => setHabit(h.id, { done: true, joy: !joyValue })}
+                              aria-label={joyValue ? "Remove joy" : "Mark as joyful"}
+                              className="min-h-[44px] min-w-[44px] flex items-center justify-end transition-transform active:scale-90"
+                            >
+                              <BlossomIcon filled={joyValue} />
+                            </button>
+                          </div>
                         </m.div>
                       );
                     })}

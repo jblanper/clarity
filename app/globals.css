@@ -30,6 +30,9 @@
 
 html {
   scroll-behavior: smooth;
+  /* Always reserve vertical scrollbar track so the layout never shifts
+     when the page becomes scrollable (e.g. FrequencyList opening). */
+  overflow-y: scroll;
 }
 
 body {

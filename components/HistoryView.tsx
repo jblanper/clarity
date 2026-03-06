@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, startTransition } from "react";
+import { useState, useEffect, useRef, startTransition } from "react";
 import { AnimatePresence, m } from "motion/react";
 import Link from "next/link";
 import { getAllEntries } from "@/lib/storage";
@@ -21,6 +21,7 @@ export default function HistoryView() {
   const [activeFilter, setActiveFilter] = useState<HeatmapFilter | null>(null);
   const [frequencyOpen, setFrequencyOpen] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const frequencyToggleRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     startTransition(() => setEntries(getAllEntries()));
@@ -88,8 +89,17 @@ export default function HistoryView() {
 
         {/* Toggle */}
         <button
+          ref={frequencyToggleRef}
           type="button"
-          onClick={() => setFrequencyOpen((o) => !o)}
+          onClick={() => {
+            if (frequencyOpen && frequencyToggleRef.current) {
+              // Scroll the toggle to the top of the viewport synchronously before
+              // the section collapses, so the page shrink never clamps scroll position.
+              const top = window.scrollY + frequencyToggleRef.current.getBoundingClientRect().top;
+              window.scrollTo({ top, behavior: "auto" });
+            }
+            setFrequencyOpen((o) => !o);
+          }}
           className="w-full min-h-[44px] flex items-center gap-1.5 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 transition-colors hover:text-stone-700 dark:hover:text-stone-400"
         >
           <span>Frequency</span>
@@ -100,10 +110,16 @@ export default function HistoryView() {
           {frequencyOpen && (
             <m.div
               initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.28, ease: "easeOut" }}
-              style={{ overflow: "hidden" }}
+              animate={{ height: "auto", opacity: 1, transition: { duration: 0.28, ease: "easeOut" } }}
+              exit={{
+                opacity: 0,
+                height: 0,
+                transition: {
+                  opacity: { duration: 0.1, ease: "easeIn" },
+                  height: { duration: 0.08, ease: "easeIn", delay: 0.1 },
+                },
+              }}
+              style={{ overflow: "hidden", overflowAnchor: "none" }}
             >
               <div className={`frequency-list${isUpdating ? " is-updating" : ""}`}>
 
