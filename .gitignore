@@ -24,6 +24,13 @@
 .DS_Store
 *.pem
 
+# tool scratch directories
+.playwright-mcp/
+
+# playwright test output
+playwright-report/
+test-results/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
