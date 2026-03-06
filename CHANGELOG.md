@@ -1,5 +1,27 @@
 # Changelog
 
+## [v2.1.5] — 2026-03-06
+
+### Fixes
+
+- Fixed WCAG AA contrast failures across ManageView, SettingsView, DayDetail, CheckInForm, HelpView, and HistoryView — all `text-stone-400` foreground uses in light mode raised to `text-stone-500`
+- Added `font-medium` to every section label (`h2`/`h3`) in all six views
+- Replaced Unicode ♥ joy indicator in DayDetail with the custom BlossomIcon
+- Added `prefers-reduced-motion` guard for DayDetail backdrop and sheet CSS transitions
+- Fixed FrequencyList scroll-position jump on collapse (synchronous scroll + two-phase exit animation)
+- Fixed Joy section height snap when removing a habit item (animated height with padding fix)
+- Fixed scrollbar layout shift when FrequencyList opens (`overflow-y: scroll` on `html`)
+- Fixed archived habit/tag label contrast in dark mode (ManageView)
+- Fixed ManageView header spacing (`mb-2 → mb-6`) to match other pages
+- Fixed `mb-1 → mb-3` spacing below Habits and By the Numbers labels in CheckInForm
+- Added `font-light` to HelpView body copy (reflective body role)
+
+### Tooling
+
+- Added Playwright regression suite (54 tests, chromium desktop + mobile)
+- Scoped Jest `testMatch` to `lib/` to prevent conflict with Playwright spec files
+- Updated Calma spec with two new documented patterns: read-only filled icon usage and two-phase exit animation for collapsible sections
+
 ## [v2.1.3] — 2026-03-02
 
 ### Improvements
