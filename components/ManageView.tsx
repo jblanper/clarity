@@ -57,7 +57,7 @@ const INLINE_FORM =
 const FIELD_LABEL = "mb-1 block text-xs text-stone-500 dark:text-stone-400";
 
 const SECTION_LABEL =
-  "mb-3 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500";
+  "mb-3 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500";
 
 // ── ManageView ─────────────────────────────────────────────────────────────
 
@@ -235,7 +235,7 @@ export default function ManageView() {
     <div className="mx-auto max-w-md px-5 pb-12 pt-10">
 
       {/* ── Header ──────────────────────────────────────────────────── */}
-      <header className="mb-2 flex items-center justify-between">
+      <header className="mb-6 flex items-center justify-between">
         <h1 className="text-xl font-light tracking-widest text-stone-800 dark:text-stone-200">
           Manage
         </h1>
@@ -279,7 +279,7 @@ export default function ManageView() {
                       onClick={() => toggleJoyByDefault(h.id)}
                       className="self-start text-left transition-colors"
                     >
-                      <span className={`text-xs ${h.joyByDefault ? "text-amber-600 dark:text-amber-500" : "text-stone-400"}`}>
+                      <span className={`text-xs ${h.joyByDefault ? "text-amber-600 dark:text-amber-500" : "text-stone-500"}`}>
                         {h.joyByDefault ? "♥ Brings joy by default" : "♡ Tap to mark as joyful by default"}
                       </span>
                     </button>
@@ -365,9 +365,9 @@ export default function ManageView() {
             <div key={h.id}>
               <div className="flex items-center justify-between gap-2 py-2">
                 <div className="flex min-w-0 items-baseline gap-2">
-                  <span className="text-sm text-stone-400 dark:text-stone-600">{h.label}</span>
+                  <span className="text-sm text-stone-400 dark:text-stone-500">{h.label}</span>
                   {h.type === "numeric" && (
-                    <span className="text-xs text-stone-300 dark:text-stone-700">{h.unit}</span>
+                    <span className="text-xs text-stone-500 dark:text-stone-500">{h.unit}</span>
                   )}
                 </div>
                 <button type="button" onClick={() => restoreHabit(h.id)} className={ACTION_BTN}>
@@ -461,7 +461,7 @@ export default function ManageView() {
                   }
                   className="self-start text-left transition-colors"
                 >
-                  <span className={`text-xs ${addHabit.joyByDefault ? "text-amber-600 dark:text-amber-500" : "text-stone-400"}`}>
+                  <span className={`text-xs ${addHabit.joyByDefault ? "text-amber-600 dark:text-amber-500" : "text-stone-500"}`}>
                     {addHabit.joyByDefault ? "♥ Brings joy by default" : "♡ Does not bring joy by default"}
                   </span>
                 </button>
@@ -578,7 +578,7 @@ export default function ManageView() {
           {archivedTags.map((t) => (
             <div key={t.id}>
               <div className="flex items-center justify-between gap-2 py-2">
-                <span className="text-sm text-stone-400 dark:text-stone-600">{t.label}</span>
+                <span className="text-sm text-stone-400 dark:text-stone-500">{t.label}</span>
                 <button type="button" onClick={() => restoreTag(t.id)} className={ACTION_BTN}>
                   Restore
                 </button>

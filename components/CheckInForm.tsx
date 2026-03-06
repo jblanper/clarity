@@ -277,7 +277,7 @@ export default function CheckInForm({ date }: Props) {
 
       {/* ── Boolean habits ─────────────────────────────────────────── */}
       <section className="mb-10">
-        <h2 className="mb-1 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
+        <h2 className="mb-3 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Habits
         </h2>
         <div className="divide-y divide-stone-100 dark:divide-stone-800">
@@ -305,7 +305,7 @@ export default function CheckInForm({ date }: Props) {
 
       {/* ── Numeric habits ─────────────────────────────────────────── */}
       <section className="mb-10">
-        <h2 className="mb-1 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
+        <h2 className="mb-3 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
           By the numbers
         </h2>
         <div className="divide-y divide-stone-100 dark:divide-stone-800">
@@ -335,7 +335,7 @@ export default function CheckInForm({ date }: Props) {
 
       {/* ── Moments ────────────────────────────────────────────────── */}
       <section className="mb-10">
-        <h2 className="mb-3 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
+        <h2 className="mb-3 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Moments
         </h2>
         <div className="flex flex-wrap gap-2">
@@ -430,7 +430,7 @@ export default function CheckInForm({ date }: Props) {
                 style={{ overflow: "hidden" }}
                 className="mb-10"
               >
-                <h2 className="mb-3 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
+                <h2 className="mb-3 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
                   What felt particularly good today?
                 </h2>
                 <div className="rounded-2xl bg-stone-50 dark:bg-stone-800/50 border border-stone-100 dark:border-stone-800 px-4 py-4">
@@ -470,7 +470,7 @@ export default function CheckInForm({ date }: Props) {
 
       {/* ── Reflection ─────────────────────────────────────────────── */}
       <section className="mb-10">
-        <h2 className="mb-3 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
+        <h2 className="mb-3 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Reflection
         </h2>
         <textarea

@@ -5,9 +5,9 @@ import BlossomIcon from "@/components/BlossomIcon";
 import Chevron from "@/components/Chevron";
 
 const SECTION_LABEL =
-  "mb-3 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500";
+  "mb-3 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500";
 
-const BODY = "text-sm leading-relaxed text-stone-700 dark:text-stone-300";
+const BODY = "text-sm font-light leading-relaxed text-stone-700 dark:text-stone-300";
 
 export default function HelpView() {
   return (

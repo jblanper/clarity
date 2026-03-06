@@ -90,7 +90,7 @@ export default function HistoryView() {
         <button
           type="button"
           onClick={() => setFrequencyOpen((o) => !o)}
-          className="w-full min-h-[44px] flex items-center gap-1.5 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500 transition-colors hover:text-stone-700 dark:hover:text-stone-400"
+          className="w-full min-h-[44px] flex items-center gap-1.5 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 transition-colors hover:text-stone-700 dark:hover:text-stone-400"
         >
           <span>Frequency</span>
           <Chevron direction="down" className={`frequency-chevron${frequencyOpen ? " is-open" : ""}`} />

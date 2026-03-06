@@ -53,5 +53,7 @@ body {
    MotionConfig reducedMotion="user" in MotionProvider. */
 @media (prefers-reduced-motion: reduce) {
   .frequency-chevron,
-  .heatmap-grid, .frequency-list { transition: none; }
+  .heatmap-grid, .frequency-list,
+  .daydetail-backdrop,
+  .daydetail-sheet { transition: none; }
 }

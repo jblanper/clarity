@@ -3,6 +3,7 @@
 import { useState, useEffect, useLayoutEffect, startTransition } from "react";
 import Link from "next/link";
 import type { HabitEntry } from "@/types/entry";
+import BlossomIcon from "@/components/BlossomIcon";
 import {
   getConfigs,
   DEFAULT_HABIT_CONFIGS,
@@ -128,7 +129,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
       {/* ── Backdrop ─────────────────────────────────────────────── */}
       <div
         style={{ opacity: isVisible ? 1 : 0 }}
-        className="absolute inset-0 bg-black/30 dark:bg-black/50 transition-opacity duration-300"
+        className="daydetail-backdrop absolute inset-0 bg-black/30 dark:bg-black/50 transition-opacity duration-300"
         onClick={handleClose}
         aria-hidden
       />
@@ -138,7 +139,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
           transform pipeline issues (same reason toggle uses explicit left-X). */}
       <div
         style={{ transform: isVisible ? "translateY(0)" : "translateY(100%)" }}
-        className="absolute bottom-0 left-0 right-0 max-h-[90vh] overflow-y-auto rounded-t-3xl bg-background transition-transform duration-300 ease-out"
+        className="daydetail-sheet absolute bottom-0 left-0 right-0 max-h-[90vh] overflow-y-auto rounded-t-3xl bg-background transition-transform duration-300 ease-out"
       >
         {/* ── Close button — sticky so it stays reachable when content scrolls */}
         <div className="sticky top-0 z-10 bg-background px-5 pt-5 pb-1">
@@ -170,7 +171,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
               {/* Boolean habits — only checked ones */}
               {checkedHabits.length > 0 && (
                 <section className="mb-6">
-                  <h3 className="mb-2 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
+                  <h3 className="mb-2 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
                     Habits
                   </h3>
                   <div className="space-y-1">
@@ -179,7 +180,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
                         <span className="text-sm text-stone-500 dark:text-stone-500">✓</span>
                         <span className="text-sm text-stone-700 dark:text-stone-300">{h.label}</span>
                         {h.joy && (
-                          <span className="text-sm text-amber-500 dark:text-amber-400">♥</span>
+                          <BlossomIcon filled={true} size={16} />
                         )}
                       </div>
                     ))}
@@ -190,7 +191,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
               {/* Numeric habits — only fields with a value > 0 */}
               {loggedNumbers.length > 0 && (
                 <section className="mb-6">
-                  <h3 className="mb-2 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
+                  <h3 className="mb-2 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
                     By the numbers
                   </h3>
                   <div className="space-y-1">
@@ -210,7 +211,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
               {/* Moments — resolved from UUIDs to labels */}
               {resolvedMoments.length > 0 && (
                 <section className="mb-6">
-                  <h3 className="mb-3 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
+                  <h3 className="mb-3 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
                     Moments
                   </h3>
                   <div className="flex flex-wrap gap-2">
@@ -229,7 +230,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
               {/* Reflection — only when non-empty */}
               {reflection && (
                 <section className="mb-6">
-                  <h3 className="mb-2 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
+                  <h3 className="mb-2 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
                     Reflection
                   </h3>
                   <p className="text-sm font-light leading-relaxed text-stone-700 dark:text-stone-300">

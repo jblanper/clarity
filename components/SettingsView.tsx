@@ -117,7 +117,7 @@ export default function SettingsView() {
 
       {/* ── Manage ────────────────────────────────────────────────── */}
       <section className="mb-8">
-        <h2 className="mb-4 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
+        <h2 className="mb-4 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Manage
         </h2>
         <Link
@@ -289,7 +289,7 @@ export default function SettingsView() {
 
       {/* ── Help ──────────────────────────────────────────────────── */}
       <section className="mb-8">
-        <h2 className="mb-4 text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
+        <h2 className="mb-4 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Help
         </h2>
         <Link
@@ -305,7 +305,7 @@ export default function SettingsView() {
 
       {/* ── Reset ─────────────────────────────────────────────────── */}
       <section>
-        <h3 className="mb-3 text-xs uppercase tracking-widest text-stone-400">
+        <h3 className="mb-3 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Reset
         </h3>
         {!resetConfirming ? (
@@ -332,7 +332,7 @@ export default function SettingsView() {
               <button
                 type="button"
                 onClick={() => setResetConfirming(false)}
-                className="text-sm text-stone-400 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
+                className="text-sm text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
               >
                 Cancel
               </button>
