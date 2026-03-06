@@ -18,3 +18,11 @@
 
 ### Plan fidelity
 [Was the implementation true to the sprint plan? Note any deviations.]
+
+### Architecture audit comparison
+
+| Before | After | Fixed | Regressions |
+|---|---|---|---|
+| [N findings] | [N findings] | [N] | [N] |
+
+[List any regressions, or "No regressions."]

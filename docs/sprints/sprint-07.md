@@ -240,6 +240,121 @@ Fully faithful to the sprint plan. All six tasks completed as specified. Two com
 
 ---
 
+## Validation
+
+**Date:** 2026-03-06
+
+### Audit results
+
+| Audit | Before | After | Fixed | Regressions |
+|---|---|---|---|---|
+| colour | 11 high · 7 medium · 3 low | 0 high · 4 medium · 4 low | 17 (all high, most medium) | 0 |
+| typography | 4 critical · 6 high · 6 medium · 5 low | 0 critical · 0 high · 6 medium · 4 low | 11 (all critical + high, M4/M6/L1) | 0 |
+| interaction | 3 high · 9 medium · 5 low | 3 high · 7 medium · 5 low | 2 (DayDetail reduced-motion) | 0 |
+| microcopy | 4 high · 5 medium · 2 low | 4 high · 5 medium · 2 low | 0 (out of scope) | 0 |
+
+### Remaining findings
+
+**Colour (4 medium, 4 low) — deferred:**
+- ManageView "Jump to Moments" anchor `text-stone-400` (nav link, should be stone-600) — medium
+- ManageView active numeric unit `text-stone-400 dark:text-stone-500` — medium
+- CheckInForm "New moment" ghost button and dismiss "✕" `text-stone-400` — medium ×2
+- ManageView archived confirmation notes `text-stone-400` (intentional dimming accepted) — low ×2
+- CalendarHeatmap day-of-week `dark:text-stone-600` wrong direction — low
+- SettingsView Cancel button: no explicit dark: base (stone-500 has adequate contrast) — low
+
+**Typography (6 medium, 4 low) — deferred:**
+- SettingsView Theme and "Your data" `h2` labels missing `font-medium` — medium ×2 (were in sprint scope but not fixed; Sprint 7 implementation notes stated these were "already correct" — incorrect)
+- HabitToggle / NumberStepper labels missing explicit `text-sm` — medium ×2
+- CheckInForm reflection textarea missing `text-sm font-light` — medium
+- DayDetail date heading `text-lg tracking-wide` (should be `text-base tracking-widest`) — medium
+- CalendarHeatmap year `text-sm` (should be `text-xs`) — low
+- SettingsView `mb-8` spacing (dividers compensate) — low
+
+**Interaction (3 high, 7 medium) — deferred:**
+- CheckInForm joy blossom `active:scale-90` scale transform — HIGH (priority)
+- HabitToggle h-7 touch target (28px) — HIGH (priority)
+- NumberStepper h-8 w-8 touch targets (32px) — HIGH (priority)
+- Touch target gaps across MomentChip, CalendarHeatmap, SettingsView, ManageView, HelpView — medium
+- FrequencyList bar `width` animation, month crossfade 110 ms, two-step hover — medium
+
+**Microcopy (4 high, 5 medium, 2 low) — fully deferred, scope for Sprint 8 or standalone sprint:**
+- Error messages in `transferData.ts` and `SettingsView.tsx` — high ×4
+- ManageView "Boolean"/"Numeric" labels, import success copy, placeholder text — medium
+
+### Regressions
+
+**None.** No new findings introduced by Sprint 7 changes.
+
+---
+
+## QA Results
+
+**Date:** 2026-03-06
+
+### Regression suite
+
+54 tests passed · 0 failed · 0 stale tests
+
+Ran across two projects: `chromium-desktop` (Desktop Chrome) and `chromium-mobile` (Chromium at 390×844, touch enabled).
+
+### New tests written
+
+All tests are new this sprint (no `e2e/` existed before):
+
+- `e2e/smoke.spec.ts` — 6 tests: page loads, BottomNav, Settings back-nav (Today + History), theme toggle, save flow
+- `e2e/section-labels.spec.ts` — 9 tests: `font-medium` on section labels across CheckInForm, SettingsView, ManageView, DayDetail, HelpView, HistoryView; spacing checks
+- `e2e/daydetail.spec.ts` — 5 tests: open/close, no Unicode ♥, empty-day fallback, Edit link
+- `e2e/colour-contrast.spec.ts` — 7 tests: SettingsView and ManageView section labels not stone-400; dark mode visibility; archived item labels
+
+Configuration: `playwright.config.ts` with `baseURL: "http://localhost:3000/clarity"` (matches `basePath: "/clarity"` in `next.config.ts`).
+
+### Failures found
+
+None. All 54 tests pass.
+
+### Stale tests updated
+
+None (no pre-existing tests to update).
+
+### Manual checklist
+
+- [o] DayDetail sheet slides in and out smoothly (ease-out enter, ease-in exit, ≤ 320 ms)
+- [o] DayDetail backdrop fades in/out correctly
+- [o] Calendar month slides left/right with correct directional animation
+- [o] FrequencyList expands/collapses without snap or jump
+- [o] Dark mode: section labels visible on all pages (SettingsView, ManageView, DayDetail, HelpView)
+- [o] Dark mode: no invisible text on Today, History, or Settings pages
+- [o] Mobile (390px): BottomNav does not overlap form content; save button is reachable
+- [o] Mobile (390px): no horizontal overflow on any page
+- [o] Reduced motion (OS setting enabled): DayDetail backdrop and sheet transitions are suppressed; calendar slide is suppressed
+- [o] BlossomIcon renders correctly for joy (filled) and non-joy (empty) states
+- [o] Archived habit displays correctly in ManageView with amber label (not destructive red)
+- [o] ManageView inline editors are mutually exclusive (opening one closes others)
+
+---
+
+## Calma Sync
+
+**Date:** 2026-03-06
+
+### Spec changes made
+
+- **`docs/calma-design-language.md` — Interaction / Symbols and two-state icons:** Added a paragraph documenting the read-only display usage of the filled state (no press state, no animation, no button wrapper) — introduced by the BlossomIcon in DayDetail.
+- **`docs/calma-design-language.md` — Motion:** Added a new "Collapsible sections" subsection documenting the two-phase exit pattern (fade opacity first, then collapse height with a short delay) — introduced by the FrequencyList animation.
+- **`public/calma-design-language.html`:** Synced both changes above into the corresponding sections.
+
+### CLAUDE.md token updates
+
+None.
+
+### Open design decisions identified
+
+- ManageView joy-icon toggle (`♡`/`♥`) still uses Unicode hearts — inconsistent after the DayDetail BlossomIcon fix. Flagged for Sprint 8.
+- Scroll-position management on section collapse (synchronous `window.scrollTo` before state update) is not yet documented in CLAUDE.md implementation notes. Candidate for the next CLAUDE.md update.
+
+---
+
 ## Retrospective
 
 <!-- To be filled in after the sprint using /sprint-retro -->

@@ -2,7 +2,7 @@
 name: sprint-arch-review
 description: Post-implementation code review — sprint plan fidelity, CLAUDE.md compliance, TypeScript strictness, and codebase health signals.
 disable-model-invocation: true
-allowed-tools: Read, Grep, Glob, Edit, Bash(git *), Bash(npm run *)
+allowed-tools: Read, Grep, Glob, Edit, Write, Bash(git *), Bash(npm run *)
 ---
 
 # Sprint Architecture Review — Post-Implementation Code Review
@@ -46,36 +46,21 @@ If both pass, announce:
 
 ## Phase 2 — Code review
 
-Work through each changed file against the following areas. Be specific:
-reference file names and line numbers for every finding.
+Work through each changed file. Be specific: reference file names and line
+numbers for every finding.
 
-### 1. CLAUDE.md compliance
-Check every changed file against every rule in CLAUDE.md — coding standards,
-data model rules, navigation architecture, motion patterns, component constraints,
-and anything else documented there. CLAUDE.md is the complete rulebook; if it's
-in there, it applies.
+### 1. Audit-arch criteria — scoped to changed files
+Apply the full criteria from `.claude/skills/audit-arch/SKILL.md` to the
+changed files only. The scope is the sprint diff, not the whole codebase —
+flag only issues introduced or worsened by this sprint's changes.
 
-### 2. TypeScript strictness
-- No `any` types introduced
-- All new data structures have interfaces
-- No type assertions (`as Foo`) that could hide runtime errors
+### 2. Sprint-specific concerns
+These are not covered by audit-arch and are unique to the diff context:
 
-### 3. Test coverage
-- Any new function in `lib/` must have a corresponding test in `lib/*.test.ts`
-- Existing tests must still pass (already verified in Phase 1)
-
-### 4. Codebase degradation signals
-- **Component size** — any component that grew significantly this sprint and would
-  benefit from extraction
-- **Pattern drift** — new patterns that diverge from established conventions without
-  a clear reason
-- **Coupling** — new dependencies between components that should be independent
 - **Dead code** — anything made unreachable or unused by this sprint's changes
-
-### 5. Sprint plan fidelity
-- Does the implementation match what the sprint doc specified?
-- Any tasks skipped, partially done, or implemented differently than planned?
-- Any scope creep — things built that weren't in the sprint doc?
+- **Sprint plan fidelity** — does the implementation match what the sprint doc
+  specified? Any tasks skipped, partially done, or implemented differently than
+  planned? Any scope creep not in the sprint doc?
 
 ## Phase 3 — Discussion
 
@@ -84,6 +69,39 @@ After presenting your findings, invite the user to respond:
 
 Stay in the Architect role. Be open to context you might have missed, but
 hold firm on CLAUDE.md violations — those are not negotiable.
+
+## Phase 4 — Architecture audit snapshot
+
+Archive and refresh the architecture audit to capture the post-sprint state.
+This mirrors what `/sprint-validate` does for UX audits.
+
+### Archive pre-sprint baseline
+If `docs/audit-arch.md` exists:
+- Write its contents to `docs/archive/audit-arch-YYYY-MM-DD.md` using today's date
+- Report: "Archived pre-sprint architecture audit to docs/archive/"
+
+If it does not exist, note: "No pre-sprint architecture audit baseline."
+
+### Run fresh audit
+Follow the instructions in `.claude/skills/audit-arch/SKILL.md` in full.
+This produces an updated `docs/audit-arch.md` reflecting the post-sprint state.
+
+### Compare and report
+If there was a baseline, compare before/after by severity:
+- List findings that were present before and are now gone (fixed)
+- List new findings not in the baseline (regressions)
+
+Produce a summary table:
+
+```
+| Before | After | Fixed | Regressions |
+|---|---|---|---|
+| N findings | N findings | N | N |
+```
+
+Include this comparison in the section appended to the sprint doc.
+
+---
 
 ## CLAUDE.md updates
 

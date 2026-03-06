@@ -22,7 +22,8 @@ Severity levels across all audit files: **critical** · **high** · **medium** �
 | `/audit-microcopy` | Tone, technical language, error messages, copy | `docs/audit-microcopy.md` |
 | `/audit-design-overall` | Holistic coherence review across all pages | `docs/audit-design-overall.md` |
 | `/audit-triage` | Consolidates all five reports into a chunked implementation plan | `docs/audit-implementation-plan.md` |
-| `/audit-all` | Runs all six in the correct order (first four in parallel, then design-overall, then triage) | All of the above |
+| `/audit-arch` | CLAUDE.md compliance, TypeScript strictness, test coverage, component structure, static export constraints | `docs/audit-arch.md` |
+| `/audit-all` | Runs all five audits in parallel, then design-overall, then triage | All of the above |
 
 ## Sprint workflow
 

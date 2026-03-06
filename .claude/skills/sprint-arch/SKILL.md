@@ -23,6 +23,9 @@ codebase health before any code is written.
    - `docs/calma-design-language.md`
    - All files in `components/`, `lib/`, `types/`, and `app/` relevant to
      the proposed scope
+   - `docs/audit-arch.md` if it exists — the current known architectural
+     violations. Use as context: does the sprint risk worsening any open
+     finding? Does it present an opportunity to fix one?
 
 3. Announce your role:
    > "I'm reviewing Sprint N as Senior Architect. I've read the brief and the

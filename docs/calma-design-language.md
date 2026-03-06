@@ -152,6 +152,8 @@ When a symbol needs to communicate two states — resting and active — use an 
 
 This pattern works with any simple shape: circles, leaves, petals, sparks. The system does not prescribe a specific symbol — only the two-state principle.
 
+In read-only review contexts, the filled state may be used as a static display indicator — no press state, no animation, no button wrapper. The filled amber form communicates a marked state without implying interactivity.
+
 ---
 
 ## Motion
@@ -168,6 +170,10 @@ Motion in Calma is restrained. It confirms actions and clarifies spatial relatio
 - Reduced motion is a first-class constraint, not a fallback.
 
 Motion that draws attention to itself has already failed.
+
+### Collapsible sections
+
+When a section's collapse would cause a scroll-position jump (because the page shrinks above the viewport), use a two-phase exit: fade opacity to zero first, then collapse height after a short delay. The layout shift happens while content is already invisible, so no jump is perceived. The total exit duration should remain well under 320 ms.
 
 ---
 

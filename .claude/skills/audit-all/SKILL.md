@@ -1,6 +1,6 @@
 ---
 name: audit-all
-description: Run all five design audits in parallel then produce the triage implementation plan. Outputs six docs/ files.
+description: Run all audits (four design + one architecture) in parallel then produce the design-overall review and the triage implementation plan. Outputs seven docs/ files.
 disable-model-invocation: true
 allowed-tools: Read, Glob, Write, Agent, Task
 ---
@@ -24,8 +24,9 @@ simultaneously — one per audit — using those instructions as each agent's pr
 | Typography & spacing | `.claude/skills/audit-typography/SKILL.md` | `docs/audit-typography.md` |
 | Interaction & motion | `.claude/skills/audit-interaction/SKILL.md` | `docs/audit-interaction.md` |
 | Microcopy & tone | `.claude/skills/audit-microcopy/SKILL.md` | `docs/audit-microcopy.md` |
+| Architecture & code health | `.claude/skills/audit-arch/SKILL.md` | `docs/audit-arch.md` |
 
-Wait for all four agents to complete and confirm all four output files exist
+Wait for all five agents to complete and confirm all four output files exist
 before proceeding.
 
 ### Phase 2 — Sequential (main session)
@@ -53,5 +54,6 @@ When all phases are done, print a summary table:
 | audit-typography.md | N critical · N high · N medium · N low |
 | audit-interaction.md | N high · N medium · N low |
 | audit-microcopy.md | N high · N medium · N low |
+| audit-arch.md | N critical · N high · N medium · N low |
 | audit-design-overall.md | N high · N medium · N low |
 | audit-implementation-plan.md | Tier 1: N chunks · Tier 2: N chunks · Tier 3 deferred: N |
