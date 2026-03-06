@@ -365,7 +365,7 @@ export default function ManageView() {
             <div key={h.id}>
               <div className="flex items-center justify-between gap-2 py-2">
                 <div className="flex min-w-0 items-baseline gap-2">
-                  <span className="text-sm text-stone-400 dark:text-stone-500">{h.label}</span>
+                  <span className="text-sm text-stone-500 dark:text-stone-500">{h.label}</span>
                   {h.type === "numeric" && (
                     <span className="text-xs text-stone-500 dark:text-stone-500">{h.unit}</span>
                   )}
@@ -578,7 +578,7 @@ export default function ManageView() {
           {archivedTags.map((t) => (
             <div key={t.id}>
               <div className="flex items-center justify-between gap-2 py-2">
-                <span className="text-sm text-stone-400 dark:text-stone-500">{t.label}</span>
+                <span className="text-sm text-stone-500 dark:text-stone-500">{t.label}</span>
                 <button type="button" onClick={() => restoreTag(t.id)} className={ACTION_BTN}>
                   Restore
                 </button>
