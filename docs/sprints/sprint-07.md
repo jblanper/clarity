@@ -319,18 +319,18 @@ None (no pre-existing tests to update).
 
 ### Manual checklist
 
-- [o] DayDetail sheet slides in and out smoothly (ease-out enter, ease-in exit, ≤ 320 ms)
-- [o] DayDetail backdrop fades in/out correctly
-- [o] Calendar month slides left/right with correct directional animation
-- [o] FrequencyList expands/collapses without snap or jump
-- [o] Dark mode: section labels visible on all pages (SettingsView, ManageView, DayDetail, HelpView)
-- [o] Dark mode: no invisible text on Today, History, or Settings pages
-- [o] Mobile (390px): BottomNav does not overlap form content; save button is reachable
-- [o] Mobile (390px): no horizontal overflow on any page
-- [o] Reduced motion (OS setting enabled): DayDetail backdrop and sheet transitions are suppressed; calendar slide is suppressed
-- [o] BlossomIcon renders correctly for joy (filled) and non-joy (empty) states
-- [o] Archived habit displays correctly in ManageView with amber label (not destructive red)
-- [o] ManageView inline editors are mutually exclusive (opening one closes others)
+- [x] DayDetail sheet slides in and out smoothly (ease-out enter, ease-in exit, ≤ 320 ms)
+- [x] DayDetail backdrop fades in/out correctly
+- [x] Calendar month slides left/right with correct directional animation
+- [x] FrequencyList expands/collapses without snap or jump
+- [x] Dark mode: section labels visible on all pages (SettingsView, ManageView, DayDetail, HelpView)
+- [x] Dark mode: no invisible text on Today, History, or Settings pages
+- [x] Mobile (390px): BottomNav does not overlap form content; save button is reachable
+- [x] Mobile (390px): no horizontal overflow on any page
+- [x] Reduced motion (OS setting enabled): DayDetail backdrop and sheet transitions are suppressed; calendar slide is suppressed
+- [x] BlossomIcon renders correctly for joy (filled) and non-joy (empty) states
+- [x] Archived habit displays correctly in ManageView with amber label (not destructive red)
+- [x] ManageView inline editors are mutually exclusive (opening one closes others)
 
 ---
 
@@ -357,4 +357,27 @@ None.
 
 ## Retrospective
 
-<!-- To be filled in after the sprint using /sprint-retro -->
+**Date:** 2026-03-06
+
+### What went well
+
+- The planning pipeline (brief → UX → arch → parallel review → plan) produced unusually precise sprint docs — task-level implementation notes were specific enough to code from directly with minimal ambiguity.
+- The arch review caught the archived-label contrast violation during implementation, before it reached validation — exactly the right moment.
+- Sprint docs now serve as a complete record: any future sprint can read Sprint 7 and reconstruct what happened and why.
+- New Playwright suite (54 tests, desktop + mobile) gives a solid regression baseline for all future sprints.
+
+### What was harder than expected
+
+- Playwright setup had significant one-time friction: basePath mismatch (`/clarity`), webkit not installed, Jest picking up spec files, theme toggle failing due to React hydration timing. All resolved but required multiple passes.
+- FrequencyList scroll-jump and layout-shift bugs were not anticipatable from the sprint plan — they are interaction-layer problems that only surface during real scrolling on a real page. Required several iterations to fully resolve (two-phase exit animation, `overflow-y: scroll`, synchronous `window.scrollTo`).
+
+### Process improvements for next sprint
+
+- **Introduce a review intensity decision tree.** Not every sprint needs the full planning pipeline. Proposed tiers: (1) full pipeline for new features, data model changes, new navigation; (2) arch-only review for bug fixes, accessibility corrections, tooling; (3) no review for docs-only or copy changes. Saves significant time and tokens on low-complexity sprints.
+- **Verify "already correct" claims before writing the sprint doc.** SettingsView Theme and "Your data" labels were stated as already correct in implementation notes — the validation audit found they were not. A quick manual check before task-writing prevents a deferred finding.
+- **Evaluate agents to de-duplicate skill role definitions.** The `ux-designer` and `architect` roles are currently re-embedded in 6+ and 3+ skills respectively. Extracting to `.claude/agents/` with `@file` references to `CLAUDE.md` and `calma-design-language.md` would reduce maintenance overhead when patterns change. Key discipline: agents must not duplicate content already in the authoritative files.
+- **Carry a Playwright smoke run into the manual testing phase.** Running the existing suite at the start of manual testing would catch configuration issues early rather than mid-QA.
+
+### Planning accuracy
+
+Scope was too conservative. All six tasks were well-specified and the ordering was logical, but the sprint could have absorbed the remaining medium-severity colour and typography findings (8 items) and the 3 HIGH interaction findings (touch targets) without risk. The audit triage had already done the work of identifying them — they just weren't pulled in. Future audit-driven sprints should aim to clear a severity tier completely rather than stopping at a subset.
