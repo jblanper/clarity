@@ -101,10 +101,10 @@ One accuracy failure: a claim in the Sprint 7 implementation notes that two Sett
 | Sprint 4 | Run `npm run build` after any route change | **Acted on** — now in CLAUDE.md and enforced by the PostToolUse hook. |
 | Sprint 5 | Keep a running notes file during multi-session sprints | **Not acted on** — no evidence in subsequent sprints. Low priority given Sprint 6 and 7 were single-session. |
 | Sprint 6 | Manual animation review pass as part of release checklist | **Acted on** — now part of the `/deploy` skill and QA manual checklist. |
-| Sprint 7 | Review intensity decision tree | **Not yet acted on** — new, first sprint to name it. |
+| Sprint 7 | Review intensity decision tree | **Done** — `docs/sprint-tier-guide.md` implements all three tiers; `docs/workflow.md` references it before every sprint. |
 | Sprint 7 | Verify "already correct" claims before writing sprint tasks | **Not yet acted on** — new. |
 | Sprint 7 | Evaluate `.claude/agents/` to de-duplicate skill role definitions | **Not yet acted on** — under evaluation. |
-| Sprint 7 | Playwright smoke run at start of manual testing | **Not yet acted on** — new. |
+| Sprint 7 | Playwright smoke run at start of manual testing | **Done** — Phase 4 in `/sprint-qa` now runs `e2e/smoke.spec.ts` before handing off the manual checklist. |
 
 ---
 
@@ -130,16 +130,16 @@ One accuracy failure: a claim in the Sprint 7 implementation notes that two Sett
 
 ## Recommended actions
 
-**1. Implement the review intensity decision tree before Sprint 8 brief** — define the three tiers (full pipeline / arch-only / no review) in a short reference in CLAUDE.md or a skill note. Apply Tier 2 to Sprint 8 if it stays an audit/polish sprint.
+**~~1. Implement the review intensity decision tree before Sprint 8 brief~~** ✓ Done — `docs/sprint-tier-guide.md` + `docs/workflow.md`.
 
 **2. Sprint 8: target the 3 HIGH interaction findings** — HabitToggle, NumberStepper, and joy blossom touch targets have been deferred twice. They are the highest-severity open findings and affect the most-used interactions in the app. Pair with the remaining typography mediums (SettingsView labels, reflection textarea, DayDetail date heading) to clear both tiers in one sprint.
 
-**3. Add CLAUDE.md note on scroll-position management before collapse** — the `window.scrollTo({ top, behavior: "auto" })` pattern (synchronous, before state update) discovered in Sprint 7 is a non-obvious implementation requirement. It is not yet documented in CLAUDE.md. Add it alongside the existing DayDetail scroll lock note.
+**~~3. Add CLAUDE.md note on scroll-position management before collapse~~** ✓ Done — added to Component-specific notes in CLAUDE.md alongside the DayDetail scroll lock note.
 
 **4. Evaluate `.claude/agents/` for Sprint 9 or later** — the design document (`docs/claude-code-optimizer/agents-design.md`) is sound. The Priority 1 pair (`ux-designer` + `architect`) would give the highest ROI. Key discipline: agents must not duplicate content from CLAUDE.md or `calma-design-language.md`. Do not implement during a feature sprint — this is tooling work that deserves its own slot.
 
-**5. Add multi-entry-point nav check to the QA manual checklist** — "open Settings from Today, use back nav; open Settings from History, use back nav; verify both return to the correct page." This is the class of bug that burned Sprint 3 and has no automated coverage.
+**~~5. Add multi-entry-point nav check to the QA manual checklist~~** ✓ Done — added as a permanent checklist item in `.claude/skills/sprint-qa/fragment.md`.
 
-**6. Scope audit-driven sprints by severity tier, not by chunk count** — when the audit triage has classified findings, the brief should state the target tier ("clear all HIGH interaction findings") rather than picking a subset by chunk number. This prevents the under-scoping failure of Sprint 7.
+**~~6. Scope audit-driven sprints by severity tier, not by chunk count~~** ✓ Done — encoded in the Notes for the PO section of `docs/sprint-tier-guide.md`.
 
 **7. Plan a dedicated microcopy sprint** — error messages in `transferData.ts` and `SettingsView.tsx` are 4 HIGH severity findings that have been deferred through two sprints. Copy changes don't need UX or arch review — this is a Tier 3 sprint (no review, no pipeline overhead). Short and completable in one session.

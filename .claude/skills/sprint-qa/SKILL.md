@@ -95,7 +95,23 @@ Update or delete stale tests. Record what was changed and why.
 
 ---
 
-## Phase 4 — Manual checklist
+## Phase 4 — Smoke run before manual handoff
+
+Run the smoke suite one final time to confirm end-to-end app health before
+handing off to manual testing:
+
+```bash
+npx playwright test e2e/smoke.spec.ts
+```
+
+If any smoke test fails here (after passing in Phase 1), treat it as a
+regression introduced during Phase 2–3 edits. Fix it before continuing.
+
+Report: `Smoke: N/N passed.`
+
+---
+
+## Phase 5 — Manual checklist
 
 Produce a checklist for things Playwright cannot reliably validate, using the
 manual checks structure in `fragment.md` in this skill's directory.
@@ -103,7 +119,7 @@ Derive sprint-specific items from the sprint doc's validation steps.
 
 ---
 
-## Phase 5 — Stop the dev server
+## Phase 6 — Stop the dev server
 
 ```bash
 kill $(lsof -ti:3000) 2>/dev/null || true
@@ -117,6 +133,6 @@ Append the section defined in `fragment.md` in this skill's directory
 to the sprint doc.
 
 Tell the user:
-> "QA complete. Regression suite: N tests. [N failures to fix / All passing.]
+> "QA complete. Regression suite: N tests. Smoke: N/N. [N failures to fix / All passing.]
 >
 > Please work through the manual checklist above before running `/deploy`."

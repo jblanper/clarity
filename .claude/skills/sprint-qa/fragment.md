@@ -19,5 +19,6 @@
 - [ ] Dark mode: no invisible text, no layout shifts
 - [ ] Mobile (390px): no horizontal overflow, touch targets feel reachable
 - [ ] Reduced motion: enable in OS settings, verify animations are suppressed
+- [ ] Nav — open Settings from Today → back → lands on Today; open Settings from History → back → lands on History
 - [ ] [Sprint-specific item from sprint tasks]
 - [ ] [Sprint-specific item]
