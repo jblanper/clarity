@@ -1,4 +1,4 @@
-<!-- Last reviewed: 2026-03-07 -->
+<!-- Last reviewed: 2026-03-07 (update-claude-md) -->
 # Clarity — Project Guide
 
 ## What is Clarity?
@@ -30,6 +30,7 @@ Before implementing anything that would:
 - Verify git repo before running git commands: `git rev-parse --git-dir`
 - Stage and commit in one step unless told otherwise
 - Always run `npm run lint && npm test && npm run build` before committing
+- Before staging, check `git status` and only add files changed in the current session. Do not pick up pre-existing unstaged changes without confirming with the user.
 
 ## Workflows
 Sprint phases, audit skills, and release pipeline: see `docs/workflow.md`.
