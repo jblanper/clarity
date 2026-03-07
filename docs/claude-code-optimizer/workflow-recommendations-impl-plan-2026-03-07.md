@@ -12,8 +12,8 @@ Four changes to make, ordered by size (smallest first):
 
 | # | Change | Files touched |
 |---|---|---|
-| A | Reframe Q5/Q6 in tier guide + shell script | 2 |
-| B | Create `/sprint-pre-flight` skill | 1 new SKILL.md + workflow.md update |
+| A | ~~Reframe Q5/Q6 in tier guide + shell script~~ ✓ DONE | 2 |
+| B | ~~Create `/sprint-pre-flight` skill~~ ✓ DONE | 1 new SKILL.md + template.md + workflow.md update |
 | C | Create `/sprint-post-code` orchestrator skill | 1 new SKILL.md + fragment.md + workflow.md update |
 | D | Update `workflow.md` execution order block | 1 |
 
