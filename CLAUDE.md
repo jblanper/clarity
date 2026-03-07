@@ -1,91 +1,42 @@
+<!-- Last reviewed: 2026-03-07 -->
 # Clarity — Project Guide
 
+## What is Clarity?
+A mobile-first Next.js habit tracker. Log daily habits, numbers, moments, and reflections once a day. Calm and minimal — no gamification, no streaks. Deployed as a static export to GitHub Pages: https://jblanper.github.io/clarity/
+
 ## Project Stack
-Next.js App Router · TypeScript strict · Tailwind CSS v4 · localStorage · Jest · GitHub Pages (`https://jblanper.github.io/clarity/`)
+Next.js App Router · TypeScript strict · Tailwind CSS v4 · localStorage · Jest · GitHub Pages
 
 - Dynamic routes require `generateStaticParams` for static export
-- Always run `npm run lint && npm test && npm run build` after changes to verify nothing is broken
 
-## Git & Commits
-- Always verify the current directory is a git repository before running git commands (`git rev-parse --git-dir`)
-- When committing, stage and commit in one step unless told otherwise
+## Never do these things
+- **Never delete an archived config** — historical entries reference UUIDs that must stay resolvable forever.
+- **Never add interactivity to `app/` page files** — server components only; all client logic goes in the `*View.tsx` or component layer.
+- **Never use `toISOString()` for dates** — UTC offset bug. Always build YYYY-MM-DD from `getFullYear()`/`getMonth()`/`getDate()`.
+- **Never use `text-stone-400` as foreground in light mode** — fails WCAG AA (2.4:1). Safe only as a `dark:` variant.
+- **Never use `router.back()`** — use the sessionStorage pattern documented in Navigation Architecture.
+- **Never add partial helpers to AppConfigs** — always read-modify-write via `getConfigs()` / `saveConfigs()`.
 
-## Audits & Reports
-Use the dedicated audit skills rather than writing audits from scratch.
-Severity levels across all audit files: **critical** · **high** · **medium** · **low**
+## When you're unsure — stop first
+Before implementing anything that would:
+- Touch more than ~4 files you didn't plan for
+- Modify the data model or localStorage keys
+- Change a navigation pattern or routing behaviour
+- Affect the Calma design spec
 
-| Skill | What it audits | Output |
-|---|---|---|
-| `/audit-colour` | WCAG contrast, stone palette, dark mode completeness | `docs/audits/audit-colour.md` |
-| `/audit-typography` | Type scale, section label pattern, spacing rhythm | `docs/audits/audit-typography.md` |
-| `/audit-interaction` | Motion library usage, transitions, reduced motion | `docs/audits/audit-interaction.md` |
-| `/audit-microcopy` | Tone, technical language, error messages, copy | `docs/audits/audit-microcopy.md` |
-| `/audit-design-overall` | Holistic coherence review across all pages | `docs/audits/audit-design-overall.md` |
-| `/audit-triage` | Consolidates all five reports into a chunked implementation plan | `docs/audits/audit-implementation-plan.md` |
-| `/audit-arch` | CLAUDE.md compliance, TypeScript strictness, test coverage, component structure, static export constraints | `docs/audits/audit-arch.md` |
-| `/audit-all` | Runs all five audits in parallel, then design-overall, then triage | All of the above |
+→ State your interpretation, list affected files, flag assumptions, then wait for a go-ahead.
 
-## Sprint workflow
+## Git & Development
+- Verify git repo before running git commands: `git rev-parse --git-dir`
+- Stage and commit in one step unless told otherwise
+- Always run `npm run lint && npm test && npm run build` before committing
 
-Sprint documents live in `docs/sprints/`. Each sprint produces two files:
-a brief (`sprint-NN-brief.md`) that evolves through planning, and a final
-doc (`sprint-NN.md`) that drives execution.
+## Workflows
+Sprint phases, audit skills, and release pipeline: see `docs/workflow.md`.
 
-**Rules:** Sprint brief and documents are owned by the Product Owner role.
-One release per sprint if possible.
+## Design (Calma Design Language)
 
-**Before starting any sprint:** check `docs/sprint-tier-guide.md` to decide which planning skills to run. Not every sprint needs the full pipeline.
-
-### Planning
-| Skill | Role | When to use |
-|---|---|---|
-| `/sprint-brief` | Product Owner | Start here — back-and-forth discussion, produces the brief |
-| `/sprint-ux` | UX/UI Designer | Reviews brief with you; flags which audits to run at validation |
-| `/sprint-arch` | Senior Architect | Reviews brief with you, technical feasibility and risks |
-| `/sprint-review` | PO mediator | Runs UX + Arch in parallel, you mediate conflicts |
-| `/sprint-plan` | Product Owner | Produces the final executable sprint doc |
-
-### Execution
-| Skill | When to use |
-|---|---|
-| `/sprint-arch-review` | After coding — lint + tests + code review against CLAUDE.md |
-| `/sprint-validate` | After coding — archives pre-sprint audits, runs fresh audits, reports regressions |
-| `/sprint-qa` | After coding — runs Playwright regression suite, writes new tests, manual checklist |
-
-### Closure
-| Skill | When to use |
-|---|---|
-| `/calma-sync` | After validation — review whether Calma spec needs updating |
-| `/deploy` | After you manually validate — full release pipeline |
-| `/sprint-retro` | After release — retrospective appended to sprint doc |
-
-### Anytime
-| Skill | When to use |
-|---|---|
-| `/sprint-kickoff` | Start of any coding session mid-sprint — git status, tasks done/pending, what to work on next |
-| `/retro-report` | Analyse all past retrospectives, produce process recommendations |
-| `/project-health` | Between sprints — security audit, outdated deps, test suite health, docs integrity |
-
-### Full execution order
-```
-PLANNING:   /sprint-brief → /sprint-ux → /sprint-arch → /sprint-plan
-                                or
-            /sprint-brief → /sprint-review → /sprint-plan
-
-EXECUTION:  /sprint-kickoff → [code] → /sprint-arch-review → /sprint-validate → /sprint-qa → [you validate]
-
-CLOSURE:    /calma-sync → /deploy → /sprint-retro
-```
-
-## Releases
-Use `/deploy` for the full release pipeline: lint → tests → build → version bump (patch / minor / major) → changelog → commit + tag → GitHub release.
-
-## What is Clarity?
-A mobile-first Next.js habit tracker. Log daily habits, numbers, moments, and reflections once a day. Calm and minimal — no gamification, no streaks.
-
-## Design
-
-All design decisions — palette, typography, spacing, motion, interaction, and microcopy — are in `docs/calma-design-language.md` (system: Calma). It is the single source of truth. Read it before any UI work.
+All design decisions — palette, typography, spacing, motion, interaction, and microcopy — are in `docs/calma-design-language.md`. "Calma" is the name of this project's design system. It is the single source of truth. Read it before any UI work.
 
 ### Tailwind implementation tokens
 
@@ -155,15 +106,28 @@ Types live in `types/entry.ts` (`HabitEntry`, `HabitState`) and `lib/habitConfig
 
 ## Key Implementation Notes
 
-- **No dynamic routes** — static export means build-time routes only. Use query params + `window.location.search` in a `useEffect`. See `app/edit/page.tsx`.
+### Rendering & SSR
 - **Page components are server components** wrapping a single `"use client"` view. Never add interactivity to `app/` files (except `edit/page.tsx`).
 - **Reading configs SSR-safely** — init `useState` with module-level defaults, then call `getConfigs()` inside a `useEffect` via `startTransition`. Avoids localStorage-during-SSR errors. Used in CheckInForm, DayDetail, CalendarHeatmap, ManageView.
+- **Avoid `useSearchParams()`** — requires `<Suspense>`. Read `window.location.search` directly in a `useEffect` instead.
+
+### Routing & Navigation
+- **No dynamic routes** — static export means build-time routes only. Use query params + `window.location.search` in a `useEffect`. See `app/edit/page.tsx`.
+- **sessionStorage for nav intent** — keeps URLs clean; survives round-trips without extra params.
+
+### Data & Storage
 - **Date handling** — build YYYY-MM-DD from `getFullYear()`/`getMonth()`/`getDate()`, never `toISOString()` (UTC offset bug).
 - **Float precision** — use `Math.round((value + step) * 1000) / 1000` in steppers.
-- **Avoid `useSearchParams()`** — requires `<Suspense>`. Read `window.location.search` directly in a `useEffect` instead.
-- **sessionStorage for nav intent** — keeps URLs clean; survives round-trips without extra params.
+
+### Animations (Framer Motion)
+- **Motion animations** — use `LazyMotion + domAnimation` (~17 KB) via `MotionProvider`. For height reveals use `animate={{ height: "auto" }}` with `style={{ overflow: "hidden" }}`. For directional slides (e.g. calendar) use named `variants` + `custom` prop on both `AnimatePresence` and `m.*` — inline function syntax on `initial`/`exit` is NOT called with `custom` and must not be used. Duration ≤ 320 ms, ease-out for enters, ease-in for exits.
+- **Exit animation snap** — when `exit={{ height: 0 }}` is on an element that has padding or margin via className, those must also be animated to 0 in `exit` (e.g. `paddingTop: 0, paddingBottom: 0, marginBottom: 0`). With `box-sizing: border-box`, `height: 0` does not collapse `py-*` padding; the element stays visible at `paddingTop + paddingBottom` height until unmount, causing a snap.
+
+### Theming & Dark Mode
 - **Tailwind v4 dark mode** — class-based via `@custom-variant dark` in `globals.css`. `translate-x-*` can fail; use inline `style` or explicit `left-*` positioning.
 - **Theme** — `public/theme-init.js` applies the class before first paint. `useIsDark()` in CalendarHeatmap uses a `MutationObserver` for runtime changes.
+
+### Component-specific notes
 - **Heatmap palette** — "sunset" two-axis blend. `b` = fraction of boolean habits done (0–1); `y` = (joy count + moments count) / 6, capped at 1. Habits map to dusk blue (hsl 210), moments/joy map to warm ember (hsl 23). When both are non-zero the hue, saturation, and lightness are blended proportionally by weight. Empty/zero days use a muted stone tone.
 - **HeatmapFilter** — exported type `{ type: "boolean-habit" | "numeric-habit" | "moment"; id: string }` from `CalendarHeatmap.tsx`. When set, non-matching cells drop to 25% opacity; matching cells use the exact palette colour for their type. Filter is owned by `HistoryView` state and passed to both `CalendarHeatmap` and `FrequencyList`.
 - **FrequencyList** — collapsible section below the heatmap (toggle button). Counts occurrences per UUID across the selected period (`Period = "month" | "3m" | "always"`). The `"month"` period follows the calendar's currently viewed month via `viewedYear`/`viewedMonth` props (synced through `CalendarHeatmap`'s `onMonthChange` callback). Tapping a row sets or clears the `HeatmapFilter`. A one-time hint ("Tap any item to filter the calendar") fades out on first tap and is persisted to `clarity-frequency-hint-seen`.
@@ -171,8 +135,6 @@ Types live in `types/entry.ts` (`HabitEntry`, `HabitState`) and `lib/habitConfig
 - **ManageView** — all inline editors are mutually exclusive via `closeAllEditors()`. Archive buttons use `text-amber-700` (reversible, not destructive).
 - **Save flow** (CheckInForm) — three states: `idle → saving → confirmed`. `saveEntry()` deferred one tick so "Saving…" renders first. Redirects after 1200 ms.
 - **Joy section** (CheckInForm) — appears between Moments and Reflection when at least one boolean habit is done. Lists done habits with `BlossomIcon` buttons to mark `joy` independently of `done`. `joyByDefault` on the config pre-fills joy when a habit is first toggled on. Factual logging (Habits) and emotional reflection (Joy) are intentionally separate moments in the form.
-- **Motion animations** — use `LazyMotion + domAnimation` (~17 KB) via `MotionProvider`. For height reveals use `animate={{ height: "auto" }}` with `style={{ overflow: "hidden" }}`. For directional slides (e.g. calendar) use named `variants` + `custom` prop on both `AnimatePresence` and `m.*` — inline function syntax on `initial`/`exit` is NOT called with `custom` and must not be used. Duration ≤ 320 ms, ease-out for enters, ease-in for exits.
-- **Exit animation snap** — when `exit={{ height: 0 }}` is on an element that has padding or margin via className, those must also be animated to 0 in `exit` (e.g. `paddingTop: 0, paddingBottom: 0, marginBottom: 0`). With `box-sizing: border-box`, `height: 0` does not collapse `py-*` padding; the element stays visible at `paddingTop + paddingBottom` height until unmount, causing a snap.
 - **DayDetail scroll lock** — uses `useLayoutEffect` (not `useEffect`) for `document.body.style.overflow = "hidden"`. The layout-effect cleanup runs synchronously during the React commit, so the lock is never left behind when the user navigates away mid-animation.
 - **DayDetail CSS transitions** — the backdrop (`transition-opacity`) and sheet (`transition-transform`) are plain `<div>` elements not governed by `MotionConfig`. They carry semantic class names `.daydetail-backdrop` and `.daydetail-sheet`, suppressed in `globals.css` via `@media (prefers-reduced-motion: reduce)`. Same pattern as `.frequency-chevron` and `.heatmap-grid`. Do not remove these class names.
 - **`lib/habitConfig.ts` is the source of truth** for config. `lib/habits.ts` contains only `createEmptyEntry()` and should not grow.
