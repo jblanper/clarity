@@ -53,11 +53,13 @@ elif ask "Does it introduce a pattern not currently in the Calma spec?
      (new visual pattern, component type, colour role, motion behaviour)"; then
   TIER=1; TIER_REASON="new Calma pattern"
 
-elif ask "Does it carry architectural risk or CLAUDE.md compliance questions?
-     (a11y, touch targets, animation polish, tooling, static export risk)"; then
+elif ask "No new features, but carries risk?
+     (a11y, touch targets, animation polish, compliance questions, static export risk,
+      tooling with app code side-effects)"; then
   TIER=2; TIER_REASON="architectural / compliance risk"
 
-elif ask "Is it purely docs, copy, or tooling with no app code changes?"; then
+elif ask "No new features, no risk?
+     (purely docs, copy, CHANGELOG, README, skill/tooling with zero app code impact)"; then
   TIER=3; TIER_REASON="docs / copy / chore"
 fi
 

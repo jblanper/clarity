@@ -27,11 +27,13 @@ sprint without reading the full guide.
 (New visual pattern, new component type, new colour role, new motion behaviour)
 > Yes → **Tier 1**
 
-**Q5 — Does it carry architectural risk or CLAUDE.md compliance questions?**
-(Accessibility corrections, touch targets, animation polish, tooling, static export risk)
+**Q5 — No new features, but carries risk?**
+(Accessibility corrections, touch targets, animation polish, compliance questions,
+static export risk, tooling with app code side-effects)
 > Yes → **Tier 2**
 
-**Q6 — Is it purely docs, copy, or tooling with no app code changes?**
+**Q6 — No new features, no risk?**
+(Purely docs, copy, CHANGELOG, README, skill/tooling changes with zero app code impact)
 > Yes → **Tier 3**
 
 **Default → Tier 2**
