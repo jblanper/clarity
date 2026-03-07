@@ -43,7 +43,7 @@ One release per sprint if possible.
 |---|---|
 | `/sprint-kickoff` | Start of any coding session mid-sprint — git status, tasks done/pending, what to work on next |
 | `/sprint-arch-review` | After coding — lint + tests + code review against CLAUDE.md |
-| `/sprint-validate` | After coding — archives pre-sprint audits, runs fresh audits, reports regressions |
+| `/sprint-validate` | After coding — archives pre-sprint audits, runs fresh audits, reports regressions. Runs: colour, typography, interaction, microcopy (sequentially). Never runs design-overall or triage. Override via "Audits to run" list in the sprint doc (added by `/sprint-ux`). |
 | `/sprint-qa` | After coding — runs Playwright regression suite, writes new tests, manual checklist |
 
 ### Closure
