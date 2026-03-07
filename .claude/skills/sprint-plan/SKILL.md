@@ -31,6 +31,16 @@ synthesise everything into a clear, executable sprint document.
 Produce `docs/sprints/sprint-NN.md` using the structure in `template.md`
 in this skill's directory.
 
+### Before writing implementation notes — verify "already correct" claims
+
+If the brief or any review states that a file, component, or line is
+"already correct", "does not need changing", or "can be used as a reference",
+**read the relevant lines before writing that into the sprint doc.**
+
+Do not carry an unverified claim into implementation notes. A wrong
+"already correct" claim produces a deferred finding that survives into the
+next sprint. Take 30 seconds to read the file and confirm.
+
 ## Task ordering
 
 Order tasks following the same principle as audit chunks:

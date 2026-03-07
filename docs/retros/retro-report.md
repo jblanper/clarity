@@ -102,7 +102,7 @@ One accuracy failure: a claim in the Sprint 7 implementation notes that two Sett
 | Sprint 5 | Keep a running notes file during multi-session sprints | **Not acted on** — no evidence in subsequent sprints. Low priority given Sprint 6 and 7 were single-session. |
 | Sprint 6 | Manual animation review pass as part of release checklist | **Acted on** — now part of the `/deploy` skill and QA manual checklist. |
 | Sprint 7 | Review intensity decision tree | **Done** — `docs/sprint-tier-guide.md` implements all three tiers; `docs/workflow.md` references it before every sprint. |
-| Sprint 7 | Verify "already correct" claims before writing sprint tasks | **Not yet acted on** — new. |
+| Sprint 7 | Verify "already correct" claims before writing sprint tasks | **Done** — guard added to `/sprint-plan` SKILL.md: read relevant lines before writing any "already correct" claim into implementation notes. |
 | Sprint 7 | Evaluate `.claude/agents/` to de-duplicate skill role definitions | **Not yet acted on** — under evaluation. |
 | Sprint 7 | Playwright smoke run at start of manual testing | **Done** — Phase 4 in `/sprint-qa` now runs `e2e/smoke.spec.ts` before handing off the manual checklist. |
 
