@@ -35,15 +35,6 @@ Before implementing anything that would:
 ## Workflows
 Sprint phases, audit skills, and release pipeline: see `docs/workflow.md`.
 
-## Agents
-
-Two standalone reviewer agents live in `.claude/agents/`:
-
-- **`architect`** — CLAUDE.md compliance, data model safety, static export constraints, TypeScript strictness, test coverage. Use for architecture reviews and codebase audits.
-- **`ux-designer`** — Calma design language, WCAG evaluation, UX review of sprint briefs. Use for design audits and pre-coding UX checks.
-
-Agents are invoked explicitly ("use the architect agent to…") or automatically when the task description matches. No existing skill invokes them — they run alongside the skills workflow, not inside it. See `docs/claude-code-optimizer/agents-design.md` for usage examples.
-
 ## Design (Calma Design Language)
 
 All design decisions — palette, typography, spacing, motion, interaction, and microcopy — are in `docs/calma-design-language.md`. "Calma" is the name of this project's design system. It is the single source of truth. Read it before any UI work.
