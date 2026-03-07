@@ -1,5 +1,7 @@
 # Claude Code Agents — Design Rationale
 
+**Last updated:** 2026-03-07
+
 ## Problem
 
 Role definitions are duplicated across skills. The UX role appears in `sprint-ux`,
@@ -84,3 +86,85 @@ When a new pattern is established in a sprint:
    (e.g. a new class of violation the agent should learn to spot)
 
 Never update the agent to reflect content already captured in `CLAUDE.md`.
+
+---
+
+## Implementation decision — 2026-03-07
+
+**Additive model adopted. Existing skills are not modified.**
+
+The original design proposed replacing role definitions inside skills with agent
+delegation. After review, that approach carries meaningful risk: the skills
+workflow is proven, and refactoring 7+ skills to delegate is a large change with
+no automated test coverage on the result.
+
+Instead, agents are deployed as standalone entities alongside the existing
+skills. No skill files are touched.
+
+**What this means:**
+- `.claude/agents/ux-designer.md` and `.claude/agents/architect.md` are created
+  from the drafts in this directory
+- All existing `/sprint-*` and `/audit-*` skills continue to work unchanged
+- Agents are available for direct use in conversation and as subagents
+- De-duplication of skill role definitions is deferred — evaluate after real
+  sprint usage confirms agents are worth the refactor cost
+
+**If agents prove useful:** plan skill refactoring as a dedicated tooling sprint
+(not during a feature sprint). The designs in this directory remain the reference.
+
+---
+
+## How to use the agents
+
+Claude Code agents in `.claude/agents/` are available in two ways:
+
+### 1. Ask Claude to use a specific agent
+
+Explicitly request the agent by name. Claude will invoke it as a subagent with
+the full context defined in its file.
+
+```
+Use the architect agent to review CheckInForm.tsx for CLAUDE.md compliance.
+```
+
+```
+Use the ux-designer agent to evaluate the sprint brief before I start coding.
+```
+
+```
+Run the architect agent over the FrequencyList changes — specifically check
+the exit animation and scroll-position handling.
+```
+
+### 2. Describe the task — Claude picks the agent automatically
+
+The `description` field in each agent's frontmatter tells Claude when to invoke
+it. If your request clearly matches, Claude will route to the agent without
+being asked explicitly.
+
+Tasks that will typically trigger `architect`:
+- "Review this diff for CLAUDE.md compliance"
+- "Check if this data model change is safe"
+- "Is this static-export safe?"
+
+Tasks that will typically trigger `ux-designer`:
+- "Does this component follow the Calma design language?"
+- "Audit the colour usage in SettingsView"
+- "Review this sprint brief for UX issues before I start"
+
+### Practical examples by sprint phase
+
+| Phase | Command |
+|---|---|
+| Before coding | `Use the ux-designer agent to review the Sprint 8 brief` |
+| Before coding | `Use the architect agent to check the Sprint 8 brief for implementation risks` |
+| After coding | `Use the architect agent to audit the changes I just made against CLAUDE.md` |
+| Spot check | `Use the ux-designer agent — does HabitToggle's touch target size pass WCAG?` |
+| Audit | `Use the architect agent to scan lib/ for TypeScript compliance issues` |
+
+### What agents are NOT for
+
+- Running the full sprint pipeline — use the existing `/sprint-*` skills for that
+- Replacing `/audit-colour`, `/audit-typography` etc. — those skills have
+  structured output format; agents produce free-form analysis
+- Committing or writing code — agents are reviewers, not implementers

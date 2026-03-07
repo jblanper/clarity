@@ -103,7 +103,7 @@ One accuracy failure: a claim in the Sprint 7 implementation notes that two Sett
 | Sprint 6 | Manual animation review pass as part of release checklist | **Acted on** — now part of the `/deploy` skill and QA manual checklist. |
 | Sprint 7 | Review intensity decision tree | **Done** — `docs/sprint-tier-guide.md` implements all three tiers; `docs/workflow.md` references it before every sprint. |
 | Sprint 7 | Verify "already correct" claims before writing sprint tasks | **Done** — guard added to `/sprint-plan` SKILL.md: read relevant lines before writing any "already correct" claim into implementation notes. |
-| Sprint 7 | Evaluate `.claude/agents/` to de-duplicate skill role definitions | **Not yet acted on** — under evaluation. |
+| Sprint 7 | Evaluate `.claude/agents/` to de-duplicate skill role definitions | **Partially acted on** — additive model adopted 2026-03-07. `architect` and `ux-designer` agents created in `.claude/agents/` as standalone reviewers. Existing skills untouched. Skill de-duplication deferred pending real-sprint validation. See `docs/claude-code-optimizer/agents-design.md`. |
 | Sprint 7 | Playwright smoke run at start of manual testing | **Done** — Phase 4 in `/sprint-qa` now runs `e2e/smoke.spec.ts` before handing off the manual checklist. |
 
 ---
@@ -136,7 +136,7 @@ One accuracy failure: a claim in the Sprint 7 implementation notes that two Sett
 
 **~~3. Add CLAUDE.md note on scroll-position management before collapse~~** ✓ Done — added to Component-specific notes in CLAUDE.md alongside the DayDetail scroll lock note.
 
-**4. Evaluate `.claude/agents/` for Sprint 9 or later** — the design document (`docs/claude-code-optimizer/agents-design.md`) is sound. The Priority 1 pair (`ux-designer` + `architect`) would give the highest ROI. Key discipline: agents must not duplicate content from CLAUDE.md or `calma-design-language.md`. Do not implement during a feature sprint — this is tooling work that deserves its own slot.
+**~~4. Evaluate `.claude/agents/` for Sprint 9 or later~~** Ongoing — `architect` and `ux-designer` agents deployed 2026-03-07 using an additive model (skills untouched). Trial in upcoming sprints. Skill de-duplication scheduled if agents prove useful.
 
 **~~5. Add multi-entry-point nav check to the QA manual checklist~~** ✓ Done — added as a permanent checklist item in `.claude/skills/sprint-qa/fragment.md`.
 
