@@ -42,6 +42,7 @@ One release per sprint if possible.
 | Skill | When to use |
 |---|---|
 | `/sprint-kickoff` | Start of any coding session mid-sprint — git status, tasks done/pending, what to work on next |
+| `/sprint-post-code` | After coding (Tier 1 or 2) — arch-review gate + validate + QA in one command |
 | `/sprint-arch-review` | After coding — lint + tests + code review against CLAUDE.md |
 | `/sprint-validate` | After coding — archives pre-sprint audits, runs fresh audits, reports regressions. Runs: colour, typography, interaction, microcopy (sequentially). Never runs design-overall or triage. Override via "Audits to run" list in the sprint doc (added by `/sprint-ux`). |
 | `/sprint-qa` | After coding — runs Playwright regression suite, writes new tests, manual checklist |
@@ -58,17 +59,19 @@ One release per sprint if possible.
 
 | Skill | When to use |
 |---|---|
+| `/sprint-pre-flight` | Before any sprint — surfaces blockers, determines tier, recommends exact skills |
 | `/retro-report` | Analyse all past retrospectives, produce process recommendations |
 | `/project-health` | Between sprints — security audit, outdated deps, test suite health, docs integrity |
 
 ### Full execution order
 
 ```
-PLANNING:   /sprint-brief → /sprint-ux → /sprint-arch → /sprint-plan
-                                or
-            /sprint-brief → /sprint-review → /sprint-plan
+PLANNING:   /sprint-pre-flight          ← blockers + tier + exact skills to run
+                 ↓
+            [planning skills as recommended by pre-flight]
 
-EXECUTION:  /sprint-kickoff → [code] → /sprint-arch-review → /sprint-validate → /sprint-qa → [you validate]
+EXECUTION:  /sprint-kickoff → [code] → /sprint-post-code → [you validate]
+            (or run /sprint-arch-review, /sprint-validate, /sprint-qa individually)
 
 CLOSURE:    /calma-sync → /deploy → /sprint-retro
 ```
