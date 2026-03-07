@@ -65,13 +65,45 @@ One release per sprint if possible.
 
 ### Full execution order
 
+Always start with pre-flight, then follow the path for your tier.
+
 ```
-PLANNING:   /sprint-pre-flight          ← blockers + tier + exact skills to run
-                 ↓
-            [planning skills as recommended by pre-flight]
+/sprint-pre-flight     ← surfaces blockers + determines tier
+```
+
+#### Tier 1 — Full pipeline
+New features, data model changes, new routes, new Calma patterns.
+
+```
+PLANNING:   /sprint-brief → /sprint-review → /sprint-plan
+                                or
+            /sprint-brief → /sprint-ux + /sprint-arch → /sprint-plan
 
 EXECUTION:  /sprint-kickoff → [code] → /sprint-post-code → [you validate]
-            (or run /sprint-arch-review, /sprint-validate, /sprint-qa individually)
+            (or run /sprint-arch-review → /sprint-validate → /sprint-qa individually)
 
 CLOSURE:    /calma-sync → /deploy → /sprint-retro
+```
+
+#### Tier 2 — Arch-only
+Bug fixes, a11y corrections, audit-driven polish, tooling changes.
+
+```
+PLANNING:   [write sprint-NN-brief.md directly] → /sprint-arch → /sprint-plan
+
+EXECUTION:  /sprint-kickoff → [code] → /sprint-post-code → [you validate]
+            (or run /sprint-arch-review → [targeted audits] → /sprint-qa individually)
+
+CLOSURE:    /calma-sync → /deploy → /sprint-retro
+```
+
+#### Tier 3 — No review
+Docs, copy, CHANGELOG, README, skill/tooling with no app code impact.
+
+```
+PLANNING:   /sprint-plan   (or skip entirely and commit directly)
+
+EXECUTION:  [edit] → npm run lint && npm test && npm run build
+
+CLOSURE:    /deploy → /sprint-retro   (retro optional for very small changes)
 ```
