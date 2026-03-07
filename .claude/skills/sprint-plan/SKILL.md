@@ -43,7 +43,7 @@ next sprint. Take 30 seconds to read the file and confirm.
 
 ## Task ordering
 
-Order tasks following the same principle as audit chunks:
+Order tasks by risk and dependency:
 1. Data model changes first (highest risk, everything else depends on them)
 2. Shared component changes next
 3. Page-specific changes

@@ -153,8 +153,8 @@ lint + tests + build alone.
 
 ## Notes for the PO
 
-- When scope comes from the audit implementation plan, check each finding's
-  severity tier: clearing all HIGH findings in one sprint is a Tier 2 sprint
+- When scope comes from the audit action list, check each finding's
+  severity level: clearing all High findings in one sprint is a Tier 2 sprint
   (use Tier 2 even if there are many items — they're pre-classified by the
   audit, not novel decisions).
 - A sprint that mixes Tier 1 and Tier 2 work is a Tier 1 sprint.

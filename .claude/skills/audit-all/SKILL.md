@@ -1,6 +1,6 @@
 ---
 name: audit-all
-description: Run all audits (four design + one architecture) in parallel then produce the design-overall review and the triage implementation plan. Outputs seven docs/ files.
+description: Run all audits (four design + one architecture) in parallel then produce the design-overall review and the triage action list. Outputs seven docs/ files.
 disable-model-invocation: true
 allowed-tools: Read, Glob, Write, Agent, Task
 ---
@@ -42,7 +42,7 @@ Output: `docs/audits/audit-design-overall.md`
 Follow the instructions in `.claude/skills/audit-triage/SKILL.md` directly
 in the main session.
 
-Output: `docs/audits/audit-implementation-plan.md`
+Output: `docs/audits/audit-action-list.md`
 
 ## Completion report
 
@@ -56,4 +56,4 @@ When all phases are done, print a summary table:
 | audit-microcopy.md | N high · N medium · N low |
 | audit-arch.md | N critical · N high · N medium · N low |
 | audit-design-overall.md | N high · N medium · N low |
-| audit-implementation-plan.md | Tier 1: N chunks · Tier 2: N chunks · Tier 3 deferred: N |
+| audit-action-list.md | Critical: N · High: N · Medium: N · Deferred: N |

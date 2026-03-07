@@ -1,14 +1,15 @@
 ---
 name: audit-triage
-description: Consolidate all five audit reports into a prioritised, chunked implementation plan. Requires all five audit docs/ files to exist first. Outputs docs/audits/audit-implementation-plan.md.
+description: Consolidate all five audit reports into a severity-ordered action list. Requires all five audit docs/ files to exist first. Outputs docs/audits/audit-action-list.md.
 disable-model-invocation: true
 allowed-tools: Read, Write
 ---
 
-# Audit Triage & Implementation Plan
+# Audit Triage & Action List
 
-Consolidate all five audit reports into a single prioritised implementation
-plan with chunked, independently executable tasks.
+Consolidate all five audit reports into a single list of individually
+actionable issues, ordered by severity — Critical first, then High,
+then Medium, then Deferred.
 
 ## Prerequisites
 
@@ -27,13 +28,13 @@ Read `CLAUDE.md` and `docs/calma-design-language.md` in full.
 Then read all five audit reports in full.
 
 This is a planning task only. Do not change any code.
-Produce a single output file: `docs/audits/audit-implementation-plan.md`.
+Produce a single output file: `docs/audits/audit-action-list.md`.
 
 ---
 
 ## Step 1 — Deduplicate and consolidate
 
-Before prioritising, consolidate findings across all five reports.
+Before ordering, consolidate findings across all five reports.
 
 The first four reports (colour, typography, interaction, microcopy)
 contain specific, measurable violations with component names and line
@@ -43,70 +44,70 @@ that may not map to a specific line of code.
 Consolidate as follows:
 
 - If the same component is flagged in multiple reports for different
-  reasons, group those findings under that component
+  reasons, keep them as separate issues (different problems, different fixes)
 - If the same issue appears in multiple reports, merge into one entry
   and note which audits flagged it — findings confirmed by more than one
-  audit should be treated as higher confidence
+  audit carry higher confidence and should be promoted one severity level
+  if they straddle a boundary
 - For findings from `audit-design-overall.md`: if the observation maps to
   a specific component or pattern already flagged in another audit,
   merge it there and note the design-level context it adds. If it is
   a standalone observation with no matching specific finding, treat it
   as its own entry
-- Discard any low-severity finding that touches a file already covered
-  by a high-severity fix in the same pass — it will be caught there
+- Discard any Low finding that duplicates the root cause of a Critical
+  or High finding in the same component — it will be caught in the same fix
 
 ---
 
-## Step 2 — Prioritise into three tiers
+## Step 2 — Filter by actionability
 
-**Tier 1 — Must fix (high urgency)**
-Violations clear enough to undermine trust in the design system, or that
-would create inconsistency with any feature being built next.
-This includes: all WCAG AA contrast failures, all missing dark mode
-variants on text, all touch target violations on primary interactions,
-any section label that deviates from the exact established pattern, any
-microcopy that is accusatory, clinical, or uses an exclamation mark, and
-any finding from `audit-design-overall.md` flagged as the single most
-important observation in the "Most important observation" paragraph.
+Decide what to include and what to defer.
 
-**Tier 2 — Fix if effort is trivial or small**
-Real findings but not urgent. Include if the fix is one to three lines.
-Defer if it requires restructuring a component or touching more than
-three files. Holistic observations from `audit-design-overall.md` that
-do not map to a specific code change belong here at most — note them
-as "design intent to carry forward" rather than as code fixes.
+**Include (Critical and High):**
+All Critical and High findings from the audit reports. These are
+non-negotiable. Critical = WCAG AA failure or data safety risk.
+High = spec contradiction, missing dark mode on text, touch target
+violation on a primary interaction, section label deviating from the
+exact pattern, microcopy that is accusatory, clinical, or contains an
+exclamation mark, and any finding flagged as the single most important
+observation in `audit-design-overall.md`.
 
-**Tier 3 — Defer to a polish pass**
-Low-severity findings, subjective improvements, anything requiring
-significant refactoring, and any overall design observation that cannot
-be addressed with a targeted code change. List them so they are not lost,
-but do not include them in the implementation chunks.
+**Include if the fix is trivial (Medium):**
+Include a Medium finding only if the fix is one to three lines and
+touches at most one file. Defer any Medium that requires restructuring
+a component or touching more than one file.
+
+**Defer (Low and non-trivial Medium):**
+List them in the Deferred section so they are not lost. Do not write
+action items for them.
+
+**Design intent (holistic observations without a code fix):**
+Observations from `audit-design-overall.md` that cannot be addressed
+with a targeted code change go in the "Design intent to carry forward"
+section — not as action items.
 
 ---
 
-## Step 3 — Write the chunked implementation plan
+## Step 3 — Write the action list ordered by severity
 
-For every Tier 1 finding and every qualifying Tier 2 finding that has
-a concrete code change, write one numbered chunk using the format in
+For every included finding, write one issue entry using the format in
 `template.md` in this skill's directory.
 
-For Tier 2 findings from `audit-design-overall.md` that are design
-intent rather than code fixes, do not write a chunk. Instead, collect
-them in a "Design intent to carry forward" section as defined in
-`template.md`.
+Order strictly by severity:
+1. Critical issues first
+2. High issues next
+3. Medium (qualifying) issues last
 
----
+Within each severity level, order by confidence: issues confirmed by
+multiple audits before those flagged by a single audit.
 
-**Chunk ordering:**
-1. `globals.css` changes first — stylesheet fixes benefit all later chunks
-2. Shared component fixes next — components used across many pages
-3. Page-specific fixes grouped by page
-4. Microcopy fixes last — fully independent of structure, easy to batch
+Each issue must be independently actionable. A developer should be able
+to pick any issue from the list, fix it, and move on to the next —
+there are no batches, no required ordering between issues, and no
+cross-dependencies unless explicitly stated on the issue itself.
 
-Each chunk must be independently executable. If a chunk depends on a
-previous one, state this explicitly at the top of that chunk. No chunk
-should mix categories — keep colour, typography, interaction, and
-microcopy concerns separate within each chunk.
+No issue should mix concerns — if a component has both a colour violation
+and a typography violation, these are two separate issues.
 
 ---
 

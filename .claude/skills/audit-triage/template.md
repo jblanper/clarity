@@ -1,63 +1,67 @@
-# Audit Implementation Plan
+# Audit Action List
 
 Generated: [today]
 Source audits: audit-colour.md · audit-typography.md · audit-interaction.md · audit-microcopy.md · audit-design-overall.md
 
 ---
 
-## Tier 1 — Must fix
+## Critical
 
-### Chunk N — [Short descriptive title]
+### [Short descriptive title]
 
-Files: FileName.tsx, globals.css  (max 3 files per chunk)
+Source: [audit-name(s)]
+File: `FileName.tsx` (line N if known)
 
-Findings addressed:
-- [One line per finding, naming the source audit]
-
-What to do:
+What to fix:
 [Two to five sentences. Specific enough that a fresh Claude Code session
-with only CLAUDE.md, calma-design-language.md, and the listed files
-could execute this correctly without reading the audit reports.]
-
-Effort: trivial / small / medium
+with only CLAUDE.md, calma-design-language.md, and the named file could
+execute this correctly without reading the audit reports.]
 
 ---
 
-## Tier 2 — Fix if trivial
+## High
 
-### Chunk N — [Short descriptive title]
+### [Short descriptive title]
 
-Files: [list]
+Source: [audit-name(s)]
+File: `FileName.tsx` (line N if known)
 
-Findings addressed:
-- [finding — source audit]
-
-What to do:
+What to fix:
 [Two to five sentences.]
 
-Effort: trivial / small
+---
+
+## Medium
+
+### [Short descriptive title]
+
+Source: [audit-name(s)]
+File: `FileName.tsx` (line N if known)
+
+What to fix:
+[Two to five sentences.]
 
 ---
 
-## Tier 3 — Deferred
+## Deferred
 
-[Bulleted list of low-severity findings and significant refactors deferred to a polish pass.]
+[Bulleted list of Low findings and non-trivial Medium findings deferred to a polish pass.
+One line each: component / file · what was flagged · source audit.]
 
 ---
 
 ## Design intent to carry forward
 
-[Bulleted list of observations that should inform future design decisions
-even if they require no immediate code change. These are not tasks — they
-are context.]
+[Bulleted list of holistic observations that should inform future design decisions
+but require no immediate code change. These are not tasks — they are context.]
 
 ---
 
-## Summary table
+## Summary
 
-| Chunk | Title | Files | Tier | Effort |
-|-------|-------|-------|------|--------|
-| 1     | …     | …     | 1    | trivial |
+| # | Title | File | Severity | Source |
+|---|-------|------|----------|--------|
+| 1 | …     | …    | Critical | audit-colour |
 
-Tier 1 chunks: N  ·  Tier 2 chunks: N  ·  Tier 3 deferred: N
-Design intent notes carried forward: N
+Critical: N · High: N · Medium: N · Deferred: N
+Design intent notes: N
