@@ -4,6 +4,10 @@ The Product Owner uses this guide before starting any sprint to decide how much
 planning overhead the sprint needs. Answer the questions in order — the first
 "Yes" wins and determines the tier.
 
+An interactive CLI version of the decision tree is available at
+`scripts/sprint-tier.sh` — run it to get the exact skills to run for your
+sprint without reading the full guide.
+
 ---
 
 ## Decision tree
