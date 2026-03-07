@@ -1,6 +1,6 @@
 ---
 name: audit-interaction
-description: Audit all interactive elements and animations for compliance with Calma interaction principles and Motion library patterns. Outputs docs/audit-interaction.md.
+description: Audit all interactive elements and animations for compliance with Calma interaction principles and Motion library patterns. Outputs docs/audits/audit-interaction.md.
 disable-model-invocation: true
 allowed-tools: Read, Grep, Glob, Write
 ---
@@ -63,6 +63,6 @@ used for something that requires Motion.
 
 ## Output
 
-Write the results to `docs/audit-interaction.md`. Overwrite if it already exists.
+Write the results to `docs/audits/audit-interaction.md`. Overwrite if it already exists.
 
 Use the structure in `template.md` in this skill's directory.

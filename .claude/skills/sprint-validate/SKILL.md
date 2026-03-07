@@ -28,10 +28,10 @@ and report progress in the sprint document.
 ## Phase 1 — Archive pre-sprint snapshots
 
 For each audit to run, if the audit file already exists:
-- Read `docs/audit-[name].md` and Write its contents to
-  `docs/archive/audit-[name]-YYYY-MM-DD.md` using today's date
+- Read `docs/audits/audit-[name].md` and Write its contents to
+  `docs/audits/archive/audit-[name]-YYYY-MM-DD.md` using today's date
   (Write creates parent directories automatically)
-- Report: "Archived pre-sprint snapshots to docs/archive/"
+- Report: "Archived pre-sprint snapshots to docs/audits/archive/"
 
 If an audit file doesn't exist yet, note "no pre-sprint baseline for [name]".
 
@@ -46,7 +46,7 @@ Follow the instructions from each relevant skill file:
 Run them sequentially (not in parallel — this is validation, not discovery;
 sequential output is easier to review).
 
-Each audit overwrites its `docs/audit-[name].md` file with fresh findings.
+Each audit overwrites its `docs/audits/audit-[name].md` file with fresh findings.
 
 ## Phase 3 — Compare and report
 

@@ -1,6 +1,6 @@
 ---
 name: audit-microcopy
-description: Audit all user-facing text for tone violations, technical language, vague messages, and Calma microcopy compliance. Outputs docs/audit-microcopy.md.
+description: Audit all user-facing text for tone violations, technical language, vague messages, and Calma microcopy compliance. Outputs docs/audits/audit-microcopy.md.
 disable-model-invocation: true
 allowed-tools: Read, Grep, Glob, Write
 ---
@@ -61,6 +61,6 @@ The save flow states are `idle → saving → confirmed`. Verify:
 
 ## Output
 
-Write the results to `docs/audit-microcopy.md`. Overwrite if it already exists.
+Write the results to `docs/audits/audit-microcopy.md`. Overwrite if it already exists.
 
 Use the structure in `template.md` in this skill's directory.

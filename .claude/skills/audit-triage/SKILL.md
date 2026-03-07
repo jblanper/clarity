@@ -1,6 +1,6 @@
 ---
 name: audit-triage
-description: Consolidate all five audit reports into a prioritised, chunked implementation plan. Requires all five audit docs/ files to exist first. Outputs docs/audit-implementation-plan.md.
+description: Consolidate all five audit reports into a prioritised, chunked implementation plan. Requires all five audit docs/ files to exist first. Outputs docs/audits/audit-implementation-plan.md.
 disable-model-invocation: true
 allowed-tools: Read, Write
 ---
@@ -13,11 +13,11 @@ plan with chunked, independently executable tasks.
 ## Prerequisites
 
 All five audit reports must exist before running this skill:
-- `docs/audit-colour.md`
-- `docs/audit-typography.md`
-- `docs/audit-interaction.md`
-- `docs/audit-microcopy.md`
-- `docs/audit-design-overall.md`
+- `docs/audits/audit-colour.md`
+- `docs/audits/audit-typography.md`
+- `docs/audits/audit-interaction.md`
+- `docs/audits/audit-microcopy.md`
+- `docs/audits/audit-design-overall.md`
 
 If any are missing, stop and report which ones need to be run first.
 
@@ -27,7 +27,7 @@ Read `CLAUDE.md` and `docs/calma-design-language.md` in full.
 Then read all five audit reports in full.
 
 This is a planning task only. Do not change any code.
-Produce a single output file: `docs/audit-implementation-plan.md`.
+Produce a single output file: `docs/audits/audit-implementation-plan.md`.
 
 ---
 

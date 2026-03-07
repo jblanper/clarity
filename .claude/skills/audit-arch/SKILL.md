@@ -1,6 +1,6 @@
 ---
 name: audit-arch
-description: Audit all components, pages, and lib utilities for CLAUDE.md pattern compliance, TypeScript strictness, test coverage, component structure, and static export constraints. Outputs docs/audit-arch.md.
+description: Audit all components, pages, and lib utilities for CLAUDE.md pattern compliance, TypeScript strictness, test coverage, component structure, and static export constraints. Outputs docs/audits/audit-arch.md.
 disable-model-invocation: true
 allowed-tools: Read, Grep, Glob, Write
 ---
@@ -67,7 +67,7 @@ require a server runtime is a critical finding. Check for dynamic routes without
 
 ## Output
 
-Write results to `docs/audit-arch.md`. Overwrite if it already exists.
+Write results to `docs/audits/audit-arch.md`. Overwrite if it already exists.
 
 Use the structure in `template.md` in this skill's directory.
 

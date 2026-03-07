@@ -1,6 +1,6 @@
 ---
 name: audit-typography
-description: Audit all components and pages for type scale, weight, spacing, and rhythm compliance against the Calma design language. Outputs docs/audit-typography.md.
+description: Audit all components and pages for type scale, weight, spacing, and rhythm compliance against the Calma design language. Outputs docs/audits/audit-typography.md.
 disable-model-invocation: true
 allowed-tools: Read, Grep, Glob, Write
 ---
@@ -57,6 +57,6 @@ through another route — reason it out).
 
 ## Output
 
-Write the results to `docs/audit-typography.md`. Overwrite if it already exists.
+Write the results to `docs/audits/audit-typography.md`. Overwrite if it already exists.
 
 Use the structure in `template.md` in this skill's directory.

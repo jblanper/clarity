@@ -16,13 +16,13 @@ Severity levels across all audit files: **critical** · **high** · **medium** �
 
 | Skill | What it audits | Output |
 |---|---|---|
-| `/audit-colour` | WCAG contrast, stone palette, dark mode completeness | `docs/audit-colour.md` |
-| `/audit-typography` | Type scale, section label pattern, spacing rhythm | `docs/audit-typography.md` |
-| `/audit-interaction` | Motion library usage, transitions, reduced motion | `docs/audit-interaction.md` |
-| `/audit-microcopy` | Tone, technical language, error messages, copy | `docs/audit-microcopy.md` |
-| `/audit-design-overall` | Holistic coherence review across all pages | `docs/audit-design-overall.md` |
-| `/audit-triage` | Consolidates all five reports into a chunked implementation plan | `docs/audit-implementation-plan.md` |
-| `/audit-arch` | CLAUDE.md compliance, TypeScript strictness, test coverage, component structure, static export constraints | `docs/audit-arch.md` |
+| `/audit-colour` | WCAG contrast, stone palette, dark mode completeness | `docs/audits/audit-colour.md` |
+| `/audit-typography` | Type scale, section label pattern, spacing rhythm | `docs/audits/audit-typography.md` |
+| `/audit-interaction` | Motion library usage, transitions, reduced motion | `docs/audits/audit-interaction.md` |
+| `/audit-microcopy` | Tone, technical language, error messages, copy | `docs/audits/audit-microcopy.md` |
+| `/audit-design-overall` | Holistic coherence review across all pages | `docs/audits/audit-design-overall.md` |
+| `/audit-triage` | Consolidates all five reports into a chunked implementation plan | `docs/audits/audit-implementation-plan.md` |
+| `/audit-arch` | CLAUDE.md compliance, TypeScript strictness, test coverage, component structure, static export constraints | `docs/audits/audit-arch.md` |
 | `/audit-all` | Runs all five audits in parallel, then design-overall, then triage | All of the above |
 
 ## Sprint workflow

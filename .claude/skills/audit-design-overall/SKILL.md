@@ -1,6 +1,6 @@
 ---
 name: audit-design-overall
-description: Holistic design coherence review across all pages — Calma identity, cross-page consistency, emotional tone, and information architecture. Outputs docs/audit-design-overall.md.
+description: Holistic design coherence review across all pages — Calma identity, cross-page consistency, emotional tone, and information architecture. Outputs docs/audits/audit-design-overall.md.
 disable-model-invocation: true
 allowed-tools: Read, Grep, Glob, Write
 ---
@@ -15,8 +15,8 @@ dashboard. This is not a spec-check; it is a coherence review.
 
 Read `CLAUDE.md` and `docs/calma-design-language.md` in full.
 Then read the four specific audit reports if they exist:
-`docs/audit-colour.md`, `docs/audit-typography.md`,
-`docs/audit-interaction.md`, `docs/audit-microcopy.md`.
+`docs/audits/audit-colour.md`, `docs/audits/audit-typography.md`,
+`docs/audits/audit-interaction.md`, `docs/audits/audit-microcopy.md`.
 Use these to understand known violations so you can assess their
 design-level impact, not to repeat their findings.
 
@@ -72,6 +72,6 @@ plan, so it must be concrete and actionable.
 
 ## Output
 
-Write the results to `docs/audit-design-overall.md`. Overwrite if it already exists.
+Write the results to `docs/audits/audit-design-overall.md`. Overwrite if it already exists.
 
 Use the structure in `template.md` in this skill's directory.

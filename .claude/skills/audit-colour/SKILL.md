@@ -1,6 +1,6 @@
 ---
 name: audit-colour
-description: Audit all components and pages for colour and contrast compliance against the Calma design language and WCAG AA. Outputs docs/audit-colour.md.
+description: Audit all components and pages for colour and contrast compliance against the Calma design language and WCAG AA. Outputs docs/audits/audit-colour.md.
 disable-model-invocation: true
 allowed-tools: Read, Grep, Glob, Write
 ---
@@ -52,7 +52,7 @@ amber (archive action only in ManageView), or the heatmap palette.
 
 ## Output
 
-Write the results to `docs/audit-colour.md`. Overwrite if it already exists.
+Write the results to `docs/audits/audit-colour.md`. Overwrite if it already exists.
 
 Use the structure in `template.md` in this skill's directory.
 

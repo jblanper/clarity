@@ -1,6 +1,6 @@
 ---
 name: retro-report
-description: Analyse all past sprint retrospectives and produce a process recommendations report. Outputs docs/retro-report.md.
+description: Analyse all past sprint retrospectives and produce a process recommendations report. Outputs docs/retros/retro-report-YYYY-MM-DD.md.
 disable-model-invocation: true
 allowed-tools: Read, Glob, Write
 ---
@@ -48,11 +48,13 @@ Are the same CLAUDE.md violations appearing repeatedly?
 
 ## Output
 
-Write `docs/retro-report.md` (overwrite if it exists) using the structure
-in `template.md` in this skill's directory.
+Write `docs/retros/retro-report-YYYY-MM-DD.md` (using today's date, e.g.
+`retro-report-2026-03-07.md`) using the structure in `template.md` in
+this skill's directory. Each run produces a new dated file — do not
+overwrite previous reports.
 
 Tell the user:
-> "Report written to docs/retro-report.md.
+> "Report written to docs/retros/retro-report-YYYY-MM-DD.md.
 >
 > The 'Recommended actions' section is a good starting point for the next
 > `/sprint-brief` discussion — share it with the Product Owner to shape

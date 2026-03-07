@@ -20,11 +20,11 @@ simultaneously — one per audit — using those instructions as each agent's pr
 
 | Agent | Skill instructions | Output file |
 |---|---|---|
-| Colour & contrast | `.claude/skills/audit-colour/SKILL.md` | `docs/audit-colour.md` |
-| Typography & spacing | `.claude/skills/audit-typography/SKILL.md` | `docs/audit-typography.md` |
-| Interaction & motion | `.claude/skills/audit-interaction/SKILL.md` | `docs/audit-interaction.md` |
-| Microcopy & tone | `.claude/skills/audit-microcopy/SKILL.md` | `docs/audit-microcopy.md` |
-| Architecture & code health | `.claude/skills/audit-arch/SKILL.md` | `docs/audit-arch.md` |
+| Colour & contrast | `.claude/skills/audit-colour/SKILL.md` | `docs/audits/audit-colour.md` |
+| Typography & spacing | `.claude/skills/audit-typography/SKILL.md` | `docs/audits/audit-typography.md` |
+| Interaction & motion | `.claude/skills/audit-interaction/SKILL.md` | `docs/audits/audit-interaction.md` |
+| Microcopy & tone | `.claude/skills/audit-microcopy/SKILL.md` | `docs/audits/audit-microcopy.md` |
+| Architecture & code health | `.claude/skills/audit-arch/SKILL.md` | `docs/audits/audit-arch.md` |
 
 Wait for all five agents to complete and confirm all four output files exist
 before proceeding.
@@ -35,14 +35,14 @@ Follow the instructions in `.claude/skills/audit-design-overall/SKILL.md`
 directly in the main session — do not spawn a sub-agent. Running in-session
 means you can reason across the four reports already produced in Phase 1.
 
-Output: `docs/audit-design-overall.md`
+Output: `docs/audits/audit-design-overall.md`
 
 ### Phase 3 — Sequential (main session)
 
 Follow the instructions in `.claude/skills/audit-triage/SKILL.md` directly
 in the main session.
 
-Output: `docs/audit-implementation-plan.md`
+Output: `docs/audits/audit-implementation-plan.md`
 
 ## Completion report
 
