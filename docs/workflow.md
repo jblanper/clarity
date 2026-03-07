@@ -25,7 +25,15 @@ doc (`sprint-NN.md`) that drives execution.
 **Rules:** Sprint brief and documents are owned by the Product Owner role.
 One release per sprint if possible.
 
-**Before starting any sprint:** check `docs/sprint-tier-guide.md` to decide which planning skills to run. Not every sprint needs the full pipeline. For a guided walkthrough, run `bash scripts/sprint-tier.sh` — it asks the same questions and prints the exact skills to run.
+**Before starting any sprint:** run `/sprint-pre-flight` — it surfaces blockers,
+determines the tier, and outputs the exact skills to run. To decide manually
+instead, consult `docs/sprint-tier-guide.md` or run `bash scripts/sprint-tier.sh`.
+
+### Pre-flight
+
+| Skill | When to use |
+|---|---|
+| `/sprint-pre-flight` | Before every sprint — surfaces blockers from last retro and open audit findings, walks the tier decision tree, recommends exact skills to run |
 
 ### Planning
 
@@ -59,7 +67,6 @@ One release per sprint if possible.
 
 | Skill | When to use |
 |---|---|
-| `/sprint-pre-flight` | Before any sprint — surfaces blockers, determines tier, recommends exact skills |
 | `/retro-report` | Analyse all past retrospectives, produce process recommendations |
 | `/project-health` | Between sprints — security audit, outdated deps, test suite health, docs integrity |
 
