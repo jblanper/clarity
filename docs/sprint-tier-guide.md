@@ -4,9 +4,9 @@ The Product Owner uses this guide before starting any sprint to decide how much
 planning overhead the sprint needs. Answer the questions in order — the first
 "Yes" wins and determines the tier.
 
-An interactive CLI version of the decision tree is available at
-`scripts/sprint-tier.sh` — run it to get the exact skills to run for your
-sprint without reading the full guide.
+Run `/sprint-pre-flight` to walk this decision tree interactively and surface
+any blockers from the last sprint before planning begins. To decide manually,
+use the decision tree below or run `bash scripts/sprint-tier.sh`.
 
 ---
 
@@ -59,6 +59,15 @@ to shape scope before anything is written down.
 
 **Validation after coding:**
 ```
+/sprint-post-code → [you validate manually]
+```
+
+`/sprint-post-code` runs `/sprint-arch-review` as a gate first. If it passes,
+`/sprint-validate` and `/sprint-qa` run in parallel. If the gate fails, it
+stops and reports — do not proceed to closure.
+
+To run steps individually instead:
+```
 /sprint-arch-review → /sprint-validate → /sprint-qa → [manual]
 ```
 
@@ -87,13 +96,20 @@ Write `docs/sprints/sprint-NN-brief.md` directly using the template at
 
 **Validation after coding:**
 ```
+/sprint-post-code → [you validate manually]
+```
+
+`/sprint-post-code` respects audit scoping — it runs only the audits listed in
+the sprint doc's "Audits to run" field. If that field is absent, it runs targeted
+audits based on what the sprint touched (see **Audit scoping** below).
+
+To run steps individually instead:
+```
 /sprint-arch-review → [targeted audits] → /sprint-qa
 ```
 
-Do not run `/sprint-validate` in full. Run only the audits that match what the
-sprint touched (see **Audit scoping** below). If the targeted audits show no new
-violations, the `/sprint-qa` manual checklist can be limited to smoke paths for
-the changed components — skip unrelated checklist items.
+If the targeted audits show no new violations, the `/sprint-qa` manual checklist
+can be limited to smoke paths for the changed components — skip unrelated items.
 
 ---
 
