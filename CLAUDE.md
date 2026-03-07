@@ -34,6 +34,8 @@ doc (`sprint-NN.md`) that drives execution.
 **Rules:** Sprint brief and documents are owned by the Product Owner role.
 One release per sprint if possible.
 
+**Before starting any sprint:** check `docs/sprint-tier-guide.md` to decide which planning skills to run. Not every sprint needs the full pipeline.
+
 ### Planning
 | Skill | Role | When to use |
 |---|---|---|
