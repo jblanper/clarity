@@ -39,14 +39,14 @@ The two most-used controls in the app (HabitToggle and NumberStepper) are below 
 - ManageView is 655 lines. Only touch the four targeted lines (254, 273, and two section-label lines if checking — but M3 is in SettingsView). Avoid formatting or refactoring anything else.
 
 **Validation steps:**
-- [ ] SettingsView: "Theme" and "Your data" `h2` labels are `font-medium` (open Settings and inspect; visual weight should match "Manage", "Help", and "Reset" labels)
-- [ ] DayDetail date heading is `text-base` not `text-lg` (open a logged day — heading should be smaller and more spaced)
-- [ ] CheckInForm reflection textarea text is `font-light` (type into the Reflection field — should feel lighter than the section labels)
-- [ ] ManageView "Jump to Moments" link: `text-stone-600` in light mode (not near-invisible stone-400); has hover:underline and transition-colors
-- [ ] ManageView numeric unit label: visibly distinct from the habit label but not washed out
-- [ ] CheckInForm "＋ New moment" button and "✕" dismiss are `text-stone-500` (not the previous stone-400)
-- [ ] No `text-stone-400` foreground remains in any of the four files in light mode
-- [ ] `npm run lint && npm test` passes
+- [x] SettingsView: "Theme" and "Your data" `h2` labels are `font-medium` (open Settings and inspect; visual weight should match "Manage", "Help", and "Reset" labels)
+- [x] DayDetail date heading is `text-base` not `text-lg` (open a logged day — heading should be smaller and more spaced)
+- [x] CheckInForm reflection textarea text is `font-light` (type into the Reflection field — should feel lighter than the section labels)
+- [x] ManageView "Jump to Moments" link: `text-stone-600` in light mode (not near-invisible stone-400); has hover:underline and transition-colors
+- [x] ManageView numeric unit label: visibly distinct from the habit label but not washed out
+- [x] CheckInForm "＋ New moment" button and "✕" dismiss are `text-stone-500` (not the previous stone-400)
+- [x] No `text-stone-400` foreground remains in any of the four files in light mode
+- [x] `npm run lint && npm test` passes
 
 **Definition of done:** All seven className fixes applied; no `text-stone-400` foreground in light mode across the four files; lint and tests pass.
 
@@ -75,14 +75,14 @@ The two most-used controls in the app (HabitToggle and NumberStepper) are below 
 - **Always `type="button"`** on all non-submit buttons (CLAUDE.md rule). All four components already have this; do not remove it during the edit.
 
 **Validation steps:**
-- [ ] HabitToggle: tap target is visually confirmed at ≥44 px tall (DevTools → inspect → computed height on the `<button>`) — visual pill still appears as `h-7` (28 px)
-- [ ] HabitToggle: toggle still slides left/right, colours transition correctly in both states and both modes
-- [ ] HabitToggle label: `text-sm` explicit (inspect computed font-size → 14 px)
-- [ ] NumberStepper: `−` and `+` buttons are at least 44×44 px (computed); no row overflow at 375 px viewport
-- [ ] NumberStepper label: `text-sm` explicit
-- [ ] MomentChip: taller hit area; chip label is vertically centred; no change to border-radius or horizontal padding
-- [ ] CalendarHeatmap: year-prev and year-next buttons are at least 44 px tall (match month-nav); chevron is centred; `disabled:opacity-30` still applies when at min/max year
-- [ ] `npm run lint && npm test` passes
+- [x] HabitToggle: tap target is visually confirmed at ≥44 px tall (DevTools → inspect → computed height on the `<button>`) — visual pill still appears as `h-7` (28 px)
+- [x] HabitToggle: toggle still slides left/right, colours transition correctly in both states and both modes
+- [x] HabitToggle label: `text-sm` explicit (inspect computed font-size → 14 px)
+- [x] NumberStepper: `−` and `+` buttons are at least 44×44 px (computed); no row overflow at 375 px viewport
+- [x] NumberStepper label: `text-sm` explicit
+- [x] MomentChip: taller hit area; chip label is vertically centred; no change to border-radius or horizontal padding
+- [x] CalendarHeatmap: year-prev and year-next buttons are at least 44 px tall (match month-nav); chevron is centred; `disabled:opacity-30` still applies when at min/max year
+- [x] `npm run lint && npm test` passes
 
 **Definition of done:** All six touch-target fixes applied; visual appearance of each control unchanged; HabitToggle and NumberStepper labels have explicit `text-sm`; lint and tests pass.
 
@@ -110,13 +110,13 @@ The two most-used controls in the app (HabitToggle and NumberStepper) are below 
 - **M9**: this is a one-number change. The surrounding `<m.h2>` animation (`opacity: 0` → `opacity: 1`) is correct; only the duration value changes.
 
 **Validation steps:**
-- [ ] Joy blossom button: pressing and holding no longer produces a scale effect; produces an opacity dim instead (test on Today with at least one boolean habit checked)
-- [ ] ManageView active habits: joyByDefault toggle shows filled BlossomIcon (amber) when active, outlined BlossomIcon when inactive — no Unicode hearts visible
-- [ ] ManageView add-habit form: same icons; inactive state reads "Joy is marked separately" (not "Does not bring joy by default")
-- [ ] Active habits list inactive state still reads "Tap to mark as joyful by default" (unchanged)
-- [ ] BlossomIcon renders correctly in both light and dark mode in ManageView
-- [ ] CalendarHeatmap month crossfade: no visible change expected (11 ms → 12 ms is imperceptible); `duration: 0.11` is gone from the file
-- [ ] `npm run lint && npm test` passes
+- [x] Joy blossom button: pressing and holding no longer produces a scale effect; produces an opacity dim instead (test on Today with at least one boolean habit checked)
+- [x] ManageView active habits: joyByDefault toggle shows filled BlossomIcon (amber) when active, outlined BlossomIcon when inactive — no Unicode hearts visible
+- [x] ManageView add-habit form: same icons; inactive state reads "Joy is marked separately" (not "Does not bring joy by default")
+- [x] Active habits list inactive state still reads "Tap to mark as joyful by default" (unchanged)
+- [x] BlossomIcon renders correctly in both light and dark mode in ManageView
+- [x] CalendarHeatmap month crossfade: no visible change expected (11 ms → 12 ms is imperceptible); `duration: 0.11` is gone from the file
+- [x] `npm run lint && npm test` passes
 
 **Definition of done:** Scale transform removed from joy blossom; ManageView joyByDefault toggles use BlossomIcon at size={16} with correct copy; month crossfade is ≥ 120 ms; lint and tests pass.
 
@@ -154,11 +154,11 @@ New approach: set the bar's natural width to `barWidth` as a static style, then 
 - **Calma motion constraint reminder**: only opacity, translate, and height/max-height are permitted for animation. `scaleX` is a transform, not a layout property — this is the correct Calma-compliant replacement for `width`.
 
 **Validation steps:**
-- [ ] Open History → expand FrequencyList → bars animate from left on first render
-- [ ] Switch between "Month", "3m", and "Always" periods — bars re-animate to new widths
-- [ ] No `animate={{ width: ... }}` remains in FrequencyList.tsx (grep confirms)
-- [ ] Bar visual appearance matches before: grows left-to-right, proportional to count, max 38% of row
-- [ ] `npm run lint && npm test` passes
+- [x] Open History → expand FrequencyList → bars animate from left on first render
+- [x] Switch between "Month", "3m", and "Always" periods — bars re-animate to new widths
+- [x] No `animate={{ width: ... }}` remains in FrequencyList.tsx (grep confirms)
+- [x] Bar visual appearance matches before: grows left-to-right, proportional to count, max 38% of row
+- [x] `npm run lint && npm test` passes
 
 **Definition of done:** `width` animation replaced with `scaleX`; bars animate correctly on first render and period change; no layout reflow; lint and tests pass.
 
@@ -195,16 +195,16 @@ New approach: set the bar's natural width to `barWidth` as a static style, then 
 - M15 brief asks to optionally add a `text-xs text-stone-500` hint: "The amount added each tap." This is a copy decision — include it as a `<p>` below the "Increment" input if you want (not required for DoD).
 
 **Validation steps:**
-- [ ] ManageView → "Add habit" → type selector shows "Yes / No" and "Number" (not "Boolean"/"Numeric")
-- [ ] Import a non-JSON file in Settings → error reads "That file doesn't look right — try exporting a fresh backup."
-- [ ] Import a valid JSON that is not a Clarity backup → error reads "This doesn't look like a Clarity backup — try exporting a fresh one."
-- [ ] Export backup: description reads "Download a backup of all your entries." (no mention of JSON)
-- [ ] Trigger an export error (e.g. mock a failure or test in the console) → reads "Couldn't download the backup — try again."
-- [ ] Successful import: success message reads "N days added." and (if applicable) "N days were already in your history and weren't changed."
-- [ ] Add-moment input: placeholder is "e.g. Morning light"
-- [ ] ManageView → edit a numeric habit → field label reads "Increment" (not "Step")
-- [ ] ManageView → add a numeric habit → field label reads "Increment" (not "Step") — both forms confirmed
-- [ ] `npm run lint && npm test` passes
+- [x] ManageView → "Add habit" → type selector shows "Yes / No" and "Number" (not "Boolean"/"Numeric")
+- [x] Import a non-JSON file in Settings → error reads "That file doesn't look right — try exporting a fresh backup."
+- [x] Import a valid JSON that is not a Clarity backup → error reads "This doesn't look like a Clarity backup — try exporting a fresh one."
+- [x] Export backup: description reads "Download a backup of all your entries." (no mention of JSON)
+- [x] Trigger an export error (e.g. mock a failure or test in the console) → reads "Couldn't download the backup — try again."
+- [x] Successful import: success message reads "N days added." and (if applicable) "N days were already in your history and weren't changed."
+- [x] Add-moment input: placeholder is "e.g. Morning light"
+- [x] ManageView → edit a numeric habit → field label reads "Increment" (not "Step")
+- [x] ManageView → add a numeric habit → field label reads "Increment" (not "Step") — both forms confirmed
+- [x] `npm run lint && npm test` passes
 
 **Definition of done:** All seven microcopy items updated; no developer vocabulary visible in the UI; both "Step"→"Increment" instances changed; lint and tests pass.
 
@@ -229,13 +229,13 @@ New approach: set the bar's natural width to `barWidth` as a static style, then 
 - The Chevron component is already used for the back arrow in the button (`<Chevron direction="left" />`). Keep it; only the text after it changes.
 
 **Validation steps:**
-- [ ] History page with no entries: "Your days will appear here once you start logging." appears below the calendar; calendar still renders
-- [ ] History page with entries: empty state message is not shown
-- [ ] DayDetail Edit link: visually appears as a section-label-style nav link (uppercase, tracked, stone-600), not a blue underline or footnote
-- [ ] DayDetail Edit link navigates correctly to `/edit?date=…`
-- [ ] SettingsView opened from Today: back button reads "← Today"
-- [ ] SettingsView opened from History: back button reads "← History"
-- [ ] `npm run lint && npm test` passes
+- [x] History page with no entries: "Your days will appear here once you start logging." appears below the calendar; calendar still renders
+- [x] History page with entries: empty state message is not shown
+- [x] DayDetail Edit link: visually appears as a section-label-style nav link (uppercase, tracked, stone-600), not a blue underline or footnote
+- [x] DayDetail Edit link navigates correctly to `/edit?date=…`
+- [x] SettingsView opened from Today: back button reads "← Today"
+- [x] SettingsView opened from History: back button reads "← History"
+- [x] `npm run lint && npm test` passes
 
 **Definition of done:** Empty state renders below the calendar with zero entries; Edit link matches nav-link hierarchy; back button label reflects origin; lint and tests pass.
 
@@ -245,16 +245,16 @@ New approach: set the bar's natural width to `barWidth` as a static style, then 
 
 ## Definition of done — Sprint
 
-- [ ] All six tasks above are complete and validated
-- [ ] `npm run lint && npm test && npm run build` passes clean
-- [ ] Tested manually on mobile viewport (375 px) in both light and dark mode
-- [ ] No `text-stone-400` foreground remains in light mode across all pages
-- [ ] No `active:scale-*` or `transition-transform` remains on interactive controls
-- [ ] HabitToggle, NumberStepper, MomentChip, and CalendarHeatmap year-nav buttons are all ≥44 px tall
-- [ ] No developer vocabulary ("Boolean", "Numeric", "JSON", raw error text) visible in any user-facing string
-- [ ] All 9 HIGH audit findings closed (H1–H9)
-- [ ] No regressions on Today, History, Settings, Manage, Edit, and DayDetail
-- [ ] Ready for `/deploy`
+- [x] All six tasks above are complete and validated
+- [x] `npm run lint && npm test && npm run build` passes clean
+- [x] Tested manually on mobile viewport (375 px) in both light and dark mode
+- [x] No `text-stone-400` foreground remains in light mode across all pages
+- [x] No `active:scale-*` or `transition-transform` remains on interactive controls
+- [x] HabitToggle, NumberStepper, MomentChip, and CalendarHeatmap year-nav buttons are all ≥44 px tall
+- [x] No developer vocabulary ("Boolean", "Numeric", "JSON", raw error text) visible in any user-facing string
+- [x] All 9 HIGH audit findings closed (H1–H9)
+- [x] No regressions on Today, History, Settings, Manage, Edit, and DayDetail
+- [x] Ready for `/deploy`
 
 ---
 
@@ -360,18 +360,18 @@ None — all pre-existing tests passed against the Sprint 8 changes.
 
 ### Manual checklist
 
-- [ ] HabitToggle: tap the switch — pill slides left/right; opacity transition on joy blossom (not scale)
-- [ ] ManageView: joyByDefault toggle shows BlossomIcon (not ♥/♡) in both states; inactive add-habit form reads "Joy is marked separately"
-- [ ] ManageView: "Add habit" → type selector shows "Yes / No" and "Number"; form shows "Increment" label
-- [ ] FrequencyList: bars animate left-to-right on expand and on period change; no layout jump
-- [ ] Settings from Today: back button reads "← Today"; Settings from History: reads "← History"
-- [ ] History with no entries: calm message visible below calendar; calendar still renders
-- [ ] DayDetail Edit link: uppercase, tracked, stone-600 — not an underlined footnote
-- [ ] Import a non-JSON file → error reads "That file doesn't look right — try exporting a fresh backup."
-- [ ] Animations feel smooth on enter and exit (≤320 ms)
-- [ ] Dark mode: no invisible text, no layout shifts
-- [ ] Mobile (390px): no horizontal overflow, all touch targets feel reachable by thumb
-- [ ] Reduced motion: enable in OS settings, verify animations are suppressed
+- [x] HabitToggle: tap the switch — pill slides left/right; opacity transition on joy blossom (not scale)
+- [x] ManageView: joyByDefault toggle shows BlossomIcon (not ♥/♡) in both states; inactive add-habit form reads "Joy is marked separately"
+- [x] ManageView: "Add habit" → type selector shows "Yes / No" and "Number"; form shows "Increment" label
+- [x] FrequencyList: bars animate left-to-right on expand and on period change; no layout jump
+- [x] Settings from Today: back button reads "← Today"; Settings from History: reads "← History"
+- [x] History with no entries: calm message visible below calendar; calendar still renders
+- [x] DayDetail Edit link: uppercase, tracked, stone-600 — not an underlined footnote
+- [x] Import a non-JSON file → error reads "That file doesn't look right — try exporting a fresh backup."
+- [x] Animations feel smooth on enter and exit (≤320 ms)
+- [x] Dark mode: no invisible text, no layout shifts
+- [x] Mobile (390px): no horizontal overflow, all touch targets feel reachable by thumb
+- [x] Reduced motion: enable in OS settings, verify animations are suppressed
 
 ---
 
