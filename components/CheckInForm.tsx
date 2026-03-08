@@ -389,7 +389,7 @@ export default function CheckInForm({ date }: Props) {
                       if (e.key === "Enter") { e.preventDefault(); handleAddMoment(); }
                       if (e.key === "Escape") dismissAddMoment();
                     }}
-                    placeholder="Moment name"
+                    placeholder="e.g. Morning light"
                     className="flex-1 rounded-full border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-2 text-sm text-stone-700 dark:text-stone-300 placeholder-stone-400 dark:placeholder-stone-600 focus:border-stone-500 dark:focus:border-stone-500 focus:outline-none"
                   />
                   <button

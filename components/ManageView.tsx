@@ -329,7 +329,7 @@ export default function ManageView() {
                           />
                         </div>
                         <div>
-                          <label className={FIELD_LABEL}>Step</label>
+                          <label className={FIELD_LABEL}>Increment</label>
                           <input
                             type="number"
                             min={0.01}
@@ -416,14 +416,14 @@ export default function ManageView() {
                   onClick={() => setAddHabit({ stage: "form-boolean", label: "", joyByDefault: false })}
                   className="text-sm text-stone-600 dark:text-stone-300 underline-offset-4 hover:underline"
                 >
-                  Boolean
+                  Yes / No
                 </button>
                 <button
                   type="button"
                   onClick={() => setAddHabit({ stage: "form-numeric", label: "", unit: "", step: 1 })}
                   className="text-sm text-stone-600 dark:text-stone-300 underline-offset-4 hover:underline"
                 >
-                  Numeric
+                  Number
                 </button>
               </div>
               <button type="button" onClick={() => setAddHabit(null)} className={CANCEL_BTN}>

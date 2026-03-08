@@ -105,23 +105,23 @@ describe("parseImportFile", () => {
 
   it("throws on malformed JSON", () => {
     expect(() => parseImportFile("not json{{{")).toThrow(
-      "The file is not valid JSON"
+      "That file doesn't look right"
     );
   });
 
   it("throws if the version field is missing or wrong", () => {
     const bad = JSON.stringify({ configs: makeConfigs(), entries: [makeEntry()] });
-    expect(() => parseImportFile(bad)).toThrow("Unrecognised file format");
+    expect(() => parseImportFile(bad)).toThrow("This doesn't look like a Clarity backup");
   });
 
   it("throws if entries array is missing", () => {
     const bad = JSON.stringify({ version: 1, exportedAt: "2026-02-25", configs: makeConfigs() });
-    expect(() => parseImportFile(bad)).toThrow("Unrecognised file format");
+    expect(() => parseImportFile(bad)).toThrow("This doesn't look like a Clarity backup");
   });
 
   it("throws if configs field is missing", () => {
     const bad = JSON.stringify({ version: 1, exportedAt: "2026-02-25", entries: [] });
-    expect(() => parseImportFile(bad)).toThrow("Unrecognised file format");
+    expect(() => parseImportFile(bad)).toThrow("This doesn't look like a Clarity backup");
   });
 
   it("throws if configs is missing habits or moments arrays", () => {
@@ -131,7 +131,7 @@ describe("parseImportFile", () => {
       configs: { habits: [] }, // missing moments
       entries: [],
     });
-    expect(() => parseImportFile(bad)).toThrow("Unrecognised file format");
+    expect(() => parseImportFile(bad)).toThrow("This doesn't look like a Clarity backup");
   });
 
   it("silently drops entries that fail validation and keeps the rest", () => {
@@ -155,7 +155,7 @@ describe("parseImportFile", () => {
       configs: makeConfigs(),
       entries: [{ date: "bad", habits: "nope" }],
     });
-    expect(() => parseImportFile(json)).toThrow("No valid entries found");
+    expect(() => parseImportFile(json)).toThrow("No recognisable entries were found");
   });
 
   it("succeeds with zero entries when the entries array is empty", () => {
@@ -275,7 +275,7 @@ describe("importBackup", () => {
     );
 
     await expect(importBackup(new File([], "bad.json"))).rejects.toThrow(
-      "not valid JSON"
+      "That file doesn't look right"
     );
   });
 });

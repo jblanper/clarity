@@ -108,18 +108,18 @@ export function parseImportFile(content: string): {
   try {
     parsed = JSON.parse(content);
   } catch {
-    throw new Error("The file is not valid JSON. Please choose a habits-backup.json file.");
+    throw new Error("That file doesn't look right — try exporting a fresh backup.");
   }
 
   if (!isExportFile(parsed)) {
     throw new Error(
-      "Unrecognised file format. Only files exported from Clarity are supported."
+      "This doesn't look like a Clarity backup — try exporting a fresh one."
     );
   }
 
   const validEntries = parsed.entries.filter(isHabitEntry);
   if (validEntries.length === 0 && parsed.entries.length > 0) {
-    throw new Error("No valid entries found in the file.");
+    throw new Error("No recognisable entries were found in that file.");
   }
 
   return { entries: validEntries, configs: parsed.configs };
@@ -164,7 +164,7 @@ export async function importBackup(
       try {
         const content = event.target?.result;
         if (typeof content !== "string") {
-          reject(new Error("Failed to read the file."));
+          reject(new Error("Couldn't read that file — try a different one."));
           return;
         }
         const { entries, configs } = parseImportFile(content);
@@ -175,7 +175,7 @@ export async function importBackup(
       }
     };
 
-    reader.onerror = () => reject(new Error("Failed to read the file."));
+    reader.onerror = () => reject(new Error("Couldn't read that file — try a different one."));
     reader.readAsText(file);
   });
 }

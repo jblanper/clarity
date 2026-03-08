@@ -173,7 +173,7 @@ export default function SettingsView() {
         {/* Export */}
         <div className="mb-6">
           <p className="mb-4 text-sm text-stone-500 dark:text-stone-400">
-            Download all your habit entries as a JSON backup file.
+            Download a backup of all your entries.
           </p>
           <button
             type="button"
@@ -184,7 +184,7 @@ export default function SettingsView() {
           </button>
           {exportStatus === "error" && (
             <p className="mt-3 text-center text-sm text-red-700 dark:text-red-400">
-              Something went wrong. Please try again.
+              Couldn&apos;t download the backup — try again.
             </p>
           )}
         </div>
@@ -246,15 +246,12 @@ export default function SettingsView() {
               <div className="rounded-2xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 px-4 py-4 text-sm text-stone-600 dark:text-stone-400">
                 <p>
                   <span className="font-medium text-stone-800 dark:text-stone-200">
-                    {importStatus.imported}{" "}
-                    {importStatus.imported === 1 ? "entry" : "entries"} imported.
+                    {importStatus.imported} days added.
                   </span>
                 </p>
                 {importStatus.skipped > 0 && (
                   <p className="mt-1 text-stone-500 dark:text-stone-500">
-                    {importStatus.skipped}{" "}
-                    {importStatus.skipped === 1 ? "entry" : "entries"} already
-                    existed and were kept.
+                    {importStatus.skipped} days were already in your history and weren&apos;t changed.
                   </p>
                 )}
               </div>

@@ -208,6 +208,8 @@ New approach: set the bar's natural width to `barWidth` as a static style, then 
 
 **Definition of done:** All seven microcopy items updated; no developer vocabulary visible in the UI; both "Step"→"Increment" instances changed; lint and tests pass.
 
+**Status: ✓ Complete** (2026-03-08)
+
 ---
 
 ### Task 6 — UI text & hierarchy
