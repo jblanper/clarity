@@ -258,6 +258,154 @@ New approach: set the bar's natural width to `barWidth` as a static style, then 
 
 ---
 
+## Architecture Review
+
+**Date:** 2026-03-08
+**Diff base:** 933d88c (sprint brief commit)
+**Lint/tests:** pass
+
+### Findings
+
+| Severity | File | Issue |
+|---|---|---|
+| Must fix | `components/ManageView.tsx:486` | `Step` label in add-habit form not changed to `Increment` — missed by `replace_all` indent mismatch. Fixed in commit d76dec2. |
+| Medium | `components/ManageView.tsx:380, 590` | `text-stone-400` foreground on "Archived" confirmation in light mode. Pre-existing. |
+| Medium | `components/HistoryView.tsx:129, 134, 139` | `text-stone-400` on inactive period selectors in light mode. Pre-existing. |
+| Medium | `lib/habitConfig.ts` | No test coverage for `getConfigs()` / `saveConfigs()`. Pre-existing. |
+| Low | `components/CheckInForm.tsx:231` | `toISOString()` used for `lastEdited` timestamp (not a date key). Pre-existing. |
+| Low | `ManageView.tsx`, `CheckInForm.tsx` | 657 / 507 lines — large but UI-state only; no extraction warranted yet. |
+
+### Must fix before deploy
+
+Must-fix resolved: `Step` → `Increment` in add-habit form committed before proceeding.
+
+### Recommendations for next sprint
+
+- Add tests for `habitConfig.ts` (`getConfigs`, `saveConfigs`) and `habits.ts` (`createEmptyEntry`)
+- Address pre-existing `text-stone-400` foreground in ManageView "Archived" confirmations and HistoryView period selectors
+
+### Plan fidelity
+
+All 6 tasks implemented as specified. No scope creep. The missed `Step` → `Increment` instance was caught here and fixed. Implementation matches the sprint plan throughout.
+
+### Architecture audit comparison
+
+| Before | After | Fixed | Regressions |
+|---|---|---|---|
+| No baseline | 0 critical · 0 high · 4 medium · 3 low | — | No regressions. |
+
+---
+
+## Validation
+
+**Date:** 2026-03-08
+
+### Audit results
+
+| Audit | Before | After | Fixed | Regressions |
+|---|---|---|---|---|
+| colour | 0 critical · 0 high · 4 medium · 4 low | 0 critical · 0 high · 0 medium · 4 low | 4 medium (ManageView nav anchor, numeric unit label; CheckInForm ghost button, dismiss "✕") | 0 |
+| typography | 0 critical · 0 high · 6 medium · 4 low | 0 critical · 0 high · 0 medium · 3 low | 6 medium (SettingsView Theme + "Your data" font-medium; DayDetail date heading; CheckInForm reflection textarea; HabitToggle + NumberStepper text-sm labels) | 0 |
+| interaction | 3 high · 7 medium · 5 low | 0 high · 3 medium · 7 low | 3 high (scale transform, HabitToggle touch target, NumberStepper touch target); 4 medium (MomentChip touch, year-nav touch, FrequencyList bar animation, month crossfade) | 0 |
+| microcopy | 4 high · 5 medium · 2 low | 0 high · 0 medium · 2 low | 4 high (all transferData.ts + export errors); 5 medium (Boolean/Numeric labels, import success copy, moment placeholder, joy copy, Step→Increment) | 0 |
+
+### Remaining findings
+
+**Colour (4 low):**
+- ManageView archived confirmation notes (×2): `text-stone-400` — intentional archival dimming, accepted.
+- HistoryView inactive period selectors: `text-stone-400` — pre-existing, deferred.
+- CalendarHeatmap day-of-week `dark:text-stone-600` — wrong direction for dark mode, deferred.
+
+**Typography (3 low):**
+- CalendarHeatmap year display `text-sm` (should be `text-xs`) — deferred.
+- SettingsView `mb-8` section spacing — compensated by dividers, deferred.
+- DayDetail numeric value `font-medium` — borderline, accepted.
+
+**Interaction (3 medium, 7 low):**
+- Two-step hover jumps — document exception in Calma spec next sprint.
+- Remaining touch targets in Settings/Manage/Help bare-text controls — deferred to a dedicated polish sprint.
+- CalendarHeatmap opacity-25 cells, FrequencyList invisible chevron, HabitToggle `transition-all`, BottomNav inactive hover, missing `transition-colors` on two ManageView type-picker buttons and one SettingsView button — deferred.
+
+**Microcopy (2 low):**
+- CheckInForm inline validation: "Please enter a name." and "A moment with that name already exists." — edge-case polish, deferred.
+
+### Regressions
+
+None. All sprint changes are improvements only. No pre-existing passing checks were broken.
+
+---
+
+## QA Results
+
+**Date:** 2026-03-08
+
+### Regression suite
+
+112 tests passed · 0 failed · 0 stale tests updated
+
+### New tests written
+
+- `e2e/sprint-08-typography.spec.ts` — 6 tests (M1–M3, M10–M13: section labels, textarea, colour)
+- `e2e/sprint-08-touch-targets.spec.ts` — 7 tests (H5, H6, M7, M16–M18: all touch targets + labels)
+- `e2e/sprint-08-microcopy.spec.ts` — 11 tests (H2–H4, H9, M4–M5, M14–M15: copy, empty state, nav)
+- `e2e/section-labels.spec.ts` — updated: added Theme and "Your data" font-medium checks (M3)
+
+### Failures found
+
+None.
+
+### Stale tests updated
+
+None — all pre-existing tests passed against the Sprint 8 changes.
+
+### Manual checklist
+
+- [ ] HabitToggle: tap the switch — pill slides left/right; opacity transition on joy blossom (not scale)
+- [ ] ManageView: joyByDefault toggle shows BlossomIcon (not ♥/♡) in both states; inactive add-habit form reads "Joy is marked separately"
+- [ ] ManageView: "Add habit" → type selector shows "Yes / No" and "Number"; form shows "Increment" label
+- [ ] FrequencyList: bars animate left-to-right on expand and on period change; no layout jump
+- [ ] Settings from Today: back button reads "← Today"; Settings from History: reads "← History"
+- [ ] History with no entries: calm message visible below calendar; calendar still renders
+- [ ] DayDetail Edit link: uppercase, tracked, stone-600 — not an underlined footnote
+- [ ] Import a non-JSON file → error reads "That file doesn't look right — try exporting a fresh backup."
+- [ ] Animations feel smooth on enter and exit (≤320 ms)
+- [ ] Dark mode: no invisible text, no layout shifts
+- [ ] Mobile (390px): no horizontal overflow, all touch targets feel reachable by thumb
+- [ ] Reduced motion: enable in OS settings, verify animations are suppressed
+
+---
+
+## Post-Code Summary
+
+**Date:** 2026-03-08
+
+### Architecture gate
+
+PASS — one must-fix found (missed `Step`→`Increment` in add-habit form) and resolved before proceeding.
+
+### Validation
+
+| Audit | Before | After | Fixed | Regressions |
+|---|---|---|---|---|
+| colour | 4 medium · 4 low | 0 medium · 4 low | 4 medium | 0 |
+| typography | 6 medium · 4 low | 0 medium · 3 low | 6 medium | 0 |
+| interaction | 3 high · 7 medium · 5 low | 0 high · 3 medium · 7 low | 3 high + 4 medium | 0 |
+| microcopy | 4 high · 5 medium · 2 low | 0 high · 0 medium · 2 low | 4 high + 5 medium | 0 |
+
+Regressions: None.
+
+### QA
+
+Regression suite: 112 tests · Smoke: 12/12
+
+Failures: None.
+
+### Recommended next action
+
+Proceed to `/calma-sync` → `/deploy`
+
+---
+
 ## Retrospective
 
 <!-- To be filled in after the sprint using /sprint-retro -->
