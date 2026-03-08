@@ -111,7 +111,7 @@ export default function SettingsView() {
           aria-label="Go back"
           className="mt-2 text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
         >
-          <Chevron direction="left" /> back
+          <Chevron direction="left" /> {backDest === "/" ? "Today" : "History"}
         </button>
       </header>
 

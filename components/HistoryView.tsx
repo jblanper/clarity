@@ -157,6 +157,13 @@ export default function HistoryView() {
         </AnimatePresence>
       </div>
 
+      {/* ── Empty state ───────────────────────────────────────── */}
+      {entries.length === 0 && (
+        <p className="mt-10 text-center text-sm text-stone-500 dark:text-stone-500">
+          Your days will appear here once you start logging.
+        </p>
+      )}
+
       {/* ── Day detail sheet ──────────────────────────────────── */}
       {selectedDate && (
         <DayDetail

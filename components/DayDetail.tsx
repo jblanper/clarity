@@ -245,7 +245,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
           <div className="mt-4">
             <Link
               href={`/edit?date=${date}`}
-              className="text-sm text-stone-500 dark:text-stone-400 underline-offset-4 transition-colors hover:underline"
+              className="text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
             >
               Edit
             </Link>

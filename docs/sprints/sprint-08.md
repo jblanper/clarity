@@ -239,6 +239,8 @@ New approach: set the bar's natural width to `barWidth` as a static style, then 
 
 **Definition of done:** Empty state renders below the calendar with zero entries; Edit link matches nav-link hierarchy; back button label reflects origin; lint and tests pass.
 
+**Status: ✓ Complete** (2026-03-08)
+
 ---
 
 ## Definition of done — Sprint
