@@ -158,9 +158,10 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
                             ? "bg-amber-400 dark:bg-amber-500"
                             : "bg-stone-300 dark:bg-stone-600"
                         }`}
-                        initial={{ width: "0%" }}
-                        animate={{ width: barWidth }}
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: 1 }}
                         transition={{ duration: 0.25, ease: "easeOut" }}
+                        style={{ width: barWidth, transformOrigin: "left" }}
                       />
                     </div>
                   </div>

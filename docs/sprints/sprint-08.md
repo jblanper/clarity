@@ -162,6 +162,8 @@ New approach: set the bar's natural width to `barWidth` as a static style, then 
 
 **Definition of done:** `width` animation replaced with `scaleX`; bars animate correctly on first render and period change; no layout reflow; lint and tests pass.
 
+**Status: ✓ Complete** (2026-03-08)
+
 ---
 
 ### Task 5 — Microcopy
