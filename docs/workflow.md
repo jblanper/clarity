@@ -14,7 +14,7 @@ Severity levels across all audit files: **critical** · **high** · **medium** �
 | `/audit-design-overall` | Holistic coherence review across all pages | `docs/audits/audit-design-overall.md` |
 | `/audit-triage` | Consolidates all five reports into a severity-ordered action list | `docs/audits/audit-action-list.md` |
 | `/audit-arch` | CLAUDE.md compliance, TypeScript strictness, test coverage, component structure, static export constraints | `docs/audits/audit-arch.md` |
-| `/audit-all` | Runs all five audits in parallel, then design-overall, then triage | All of the above |
+| `/audit-all` | Runs four design audits + arch audit in parallel, then design-overall, then triage | All of the above |
 
 ## Sprint Workflow
 
@@ -51,7 +51,7 @@ instead, consult `docs/sprint-tier-guide.md` or run `bash scripts/sprint-tier.sh
 |---|---|
 | `/sprint-kickoff` | Start of any coding session mid-sprint — git status, tasks done/pending, what to work on next |
 | `/sprint-post-code` | After coding (Tier 1 or 2) — arch-review gate + validate + QA in one command |
-| `/sprint-arch-review` | After coding — lint + tests + code review against CLAUDE.md |
+| `/sprint-arch-review` | After coding — lint + tests + code review against CLAUDE.md; archives pre-sprint arch audit, runs a fresh one, reports before/after comparison; proposes CLAUDE.md updates if new patterns were established |
 | `/sprint-validate` | After coding — archives pre-sprint audits, runs fresh audits, reports regressions. Runs: colour, typography, interaction, microcopy (sequentially). Never runs design-overall or triage. Override via "Audits to run" list in the sprint doc (added by `/sprint-ux`). |
 | `/sprint-qa` | After coding — runs Playwright regression suite, writes new tests, manual checklist |
 
@@ -69,6 +69,7 @@ instead, consult `docs/sprint-tier-guide.md` or run `bash scripts/sprint-tier.sh
 |---|---|
 | `/retro-report` | Analyse all past retrospectives, produce process recommendations |
 | `/project-health` | Between sprints — security audit, outdated deps, test suite health, docs integrity |
+| `/update-claude-md` | End of session — review conversation and codebase, update CLAUDE.md with corrections, new patterns, gotchas, and stale rules |
 
 ### Full execution order
 
