@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Chevron from "@/components/Chevron";
+import BlossomIcon from "@/components/BlossomIcon";
 import { useState, useEffect, startTransition } from "react";
 import { AnimatePresence, m } from "motion/react";
 import {
@@ -279,8 +280,9 @@ export default function ManageView() {
                       onClick={() => toggleJoyByDefault(h.id)}
                       className="self-start text-left transition-colors"
                     >
-                      <span className={`text-xs ${h.joyByDefault ? "text-amber-600 dark:text-amber-500" : "text-stone-500"}`}>
-                        {h.joyByDefault ? "♥ Brings joy by default" : "♡ Tap to mark as joyful by default"}
+                      <span className={`flex items-center gap-1 text-xs ${h.joyByDefault ? "text-amber-600 dark:text-amber-500" : "text-stone-500"}`}>
+                        <BlossomIcon filled={h.joyByDefault} size={16} />
+                        {h.joyByDefault ? "Brings joy by default" : "Tap to mark as joyful by default"}
                       </span>
                     </button>
                   )}
@@ -461,8 +463,9 @@ export default function ManageView() {
                   }
                   className="self-start text-left transition-colors"
                 >
-                  <span className={`text-xs ${addHabit.joyByDefault ? "text-amber-600 dark:text-amber-500" : "text-stone-500"}`}>
-                    {addHabit.joyByDefault ? "♥ Brings joy by default" : "♡ Does not bring joy by default"}
+                  <span className={`flex items-center gap-1 text-xs ${addHabit.joyByDefault ? "text-amber-600 dark:text-amber-500" : "text-stone-500"}`}>
+                    <BlossomIcon filled={addHabit.joyByDefault} size={16} />
+                    {addHabit.joyByDefault ? "Brings joy by default" : "Joy is marked separately"}
                   </span>
                 </button>
               </div>

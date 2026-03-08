@@ -257,7 +257,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.11 }}
+            transition={{ duration: 0.12 }}
             className="text-base font-light tracking-widest text-stone-600 dark:text-stone-400"
           >
             {MONTH_NAMES[month]}

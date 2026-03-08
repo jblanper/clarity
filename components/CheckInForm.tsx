@@ -453,7 +453,7 @@ export default function CheckInForm({ date }: Props) {
                               type="button"
                               onClick={() => setHabit(h.id, { done: true, joy: !joyValue })}
                               aria-label={joyValue ? "Remove joy" : "Mark as joyful"}
-                              className="min-h-[44px] min-w-[44px] flex items-center justify-end transition-transform active:scale-90"
+                              className="min-h-[44px] min-w-[44px] flex items-center justify-end transition-opacity active:opacity-70"
                             >
                               <BlossomIcon filled={joyValue} />
                             </button>
