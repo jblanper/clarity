@@ -16,11 +16,13 @@ Orchestrate all post-coding validation in one command:
 
 ## Setup
 
-Find the current sprint doc:
-- List `docs/sprints/sprint-[0-9][0-9].md`, sort, take the latest with status `active`
-- Read it in full — you need the sprint number and any "Audits to run" list (used by the validate agent)
-- If no active sprint is found, stop:
-  > "No active sprint found. Run `/sprint-plan` to start one."
+Perform all three reads in parallel:
+- List `docs/sprints/sprint-[0-9][0-9].md`, sort, take the latest with status `active` — read it in full (you need the sprint number and any "Audits to run" list used by the validate agent)
+- Read `.claude/skills/sprint-validate/SKILL.md` in full
+- Read `.claude/skills/sprint-qa/SKILL.md` in full
+
+If no active sprint is found, stop:
+> "No active sprint found. Run `/sprint-plan` to start one."
 
 ---
 
@@ -41,6 +43,10 @@ appended to the sprint doc, determine the gate result:
   > manually once the issues are fixed."
 - Stop. Do not proceed to Phase 2.
 
+**If re-running after a partial failure:** arch-review runs from scratch — that
+is expected and correct. The previous arch-review section in the sprint doc will
+be overwritten when the new one is appended.
+
 **If no must-fix issues:**
 - Continue to Phase 2.
 
@@ -48,12 +54,8 @@ appended to the sprint doc, determine the gate result:
 
 ## Phase 2 — Parallel validation (background agents)
 
-Read both skill files in full:
-- `.claude/skills/sprint-validate/SKILL.md`
-- `.claude/skills/sprint-qa/SKILL.md`
-
 Spawn two agents simultaneously using the `Agent` tool, passing the full
-content of each skill file as that agent's task prompt:
+content of each skill file (read during Setup) as that agent's task prompt:
 
 - **Agent A** — sprint-validate instructions as prompt
 - **Agent B** — sprint-qa instructions as prompt
@@ -62,6 +64,10 @@ Note: `sprint-qa` starts a dev server on port 3000. `sprint-validate` does
 not use the dev server. No port conflict.
 
 Wait for both agents to complete before proceeding to Phase 3.
+
+If an agent produces no output or errors, note the failure in the consolidated
+summary and flag it as a blocker in the recommended next action — do not
+silently skip it.
 
 ---
 
