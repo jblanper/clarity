@@ -124,15 +124,52 @@ Validation after coding:
 ```
 
 **Tier 2:**
+
+Before printing the Tier 2 sequence, infer which audits apply from the
+information already gathered in Phase 1. Do not ask the user unless the
+scope is genuinely ambiguous after reading the available context.
+
+Use this mapping:
+
+| What the context suggests was/will be touched | Audit to include |
+|---|---|
+| Colour, contrast, dark mode, stone palette | `/audit-colour` |
+| Typography, section labels, spacing rhythm | `/audit-typography` |
+| Animation, motion, scroll, reduced motion | `/audit-interaction` |
+| Copy, error messages, UI text, tone | `/audit-microcopy` |
+| Components, data model, routes, CLAUDE.md compliance | `/audit-arch` |
+| Three or more of the above | also include `/audit-design-overall` |
+
+Sources to read in order of specificity:
+1. Open critical/high findings in `audit-action-list.md` — their domain
+   labels indicate which audits apply directly.
+2. The last sprint doc's Goals and Scope — infer domain from what is described.
+3. Unresolved retro items — if they name a domain (e.g. "animation feels
+   sluggish"), count that.
+
+If after reading all three sources the scope covers three or more domains,
+also add `/audit-design-overall`.
+
+If scope is still unclear after reading all available context, ask one
+targeted question:
+> "I can't determine which audits to run from the available context.
+> What does this sprint primarily touch — colour, typography, animation,
+> copy, or components/architecture?"
+
+Then print the resolved sequence:
+
 ```
 Planning:
   [write sprint-NN-brief.md directly] → /sprint-arch → /sprint-plan
 
 Validation after coding:
-  /sprint-post-code   (arch-review gate + targeted audits + QA in one command)
+  /sprint-post-code   (arch-review gate + [inferred audits] + QA in one command)
         or run individually:
-  /sprint-arch-review → [targeted audits] → /sprint-qa
+  /sprint-arch-review → [inferred audits] → /sprint-qa
 ```
+
+Replace `[inferred audits]` with the actual audit skills determined above,
+e.g. `/audit-colour` + `/audit-interaction`.
 
 **Tier 3:**
 ```
