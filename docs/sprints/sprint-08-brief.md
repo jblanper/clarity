@@ -1,6 +1,6 @@
 # Sprint 8 Brief
 
-**Status:** draft
+**Status:** finalized
 **Created:** 2026-03-08
 **Tier:** 2 — see [Sprint Tier Guide](../sprint-tier-guide.md)
 
@@ -158,3 +158,55 @@ backlog and completes the work the retro identified as "deferred twice."
 - **H3 empty state placement:** The calendar renders even with no entries (all
   cells are muted stone). Should the empty-state message sit above the
   calendar, below it, or replace it entirely? Arch to advise.
+  **Decision:** Below the calendar. The calendar remains a useful structural
+  fixture even with zero entries. The message appears where history items will
+  eventually appear, guiding the eye without cluttering the header.
+- **Joy-icon BlossomIcon sizing in ManageView:** The joyByDefault toggle button
+  sits beside a `text-xs` label. What size keeps it visually balanced?
+  **Decision:** `size={16}`. Matches the DayDetail display precedent and avoids
+  a 20 px icon competing with 12 px copy.
+
+---
+
+## Architecture Review
+
+**Reviewed:** 2026-03-08
+
+### Assessment summary
+
+- No data model changes, no static export constraints, no new dependencies — sprint is well-scoped for a pure presentation pass.
+- **H8 import side already implemented**: SettingsView lines 79–81 already surface the thrown error message from `transferData.ts`. Only the export-side generic ("Something went wrong") needs updating.
+- **"Step" label appears in two places in ManageView** (~line 330 in the edit form, ~line 483 in the add-habit form). Both must be renamed to "Increment" — brief references only line 483.
+- **M8 `scaleX` migration is non-trivial**: `barWidth` is currently a percentage string (`"60%"`). Framer Motion's `scaleX` requires a 0–1 decimal. The computation feeding `barWidth` must be read before changing the `animate` prop.
+- **BlossomIcon fix and M6 copy change target the same button elements** in ManageView — should be implemented in a single pass per location to avoid a second edit.
+- All Group 5 (typography/colour) and Group 4 (UI text) items are safe and should be implemented first.
+
+### Data model changes required
+
+None.
+
+### Risks flagged
+
+- **"Step" in two places**: Search both `<label>` instances in ManageView before committing; fixing only one leaves the UI inconsistent.
+- **`scaleX` needs a 0–1 decimal**: Read the `barWidth` computation in FrequencyList before changing the `animate` prop — it is not a direct percentage passthrough.
+- **H8 import side wasted effort**: Verify SettingsView lines 79–81 before scoping; import-side surfacing was already done in a prior sprint.
+- **BlossomIcon + M6 combined**: Treat them as one task per button location to avoid partial edits.
+
+### Codebase degradation signals
+
+- ManageView at 655 lines — watch threshold, deferred per brief (extraction to next feature sprint).
+- SettingsView "Theme" and "Your data" section labels confirmed missing `font-medium` (M3) — corrected in this sprint.
+- ManageView "Jump to Moments" anchor confirmed `text-stone-400` WCAG AA failure in light mode (M10) — corrected in this sprint.
+
+### Decision log
+
+| Topic | Discussion | Decision |
+|---|---|---|
+| H3 empty-state placement | Calendar always renders; message could go above, below, or replace it | Below the calendar — keeps the calendar as a structural fixture; message appears where history items will appear |
+| Joy-icon BlossomIcon sizing in ManageView | Default 20 px icon is heavy next to text-xs copy | `size={16}` — matches DayDetail display precedent |
+
+### Scope adjustments from Architecture review
+
+- H8: import-side work removed — already implemented. Scope is export-side only: replace "Something went wrong. Please try again." (line 186–188) with "Couldn't download the backup — try again."
+- M15: Both "Step" label instances in ManageView must be renamed to "Increment" (edit form ~line 330 and add-habit form ~line 483), not just the one cited in the brief.
+- M8: Implementation note added — `barWidth` must be expressed as a 0–1 decimal for `scaleX`; read the computation before changing the `animate` prop.

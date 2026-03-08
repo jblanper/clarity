@@ -1,10 +1,10 @@
 # Interaction & Motion Audit
 
 Calma principles reviewed against every interactive element and animation in the codebase.
-Date: 2026-03-06.
+Date: 2026-03-08.
 Severity: **High** (breaks experience or accessibility) · **Medium** (noticeable deviation) · **Low** (polish/consistency)
 
-Sprint 7 context: DayDetail backdrop and sheet plain-div CSS transitions now carry semantic class names (`.daydetail-backdrop`, `.daydetail-sheet`) and are suppressed in `globals.css` under `@media (prefers-reduced-motion: reduce)`.
+Sprint 8 context: Task 2 applied `min-h-[44px]` fixes to HabitToggle, NumberStepper, MomentChip, and CalendarHeatmap year-nav buttons. Task 3 replaced `active:scale-90` with `active:opacity-70` on the joy blossom button, raised month crossfade duration from 0.11 to 0.12, and added `transition-colors` to ManageView "Jump to Moments" anchor. Task 4 replaced FrequencyList `width` animation with `scaleX`.
 
 ---
 
@@ -14,22 +14,26 @@ Sprint 7 context: DayDetail backdrop and sheet plain-div CSS transitions now car
 
 | Element | File | Classes |
 |---|---|---|
-| HabitToggle switch | HabitToggle.tsx:34 | `transition-colors duration-200` |
-| HabitToggle thumb | HabitToggle.tsx:41 | `transition-all duration-200` |
-| MomentChip | MomentChip.tsx:15 | `transition-colors` |
+| HabitToggle switch | HabitToggle.tsx:34 | `transition-colors duration-200` (on inner pill span) |
+| HabitToggle thumb | HabitToggle.tsx:44 | `transition-all duration-200` |
+| MomentChip | MomentChip.tsx:11 | `transition-colors` |
 | NumberStepper ± buttons | NumberStepper.tsx:73,96 | `transition-colors` |
-| "New moment" / "Add" / "✕" buttons | CheckInForm.tsx:364,398,405 | `transition-colors` |
-| Joy blossom button | CheckInForm.tsx:456 | `transition-transform` |
+| "New moment" ghost button | CheckInForm.tsx:364 | `transition-colors` |
+| "Add" confirm button | CheckInForm.tsx:398 | `transition-colors` |
+| "✕" dismiss button | CheckInForm.tsx:405 | `transition-colors` |
+| Joy blossom button | CheckInForm.tsx:456 | `transition-opacity` |
 | Save button | CheckInForm.tsx:491 | `transition-colors duration-500` |
 | Back / Settings links | CheckInForm.tsx:263,271 | `transition-colors` |
 | BottomNav tabs | BottomNav.tsx:31 | `transition-colors` |
 | DayDetail close button | DayDetail.tsx:150 | `transition-colors` |
 | DayDetail edit link | DayDetail.tsx:248 | `transition-colors` |
-| CalendarHeatmap nav buttons | CalendarHeatmap.tsx | `transition-colors` |
+| CalendarHeatmap year-nav buttons | CalendarHeatmap.tsx:226,237 | `transition-colors` |
+| CalendarHeatmap month nav buttons | CalendarHeatmap.tsx:248,271 | `transition-colors` |
 | Calendar day cells | CalendarHeatmap.tsx | `transition-colors` |
-| HistoryView Settings link | HistoryView.tsx:69 | `transition-colors` |
-| Frequency toggle button | HistoryView.tsx:93 | `transition-colors` |
-| Period selector buttons | HistoryView.tsx:113–124 | `transition-colors` |
+| HistoryView Settings link | HistoryView.tsx:70 | `transition-colors` |
+| Frequency toggle button | HistoryView.tsx:103 | `transition-colors` |
+| Period selector buttons | HistoryView.tsx:129–139 | `transition-colors` |
+| ManageView "Jump to Moments" anchor | ManageView.tsx:255 | `transition-colors` (Sprint 8 fix) |
 | FrequencyList rows | FrequencyList.tsx:142 | `transition-colors` |
 | SettingsView all interactive buttons | SettingsView.tsx (many) | `transition-colors` |
 | ManageView header link + action buttons | ManageView.tsx (via constants) | `transition-colors` |
@@ -40,21 +44,25 @@ Sprint 7 context: DayDetail backdrop and sheet plain-div CSS transitions now car
 | Component | Line | Description | Severity |
 |---|---|---|---|
 | SettingsView | 229 | Remove-file "✕" button — `hover:text-stone-700` but no `transition-colors` | Low |
-| ManageView | 254 | "Jump to Moments" anchor — `hover:underline` but no `transition-colors` | Low |
-| ManageView | 413 | "Boolean" type-picker — `hover:underline` but no `transition-colors` | Low |
-| ManageView | 419 | "Numeric" type-picker — `hover:underline` but no `transition-colors` | Low |
+| ManageView | 417, 423 | "Yes / No" and "Number" type-pickers — `hover:underline` but no `transition-colors` | Low |
 | BottomNav | 31 | Inactive tabs have `transition-colors` but no hover colour — transition fires over nothing | Low |
 
 ---
 
 ## 2. Hover State Correctness
 
-### Violations
+### Passing
+
+| Element | Hover class | Assessment |
+|---|---|---|
+| Joy blossom button | `active:opacity-70` | ✅ Sprint 8 fix — scale replaced with opacity |
+| All nav links | `hover:text-stone-800 dark:hover:text-stone-300` | ✅ (documented two-step exception) |
+
+### Remaining violations
 
 | Component | Line | Description | Severity |
 |---|---|---|---|
-| CheckInForm — joy blossom button | 456 | `active:scale-90` — scale transform on press. Scale is explicitly excluded from Calma (translate-only). Replace with `active:opacity-70` or a colour shift. | **High** |
-| CheckInForm / SettingsView / HelpView nav links | various | `text-stone-600 hover:text-stone-800` — two steps darker. CLAUDE.md codifies this as intended nav-link hover; it deviates from the one-step Calma rule. Recommend explicitly documenting this exception in the design language. | **Medium** |
+| CheckInForm / SettingsView / HelpView nav links | various | `text-stone-600 hover:text-stone-800` — two steps darker. CLAUDE.md codifies this as intended nav-link hover; recommend explicitly documenting this exception in the Calma design language. | **Medium** |
 
 ---
 
@@ -66,11 +74,17 @@ Minimum 44 × 44 px for every tappable element.
 
 | Element | File | Enforced by |
 |---|---|---|
+| HabitToggle switch button | HabitToggle.tsx:34 | `min-h-[44px]` (Sprint 8 fix) |
+| NumberStepper − button | NumberStepper.tsx:73 | `min-h-[44px] min-w-[44px]` (Sprint 8 fix) |
+| NumberStepper + button | NumberStepper.tsx:96 | `min-h-[44px] min-w-[44px]` (Sprint 8 fix) |
+| MomentChip | MomentChip.tsx:11 | `min-h-[44px]` (Sprint 8 fix) |
+| CalendarHeatmap year-prev button | CalendarHeatmap.tsx:226 | `min-h-[44px]` (Sprint 8 fix) |
+| CalendarHeatmap year-next button | CalendarHeatmap.tsx:237 | `min-h-[44px]` (Sprint 8 fix) |
 | Joy blossom button | CheckInForm.tsx:456 | `min-h-[44px] min-w-[44px]` |
 | DayDetail close button | DayDetail.tsx:150 | `min-h-[44px] min-w-[44px]` |
 | CalendarHeatmap month nav buttons | CalendarHeatmap.tsx | `min-h-[44px]` |
 | Calendar day cells | CalendarHeatmap.tsx | `h-11 w-11` (44 × 44 px) |
-| Frequency toggle button | HistoryView.tsx:93 | `min-h-[44px]` |
+| Frequency toggle button | HistoryView.tsx:103 | `min-h-[44px]` |
 | FrequencyList rows | FrequencyList.tsx:142 | `min-h-[44px]` |
 | Full-width form buttons | SettingsView.tsx | `py-4 w-full` |
 
@@ -78,16 +92,12 @@ Minimum 44 × 44 px for every tappable element.
 
 | Component | Line | Element | Actual size | Severity |
 |---|---|---|---|---|
-| HabitToggle | 34 | Toggle switch button | `h-7 w-12` = **28 × 48 px** — 16 px short | **High** |
-| NumberStepper | 73, 96 | Decrement / Increment buttons | `h-8 w-8` = **32 × 32 px** | **High** |
-| MomentChip | 11 | Chip button | `py-2` ≈ **32 px** | Medium |
-| CheckInForm | 361 | "New moment" dashed button | `py-2` ≈ **32 px** | Medium |
-| CheckInForm | 395, 403 | Inline "Add" and dismiss "✕" | ~32 px / ~20 px | Medium |
-| CalendarHeatmap | 223, 234 | Year prev / next buttons | No `min-h`; icon ≈ 20 px | Medium |
+| CheckInForm | 361 | "＋ New moment" dashed button | `py-2` ≈ **32 px** | Medium |
+| CheckInForm | 395, 403 | Inline "Add" and dismiss "✕" | ~32 px / small | Medium |
 | SettingsView | 110 | Back button | `text-xs` only | Medium |
 | SettingsView | 142, 153 | Light / Dark theme buttons | `text-sm` only | Medium |
 | SettingsView | 226, 297, 313, 327, 335 | Various bare-text controls | No min-h | Medium |
-| ManageView | 244, 254, 278, 289, 292, 345, 353, 388, 413, 419, 597 | Various bare-text controls | No min-h | Medium |
+| ManageView | 244, 278, 289, 292, 345, 353, 388, 417, 423, 597 | Various bare-text controls | No min-h | Medium |
 | HelpView | 21, 102 | Back link + design link | `text-xs` only | Medium |
 
 ---
@@ -100,11 +110,9 @@ Minimum 44 × 44 px for every tappable element.
 |---|---|---|---|---|---|
 | `.frequency-chevron` | globals.css | `transform` (rotation) | 200 ms | ✅ `@media` in globals.css | Pass |
 | `.heatmap-grid / .frequency-list` | globals.css | `opacity` | 120 ms | ✅ `@media` in globals.css | Pass |
-| DayDetail backdrop | DayDetail.tsx:132 | `opacity` via `.daydetail-backdrop` | 300 ms | ✅ `@media` in globals.css (Sprint 7) | **Pass** |
-| DayDetail bottom sheet | DayDetail.tsx:142 | `transform` via `.daydetail-sheet` | 300 ms | ✅ `@media` in globals.css (Sprint 7) | **Pass** |
-| HabitToggle thumb | HabitToggle.tsx:41 | `left` via `transition-all` | 200 ms | No guard; `transition-all` overly broad | Low |
-
-Sprint 7 resolved the two DayDetail CSS transition reduced-motion issues by adding `.daydetail-backdrop` and `.daydetail-sheet` class names and suppressing them in the existing `@media (prefers-reduced-motion: reduce)` block. ✅
+| DayDetail backdrop | DayDetail.tsx:132 | `opacity` via `.daydetail-backdrop` | 300 ms | ✅ `@media` in globals.css | Pass |
+| DayDetail bottom sheet | DayDetail.tsx:142 | `transform` via `.daydetail-sheet` | 300 ms | ✅ `@media` in globals.css | Pass |
+| HabitToggle thumb | HabitToggle.tsx:44 | `left` via `transition-all` | 200 ms | No guard; `transition-all` overly broad | Low |
 
 ### Motion (JS) animations
 
@@ -113,13 +121,14 @@ Sprint 7 resolved the two DayDetail CSS transition reduced-motion issues by addi
 | Add-moment reveal | CheckInForm.tsx | 373–376 | 220 ms ease-out | ✅ via MotionProvider | Pass |
 | Joy section reveal/exit | CheckInForm.tsx | 424–430 | 280 ms ease-out | ✅ | Pass |
 | Joy row enter/exit | CheckInForm.tsx | 441–446 | 160 ms | ✅ | Pass |
-| Month heading crossfade | CalendarHeatmap.tsx | 255–264 | 110 ms | Below 120 ms floor | **Medium** |
+| Month heading crossfade | CalendarHeatmap.tsx | 255–264 | 120 ms | ✅ Sprint 8 fix (was 110 ms) | Pass |
 | Calendar grid slide | CalendarHeatmap.tsx | 283–291 | 220 ms ease-out | ✅ | Pass |
-| Frequency section reveal | HistoryView.tsx | 101–106 | 280 ms ease-out | ✅ | Pass |
+| Frequency section reveal | HistoryView.tsx | 110–121 | 280 ms ease-out | ✅ | Pass |
 | FrequencyList hint exit | FrequencyList.tsx | 118–121 | 300 ms | ✅ | Pass |
-| FrequencyList bar grow | FrequencyList.tsx | 155–163 | 250 ms | Animates `width` — only opacity/translate/height allowed | **Medium** |
-| ManageView inline form reveals | ManageView.tsx | various | 220 ms ease-out | ✅ | Pass |
-| Joy blossom button (CSS) | CheckInForm.tsx | 456 | — | `active:scale-90` — scale transform, Calma-forbidden | **High** |
+| FrequencyList bar grow | FrequencyList.tsx | 155–165 | 250 ms | `scaleX` animation with static width — ✅ Sprint 8 fix | Pass |
+| ManageView type picker reveal | ManageView.tsx | 402–433 | 220 ms ease-out | ✅ | Pass |
+| ManageView inline edit forms | ManageView.tsx | various | 220 ms ease-out | ✅ | Pass |
+| ManageView add-habit form | ManageView.tsx | 436–518 | 220 ms ease-out | ✅ | Pass |
 
 ---
 
@@ -143,32 +152,36 @@ Sprint 7 resolved the two DayDetail CSS transition reduced-motion issues by addi
 
 ---
 
-## Prioritised Fix List
+## 6. MotionProvider
 
-### High (fix before next deploy)
-1. **CheckInForm joy blossom `active:scale-90`** (`CheckInForm.tsx:456`): Replace with `active:opacity-70`.
-2. **HabitToggle touch target** (`HabitToggle.tsx:34`): Wrap in `min-h-[44px]` strategy.
-3. **NumberStepper ± buttons** (`NumberStepper.tsx:73,96`): Increase to `min-h-[44px] min-w-[44px]` with centred visual circle.
+`LazyMotion + domAnimation + MotionConfig reducedMotion="user"` is in place in `components/MotionProvider.tsx` and wraps the app via `app/layout.tsx`. Not duplicated. ✅
 
-### Medium (fix in Sprint 8)
-4. **MomentChip touch target** (`MomentChip.tsx:11`): Add `min-h-[44px]`.
-5. **CalendarHeatmap year-nav buttons**: Add `min-h-[44px]`.
-6. **FrequencyList bar `width` animation** (`FrequencyList.tsx:163`): Swap to `scaleX` with `transform-origin: left`.
-7. **Month heading crossfade 110 ms** (`CalendarHeatmap.tsx`): Raise to `0.12` to meet 120 ms floor.
-8. **Two-step hover jumps**: Codify `stone-600 → stone-800` nav-link exception in the Calma doc.
-9. **Missing `transition-colors`** (`SettingsView.tsx:229`, `ManageView.tsx:254,413,419`).
+---
+
+## 7. Scroll lock
+
+`DayDetail.tsx` correctly uses `useLayoutEffect` (not `useEffect`) for `document.body.style.overflow = "hidden"` at line 67. ✅
+
+---
+
+## Remaining issues to address in future sprints
+
+### Medium (not this sprint's scope)
+1. **Two-step hover jumps**: Codify `stone-600 → stone-800` nav-link exception in the Calma doc.
+2. **CheckInForm "New moment" dashed button touch target**: Add `min-h-[44px]`.
+3. **Medium touch targets in Settings/Manage/Help** (numerous bare-text controls).
 
 ### Low (polish pass)
-10. **CalendarHeatmap opacity-25**: Raise to `opacity-30`.
-11. **FrequencyList invisible chevron**: Replace with `opacity-0`.
-12. **HabitToggle thumb `transition-all`**: Narrow to `transition-[left]`.
-13. **BottomNav inactive tabs**: Add `hover:text-stone-700 dark:hover:text-stone-300`.
-14. Medium-severity touch targets in Settings/Manage/Help.
+4. **CalendarHeatmap opacity-25**: Raise to `opacity-30` for future/filter-dimmed cells.
+5. **FrequencyList invisible chevron**: Replace `invisible` with `opacity-0`.
+6. **HabitToggle thumb `transition-all`**: Narrow to `transition-[left]`.
+7. **BottomNav inactive tabs**: Add `hover:text-stone-700 dark:hover:text-stone-300`.
+8. **Missing `transition-colors`**: SettingsView:229, ManageView:417, ManageView:423.
 
 ---
 
 ## Summary
 
-**3 high · 7 medium · 5 low**
+**0 high · 3 medium · 7 low**
 
-Sprint 7 resolved the two DayDetail reduced-motion medium findings. All other pre-sprint findings carry forward unchanged. No regressions introduced.
+Sprint 8 resolved all 3 pre-sprint high findings (H1 scale transform, H5 HabitToggle touch target, H6 NumberStepper touch target) and 4 of the 7 pre-sprint medium findings (MomentChip touch target, CalendarHeatmap year-nav touch targets, FrequencyList bar animation, month crossfade duration). No regressions introduced.

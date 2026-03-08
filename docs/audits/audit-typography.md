@@ -1,16 +1,16 @@
 # Typography & Spacing Audit — Clarity × Calma
 
-**Date:** 2026-03-06
+**Date:** 2026-03-08
 **Scope:** All component and page files
 **Reference:** `docs/calma-design-language.md` (source of truth)
 
-Sprint 7 context: added `font-medium` to section labels across CheckInForm, ManageView, SettingsView (Manage/Help/Reset), DayDetail, HelpView; corrected ManageView header spacing; fixed `mb-1 → mb-3` on Habits and By the Numbers; added `font-light` to HelpView `BODY` constant; added `font-medium` to HistoryView frequency toggle.
+Sprint 8 context: Task 1 added `font-medium` to SettingsView Theme and "Your data" `h2` labels (M3), corrected DayDetail date heading from `text-lg tracking-wide` to `text-base tracking-widest` (M2), added `text-sm font-light` to CheckInForm reflection textarea (M1), added explicit `text-sm` to HabitToggle and NumberStepper labels (Task 2 M17/M18).
 
 ---
 
 ## Summary
 
-Sprint 7 resolved all four WCAG-critical stone-400 failures and closed the systemic `font-medium` gap on section labels across the majority of the codebase. Two SettingsView section labels (Theme, Your data) were missed in the sprint. Several medium-severity role-declaration items remain deferred. No `font-bold` or `font-semibold` anywhere — that constraint is clean.
+Sprint 8 closed all six remaining medium typography findings from the pre-sprint baseline. No `font-bold` or `font-semibold` exists anywhere. Section label pattern is now correct across all components. All targeted touch-target and label fixes have been applied.
 
 Severity key: **Critical** = WCAG AA failure or outright spec contradiction · **High** = systemic gap · **Medium** = missing detail · **Low** = minor inconsistency
 
@@ -20,26 +20,29 @@ Severity key: **Critical** = WCAG AA failure or outright spec contradiction · *
 
 Canonical pattern: `text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500`
 
-### 1.1 — Resolved (Sprint 7)
+### 1.1 — Resolved this sprint
 
-All six previously failing section-label sites have been fixed:
-- `ManageView.tsx` `SECTION_LABEL` const — now `text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500` ✅
-- `SettingsView.tsx` Manage `h2` — full 6-part pattern ✅
-- `SettingsView.tsx` Help `h2` — full 6-part pattern ✅
-- `SettingsView.tsx` Reset `h3` — full 6-part pattern ✅
-- `CheckInForm.tsx` all five `h2` labels — all have `font-medium` ✅
-- `DayDetail.tsx` all four `h3` labels — all have `font-medium` ✅
-- `HelpView.tsx` `SECTION_LABEL` const — full 6-part pattern ✅
-- `HistoryView.tsx` frequency toggle button — has `font-medium` ✅
+- `SettingsView.tsx` Theme `h2` — now has `font-medium` ✅ (line 136)
+- `SettingsView.tsx` "Your data" `h2` — now has `font-medium` ✅ (line 169)
 
-### 1.2 — Remaining violations
+### 1.2 — All other section labels passing
 
-| Component | Line | Current | Expected | Severity |
-|---|---|---|---|---|
-| `SettingsView.tsx` | 136 | `text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500` (Theme `h2`) | + `font-medium` | **medium** |
-| `SettingsView.tsx` | 169 | `text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500` (Your data `h2`) | + `font-medium` | **medium** |
+| Component | Status |
+|---|---|
+| `ManageView.tsx` `SECTION_LABEL` const | ✅ `text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500` |
+| `SettingsView.tsx` Manage `h2` | ✅ |
+| `SettingsView.tsx` Help `h2` | ✅ |
+| `SettingsView.tsx` Reset `h3` | ✅ |
+| `SettingsView.tsx` Theme `h2` | ✅ (Sprint 8 fix) |
+| `SettingsView.tsx` "Your data" `h2` | ✅ (Sprint 8 fix) |
+| `CheckInForm.tsx` all five `h2` labels | ✅ |
+| `DayDetail.tsx` all four `h3` labels | ✅ |
+| `HelpView.tsx` `SECTION_LABEL` const | ✅ |
+| `HistoryView.tsx` frequency toggle button | ✅ |
 
-Sprint 7 fixed the three sprint-targeted SettingsView labels (Manage, Help, Reset). Theme and "Your data" were not in scope and remain. The sprint plan implementation notes explicitly called out these two as "already correct" — this was incorrect; they were missing `font-medium` but had the correct colour.
+### 1.3 — Remaining violations
+
+**None.** All section labels across the codebase now match the canonical six-part pattern. ✅
 
 ---
 
@@ -53,48 +56,44 @@ All `font-medium` instances are intentional (active-state indicators, section la
 
 ## 3. Section headings and body text
 
-### 3.1 — DayDetail date heading: still oversized
+### 3.1 — DayDetail date heading: resolved ✅
 
-| Component | Line | Current | Expected | Severity |
-|---|---|---|---|---|
-| `DayDetail.tsx` | 161 | `text-lg font-light tracking-wide text-stone-800 dark:text-stone-200` | `text-base font-light tracking-widest` | **medium** |
+| Component | Line | Current | Status |
+|---|---|---|---|
+| `DayDetail.tsx` | 161 | `text-base font-light tracking-widest text-stone-800 dark:text-stone-200` | ✅ Fixed in Sprint 8 |
 
-This was M5 in the pre-sprint baseline. Unchanged — deferred from Sprint 7.
+### 3.2 — Body/item labels: resolved ✅
 
-### 3.2 — Body/item labels: missing explicit `text-sm`
+| Component | Line | Current | Status |
+|---|---|---|---|
+| `HabitToggle.tsx` | 24 | `text-sm text-stone-700 dark:text-stone-300` | ✅ Fixed in Sprint 8 |
+| `NumberStepper.tsx` | 63 | `text-sm text-stone-700 dark:text-stone-300` | ✅ Fixed in Sprint 8 |
 
-| Component | Line | Current | Expected | Severity |
-|---|---|---|---|---|
-| `HabitToggle.tsx` | 24 | `text-stone-700 dark:text-stone-300` (label, no size) | `text-sm text-stone-700 dark:text-stone-300` | **medium** |
-| `NumberStepper.tsx` | 63 | `text-stone-700 dark:text-stone-300` (label, no size) | `text-sm text-stone-700 dark:text-stone-300` | **medium** |
+Note: NumberStepper unit label (line 64) correctly uses `text-xs text-stone-500 dark:text-stone-500` — appropriate metadata sizing for a unit display.
 
-M1 and M2 from the pre-sprint baseline. Both labels are wrapped in `py-3.5` rows alongside `text-sm` siblings — visually correct, but the absence of an explicit size is fragile. Unchanged — deferred from Sprint 7.
+### 3.3 — Reflective text: resolved ✅
 
-### 3.3 — Reflective text: missing `font-light` in CheckInForm
-
-| Component | Line | Current | Expected | Severity |
-|---|---|---|---|---|
-| `CheckInForm.tsx` | 483 | `text-stone-700 dark:text-stone-300` (reflection textarea, no size or weight) | `text-sm font-light` | **medium** |
-
-M3 from the pre-sprint baseline. HelpView `BODY` was fixed in Sprint 7 (added `font-light`). The CheckInForm reflection textarea was not in the sprint scope. Deferred.
+| Component | Line | Current | Status |
+|---|---|---|---|
+| `CheckInForm.tsx` | 484 | `text-sm font-light text-stone-700 dark:text-stone-300` | ✅ Fixed in Sprint 8 |
 
 ---
 
 ## 4. Vertical rhythm
 
-### 4.1 — ManageView header spacing: resolved ✅
+### 4.1 — ManageView header spacing ✅
 
-ManageView header changed from `mb-2` to `mb-6` in Sprint 7, matching the minimum threshold for page headers. ✅
+ManageView header uses `mb-6` — correct. ✅
 
-### 4.2 — CheckInForm section label margin: resolved ✅
+### 4.2 — CheckInForm section label margin ✅
 
-Habits and By the Numbers section labels changed from `mb-1` to `mb-3` in Sprint 7, matching Moments, Joy, and Reflection. All five section labels now use `mb-3`. ✅
+All five section labels use `mb-3` — consistent. ✅
 
 ### 4.3 — SettingsView section spacing: `mb-8` vs Calma baseline
 
 | Component | Lines | Current | Notes | Severity |
 |---|---|---|---|---|
-| `SettingsView.tsx` | 119, 135, 168, 291, 307 | `mb-8` on all sections | Consistent internally; 8px below Calma baseline of 40px; explicit border dividers compensate | **low** |
+| `SettingsView.tsx` | 119, 135, 168, 291, 307 | `mb-8` on all sections | Consistent internally; explicit border dividers compensate | **low** |
 
 Unchanged from pre-sprint. Low priority.
 
@@ -108,38 +107,26 @@ Unchanged from pre-sprint. Low priority.
 
 ## Consolidated findings
 
-### Critical — 0 (all fixed)
+### Critical — 0
 
-Previously: `text-stone-400` as section label text (ManageView SECTION_LABEL, SettingsView Manage/Help/Reset). All resolved in Sprint 7.
+### High — 0
 
-### High — 0 (all fixed)
+### Medium — 0
 
-Previously: systemic `font-medium` gap across CheckInForm, DayDetail, HelpView, ManageView, HistoryView, SettingsView. All resolved in Sprint 7 (SettingsView partially — see below).
+All six medium findings from the Sprint 7 baseline (R1, R2, M1, M2, M3, M5) have been resolved in Sprint 8.
 
-### Medium — 6 remaining
-
-| ID | Component | Line | Current | Expected |
-|---|---|---|---|---|
-| R1 | `SettingsView.tsx` | 136 | Theme `h2` missing `font-medium` | + `font-medium` |
-| R2 | `SettingsView.tsx` | 169 | "Your data" `h2` missing `font-medium` | + `font-medium` |
-| M1 | `HabitToggle.tsx` | 24 | Label — no `text-sm` | `text-sm` |
-| M2 | `NumberStepper.tsx` | 63 | Label — no `text-sm` | `text-sm` |
-| M3 | `CheckInForm.tsx` | 483 | Reflection textarea — no size or weight | `text-sm font-light` |
-| M5 | `DayDetail.tsx` | 161 | Date heading `text-lg tracking-wide` | `text-base tracking-widest` |
-
-### Low — 4 remaining
+### Low — 3 remaining
 
 | ID | Component | Line | Current | Expected |
 |---|---|---|---|---|
 | L2 | `CalendarHeatmap.tsx` | ~230 | Year display `text-sm uppercase tracking-widest` | `text-xs uppercase tracking-widest` |
 | L3 | `SettingsView.tsx` | sections | `mb-8` spacing (vs Calma baseline 2.5rem) | Dividers compensate; low impact |
-| L4 | `DayDetail.tsx` | 200 | Numeric value `font-medium` | Borderline — acceptable |
-| L5 | `SettingsView.tsx` | 248 | Import count `font-medium` | Borderline — acceptable |
+| L4 | `DayDetail.tsx` | 200 | Numeric value `font-medium` | Borderline — acceptable for data emphasis |
 
 ---
 
 ## Summary counts
 
-**0 critical · 0 high · 6 medium · 4 low**
+**0 critical · 0 high · 0 medium · 3 low**
 
-Sprint 7 resolved all 4 critical and all 6 high findings from the pre-sprint baseline, plus 2 of the 6 pre-sprint medium findings (M4 HelpView font-light, M6 HistoryView toggle font-medium) and both low findings L1 (CheckInForm mb-1) and H6 (ManageView mb-2). Two previously-high SettingsView labels (Theme, Your data) remain with missing font-medium and are now medium severity.
+Sprint 8 resolved all 6 remaining medium findings from the pre-sprint baseline. The three low findings are pre-existing and carry forward. No regressions introduced.

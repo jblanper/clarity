@@ -1,4 +1,4 @@
-<!-- Last reviewed: 2026-03-07 (update-claude-md, agents) -->
+<!-- Last reviewed: 2026-03-08 (update-claude-md, sprint-08) -->
 # Clarity — Project Guide
 
 ## What is Clarity?
@@ -38,6 +38,8 @@ Sprint phases, audit skills, and release pipeline: see `docs/workflow.md`.
 ## Design (Calma Design Language)
 
 All design decisions — palette, typography, spacing, motion, interaction, and microcopy — are in `docs/calma-design-language.md`. "Calma" is the name of this project's design system. It is the single source of truth. Read it before any UI work.
+
+**Spec vs. CLAUDE.md boundary** — `docs/calma-design-language.md` holds design principles. CLAUDE.md holds code-level implementation rules (Tailwind classes, permitted Framer Motion properties, component patterns). Never add implementation specifics to the Calma spec; add them here instead.
 
 ### Tailwind implementation tokens
 
@@ -134,7 +136,8 @@ Types live in `types/entry.ts` (`HabitEntry`, `HabitState`) and `lib/habitConfig
 - **HeatmapFilter** — exported type `{ type: "boolean-habit" | "numeric-habit" | "moment"; id: string }` from `CalendarHeatmap.tsx`. When set, non-matching cells drop to 25% opacity; matching cells use the exact palette colour for their type. Filter is owned by `HistoryView` state and passed to both `CalendarHeatmap` and `FrequencyList`.
 - **FrequencyList** — collapsible section below the heatmap (toggle button). Counts occurrences per UUID across the selected period (`Period = "month" | "3m" | "always"`). The `"month"` period follows the calendar's currently viewed month via `viewedYear`/`viewedMonth` props (synced through `CalendarHeatmap`'s `onMonthChange` callback). Tapping a row sets or clears the `HeatmapFilter`. A one-time hint ("Tap any item to filter the calendar") fades out on first tap and is persisted to `clarity-frequency-hint-seen`.
 - **DayDetail labels** — resolve by iterating the entry's UUIDs, not the config list, so archived and imported habits display correctly.
-- **ManageView** — all inline editors are mutually exclusive via `closeAllEditors()`. Archive buttons use `text-amber-700` (reversible, not destructive).
+- **ManageView** — all inline editors are mutually exclusive via `closeAllEditors()`. Archive buttons use `text-amber-700` (reversible, not destructive). The add-habit form and the inline edit form are separate JSX subtrees with different indentation — when editing label copy in one, always verify the other is updated too.
+- **HabitToggle touch target** — the button is a transparent hit area (`min-h-[44px] flex-shrink-0 flex items-center`) with an inner `<span>` that carries all visual pill styles (bg, rounded, size). Never enlarge the visual pill to meet the touch target — keep them separate so the tap area can be larger than the visual.
 - **Save flow** (CheckInForm) — three states: `idle → saving → confirmed`. `saveEntry()` deferred one tick so "Saving…" renders first. Redirects after 1200 ms.
 - **Joy section** (CheckInForm) — appears between Moments and Reflection when at least one boolean habit is done. Lists done habits with `BlossomIcon` buttons to mark `joy` independently of `done`. `joyByDefault` on the config pre-fills joy when a habit is first toggled on. Factual logging (Habits) and emotional reflection (Joy) are intentionally separate moments in the form.
 - **DayDetail scroll lock** — uses `useLayoutEffect` (not `useEffect`) for `document.body.style.overflow = "hidden"`. The layout-effect cleanup runs synchronously during the React commit, so the lock is never left behind when the user navigates away mid-animation.
@@ -145,6 +148,8 @@ Types live in `types/entry.ts` (`HabitEntry`, `HabitState`) and `lib/habitConfig
 ## Coding Standards
 - Strict TypeScript — no `any`. Interfaces for all data structures.
 - **Always `type="button"` on non-submit buttons** — `<button>` defaults to `type="submit"` inside a `<form>`. Applies to HabitToggle, MomentChip, NumberStepper, and any button inside CheckInForm.
+- **Escape apostrophes and quotes in JSX text** — literal `'` and `"` inside JSX text content (not attribute values) trigger `react/no-unescaped-entities`. Use `&apos;` and `&quot;` instead. Caught by `npm run lint`.
+- **Verify `replace_all` completeness** — after any `replace_all` edit, grep the file for the old string to confirm no instances remain. Different indentation levels in the same file can cause silent misses (e.g. the same label appearing in both an inline edit form and an add form at different indentation depths).
 - Small, focused functions. Named constants, no magic numbers. Comments only on non-obvious logic.
 - Jest unit tests for all `lib/` utilities. UI testing not required.
 - Mobile-first. No horizontal scrolling.
