@@ -1,5 +1,26 @@
 # Changelog
 
+## [v2.2.0] — 2026-03-08
+
+### Improvements
+
+- **Touch targets** — HabitToggle, NumberStepper, MomentChip, and CalendarHeatmap year-nav buttons all meet the 44×44px minimum. HabitToggle uses a transparent hit-area wrapper so the visual pill stays compact while the tap target is full-height.
+- **Typography & colour** — reflection textarea uses `font-light`; SettingsView section labels gain `font-medium`; ManageView numeric unit label raised to `text-stone-500`; DayDetail date heading changed to `text-base tracking-widest`; Edit link styled as a nav-link (uppercase, tracked, stone-600).
+- **History empty state** — new message ("Your days will appear here once you start logging.") shown below the heatmap when no entries exist.
+- **Microcopy** — developer vocabulary eliminated from the UI: "Boolean" → "Yes / No", "Numeric" → "Number", "Step" → "Increment". Error and import copy in SettingsView and transferData rewritten to plain English. Moment input placeholder updated to "e.g. Morning light". Back button in Settings is context-aware ("← Today" / "← History").
+- **Animation** — FrequencyList bar animation switched from `width` to `scaleX` (reflow-free). Press states on joy blossom use `active:opacity-70` instead of `active:scale-90`.
+- **Joy icons** — ManageView `joyByDefault` toggle uses `BlossomIcon` instead of Unicode ♥/♡.
+
+### Fixes
+
+- Corrected "Step" → "Increment" in ManageView add-habit form (had been missed in the initial pass).
+
+### Tooling
+
+- Added Playwright regression suite for Sprint 8 (touch targets, typography, microcopy).
+- Updated Calma spec: active press state rule (opacity, not scale) and navigation label microcopy pattern.
+- Updated CLAUDE.md: permitted animation properties, HabitToggle touch-target pattern, `replace_all` verification rule, JSX unescaped-entities rule.
+
 ## [v2.1.5] — 2026-03-06
 
 ### Fixes
