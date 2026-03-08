@@ -251,7 +251,7 @@ export default function ManageView() {
       <div className="mb-10">
         <a
           href="#moments"
-          className="text-xs text-stone-400 underline-offset-4 hover:underline dark:text-stone-500"
+          className="text-xs text-stone-600 dark:text-stone-500 underline-offset-4 transition-colors hover:underline"
         >
           Jump to Moments <Chevron direction="down" size={13} />
         </a>
@@ -270,7 +270,7 @@ export default function ManageView() {
                   <div className="flex items-baseline gap-2">
                     <span className="text-sm text-stone-700 dark:text-stone-300">{h.label}</span>
                     {h.type === "numeric" && (
-                      <span className="text-xs text-stone-400 dark:text-stone-500">{h.unit}</span>
+                      <span className="text-xs text-stone-500 dark:text-stone-500">{h.unit}</span>
                     )}
                   </div>
                   {h.type === "boolean" && (

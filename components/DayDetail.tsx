@@ -158,7 +158,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
         <div className="mx-auto max-w-md px-6 pb-10">
 
           {/* Date heading */}
-          <h2 className="mb-6 text-lg font-light tracking-wide text-stone-800 dark:text-stone-200">
+          <h2 className="mb-6 text-base font-light tracking-widest text-stone-800 dark:text-stone-200">
             {formatDetailDate(date)}
           </h2>
 

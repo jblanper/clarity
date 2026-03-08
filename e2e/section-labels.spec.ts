@@ -8,15 +8,7 @@
  * Tests check computed CSS properties rather than class names so they
  * survive Tailwind class renames.
  */
-import { test, expect, type Page } from "@playwright/test";
-
-/** Returns true if the element has font-weight 500 (font-medium). */
-async function hasFontMedium(page: Page, role: string, name: string | RegExp) {
-  const el = page.getByRole(role as Parameters<typeof page.getByRole>[0], { name });
-  const weight = await el.evaluate((node) => getComputedStyle(node).fontWeight);
-  // 500 = medium
-  return weight === "500";
-}
+import { test, expect } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/clarity/");

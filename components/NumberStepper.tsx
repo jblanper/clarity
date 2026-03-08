@@ -60,7 +60,7 @@ export default function NumberStepper({
   return (
     <div className="flex items-center justify-between py-3.5">
       <div className="flex items-baseline gap-2">
-        <span className="text-stone-700 dark:text-stone-300">{label}</span>
+        <span className="text-sm text-stone-700 dark:text-stone-300">{label}</span>
         <span className="text-xs text-stone-500 dark:text-stone-500">{unit}</span>
       </div>
 
@@ -70,7 +70,7 @@ export default function NumberStepper({
           onClick={decrement}
           disabled={value <= min}
           aria-label={`Decrease ${label}`}
-          className="flex h-8 w-8 items-center justify-center rounded-full border border-stone-300 dark:border-stone-700 text-stone-600 dark:text-stone-500 transition-colors hover:border-stone-400 dark:hover:border-stone-600 hover:text-stone-800 dark:hover:text-stone-300 active:bg-stone-50 dark:active:bg-stone-800 disabled:opacity-30"
+          className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-stone-300 dark:border-stone-700 text-stone-600 dark:text-stone-500 transition-colors hover:border-stone-400 dark:hover:border-stone-600 hover:text-stone-800 dark:hover:text-stone-300 active:bg-stone-50 dark:active:bg-stone-800 disabled:opacity-30"
         >
           −
         </button>
@@ -93,7 +93,7 @@ export default function NumberStepper({
           onClick={increment}
           disabled={value >= max}
           aria-label={`Increase ${label}`}
-          className="flex h-8 w-8 items-center justify-center rounded-full border border-stone-300 dark:border-stone-700 text-stone-600 dark:text-stone-500 transition-colors hover:border-stone-400 dark:hover:border-stone-600 hover:text-stone-800 dark:hover:text-stone-300 active:bg-stone-50 dark:active:bg-stone-800 disabled:opacity-30"
+          className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-stone-300 dark:border-stone-700 text-stone-600 dark:text-stone-500 transition-colors hover:border-stone-400 dark:hover:border-stone-600 hover:text-stone-800 dark:hover:text-stone-300 active:bg-stone-50 dark:active:bg-stone-800 disabled:opacity-30"
         >
           +
         </button>

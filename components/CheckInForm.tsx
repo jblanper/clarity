@@ -361,7 +361,7 @@ export default function CheckInForm({ date }: Props) {
             <button
               type="button"
               onClick={() => setIsAddingMoment(true)}
-              className="rounded-full border border-dashed border-stone-300 dark:border-stone-600 bg-transparent px-4 py-2 text-sm text-stone-400 dark:text-stone-500 transition-colors hover:border-stone-400 dark:hover:border-stone-500 hover:text-stone-500 dark:hover:text-stone-400"
+              className="rounded-full border border-dashed border-stone-300 dark:border-stone-600 bg-transparent px-4 py-2 text-sm text-stone-500 dark:text-stone-500 transition-colors hover:border-stone-400 dark:hover:border-stone-500 hover:text-stone-500 dark:hover:text-stone-400"
             >
               ＋ New moment
             </button>
@@ -402,7 +402,7 @@ export default function CheckInForm({ date }: Props) {
                   <button
                     type="button"
                     onClick={dismissAddMoment}
-                    className="text-stone-400 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
+                    className="text-stone-500 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
                   >
                     ✕
                   </button>
@@ -481,7 +481,7 @@ export default function CheckInForm({ date }: Props) {
           }
           placeholder="Anything about today worth remembering?"
           rows={4}
-          className="w-full resize-none rounded-2xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-3 text-stone-700 dark:text-stone-300 placeholder-stone-400 dark:placeholder-stone-600 focus:border-stone-500 dark:focus:border-stone-500 focus:outline-none"
+          className="w-full resize-none rounded-2xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-3 text-sm font-light text-stone-700 dark:text-stone-300 placeholder-stone-400 dark:placeholder-stone-600 focus:border-stone-500 dark:focus:border-stone-500 focus:outline-none"
         />
       </section>
 

@@ -133,7 +133,7 @@ export default function SettingsView() {
 
       {/* ── Theme ─────────────────────────────────────────────────── */}
       <section className="mb-8">
-        <h2 className="mb-4 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
+        <h2 className="mb-4 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Theme
         </h2>
         <div className="flex gap-6">
@@ -166,7 +166,7 @@ export default function SettingsView() {
 
       {/* ── Your Data ─────────────────────────────────────────────── */}
       <section className="mb-8">
-        <h2 className="mb-4 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
+        <h2 className="mb-4 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Your data
         </h2>
 

@@ -21,7 +21,7 @@ export default function HabitToggle({ label, value, joyByDefault, onChange }: Pr
 
   return (
     <div className="flex items-center justify-between py-3.5">
-      <span className="text-stone-700 dark:text-stone-300">{label}</span>
+      <span className="text-sm text-stone-700 dark:text-stone-300">{label}</span>
       {/* Toggle switch — slides left (off) / right (on).
           Uses explicit `left` instead of translate to avoid transform
           initialisation issues in Tailwind v4. */}
@@ -31,17 +31,21 @@ export default function HabitToggle({ label, value, joyByDefault, onChange }: Pr
         aria-checked={value.done}
         aria-label={label}
         onClick={handleToggle}
-        className={`relative h-7 w-12 flex-shrink-0 rounded-full transition-colors duration-200 focus:outline-none ${
-          value.done
-            ? "bg-stone-500 dark:bg-stone-300"
-            : "bg-stone-300 dark:bg-stone-600"
-        }`}
+        className="min-h-[44px] flex-shrink-0 flex items-center focus:outline-none"
       >
         <span
-          className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow-sm transition-all duration-200 ${
-            value.done ? "left-6" : "left-1"
+          className={`relative h-7 w-12 rounded-full transition-colors duration-200 ${
+            value.done
+              ? "bg-stone-500 dark:bg-stone-300"
+              : "bg-stone-300 dark:bg-stone-600"
           }`}
-        />
+        >
+          <span
+            className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow-sm transition-all duration-200 ${
+              value.done ? "left-6" : "left-1"
+            }`}
+          />
+        </span>
       </button>
     </div>
   );

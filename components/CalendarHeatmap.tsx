@@ -223,7 +223,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
           onClick={prevYear}
           disabled={year <= minYear}
           aria-label="Previous year"
-          className="text-xl text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300 disabled:opacity-30"
+          className="min-h-[44px] flex items-center justify-center text-xl text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300 disabled:opacity-30"
         >
           <Chevron direction="left" />
         </button>
@@ -234,7 +234,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
           onClick={nextYear}
           disabled={year >= currentYear}
           aria-label="Next year"
-          className="text-xl text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300 disabled:opacity-30"
+          className="min-h-[44px] flex items-center justify-center text-xl text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300 disabled:opacity-30"
         >
           <Chevron direction="right" />
         </button>
