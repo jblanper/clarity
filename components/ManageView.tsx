@@ -483,7 +483,7 @@ export default function ManageView() {
                   />
                 </div>
                 <div>
-                  <label className={FIELD_LABEL}>Step</label>
+                  <label className={FIELD_LABEL}>Increment</label>
                   <input
                     type="number"
                     min={0.01}
