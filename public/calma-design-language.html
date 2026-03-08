@@ -1100,7 +1100,7 @@
     <div class="example">
       <div class="example-label">Resting · Active</div>
       <div style="display:flex;gap:2rem;align-items:center;">
-        <button onclick="toggleBlossom(this)" style="background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:0.5rem;min-width:44px;min-height:44px;transition:transform 150ms ease;" onmousedown="this.style.transform='scale(0.88)'" onmouseup="this.style.transform='scale(1)'" onmouseleave="this.style.transform='scale(1)'">
+        <button onclick="toggleBlossom(this)" style="background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:0.5rem;min-width:44px;min-height:44px;transition:opacity 150ms ease-in;" onmousedown="this.style.opacity='0.7'" onmouseup="this.style.opacity='1'" onmouseleave="this.style.opacity='1'">
           <div style="position:relative;width:28px;height:28px;">
           <svg id="blossom-empty" width="28" height="28" viewBox="0 0 24 24" fill="none">
             <ellipse cx="12" cy="5.5" rx="2.2" ry="3.5" stroke="var(--stone-400)" stroke-width="1.3" opacity="0.5"/>
@@ -1172,6 +1172,9 @@
 
     <p style="font-size:0.875rem;color:var(--stone-500);margin-top:1.5rem;font-style:italic;">Motion that draws attention to itself has already failed.</p>
 
+    <h3>Active press states</h3>
+    <p>Active press states use opacity dimming (e.g. <code>active:opacity-70</code>), not scale transforms. Scale creates a spatial jolt that contradicts the in-place, calm nature of Calma interactions. The "two steps" of active feedback is felt through opacity or color — never through movement.</p>
+
     <h3>Collapsible sections</h3>
     <p>When a section's collapse would cause a scroll-position jump (because the page shrinks above the viewport), use a two-phase exit: fade opacity to zero first, then collapse height after a short delay. The layout shift happens while content is already invisible, so no jump is perceived. The total exit duration should remain well under 320 ms.</p>
   </section>
@@ -1207,7 +1210,7 @@
   <!-- Writing & Microcopy -->
   <section class="section fade-in">
     <div class="section-label">Writing &amp; Microcopy</div>
-    <p>Words are design material. They should feel as considered as any visual element. No exclamation marks. No all-caps except the section label pattern. Labels are plain and human.</p>
+    <p>Words are design material. They should feel as considered as any visual element. No exclamation marks. No all-caps except the section label pattern. Labels are plain and human. Navigation labels reflect the user's actual destination — <em>← Today</em> or <em>← History</em> rather than <em>← back</em>.</p>
 
     <h3>Examples</h3>
     <div class="example">
@@ -1251,6 +1254,16 @@
           <div class="microcopy-col">
             <div class="microcopy-tag prefer">Prefer</div>
             <div class="microcopy-text prefer">That file doesn't look right — try exporting a fresh backup</div>
+          </div>
+        </div>
+        <div class="microcopy-pair">
+          <div class="microcopy-col">
+            <div class="microcopy-tag avoid">Avoid</div>
+            <div class="microcopy-text avoid">← back</div>
+          </div>
+          <div class="microcopy-col">
+            <div class="microcopy-tag prefer">Prefer</div>
+            <div class="microcopy-text prefer">← Today / ← History</div>
           </div>
         </div>
       </div>

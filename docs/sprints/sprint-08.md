@@ -406,6 +406,26 @@ Proceed to `/calma-sync` → `/deploy`
 
 ---
 
+## Calma Sync
+
+**Date:** 2026-03-08
+
+### Spec changes made
+
+- **Motion — Active press states** (new sub-section): documents that press feedback uses opacity dimming (`active:opacity-70`), not scale transforms. Scale contradicts Calma's in-place, calm interaction model.
+- **Writing & Microcopy — Navigation labels** (new bullet + example): `← Today` / `← History` over `← back` — labels name the destination, not just the direction.
+- `public/calma-design-language.html` synced to match both additions. HTML blossom demo press state fixed from scale to opacity to match the new rule.
+
+### CLAUDE.md token updates
+
+- **Animations — Permitted animation properties** (new bullet): opacity · translate · height/max-height · scaleX/scaleY (with static `style` width and `transformOrigin`). Explicit prohibition on animating `width` directly and on `scale`/`transition-transform` for press states.
+
+### Open design decisions identified
+
+- Calma spec does not enumerate permitted animation properties — intentional; that detail lives in CLAUDE.md as an implementation concern, not a design principle.
+
+---
+
 ## Retrospective
 
 <!-- To be filled in after the sprint using /sprint-retro -->

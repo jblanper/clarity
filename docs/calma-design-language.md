@@ -171,6 +171,10 @@ Motion in Calma is restrained. It confirms actions and clarifies spatial relatio
 
 Motion that draws attention to itself has already failed.
 
+### Active press states
+
+Active press states use opacity dimming (e.g. `active:opacity-70`), not scale transforms. Scale creates a spatial jolt that contradicts the in-place, calm nature of Calma interactions. The "two steps" of active feedback is felt through opacity or color — never through movement.
+
 ### Collapsible sections
 
 When a section's collapse would cause a scroll-position jump (because the page shrinks above the viewport), use a two-phase exit: fade opacity to zero first, then collapse height after a short delay. The layout shift happens while content is already invisible, so no jump is perceived. The total exit duration should remain well under 320 ms.
@@ -200,6 +204,7 @@ Words are design material. They should feel as considered as any visual element.
 - **Destructive actions** — calm and specific. Give the user confidence, not anxiety.
 - **No exclamation marks.** No all-caps except the section label pattern.
 - **Labels** — plain and human. *"Theme"* not *"Appearance Settings."*
+- **Navigation labels** — reflect the user's actual destination, not a generic direction. `← Today` or `← History` rather than `← back`. A label that names where you're going is more trustworthy than one that names only the direction.
 
 ### Examples
 
@@ -209,6 +214,7 @@ Words are design material. They should feel as considered as any visual element.
 | Saved successfully! | Day captured |
 | Appearance Settings | Theme |
 | Invalid file format detected | That file doesn't look right — try exporting a fresh backup |
+| ← back | ← Today / ← History |
 
 ---
 
