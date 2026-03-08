@@ -54,6 +54,17 @@ test("SettingsView — Manage, Help, Reset section labels are font-medium", asyn
   }
 });
 
+// Sprint 8 M3: Theme and Your data labels added font-medium
+test("SettingsView — Theme and Your data section labels are font-medium", async ({ page }) => {
+  await page.goto("/clarity/settings");
+
+  for (const name of ["Theme", "Your data"]) {
+    const heading = page.getByRole("heading", { name });
+    const weight = await heading.evaluate((node) => getComputedStyle(node).fontWeight);
+    expect(weight, `Settings "${name}" section label should be font-medium (500) — Sprint 8 M3`).toBe("500");
+  }
+});
+
 test("SettingsView — Reset label is visible in light and dark mode", async ({ page }) => {
   await page.goto("/clarity/settings");
   const reset = page.getByRole("heading", { name: "Reset" });
