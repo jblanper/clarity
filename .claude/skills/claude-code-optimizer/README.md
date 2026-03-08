@@ -56,6 +56,34 @@ All scripts output structured JSON, making them composable with `jq` or other to
 
 Covers both project-level (`.claude/`) and global (`~/.claude/`) skills, settings, and hooks. Works with any Claude Code project — no project-specific conventions assumed.
 
+## Keeping references up to date
+
+The files in `references/` document Claude Code's hooks, memory system, skill structure, and automation patterns. As Claude Code evolves, these may drift from the official docs. Use the prompt below to sync them.
+
+### Doc-sync prompt
+
+Paste this into Claude Code when you want to update the references:
+
+```
+Fetch the following four official Claude Code documentation pages and compare them against the reference files in .claude/skills/claude-code-optimizer/references/. For each file, identify what is incorrect, missing, or outdated relative to the official docs, then apply the necessary corrections. Do not rewrite content that is still accurate. Preserve the "best practices" and "guidance" sections — those are editorial additions not in the official docs and should be kept if still valid.
+
+Pages to fetch:
+- https://code.claude.com/docs/en/hooks
+- https://code.claude.com/docs/en/memory
+- https://code.claude.com/docs/en/slash-commands
+- https://code.claude.com/docs/en/settings
+
+Reference files to update:
+- .claude/skills/claude-code-optimizer/references/hooks_guide.md (maps to hooks + settings)
+- .claude/skills/claude-code-optimizer/references/claude_md_guide.md (maps to memory)
+- .claude/skills/claude-code-optimizer/references/skill_structure.md (maps to slash-commands)
+- .claude/skills/claude-code-optimizer/references/automation_patterns.md (cross-cutting patterns; update only if the docs introduce new native automation features)
+
+After editing, summarise what changed in each file.
+```
+
+The references are intentionally more concise than the full docs — they include only what is relevant to auditing a `.claude/` environment. When syncing, add missing facts but do not expand into a full documentation mirror.
+
 ## Key concepts
 
 **Semantic Guardrail** — The skill distinguishes Low-Entropy tasks (deterministic, scriptable) from High-Entropy tasks (require judgment). It will not recommend scripting things that need semantic reasoning.
