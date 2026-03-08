@@ -40,6 +40,27 @@ Scripting High-Entropy tasks produces brittle, wrong outputs. Keeping Low-Entrop
 
 **Scope:** Each script does one thing. Don't combine token counting with linting — separate scripts compose better.
 
-## 5. Shared Utilities
+## 5. Dynamic Context Injection (`!command`)
+
+Claude Code skills support a native preprocessing step: prefix a line with `!` followed by a shell command in backticks, and the command runs **before** the skill content reaches Claude. The output replaces the placeholder inline.
+
+This is a Low-Entropy operation — the command must be deterministic. Claude only sees the result, not the command.
+
+```markdown
+## Current state
+- Branch: !`git branch --show-current`
+- Staged files: !`git diff --cached --name-only`
+- Open PRs: !`gh pr list --json title,number --limit 5`
+```
+
+Use `${CLAUDE_SKILL_DIR}` to reference scripts bundled with the skill regardless of the current working directory:
+
+```markdown
+!`node ${CLAUDE_SKILL_DIR}/scripts/gather-context.js`
+```
+
+This pattern replaces the need to instruct Claude to run scripts as a first step — the data arrives pre-fetched. Reserve it for stable, fast, deterministic commands. Avoid side-effecting commands here (they run silently before Claude sees anything).
+
+## 6. Shared Utilities
 
 Common helpers (frontmatter parsing, path resolution) that appear in multiple scripts should be extracted into a shared module (e.g., `scripts/utils.js`) rather than copy-pasted. This reduces inconsistency between scripts.

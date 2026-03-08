@@ -2,43 +2,98 @@
 
 ## 1. YAML Frontmatter Keys
 
+All fields are optional. `description` is strongly recommended so Claude knows when to use the skill.
+
 | Key | Purpose | Guidance |
 |---|---|---|
-| `name` | The `/name` slash command. | Required. Use kebab-case. |
-| `description` | Trigger text and menu label. | One sentence max. If omitted, Claude reads the first paragraph — less predictable. |
-| `disable-model-invocation: true` | Removes the description from every-session context. | **Use for all skills that should NOT auto-trigger.** Skills invoked as `/name` commands should set this. Without it, the description is injected into every session even when irrelevant — a direct token tax. |
-| `allowed-tools` | Constrain which Claude tools the skill may use. | Best practice for security and determinism. Format: `Read, Edit, Bash(npm *)`. Omitting it means the skill can use all tools. |
-| `context: fork` | Run the skill in a fresh sub-agent. | Recommended for long workflows that accumulate context (sprint phases, full audits). Prevents conversation history from polluting the skill's reasoning. |
-| `user-invocable: false` | Hide from the `/` menu. | For internal playbooks called only by other skills. |
+| `name` | The `/name` slash command. | Optional — defaults to directory name. Lowercase letters, numbers, hyphens, max 64 chars. |
+| `description` | Trigger text and menu label. | One sentence. If omitted, Claude reads the first paragraph — less predictable. |
+| `argument-hint` | Hint shown in autocomplete. | Format: `[issue-number]` or `[filename] [format]`. |
+| `disable-model-invocation` | Prevents Claude from auto-loading the skill. | Set to `true` for workflows you want to trigger manually with `/name`. **Removes the description from every-session context entirely.** |
+| `user-invocable` | Controls `/` menu visibility. | Set to `false` to hide from the menu. Claude can still auto-trigger the skill. Description IS in context. |
+| `allowed-tools` | Limits which tools Claude may use when the skill is active. | Best practice for security and determinism. Format: `Read, Edit, Bash(npm *)`. |
+| `context` | Set to `fork` to run in an isolated subagent. | Recommended for long workflows. The skill content becomes the subagent's task prompt. |
+| `agent` | Which subagent type to use when `context: fork` is set. | Options: `Explore`, `Plan`, `general-purpose`, or any custom agent. Defaults to `general-purpose`. |
+| `model` | Model to use when the skill is active. | Overrides the session default. |
+| `hooks` | Hooks scoped to this skill's lifecycle. | See the Hooks reference for format. |
 
-## 2. Token Impact of `disable-model-invocation`
+## 2. Invocation & Context Loading
 
-Skills WITHOUT `disable-model-invocation: true` have their descriptions injected into every Claude Code session — even sessions unrelated to those skills. For a project with 25 skills and only 3 that should auto-trigger, the other 22 descriptions are pure waste.
+This table shows exactly who can invoke a skill and when its description enters context:
 
-Setting `disable-model-invocation: true` reduces per-session context to only what is always needed.
+| Frontmatter | You can invoke | Claude can invoke | Description in context |
+|---|---|---|---|
+| (default) | Yes | Yes | Always — description injected every session |
+| `disable-model-invocation: true` | Yes | No | Never — description excluded from context |
+| `user-invocable: false` | No | Yes | Always — description injected every session |
 
-## 3. Directory Layout (self-contained)
+**Key implication:** `user-invocable: false` is for background knowledge Claude should always have but users shouldn't invoke as a command. The description IS in context. To make a skill completely invisible to both users and Claude until needed, combine `disable-model-invocation: true` with no `user-invocable` setting (which keeps it in the `/` menu, letting you invoke it manually).
+
+For a truly internal skill (hidden from menu AND not auto-triggered): `disable-model-invocation: true` removes it from Claude's context, and since it has no menu entry when not user-invocable, it can only be called from another skill's content.
+
+## 3. Token Impact of `disable-model-invocation`
+
+Skills WITHOUT `disable-model-invocation: true` have their descriptions injected into every Claude Code session. The total budget scales at 2% of the context window, with a fallback cap of 16,000 characters. When the budget is exceeded, some skill descriptions are excluded and Claude Code shows a warning in `/context`.
+
+Setting `disable-model-invocation: true` removes a skill's description from the budget entirely.
+
+## 4. Substitution Variables
+
+Use these placeholders in `SKILL.md` content. They are replaced before the skill runs:
+
+| Variable | Description |
+|---|---|
+| `$ARGUMENTS` | All arguments passed after the skill name. |
+| `$ARGUMENTS[N]` | A specific argument by 0-based index. |
+| `$N` | Shorthand for `$ARGUMENTS[N]`. |
+| `${CLAUDE_SESSION_ID}` | The current session ID. |
+| `${CLAUDE_SKILL_DIR}` | Absolute path to the skill's directory. Use this to reference bundled scripts regardless of working directory. |
+
+## 5. Dynamic Context Injection (`!command`)
+
+Prefix a line with `!` followed by a shell command in backticks to run it **before** the skill content is sent to Claude. The command output replaces the placeholder inline:
+
+```markdown
+## Current state
+- Open PRs: !`gh pr list --json title,number`
+- Changed files: !`git diff --name-only`
+```
+
+Claude receives the rendered output, not the command itself. This is preprocessing — Claude cannot re-run it. Use `${CLAUDE_SKILL_DIR}` to reference bundled scripts portably:
+
+```markdown
+!`node ${CLAUDE_SKILL_DIR}/scripts/gather-context.js`
+```
+
+## 6. Directory Layout
 
 ```
 .claude/skills/my-skill/
-├── SKILL.md          # Instructions + frontmatter
+├── SKILL.md          # Instructions + frontmatter (required, keep under 500 lines)
 ├── scripts/          # Deterministic Low-Entropy helpers
 │   └── package.json  # { "type": "module" } for ESM
-├── references/       # Heavy documentation (progressive disclosure)
+├── references/       # Heavy documentation loaded on demand
 └── assets/           # Static templates
 ```
 
-## 4. The Semantic Guardrail
+Keep `SKILL.md` under 500 lines. Move detailed reference material to separate files and link to them from `SKILL.md` so Claude knows they exist and when to load them.
+
+## 7. Skill Locations
+
+| Scope | Path |
+|---|---|
+| Personal (all projects) | `~/.claude/skills/<name>/SKILL.md` |
+| Project | `.claude/skills/<name>/SKILL.md` |
+| Legacy (still works) | `.claude/commands/<name>.md` |
+| Plugin | `<plugin>/skills/<name>/SKILL.md` — namespace: `plugin-name:skill-name` |
+
+When the same skill name exists at multiple levels, priority is: enterprise > personal > project.
+
+## 8. The Semantic Guardrail
 
 **Do not script everything.** Claude Code is an LLM agent designed for semantic judgment.
 
 | Category | Examples | Approach |
 |---|---|---|
-| **Low-Entropy (scriptable)** | File creation, token counting, linting for presence of keys, dependency graph from text patterns | Write a script |
+| **Low-Entropy (scriptable)** | File creation, token counting, linting for presence of keys, dependency graph from text patterns | Write a script or use `!command` injection |
 | **High-Entropy (LLM-native)** | Audit triage, code review, semantic redundancy detection, deciding what context is "earned" | Keep as skill instruction |
-
-## 5. Skill Invocation Patterns
-
-- **Auto-triggered:** No `disable-model-invocation`. Claude injects the description and may invoke the skill when the user's message matches. Suitable for: skills that need to fire without a slash command (e.g., a linter on every edit).
-- **Manual (`/name`):** `disable-model-invocation: true`. User explicitly runs `/skill-name`. Suitable for: all deliberate workflows (deploy, sprint, audit).
-- **Internal (called by other skills):** `user-invocable: false` + `disable-model-invocation: true`. Not in the menu, not auto-triggered. Suitable for: sub-tasks in a pipeline.
