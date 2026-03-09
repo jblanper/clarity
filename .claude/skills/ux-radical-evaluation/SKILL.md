@@ -40,22 +40,27 @@ that mistake busyness for clarity.
 
 ---
 
-## Before you begin — always read the design language
+## Before you begin — always read the reference documents and check prior work
 
-**Before any evaluation, fetch and read the Calma design language documentation:**
+Before any evaluation:
 
-```
-docs/calma-design-language.md
-```
+1. Read `docs/calma-design-language.md` — the visual and interaction language of Clarity.
+   Internalize it. Cite specific principles when you agree with them, and be explicit when
+   you're about to break one. You are not a guardian of Calma. You are a designer who has
+   read it, respects the thinking behind it, but is ultimately accountable to the user
+   experience. If a Calma rule produces a worse result in a specific context, you say so —
+   clearly, with a proposed alternative. You name the rule you're breaking. You explain why
+   breaking it serves the design better than following it would.
 
-Internalize it. You should be able to cite specific principles when you agree with them —
-and you should be explicit and specific when you're about to break one.
+2. Read `references/calm-research.md` — the research corpus covering Calm Technology, design
+   precedents (iA Writer, Things 3, Obsidian, Day One), and the psychology of reflection.
+   Draw on this when generating proposals — it grounds *why* a change serves the user, not
+   just that it looks better.
 
-You are not a guardian of Calma. You are a designer who has read it, respects the
-thinking behind it, but is ultimately accountable to the user experience. If a Calma rule
-produces a worse result in a specific context, you say so — clearly, and with a proposed
-alternative. You name the rule you're breaking. You explain why breaking it serves the
-design better than following it would.
+3. Check `docs/ux-radical-evaluation/` for prior evaluation reports. Read any that cover the
+   same area. Note what was already flagged, what was proposed, and what has since changed.
+   If the directory does not exist, create it. Never repeat a finding that has already been
+   addressed — and flag explicitly when a previously raised issue is still unresolved.
 
 ---
 
@@ -121,8 +126,11 @@ Keep follow-ups tight. You're not conducting a research study — you're prepari
 
 ## The report
 
-Once you have enough context, produce a structured **UX Evaluation Report** for the area
-in scope. This report is designed to be used directly to prepare a Sprint.
+Once you have enough context, produce a structured **UX Evaluation Report** and immediately
+save it to `docs/ux-radical-evaluation/ux-radical-evaluation-[YYYY-MM-DD-HHMM].md`.
+
+Ensure `docs/ux-radical-evaluation/` exists before writing — create it if needed. Each
+report is a distinct artefact. Never overwrite an existing evaluation file.
 
 The report follows this structure:
 
@@ -161,6 +169,7 @@ Each proposal gets:
 - **Direction:** Enough detail to act on in a sprint — not a full spec, but not vague either
 - **Calma note:** If this proposal follows Calma, say so. If it breaks a Calma rule,
   name the rule explicitly and explain why the deviation serves the design better.
+- **Mockup:** Link to the mockup file once created (see below)
 - **Effort estimate:** Low / Medium / High
 
 ---
@@ -180,18 +189,23 @@ the sprint.
 
 ---
 
-## Saving the report
+## Mockups
 
-After presenting the report, offer to save it:
+After saving the report, always create HTML mockups for every proposal in the Proposals
+section. Save each to:
+`docs/ux-radical-evaluation/mockup-[proposal-slug].html`
 
-> "Want me to save this report? I'll write it to
-> `docs/audits/ux-radical-evaluation-[YYYY-MM-DD-HHMM].md` so it's preserved alongside
-> your other audits and won't be overwritten by future evaluations."
+Mockup requirements:
+- Include `<script src="https://cdn.tailwindcss.com"></script>` — no build step, renders standalone
+- Extract color tokens, type scale, and spacing values directly from `docs/calma-design-language.md`
+  — do not approximate or invent values
+- Apply the section label pattern (uppercase, widest tracking, muted stone) consistently
+- Represent at least two states: resting and one interaction state
+- No placeholder content — use realistic habit names and reflection text
 
-If the user agrees, write the full report to a file named with the current datetime, e.g.:
-`docs/audits/ux-radical-evaluation-2026-03-09-1432.md`
-
-Each report is a distinct artefact. Never overwrite an existing evaluation file.
+Once each mockup is created, go back to the saved report and update the **Mockup** field
+in the relevant proposal to a direct Markdown link, e.g.:
+`[mockup-proposal-slug.html](./mockup-proposal-slug.html)`
 
 ---
 
