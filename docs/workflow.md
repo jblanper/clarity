@@ -69,6 +69,7 @@ instead, consult `docs/sprint-tier-guide.md` or run `bash scripts/sprint-tier.sh
 
 | Skill | When to use |
 |---|---|
+| `/ux-radical-evaluation` | Conversational UX/UI evaluation by a senior designer persona. Uses Playwright to capture live screenshots of the deployed app, then produces a structured sprint-ready report. Each report is saved as a datetime-stamped file in `docs/audits/` — never overwrites previous evaluations. Use before a UX-heavy sprint, after new features land, or whenever you want an honest outside-eye design critique. |
 | `/retro-report` | Analyse all past retrospectives, produce process recommendations. Archives previous report to `docs/retros/archive/`, writes fixed filename `docs/retros/retro-report.md`. |
 | `/project-health` | Between sprints — security audit, outdated deps, test suite health, docs integrity |
 | `/update-claude-md` | End of session — review conversation and codebase, update CLAUDE.md with corrections, new patterns, gotchas, and stale rules |
