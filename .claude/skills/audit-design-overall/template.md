@@ -1,7 +1,7 @@
 # Design Audit — Overall Coherence
 ## Clarity × Calma
 
-Date: [today]
+Generated: YYYY-MM-DD HH:MM
 Scope: All pages, all components, first-use and experienced-user perspectives.
 Reference: docs/calma-design-language.md, prior audits in docs/.
 

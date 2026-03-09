@@ -2,7 +2,7 @@
 name: audit-interaction
 description: Audit all interactive elements and animations for compliance with Calma interaction principles and Motion library patterns. Outputs docs/audits/audit-interaction.md.
 disable-model-invocation: true
-allowed-tools: Read, Grep, Glob, Write
+allowed-tools: Read, Grep, Glob, Write, Bash(date *), Bash(node *)
 ---
 
 # Audit — Interaction & Motion
@@ -62,6 +62,15 @@ used for something that requires Motion.
 `document.body.style.overflow = "hidden"`. Flag if `useEffect` is used instead.
 
 ## Output
+
+Run `date '+%Y-%m-%d %H:%M'` and write the result into the `Generated:` field.
+
+Before writing, archive the previous report:
+```
+node .claude/skills/scripts/archive_audit.js docs/audits/audit-interaction.md YYYY-MM-DD
+```
+- If `archived: true`, note: "Archived previous report → [destination]"
+- If `archived: false`, note: "No previous report to archive."
 
 Write the results to `docs/audits/audit-interaction.md`. Overwrite if it already exists.
 

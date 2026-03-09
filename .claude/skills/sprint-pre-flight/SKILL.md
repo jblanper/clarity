@@ -1,8 +1,8 @@
 ---
 name: sprint-pre-flight
-description: Read project state, surface blockers, and determine sprint tier before any planning begins.
+description: Read project state, surface blockers, and determine sprint tier before any planning begins. Writes docs/sprints/pre-flight-report.md.
 disable-model-invocation: true
-allowed-tools: Read, Glob, Bash(git *)
+allowed-tools: Read, Glob, Write, Bash(git *), Bash(date *)
 ---
 
 # Sprint Pre-Flight
@@ -183,7 +183,41 @@ Validation after coding:
 
 ---
 
-## Phase 4 — Output
+## Phase 4 — Write pre-flight report
 
-No file is written. Pre-flight output lives in the chat transcript.
-The user reads the blockers and tier recommendation and decides how to proceed.
+Run `date '+%Y-%m-%d %H:%M'` to get the current timestamp.
+
+Write `docs/sprints/pre-flight-report.md`, always overwriting any previous report,
+using this structure:
+
+```markdown
+# Pre-flight Report
+**Generated:** YYYY-MM-DD HH:MM
+**Sprint:** N+1 (next)
+
+## Blockers
+### From last sprint retro
+[Unresolved items as bullets, or "None"]
+
+### From audit findings (critical + high)
+[Open findings with severity and source, or "None"]
+
+## Tier recommendation
+Tier [1 / 2 / 3] — [one-line rationale]
+
+## Audits to run
+[Comma-separated list, e.g. "colour, typography" — inferred from Phase 1 context.
+ Tier 1: all four design audits unless scope is clearly narrower.
+ Tier 2: only audits relevant to the changes planned.
+ Tier 3: none.]
+
+## Recommended skill sequence
+Planning:   [exact skills, in order]
+Execution:  [exact skills, in order]
+Closure:    [exact skills, in order]
+```
+
+Tell the user:
+> "Pre-flight complete. Report written to docs/sprints/pre-flight-report.md.
+>
+> Run `/sprint-brief` to start planning Sprint N+1."

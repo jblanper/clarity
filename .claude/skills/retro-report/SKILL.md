@@ -1,8 +1,8 @@
 ---
 name: retro-report
-description: Analyse all past sprint retrospectives and produce a process recommendations report. Outputs docs/retros/retro-report-YYYY-MM-DD.md.
+description: Analyse all past sprint retrospectives and produce a process recommendations report. Outputs docs/retros/retro-report.md (fixed filename, always overwritten).
 disable-model-invocation: true
-allowed-tools: Read, Glob, Write
+allowed-tools: Read, Glob, Write, Bash(node *), Bash(date *)
 ---
 
 # Retrospective Report
@@ -48,13 +48,21 @@ Are the same CLAUDE.md violations appearing repeatedly?
 
 ## Output
 
-Write `docs/retros/retro-report-YYYY-MM-DD.md` (using today's date, e.g.
-`retro-report-2026-03-07.md`) using the structure in `template.md` in
-this skill's directory. Each run produces a new dated file — do not
-overwrite previous reports.
+Run `date '+%Y-%m-%d %H:%M'` to get the current timestamp.
+
+Before writing, archive the previous report:
+```
+node .claude/skills/scripts/archive_audit.js docs/retros/retro-report.md YYYY-MM-DD docs/retros/archive/
+```
+- If `archived: true`, report: "Archived previous retro report → [destination]"
+- If `archived: false`, note: "No previous retro report to archive."
+
+Write `docs/retros/retro-report.md` (fixed filename — always overwrite) using the
+structure in `template.md` in this skill's directory. Write the timestamp from above
+into the `**Generated:**` field.
 
 Tell the user:
-> "Report written to docs/retros/retro-report-YYYY-MM-DD.md.
+> "Report written to docs/retros/retro-report.md.
 >
 > The 'Recommended actions' section is a good starting point for the next
 > `/sprint-brief` discussion — share it with the Product Owner to shape

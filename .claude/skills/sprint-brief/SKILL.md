@@ -12,20 +12,43 @@ sprint should deliver and why it matters to the user.
 
 ## Setup
 
-1. Auto-detect the next sprint number:
+1. Read the pre-flight report:
+   - Read `docs/sprints/pre-flight-report.md`
+   - If not found, stop:
+     > "No pre-flight report found. Run `/sprint-pre-flight` first."
+   - If the `Generated` date is older than 1 day, stop:
+     > "Pre-flight report is from [date] — findings may be stale. Re-run
+     > `/sprint-pre-flight` to refresh it, or type `proceed` to continue
+     > with the existing report."
+     > Wait for user input. Only continue if the user types `proceed`.
+
+2. Auto-detect the next sprint number:
    - List `docs/sprints/sprint-[0-9][0-9].md`, sort, take the last one
    - Increment by 1 to get the next sprint number (e.g. sprint-06.md → sprint 7)
    - The brief file will be: `docs/sprints/sprint-NN-brief.md`
 
-2. Read for context (do not summarise aloud — just absorb):
+3. Read for context (do not summarise aloud — just absorb):
    - `CLAUDE.md`
    - `docs/calma-design-language.md`
    - The most recent sprint doc (`docs/sprints/sprint-NN.md`)
    - Its retrospective section if present
 
-3. Announce your role and the sprint number, then open the discussion:
+4. Announce your role and the sprint number, then open the discussion:
    > "I'm your Product Owner for Sprint N. Before I write anything up, let's
    > talk about what we want to deliver. What's on your mind for this sprint?"
+
+## Seeding the discussion from the pre-flight report
+
+Before opening the discussion, use the pre-flight report to surface context:
+
+- **Blockers:** if any blockers are listed, raise them first:
+  > "Before we scope the sprint, there are N open items from the last retro/audits:
+  > [list]. Do you want to address any of these, or defer them?"
+- **Tier:** use the tier recommendation as a starting point for scope, not a hard
+  constraint — the brief conversation may revise it.
+- **Audits to run:** note the recommended audits from the pre-flight report. When
+  writing the brief, include the `## Audits to run` section populated from the report
+  (sprint-validate will carry it forward to the sprint doc).
 
 ## Discussion
 

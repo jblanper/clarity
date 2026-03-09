@@ -10,6 +10,12 @@ allowed-tools: Read, Glob, Edit, Agent, Task
 Run the UX/UI and Architecture reviews simultaneously as background agents,
 then facilitate a mediation session with the user as Product Owner.
 
+**Trade-off vs. running individually:** `/sprint-review` runs UX and Arch in
+analysis-only mode (no discussion phase) and adds a mediation step. Running
+`/sprint-ux` then `/sprint-arch` separately gives a full discussion phase per
+review. Choose `/sprint-review` when you want speed; choose individually when
+you want depth.
+
 ## Setup
 
 1. Find the current sprint brief:
@@ -24,15 +30,39 @@ then facilitate a mediation session with the user as Product Owner.
 
 ## Phase 1 — Parallel reviews
 
-Read the skill files for both roles, then spawn two background agents simultaneously:
+Spawn two background agents simultaneously using the trimmed inline prompts below.
+Do not pass the full sprint-ux or sprint-arch SKILL.md files — those contain
+interactive discussion and brief-update phases that must not run here.
 
-**UX/UI Agent** — use the full instructions from `.claude/skills/sprint-ux/SKILL.md`,
-but instruct the agent to produce only the written analysis (the "Analysis" section),
-not to engage in discussion or update the brief. It should return its findings as text.
+**UX/UI Agent** — use this prompt verbatim, substituting the actual brief path:
 
-**Architecture Agent** — use the full instructions from `.claude/skills/sprint-arch/SKILL.md`,
-but instruct the agent to produce only the written analysis, not to engage in discussion
-or update the brief. It should return its findings as text.
+> You are a senior UX/UI designer reviewing a sprint brief.
+> Do not engage in discussion. Do not update the brief. Return only the written analysis as your response.
+>
+> 1. Read the brief file at `[path to current brief]`.
+> 2. Read: `CLAUDE.md`, `docs/calma-design-language.md`, any components in `components/` relevant to the proposed scope, and any existing audit files in `docs/audits/` (audit-colour.md, audit-typography.md, audit-interaction.md, audit-microcopy.md).
+> 3. Produce a written analysis covering these sections in order:
+>    - **Calma fit** — does the scope feel consistent with Clarity's calm, typographic, non-gamified identity? Flag anything that risks adding visual noise, urgency, or dashboard energy.
+>    - **User flow** — walk through the user journey for each proposed feature; flag ambiguous flows or new navigation patterns not established in the current architecture.
+>    - **Component and pattern reuse** — which existing components apply; what would be new; what risks diverging from the design system?
+>    - **Interaction and motion** — describe any new interactions or animations; flag anything requiring non-trivial Framer Motion work.
+>    - **Audit relevance** — which of colour/typography/interaction/microcopy should run during sprint-validate?
+>    - **Concerns and open questions** — anything uncertain or needing an answer before design is considered done.
+
+**Architecture Agent** — use this prompt verbatim, substituting the actual brief path:
+
+> You are a senior fullstack architect reviewing a sprint brief.
+> Do not engage in discussion. Do not update the brief. Return only the written analysis as your response.
+>
+> 1. Read the brief file at `[path to current brief]`.
+> 2. Read: `CLAUDE.md`, `docs/calma-design-language.md`, all files in `components/`, `lib/`, `types/`, and `app/` relevant to the proposed scope, and `docs/audits/audit-arch.md` if it exists.
+> 3. Produce a written analysis covering these sections in order:
+>    - **Technical feasibility** — for each scope item: straightforward, non-trivial, or risky?
+>    - **Data model impact** — any new localStorage keys, type changes, or migration paths needed?
+>    - **Static export constraints** — any dynamic routes, server-side logic, or incompatible dependencies?
+>    - **Codebase degradation signals** — large components, pattern drift from CLAUDE.md, missing tests, coupling issues.
+>    - **Implementation order and risks** — safest order; what could go wrong; how to catch it early.
+>    - **Concerns and open questions** — anything needing an answer before implementation can begin safely.
 
 Wait for both agents to complete.
 

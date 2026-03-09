@@ -2,7 +2,7 @@
 
 Audited: [list of files read]
 Reference: docs/calma-design-language.md
-Date: [today]
+Generated: YYYY-MM-DD HH:MM
 
 ---
 

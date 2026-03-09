@@ -2,7 +2,7 @@
 name: audit-colour
 description: Audit all components and pages for colour and contrast compliance against the Calma design language and WCAG AA. Outputs docs/audits/audit-colour.md.
 disable-model-invocation: true
-allowed-tools: Read, Grep, Glob, Write
+allowed-tools: Read, Grep, Glob, Write, Bash(date *), Bash(node *)
 ---
 
 # Audit — Colour & Contrast
@@ -51,6 +51,15 @@ for text or backgrounds that isn't part of the stone scale, red (errors only),
 amber (archive action only in ManageView), or the heatmap palette.
 
 ## Output
+
+Run `date '+%Y-%m-%d %H:%M'` and write the result into the `Generated:` field.
+
+Before writing, archive the previous report:
+```
+node .claude/skills/scripts/archive_audit.js docs/audits/audit-colour.md YYYY-MM-DD
+```
+- If `archived: true`, note: "Archived previous report → [destination]"
+- If `archived: false`, note: "No previous report to archive."
 
 Write the results to `docs/audits/audit-colour.md`. Overwrite if it already exists.
 

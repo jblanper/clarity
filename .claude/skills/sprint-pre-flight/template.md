@@ -1,4 +1,6 @@
-# Sprint Pre-Flight — [Date]
+# Pre-flight Report
+**Generated:** YYYY-MM-DD HH:MM
+**Sprint:** N+1 (next)
 
 ## Blockers
 
@@ -10,12 +12,22 @@
 
 ---
 
-## Sprint tier: [1 / 2 / 3]
+## Tier recommendation
+Tier [1 / 2 / 3] — [one-line rationale]
 
-### Recommended skill sequence
+## Audits to run
+[Comma-separated list relevant to the sprint scope, e.g. "colour, typography".
+ Tier 1: all four design audits unless scope is clearly narrower.
+ Tier 2: only audits relevant to the changes planned.
+ Tier 3: none.]
+
+## Recommended skill sequence
 
 **Planning:**
 [Exact skills to run, in order]
 
-**Validation after coding:**
-[Exact skills to run]
+**Execution:**
+[Exact skills to run, in order]
+
+**Closure:**
+[Exact skills to run, in order]

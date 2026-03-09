@@ -1,8 +1,8 @@
 ---
 name: audit-all
-description: Run all audits (four design + one architecture) in parallel then produce the design-overall review and the triage action list. Outputs seven docs/ files.
+description: Run all five audits (four design + one architecture) in parallel then produce the design-overall review and the triage action list. Outputs seven docs/ files.
 disable-model-invocation: true
-allowed-tools: Read, Glob, Write, Agent, Task
+allowed-tools: Read, Glob, Write, Agent, Task, Bash(date *), Bash(node *)
 ---
 
 # Audit — Full Suite
@@ -13,10 +13,29 @@ This is a planning task only. Do not change any code.
 
 ## Execution order
 
-### Phase 1 — Parallel (run all four simultaneously as background agents)
+### Before Phase 1 — Get timestamp and archive previous reports
 
-Read each skill file listed below, then spawn four background agents
+Run `date '+%Y-%m-%d %H:%M'` and capture the result as `TIMESTAMP`.
+This will be passed into each agent's prompt so agents do not need Bash access.
+
+Run the following archive calls in parallel (one per output file):
+```
+node .claude/skills/scripts/archive_audit.js docs/audits/audit-colour.md YYYY-MM-DD
+node .claude/skills/scripts/archive_audit.js docs/audits/audit-typography.md YYYY-MM-DD
+node .claude/skills/scripts/archive_audit.js docs/audits/audit-interaction.md YYYY-MM-DD
+node .claude/skills/scripts/archive_audit.js docs/audits/audit-microcopy.md YYYY-MM-DD
+node .claude/skills/scripts/archive_audit.js docs/audits/audit-arch.md YYYY-MM-DD
+node .claude/skills/scripts/archive_audit.js docs/audits/audit-design-overall.md YYYY-MM-DD
+node .claude/skills/scripts/archive_audit.js docs/audits/audit-action-list.md YYYY-MM-DD
+```
+Report "Archived N previous reports to docs/audits/archive/" (or "No previous reports found" if all return `archived: false`).
+
+### Phase 1 — Parallel (run all five simultaneously as background agents)
+
+Read each skill file listed below, then spawn five background agents
 simultaneously — one per audit — using those instructions as each agent's prompt.
+Prepend to each agent's prompt: `The current timestamp is: [TIMESTAMP]. Write this
+value into the Generated: field of your output — do not run date yourself.`
 
 | Agent | Skill instructions | Output file |
 |---|---|---|
@@ -26,7 +45,7 @@ simultaneously — one per audit — using those instructions as each agent's pr
 | Microcopy & tone | `.claude/skills/audit-microcopy/SKILL.md` | `docs/audits/audit-microcopy.md` |
 | Architecture & code health | `.claude/skills/audit-arch/SKILL.md` | `docs/audits/audit-arch.md` |
 
-Wait for all five agents to complete and confirm all four output files exist
+Wait for all five agents to complete and confirm all five output files exist
 before proceeding.
 
 ### Phase 2 — Sequential (main session)

@@ -1,6 +1,6 @@
 # Audit Action List
 
-Generated: [today]
+Generated: YYYY-MM-DD HH:MM
 Source audits: audit-colour.md · audit-typography.md · audit-interaction.md · audit-microcopy.md · audit-design-overall.md
 
 ---

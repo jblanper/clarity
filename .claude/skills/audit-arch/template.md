@@ -1,6 +1,6 @@
 # Architecture & Code Health Audit
 
-Date: [today]
+Generated: YYYY-MM-DD HH:MM
 Scope: components/ · app/ · lib/ · types/
 Reference: CLAUDE.md
 

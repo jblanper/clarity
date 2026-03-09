@@ -16,10 +16,11 @@ Orchestrate all post-coding validation in one command:
 
 ## Setup
 
-Perform all three reads in parallel:
+Perform all four reads in parallel:
 - List `docs/sprints/sprint-[0-9][0-9].md`, sort, take the latest with status `active` — read it in full (you need the sprint number and any "Audits to run" list used by the validate agent)
 - Read `.claude/skills/sprint-validate/SKILL.md` in full
 - Read `.claude/skills/sprint-qa/SKILL.md` in full
+- Read `.claude/skills/sprint-arch-review/SKILL.md` in full (used in Phase 1)
 
 If no active sprint is found, stop:
 > "No active sprint found. Run `/sprint-plan` to start one."

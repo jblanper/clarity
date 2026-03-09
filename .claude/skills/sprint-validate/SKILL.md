@@ -2,7 +2,7 @@
 name: sprint-validate
 description: Archive pre-sprint audit snapshots, run fresh audits, compare before/after findings, and report any regressions in the sprint document.
 disable-model-invocation: true
-allowed-tools: Read, Grep, Glob, Write, Edit
+allowed-tools: Read, Grep, Glob, Write, Edit, Bash(node *), Agent
 ---
 
 # Sprint Validate — Audit-Based Validation
@@ -21,30 +21,38 @@ and report progress in the sprint document.
    - If none is listed, run all four specific audits (colour, typography, interaction, microcopy)
    - Never run `/audit-design-overall` or `/audit-triage` here — those are planning tools
 
+   **Guard:** `audit-arch` must never appear in the "Audits to run" list — it is always
+   handled by `sprint-arch-review`. If the list contains `audit-arch`, remove it and note:
+   "audit-arch is excluded from sprint-validate; it runs via sprint-arch-review."
+
 3. Announce:
    > "Running Sprint N validation audits: [list]. I'll archive the current
    > audit files first so we can compare before and after."
 
 ## Phase 1 — Archive pre-sprint snapshots
 
-For each audit to run, if the audit file already exists:
-- Read `docs/audits/audit-[name].md` and Write its contents to
-  `docs/audits/archive/audit-[name]-YYYY-MM-DD.md` using today's date
-  (Write creates parent directories automatically)
-- Report: "Archived pre-sprint snapshots to docs/audits/archive/"
+For each audit to run, run the following in parallel (one Bash call per audit):
 
-If an audit file doesn't exist yet, note "no pre-sprint baseline for [name]".
+```
+node .claude/skills/scripts/archive_audit.js docs/audits/audit-[name].md YYYY-MM-DD
+```
+
+- If `archived: true`, report: "Archived pre-sprint snapshot → [destination]"
+- If `archived: false`, note: "No pre-sprint baseline for [name]"
+
+Report: "Pre-sprint snapshots archived to docs/audits/archive/"
 
 ## Phase 2 — Run fresh audits
 
-Follow the instructions from each relevant skill file:
-- `.claude/skills/audit-colour/SKILL.md`
-- `.claude/skills/audit-typography/SKILL.md`
-- `.claude/skills/audit-interaction/SKILL.md`
-- `.claude/skills/audit-microcopy/SKILL.md`
+Spawn one background agent per audit simultaneously, each following the
+instructions from its SKILL.md. Wait for all agents to complete before Phase 3.
 
-Run them sequentially (not in parallel — this is validation, not discovery;
-sequential output is easier to review).
+| Agent | Skill instructions | Output file |
+|---|---|---|
+| Colour & contrast | `.claude/skills/audit-colour/SKILL.md` | `docs/audits/audit-colour.md` |
+| Typography & spacing | `.claude/skills/audit-typography/SKILL.md` | `docs/audits/audit-typography.md` |
+| Interaction & motion | `.claude/skills/audit-interaction/SKILL.md` | `docs/audits/audit-interaction.md` |
+| Microcopy & tone | `.claude/skills/audit-microcopy/SKILL.md` | `docs/audits/audit-microcopy.md` |
 
 Each audit overwrites its `docs/audits/audit-[name].md` file with fresh findings.
 

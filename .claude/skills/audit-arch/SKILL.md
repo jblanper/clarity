@@ -2,7 +2,7 @@
 name: audit-arch
 description: Audit all components, pages, and lib utilities for CLAUDE.md pattern compliance, TypeScript strictness, test coverage, component structure, and static export constraints. Outputs docs/audits/audit-arch.md.
 disable-model-invocation: true
-allowed-tools: Read, Grep, Glob, Write
+allowed-tools: Read, Grep, Glob, Write, Bash(date *), Bash(node *)
 ---
 
 # Audit — Architecture & Code Health
@@ -66,6 +66,15 @@ require a server runtime is a critical finding. Check for dynamic routes without
 `generateStaticParams`, and any server-runtime assumptions in the codebase.
 
 ## Output
+
+Run `date '+%Y-%m-%d %H:%M'` and write the result into the `Generated:` field.
+
+Before writing, archive the previous report:
+```
+node .claude/skills/scripts/archive_audit.js docs/audits/audit-arch.md YYYY-MM-DD
+```
+- If `archived: true`, note: "Archived previous report → [destination]"
+- If `archived: false`, note: "No previous report to archive."
 
 Write results to `docs/audits/audit-arch.md`. Overwrite if it already exists.
 

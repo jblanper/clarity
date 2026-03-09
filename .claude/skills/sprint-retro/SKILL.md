@@ -52,8 +52,13 @@ to the sprint doc, replacing the placeholder comment.
 
 ## Closing
 
-After writing, tell the user:
+Edit the sprint doc's `**Status:**` field to `completed`.
+
+Tell the user:
 > "Retrospective recorded. The process improvements above will be useful
 > context when we run `/sprint-brief` for Sprint N+1.
+>
+> Session learnings are fresh — run `/update-claude-md` now to capture any
+> new patterns, gotchas, or corrections before you close this session.
 >
 > Ready to start planning the next sprint whenever you are."

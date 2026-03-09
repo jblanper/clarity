@@ -2,7 +2,7 @@
 name: audit-microcopy
 description: Audit all user-facing text for tone violations, technical language, vague messages, and Calma microcopy compliance. Outputs docs/audits/audit-microcopy.md.
 disable-model-invocation: true
-allowed-tools: Read, Grep, Glob, Write
+allowed-tools: Read, Grep, Glob, Write, Bash(date *), Bash(node *)
 ---
 
 # Audit — Microcopy & Tone
@@ -60,6 +60,15 @@ The save flow states are `idle → saving → confirmed`. Verify:
 - The confirmed message fits the calm, human tone
 
 ## Output
+
+Run `date '+%Y-%m-%d %H:%M'` and write the result into the `Generated:` field.
+
+Before writing, archive the previous report:
+```
+node .claude/skills/scripts/archive_audit.js docs/audits/audit-microcopy.md YYYY-MM-DD
+```
+- If `archived: true`, note: "Archived previous report → [destination]"
+- If `archived: false`, note: "No previous report to archive."
 
 Write the results to `docs/audits/audit-microcopy.md`. Overwrite if it already exists.
 

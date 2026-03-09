@@ -2,7 +2,7 @@
 name: audit-triage
 description: Consolidate all five audit reports into a severity-ordered action list. Requires all five audit docs/ files to exist first. Outputs docs/audits/audit-action-list.md.
 disable-model-invocation: true
-allowed-tools: Read, Write
+allowed-tools: Read, Write, Bash(date *), Bash(node *)
 ---
 
 # Audit Triage & Action List
@@ -89,6 +89,16 @@ section — not as action items.
 ---
 
 ## Step 3 — Write the action list ordered by severity
+
+Run `date '+%Y-%m-%d %H:%M'` and write the result into the `Generated:` field at
+the top of the output file.
+
+Before writing, archive the previous action list:
+```
+node .claude/skills/scripts/archive_audit.js docs/audits/audit-action-list.md YYYY-MM-DD
+```
+- If `archived: true`, note: "Archived previous action list → [destination]"
+- If `archived: false`, note: "No previous action list to archive."
 
 For every included finding, write one issue entry using the format in
 `template.md` in this skill's directory.

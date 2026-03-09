@@ -1,6 +1,6 @@
 # Retrospective Report
 
-**Generated:** YYYY-MM-DD
+**Generated:** YYYY-MM-DD HH:MM
 **Sprints analysed:** Sprint 1 – Sprint N
 
 ---

@@ -1,5 +1,7 @@
 # Microcopy & Tone Audit
 
+Generated: YYYY-MM-DD HH:MM
+
 Audited files: [list]
 
 ---

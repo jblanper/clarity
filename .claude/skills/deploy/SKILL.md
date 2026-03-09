@@ -75,3 +75,12 @@ Inspect the commits since the last tag to decide which applies. When in doubt, a
 
 11. **Report**
     - Confirm the release was created and print the GitHub release URL
+
+---
+
+## If deployment fails mid-way
+
+- **Tag pushed, release failed** — run `gh release create` again with the same tag (idempotent).
+- **Commit pushed, tag failed** — run `git tag -a v{version} -m "v{version}"` then `git push origin v{version}`.
+- **Commit failed** — working tree changes are local; re-run from Step 9.
+- **GitHub Pages Actions failure** — check the Actions tab; it usually self-heals on retry.

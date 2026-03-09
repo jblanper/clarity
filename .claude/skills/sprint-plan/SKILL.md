@@ -16,10 +16,11 @@ synthesise everything into a clear, executable sprint document.
    - List `docs/sprints/sprint-[0-9][0-9]-brief.md`, sort, take the latest
    - Read it in full
    - Check its **Status** field. If it is still `draft`, `ux-reviewed`, or
-     `arch-reviewed` (not `reviewed`), warn the user:
-     > "The brief hasn't completed both reviews yet (current status: X).
-     > You can proceed anyway, but I'd recommend running the missing review first."
-     > Ask: "Proceed anyway, or run the missing review first?"
+     `arch-reviewed` (not `reviewed`), print:
+     > "⚠ Brief status is [X] — not all reviews are complete. Proceeding will
+     > skip the missing review and may produce an incomplete sprint doc. Type
+     > `proceed` to continue anyway, or run the missing review first."
+     > Wait for user input. Only continue if the user types `proceed`.
 
 2. Also read:
    - `CLAUDE.md`

@@ -5,6 +5,8 @@
 Use the dedicated audit skills rather than writing audits from scratch.
 Severity levels across all audit files: **critical** · **high** · **medium** · **low**
 
+Each audit skill archives its previous output to `docs/audits/archive/` before writing, and stamps a `Generated: YYYY-MM-DD HH:MM` timestamp in every report.
+
 | Skill | What it audits | Output |
 |---|---|---|
 | `/audit-colour` | WCAG contrast, stone palette, dark mode completeness | `docs/audits/audit-colour.md` |
@@ -14,7 +16,7 @@ Severity levels across all audit files: **critical** · **high** · **medium** �
 | `/audit-design-overall` | Holistic coherence review across all pages | `docs/audits/audit-design-overall.md` |
 | `/audit-triage` | Consolidates all five reports into a severity-ordered action list | `docs/audits/audit-action-list.md` |
 | `/audit-arch` | CLAUDE.md compliance, TypeScript strictness, test coverage, component structure, static export constraints | `docs/audits/audit-arch.md` |
-| `/audit-all` | Runs four design audits + arch audit in parallel, then design-overall, then triage | All of the above |
+| `/audit-all` | Runs five audits (four design + arch) in parallel, then design-overall, then triage. Archives all previous reports before starting; injects a timestamp into every output. | All of the above |
 
 ## Sprint Workflow
 
@@ -33,13 +35,13 @@ instead, consult `docs/sprint-tier-guide.md` or run `bash scripts/sprint-tier.sh
 
 | Skill | When to use |
 |---|---|
-| `/sprint-pre-flight` | Before every sprint — surfaces blockers from last retro and open audit findings, walks the tier decision tree, recommends exact skills to run |
+| `/sprint-pre-flight` | Before every sprint — surfaces blockers from last retro and open audit findings, walks the tier decision tree, recommends exact skills to run. Writes `docs/sprints/pre-flight-report.md` (required by `/sprint-brief`). |
 
 ### Planning
 
 | Skill | Role | When to use |
 |---|---|---|
-| `/sprint-brief` | Product Owner | Start here — back-and-forth discussion, produces the brief |
+| `/sprint-brief` | Product Owner | Start here — reads pre-flight report (hard-stop if missing or >1 day old); surfaces any blockers from the report before scoping begins (soft raise — you decide to address or defer); back-and-forth discussion, produces the brief |
 | `/sprint-ux` | UX/UI Designer | Reviews brief with you; flags which audits to run at validation |
 | `/sprint-arch` | Senior Architect | Reviews brief with you, technical feasibility and risks |
 | `/sprint-review` | PO mediator | Runs UX + Arch in parallel, you mediate conflicts |
@@ -52,7 +54,7 @@ instead, consult `docs/sprint-tier-guide.md` or run `bash scripts/sprint-tier.sh
 | `/sprint-kickoff` | Start of any coding session mid-sprint — git status, tasks done/pending, what to work on next |
 | `/sprint-post-code` | After coding (Tier 1 or 2) — arch-review gate + validate + QA in one command |
 | `/sprint-arch-review` | After coding — lint + tests + code review against CLAUDE.md; archives pre-sprint arch audit, runs a fresh one, reports before/after comparison; proposes CLAUDE.md updates if new patterns were established |
-| `/sprint-validate` | After coding — archives pre-sprint audits, runs fresh audits, reports regressions. Runs: colour, typography, interaction, microcopy (sequentially). Never runs design-overall or triage. Override via "Audits to run" list in the sprint doc (added by `/sprint-ux`). |
+| `/sprint-validate` | After coding — archives pre-sprint audits, runs fresh audits in parallel (one agent per audit), reports regressions. Runs: colour, typography, interaction, microcopy. Never runs audit-arch (that's `/sprint-arch-review`), design-overall, or triage. Override via "Audits to run" list in the sprint doc (added by `/sprint-ux`). |
 | `/sprint-qa` | After coding — runs Playwright regression suite, writes new tests, manual checklist |
 
 ### Closure
@@ -61,13 +63,13 @@ instead, consult `docs/sprint-tier-guide.md` or run `bash scripts/sprint-tier.sh
 |---|---|
 | `/calma-sync` | After validation — review whether Calma spec needs updating |
 | `/deploy` | After you manually validate — full release pipeline: lint → tests → build → version bump (patch / minor / major) → changelog → commit + tag → GitHub release |
-| `/sprint-retro` | After release — retrospective appended to sprint doc |
+| `/sprint-retro` | After release — retrospective appended to sprint doc; sets sprint status to `completed`; prompts `/update-claude-md` |
 
 ### Anytime
 
 | Skill | When to use |
 |---|---|
-| `/retro-report` | Analyse all past retrospectives, produce process recommendations |
+| `/retro-report` | Analyse all past retrospectives, produce process recommendations. Archives previous report to `docs/retros/archive/`, writes fixed filename `docs/retros/retro-report.md`. |
 | `/project-health` | Between sprints — security audit, outdated deps, test suite health, docs integrity |
 | `/update-claude-md` | End of session — review conversation and codebase, update CLAUDE.md with corrections, new patterns, gotchas, and stale rules |
 

@@ -2,7 +2,7 @@
 name: sprint-arch-review
 description: Post-implementation code review — sprint plan fidelity, CLAUDE.md compliance, TypeScript strictness, and codebase health signals.
 disable-model-invocation: true
-allowed-tools: Read, Grep, Glob, Edit, Write, Bash(git *), Bash(npm run *)
+allowed-tools: Read, Grep, Glob, Edit, Write, Bash(git *), Bash(npm run *), Bash(node *)
 ---
 
 # Sprint Architecture Review — Post-Implementation Code Review
@@ -76,15 +76,16 @@ Archive and refresh the architecture audit to capture the post-sprint state.
 This mirrors what `/sprint-validate` does for UX audits.
 
 ### Archive pre-sprint baseline
-If `docs/audit-arch.md` exists:
-- Write its contents to `docs/archive/audit-arch-YYYY-MM-DD.md` using today's date
-- Report: "Archived pre-sprint architecture audit to docs/archive/"
-
-If it does not exist, note: "No pre-sprint architecture audit baseline."
+Run:
+```
+node .claude/skills/scripts/archive_audit.js docs/audits/audit-arch.md YYYY-MM-DD
+```
+- If `archived: true`, report: "Archived pre-sprint architecture audit → [destination]"
+- If `archived: false`, note: "No pre-sprint architecture audit baseline."
 
 ### Run fresh audit
 Follow the instructions in `.claude/skills/audit-arch/SKILL.md` in full.
-This produces an updated `docs/audit-arch.md` reflecting the post-sprint state.
+This produces an updated `docs/audits/audit-arch.md` reflecting the post-sprint state.
 
 ### Compare and report
 If there was a baseline, compare before/after by severity:

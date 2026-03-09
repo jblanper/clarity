@@ -2,7 +2,7 @@
 name: audit-typography
 description: Audit all components and pages for type scale, weight, spacing, and rhythm compliance against the Calma design language. Outputs docs/audits/audit-typography.md.
 disable-model-invocation: true
-allowed-tools: Read, Grep, Glob, Write
+allowed-tools: Read, Grep, Glob, Write, Bash(date *), Bash(node *)
 ---
 
 # Audit — Typography & Spacing
@@ -56,6 +56,15 @@ through another route — reason it out).
 - Flag any missing `max-w-md` or elements that could overflow on narrow viewports
 
 ## Output
+
+Run `date '+%Y-%m-%d %H:%M'` and write the result into the `Generated:` field.
+
+Before writing, archive the previous report:
+```
+node .claude/skills/scripts/archive_audit.js docs/audits/audit-typography.md YYYY-MM-DD
+```
+- If `archived: true`, note: "Archived previous report → [destination]"
+- If `archived: false`, note: "No previous report to archive."
 
 Write the results to `docs/audits/audit-typography.md`. Overwrite if it already exists.
 

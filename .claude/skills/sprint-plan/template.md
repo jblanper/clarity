@@ -1,3 +1,21 @@
+<!--
+Sprint doc status lifecycle (reference — not part of the output doc):
+
+| Status        | Set by                         |
+|---|---|
+| draft         | sprint-brief                   |
+| ux-reviewed   | sprint-ux                      |
+| arch-reviewed | sprint-arch                    |
+| reviewed      | sprint-review                  |
+| finalized     | sprint-plan (brief file)       |
+| active        | sprint-plan (this sprint doc)  |
+| completed     | sprint-retro                   |
+
+Transition path: draft → ux-reviewed / arch-reviewed → reviewed → finalized → active → completed
+sprint-kickoff finds sprints with status `active`. After sprint-retro sets `completed`,
+old sprints are no longer matched.
+-->
+
 # Sprint N — [Theme Name]
 
 **Dates:** YYYY-MM-DD – (TBD)

@@ -5,7 +5,9 @@ planning overhead the sprint needs. Answer the questions in order — the first
 "Yes" wins and determines the tier.
 
 Run `/sprint-pre-flight` to walk this decision tree interactively and surface
-any blockers from the last sprint before planning begins. To decide manually,
+any blockers from the last sprint before planning begins. It writes
+`docs/sprints/pre-flight-report.md`, which `/sprint-brief` reads automatically —
+run pre-flight before brief, or brief will hard-stop. To decide manually,
 use the decision tree below or run `bash scripts/sprint-tier.sh`.
 
 ---
@@ -71,9 +73,12 @@ To run steps individually instead:
 /sprint-arch-review → /sprint-validate → /sprint-qa → [manual]
 ```
 
-Run all audits via `/sprint-validate`. If the sprint clearly touches only a
-subset of domains you may skip unrelated audits (see **Audit scoping** below),
-but when in doubt run all five.
+Run all audits via `/sprint-validate`. Audits run in parallel (one agent per audit)
+for a significant speed improvement over prior sequential execution. If the sprint
+clearly touches only a subset of domains you may skip unrelated audits (see
+**Audit scoping** below), but when in doubt run all four design audits.
+Note: `audit-arch` never runs via `/sprint-validate` — it always runs via
+`/sprint-arch-review`.
 
 ---
 
@@ -100,8 +105,9 @@ Write `docs/sprints/sprint-NN-brief.md` directly using the template at
 ```
 
 `/sprint-post-code` respects audit scoping — it runs only the audits listed in
-the sprint doc's "Audits to run" field. If that field is absent, it runs targeted
-audits based on what the sprint touched (see **Audit scoping** below).
+the sprint doc's "Audits to run" field (populated from the pre-flight report via
+`/sprint-brief`). If that field is absent, it runs targeted audits based on what
+the sprint touched (see **Audit scoping** below).
 
 To run steps individually instead:
 ```

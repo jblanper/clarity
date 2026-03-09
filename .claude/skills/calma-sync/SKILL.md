@@ -23,7 +23,13 @@ must be kept in sync with it.
 2. Read `docs/calma-design-language.md` in full.
 
 3. Find the sprint's changes:
-   - Run `git diff [sprint-base-commit]..HEAD --name-only` to list changed files
+   - Determine the base commit:
+     1. Read the sprint doc to find the sprint number (N)
+     2. Run `git log --oneline` and find the commit just before the first commit
+        referencing "Sprint N" or the sprint theme
+     3. Use that commit hash as `[base]`
+     4. If no clear boundary is found, ask the user to provide the base commit hash
+   - Run `git diff [base]..HEAD --name-only` to list changed files
    - Read every changed component and page file
 
 4. Announce:

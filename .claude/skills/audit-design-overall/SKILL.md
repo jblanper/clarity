@@ -2,7 +2,7 @@
 name: audit-design-overall
 description: Holistic design coherence review across all pages — Calma identity, cross-page consistency, emotional tone, and information architecture. Outputs docs/audits/audit-design-overall.md.
 disable-model-invocation: true
-allowed-tools: Read, Grep, Glob, Write
+allowed-tools: Read, Grep, Glob, Write, Bash(date *), Bash(node *)
 ---
 
 # Audit — Overall Design Coherence
@@ -71,6 +71,15 @@ This finding will be used by the triage skill to prioritise the implementation
 plan, so it must be concrete and actionable.
 
 ## Output
+
+Run `date '+%Y-%m-%d %H:%M'` and write the result into the `Generated:` field.
+
+Before writing, archive the previous report:
+```
+node .claude/skills/scripts/archive_audit.js docs/audits/audit-design-overall.md YYYY-MM-DD
+```
+- If `archived: true`, note: "Archived previous report → [destination]"
+- If `archived: false`, note: "No previous report to archive."
 
 Write the results to `docs/audits/audit-design-overall.md`. Overwrite if it already exists.
 

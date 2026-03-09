@@ -1,5 +1,7 @@
 # Interaction & Motion Audit
 
+Generated: YYYY-MM-DD HH:MM
+
 Calma principles reviewed against every interactive element and animation.
 Severity: High (breaks experience or accessibility) · Medium (noticeable deviation)
 · Low (polish/consistency)

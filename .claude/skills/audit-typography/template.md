@@ -1,6 +1,6 @@
 # Typography & Spacing Audit
 
-Date: [today]
+Generated: YYYY-MM-DD HH:MM
 Scope: All component and page files
 Reference: docs/calma-design-language.md
 
