@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proposal 1 — Left indicator + full-row tap</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            stone: {
+              50: '#fafaf9',
+              100: '#f5f5f4',
+              200: '#e7e5e4',
+              300: '#d6d3d1',
+              400: '#a8a29e',
+              500: '#78716c',
+              600: '#57534e',
+              700: '#44403c',
+              800: '#292524',
+              900: '#1c1917',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #f5f5f4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  </style>
+</head>
+<body class="flex flex-col items-center gap-12 py-16 px-4">
+
+  <!-- Label -->
+  <p class="text-xs font-medium uppercase tracking-widest text-stone-500">
+    Proposal 1 — Left indicator + full-row tap
+  </p>
+
+  <!-- LIGHT MODE -->
+  <div class="w-full max-w-sm flex flex-col gap-6">
+    <p class="text-xs font-medium uppercase tracking-widest text-stone-500">Light mode</p>
+
+    <div class="bg-stone-50 rounded-2xl overflow-hidden border border-stone-200">
+      <!-- Section label -->
+      <div class="px-5 pt-5 pb-3">
+        <span class="text-xs font-medium uppercase tracking-widest text-stone-500">Habits</span>
+      </div>
+
+      <!-- Habit row — OFF state -->
+      <button type="button" class="w-full text-left flex items-center gap-4 px-5 py-3.5 min-h-[44px] transition-colors active:bg-stone-100">
+        <!-- Indicator: outlined circle -->
+        <span class="flex-shrink-0 h-5 w-5 rounded-full border-2 border-stone-300 bg-transparent"></span>
+        <span class="text-sm text-stone-700">Meditation</span>
+      </button>
+
+      <div class="mx-5 border-t border-stone-100"></div>
+
+      <!-- Habit row — ON state -->
+      <button type="button" class="w-full text-left flex items-center gap-4 px-5 py-3.5 min-h-[44px] bg-amber-50 transition-colors active:bg-amber-100">
+        <!-- Indicator: filled amber circle -->
+        <span class="flex-shrink-0 h-5 w-5 rounded-full bg-amber-500 border-2 border-amber-500 flex items-center justify-center">
+          <!-- Inner highlight -->
+          <span class="h-2 w-2 rounded-full bg-amber-200 opacity-60"></span>
+        </span>
+        <span class="text-sm text-stone-800 font-normal">Exercise</span>
+      </button>
+
+      <div class="mx-5 border-t border-stone-100"></div>
+
+      <!-- Habit row — OFF state -->
+      <button type="button" class="w-full text-left flex items-center gap-4 px-5 py-3.5 min-h-[44px] transition-colors active:bg-stone-100">
+        <span class="flex-shrink-0 h-5 w-5 rounded-full border-2 border-stone-300 bg-transparent"></span>
+        <span class="text-sm text-stone-700">Reading</span>
+      </button>
+
+      <div class="mx-5 border-t border-stone-100"></div>
+
+      <!-- Habit row — OFF state -->
+      <button type="button" class="w-full text-left flex items-center gap-4 px-5 py-3.5 min-h-[44px] transition-colors active:bg-stone-100 mb-1">
+        <span class="flex-shrink-0 h-5 w-5 rounded-full border-2 border-stone-300 bg-transparent"></span>
+        <span class="text-sm text-stone-700">Morning walk</span>
+      </button>
+    </div>
+
+    <!-- Annotation -->
+    <div class="text-xs text-stone-500 leading-relaxed space-y-1">
+      <p><span class="text-stone-700 font-medium">Off:</span> outlined circle, stone-300 border, no fill</p>
+      <p><span class="text-stone-700 font-medium">On:</span> filled amber-500, amber-50 row wash, label shifts to stone-800</p>
+      <p><span class="text-stone-700 font-medium">Tap zone:</span> full row width</p>
+    </div>
+  </div>
+
+  <!-- DARK MODE -->
+  <div class="w-full max-w-sm flex flex-col gap-6">
+    <p class="text-xs font-medium uppercase tracking-widest text-stone-500">Dark mode</p>
+
+    <div class="bg-stone-900 rounded-2xl overflow-hidden border border-stone-700">
+      <!-- Section label -->
+      <div class="px-5 pt-5 pb-3">
+        <span class="text-xs font-medium uppercase tracking-widest text-stone-500">Habits</span>
+      </div>
+
+      <!-- Habit row — OFF -->
+      <button type="button" class="w-full text-left flex items-center gap-4 px-5 py-3.5 min-h-[44px] transition-colors active:bg-stone-800">
+        <span class="flex-shrink-0 h-5 w-5 rounded-full border-2 border-stone-600 bg-transparent"></span>
+        <span class="text-sm text-stone-300">Meditation</span>
+      </button>
+
+      <div class="mx-5 border-t border-stone-800"></div>
+
+      <!-- Habit row — ON -->
+      <button type="button" class="w-full text-left flex items-center gap-4 px-5 py-3.5 min-h-[44px] transition-colors" style="background: rgba(120,63,4,0.12);">
+        <span class="flex-shrink-0 h-5 w-5 rounded-full bg-amber-500 border-2 border-amber-500 flex items-center justify-center">
+          <span class="h-2 w-2 rounded-full bg-amber-200 opacity-60"></span>
+        </span>
+        <span class="text-sm text-stone-100">Exercise</span>
+      </button>
+
+      <div class="mx-5 border-t border-stone-800"></div>
+
+      <!-- Habit row — OFF -->
+      <button type="button" class="w-full text-left flex items-center gap-4 px-5 py-3.5 min-h-[44px] transition-colors active:bg-stone-800">
+        <span class="flex-shrink-0 h-5 w-5 rounded-full border-2 border-stone-600 bg-transparent"></span>
+        <span class="text-sm text-stone-300">Reading</span>
+      </button>
+
+      <div class="mx-5 border-t border-stone-800"></div>
+
+      <!-- Habit row — OFF -->
+      <button type="button" class="w-full text-left flex items-center gap-4 px-5 py-3.5 min-h-[44px] transition-colors active:bg-stone-800 mb-1">
+        <span class="flex-shrink-0 h-5 w-5 rounded-full border-2 border-stone-600 bg-transparent"></span>
+        <span class="text-sm text-stone-300">Morning walk</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- COMPARISON: current vs proposed -->
+  <div class="w-full max-w-sm flex flex-col gap-4">
+    <p class="text-xs font-medium uppercase tracking-widest text-stone-500">Current vs. proposed</p>
+
+    <div class="grid grid-cols-2 gap-3">
+      <!-- Current -->
+      <div class="flex flex-col gap-2">
+        <p class="text-xs text-stone-500 text-center">Current</p>
+        <div class="bg-stone-50 rounded-2xl border border-stone-200 p-4 flex flex-col gap-3">
+          <div class="flex items-center justify-between min-h-[44px]">
+            <span class="text-sm text-stone-700">Exercise</span>
+            <!-- OS toggle, on -->
+            <span class="relative h-7 w-12 rounded-full bg-stone-500 flex-shrink-0">
+              <span class="absolute top-1 h-5 w-5 rounded-full bg-white shadow-sm" style="left: 1.5rem;"></span>
+            </span>
+          </div>
+        </div>
+        <p class="text-xs text-stone-400 text-center">OS toggle — stone color</p>
+      </div>
+
+      <!-- Proposed -->
+      <div class="flex flex-col gap-2">
+        <p class="text-xs text-stone-500 text-center">Proposed</p>
+        <div class="bg-amber-50 rounded-2xl border border-amber-200 p-4 flex flex-col gap-3">
+          <button type="button" class="w-full text-left flex items-center gap-3 min-h-[44px]">
+            <span class="flex-shrink-0 h-5 w-5 rounded-full bg-amber-500 border-2 border-amber-500 flex items-center justify-center">
+              <span class="h-2 w-2 rounded-full bg-amber-200 opacity-60"></span>
+            </span>
+            <span class="text-sm text-stone-800">Exercise</span>
+          </button>
+        </div>
+        <p class="text-xs text-stone-400 text-center">Left mark — amber</p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

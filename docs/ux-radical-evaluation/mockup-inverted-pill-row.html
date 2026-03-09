@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proposal 6 — Filled row chip (inversion)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background: #f5f5f4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  </style>
+</head>
+<body class="flex flex-col items-center gap-12 py-16 px-4">
+
+  <p class="text-xs font-medium uppercase tracking-widest text-stone-500">
+    Proposal 6 — Filled row chip (inversion)
+  </p>
+  <p class="text-xs text-stone-400 max-w-xs text-center -mt-8">
+    Done habits become dark filled chips. Extends the moment-chip pattern to habits.
+  </p>
+
+  <!-- LIGHT MODE -->
+  <div class="w-full max-w-sm flex flex-col gap-6">
+    <p class="text-xs font-medium uppercase tracking-widest text-stone-500">Light mode</p>
+
+    <div class="bg-stone-50 rounded-2xl overflow-hidden border border-stone-200">
+      <div class="px-5 pt-5 pb-3">
+        <span class="text-xs font-medium uppercase tracking-widest text-stone-500">Habits</span>
+      </div>
+
+      <!-- OFF — plain row -->
+      <button type="button" class="w-full text-left flex items-center px-5 py-2 min-h-[44px] active:bg-stone-100">
+        <span class="text-sm text-stone-700">Meditation</span>
+      </button>
+
+      <div class="mx-5 border-t border-stone-100"></div>
+
+      <!-- ON — dark chip row -->
+      <button type="button" class="w-full text-left flex items-center px-3 py-2 min-h-[44px]">
+        <span class="flex-1 flex items-center justify-between px-4 py-2.5 bg-stone-800 rounded-xl">
+          <span class="text-sm text-white">Exercise</span>
+          <span class="h-2 w-2 rounded-full bg-amber-400"></span>
+        </span>
+      </button>
+
+      <div class="mx-5 border-t border-stone-100"></div>
+
+      <!-- OFF -->
+      <button type="button" class="w-full text-left flex items-center px-5 py-2 min-h-[44px] active:bg-stone-100">
+        <span class="text-sm text-stone-700">Reading</span>
+      </button>
+
+      <div class="mx-5 border-t border-stone-100"></div>
+
+      <!-- ON -->
+      <button type="button" class="w-full text-left flex items-center px-3 py-2 min-h-[44px]">
+        <span class="flex-1 flex items-center justify-between px-4 py-2.5 bg-stone-800 rounded-xl">
+          <span class="text-sm text-white">Morning walk</span>
+          <span class="h-2 w-2 rounded-full bg-amber-400"></span>
+        </span>
+      </button>
+
+      <div class="mx-5 border-t border-stone-100"></div>
+
+      <!-- OFF -->
+      <button type="button" class="w-full text-left flex items-center px-5 py-2 min-h-[44px] active:bg-stone-100 mb-1">
+        <span class="text-sm text-stone-700">Cold shower</span>
+      </button>
+    </div>
+
+    <div class="text-xs text-stone-500 leading-relaxed space-y-1">
+      <p><span class="text-stone-700 font-medium">Off:</span> plain text row, stone-700</p>
+      <p><span class="text-stone-700 font-medium">On:</span> stone-800 chip, white label, amber-400 trailing dot</p>
+      <p><span class="text-stone-700 font-medium">Radius:</span> rounded-xl — Calma inline/compact scale</p>
+    </div>
+  </div>
+
+  <!-- DARK MODE -->
+  <div class="w-full max-w-sm flex flex-col gap-6">
+    <p class="text-xs font-medium uppercase tracking-widest text-stone-500">Dark mode</p>
+
+    <div class="bg-stone-900 rounded-2xl overflow-hidden border border-stone-700">
+      <div class="px-5 pt-5 pb-3">
+        <span class="text-xs font-medium uppercase tracking-widest text-stone-500">Habits</span>
+      </div>
+
+      <!-- OFF -->
+      <button type="button" class="w-full text-left flex items-center px-5 py-2 min-h-[44px] active:bg-stone-800">
+        <span class="text-sm text-stone-300">Meditation</span>
+      </button>
+
+      <div class="mx-5 border-t border-stone-800"></div>
+
+      <!-- ON — light chip row (inverted in dark mode) -->
+      <button type="button" class="w-full text-left flex items-center px-3 py-2 min-h-[44px]">
+        <span class="flex-1 flex items-center justify-between px-4 py-2.5 bg-stone-100 rounded-xl">
+          <span class="text-sm text-stone-900">Exercise</span>
+          <span class="h-2 w-2 rounded-full bg-amber-500"></span>
+        </span>
+      </button>
+
+      <div class="mx-5 border-t border-stone-800"></div>
+
+      <!-- OFF -->
+      <button type="button" class="w-full text-left flex items-center px-5 py-2 min-h-[44px] active:bg-stone-800">
+        <span class="text-sm text-stone-300">Reading</span>
+      </button>
+
+      <div class="mx-5 border-t border-stone-800"></div>
+
+      <!-- ON -->
+      <button type="button" class="w-full text-left flex items-center px-3 py-2 min-h-[44px]">
+        <span class="flex-1 flex items-center justify-between px-4 py-2.5 bg-stone-100 rounded-xl">
+          <span class="text-sm text-stone-900">Morning walk</span>
+          <span class="h-2 w-2 rounded-full bg-amber-500"></span>
+        </span>
+      </button>
+
+      <div class="mx-5 border-t border-stone-800"></div>
+
+      <!-- OFF -->
+      <button type="button" class="w-full text-left flex items-center px-5 py-2 min-h-[44px] active:bg-stone-800 mb-1">
+        <span class="text-sm text-stone-300">Cold shower</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- All done state -->
+  <div class="w-full max-w-sm flex flex-col gap-4">
+    <p class="text-xs font-medium uppercase tracking-widest text-stone-500">All habits done</p>
+
+    <div class="bg-stone-50 rounded-2xl overflow-hidden border border-stone-200">
+      <div class="px-5 pt-5 pb-3">
+        <span class="text-xs font-medium uppercase tracking-widest text-stone-500">Habits</span>
+      </div>
+      <button type="button" class="w-full text-left flex items-center px-3 py-2 min-h-[44px]">
+        <span class="flex-1 flex items-center justify-between px-4 py-2.5 bg-stone-800 rounded-xl">
+          <span class="text-sm text-white">Meditation</span>
+          <span class="h-2 w-2 rounded-full bg-amber-400"></span>
+        </span>
+      </button>
+      <div class="mx-5 border-t border-stone-100"></div>
+      <button type="button" class="w-full text-left flex items-center px-3 py-2 min-h-[44px]">
+        <span class="flex-1 flex items-center justify-between px-4 py-2.5 bg-stone-800 rounded-xl">
+          <span class="text-sm text-white">Exercise</span>
+          <span class="h-2 w-2 rounded-full bg-amber-400"></span>
+        </span>
+      </button>
+      <div class="mx-5 border-t border-stone-100"></div>
+      <button type="button" class="w-full text-left flex items-center px-3 py-2 min-h-[44px]">
+        <span class="flex-1 flex items-center justify-between px-4 py-2.5 bg-stone-800 rounded-xl">
+          <span class="text-sm text-white">Morning walk</span>
+          <span class="h-2 w-2 rounded-full bg-amber-400"></span>
+        </span>
+      </button>
+      <div class="px-3 pb-2 pt-1"><!-- spacing --></div>
+    </div>
+
+    <p class="text-xs text-stone-500 leading-relaxed">
+      When all habits are done, the section becomes a set of dark chips — confident and complete.
+      This is the boldest read of any proposal. It might be too assertive for the Clarity philosophy,
+      but for some users, this clarity (a page full of dark marked chips) could feel deeply satisfying
+      without any gamification element.
+    </p>
+  </div>
+
+  <!-- Comparison with moment chips -->
+  <div class="w-full max-w-sm flex flex-col gap-4">
+    <p class="text-xs font-medium uppercase tracking-widest text-stone-500">Language consistency — moment chips</p>
+
+    <div class="bg-stone-50 rounded-2xl border border-stone-200 p-5 flex flex-col gap-4">
+      <div>
+        <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Moments</p>
+        <div class="flex flex-wrap gap-2">
+          <!-- Selected moment chip (existing Clarity pattern) -->
+          <span class="px-3.5 py-1.5 rounded-full text-sm bg-stone-800 text-white border border-stone-800">Gratitude</span>
+          <span class="px-3.5 py-1.5 rounded-full text-sm bg-stone-800 text-white border border-stone-800">Rest</span>
+          <!-- Unselected -->
+          <span class="px-3.5 py-1.5 rounded-full text-sm text-stone-700 border border-stone-200 bg-white">Creativity</span>
+          <span class="px-3.5 py-1.5 rounded-full text-sm text-stone-700 border border-stone-200 bg-white">Connection</span>
+        </div>
+      </div>
+      <div>
+        <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-2">Habits (Proposal 6)</p>
+        <button type="button" class="w-full text-left flex items-center min-h-[44px]">
+          <span class="flex-1 flex items-center justify-between px-4 py-2.5 bg-stone-800 rounded-xl">
+            <span class="text-sm text-white">Exercise</span>
+            <span class="h-2 w-2 rounded-full bg-amber-400"></span>
+          </span>
+        </button>
+      </div>
+      <p class="text-xs text-stone-500">
+        P6 extends the existing filled-dark-chip language from Moments to Habits. Both sections share the same "selected = dark filled" vocabulary — different shapes (pill vs. rounded-xl), but the same semantic.
+      </p>
+    </div>
+  </div>
+
+</body>
+</html>
