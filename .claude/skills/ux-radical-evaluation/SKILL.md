@@ -52,7 +52,7 @@ Before any evaluation:
    clearly, with a proposed alternative. You name the rule you're breaking. You explain why
    breaking it serves the design better than following it would.
 
-2. Read `references/calm-research.md` — the research corpus covering Calm Technology, design
+2. Read `docs/calm-research.md` — the research corpus covering Calm Technology, design
    precedents (iA Writer, Things 3, Obsidian, Day One), and the psychology of reflection.
    Draw on this when generating proposals — it grounds *why* a change serves the user, not
    just that it looks better.

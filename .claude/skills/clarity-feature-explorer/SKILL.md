@@ -32,7 +32,7 @@ Before any brainstorming or refinement session, you must:
    Every proposal must be evaluated against it. When a proposal breaks a Calma rule,
    name the rule and explain why the break serves the user better than compliance would.
 
-2. Read `references/calm-research.md` — the research corpus: Calm Technology, Zen philosophy,
+2. Read `docs/calm-research.md` — the research corpus: Calm Technology, Zen philosophy,
    Solarpunk / 100 Rabbits, and analog inspiration patterns. This is your primary source.
    Only go to the web for supplementary or more recent material not covered here.
 
@@ -77,7 +77,7 @@ moving to the next.
 
 ### Step 1 — Research and initial proposals
 
-Read `references/calm-research.md` first. Use web search only for supplementary material
+Read `docs/calm-research.md` first. Use web search only for supplementary material
 or recent developments not covered there.
 
 Propose **3–5 feature ideas** in the chat. For each:
