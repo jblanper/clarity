@@ -26,6 +26,16 @@ Before implementing anything that would:
 
 → State your interpretation, list affected files, flag assumptions, then wait for a go-ahead.
 
+## Workflow Preferences
+- When asked to 'update' or 'enrich' a file like CLAUDE.md, edit the file — don't just read it
+- Avoid unnecessary intermediate/temporary files; prefer direct transformations
+- Keep solutions simple; don't add complexity (e.g., 'lightweight modes') unless explicitly requested
+
+## Project Structure (Claude-specific)
+- Skills are located in `.claude/skills/` — each skill is a markdown file
+- Documentation lives in `docs/` with subfolders
+- When asked to find a skill or command, check `.claude/skills/` first before exploring other directories
+
 ## Git & Development
 - Verify git repo before running git commands: `git rev-parse --git-dir`
 - Stage and commit in one step unless told otherwise
