@@ -1,30 +1,53 @@
 #!/usr/bin/env node
 
 /**
- * @fileoverview Analyzes the Claude Code settings.json for defined hooks.
- * Extracts and prints the hooks for further auditing and performance evaluation.
+ * @fileoverview Analyzes Claude Code hooks from both project and global settings.json.
+ * Merges results and summarizes event coverage.
  */
 
 import fs from 'fs/promises';
 import { existsSync } from 'fs';
 import path from 'path';
+import os from 'os';
 
-const settingsPath = path.join(process.cwd(), '.claude', 'settings.json');
+const projectRoot = process.cwd();
+const globalRoot = path.join(os.homedir(), '.claude');
 
-if (!existsSync(settingsPath)) {
-  console.log(JSON.stringify({ error: "No settings.json found" }));
-  process.exit(0);
+async function loadHooks(settingsPath, origin) {
+  if (!existsSync(settingsPath)) return { origin, hooks: {}, error: null };
+  try {
+    const data = await fs.readFile(settingsPath, 'utf8');
+    const settings = JSON.parse(data);
+    return { origin, hooks: settings.hooks ?? {}, error: null };
+  } catch (err) {
+    return { origin, hooks: {}, error: err.message };
+  }
 }
 
-try {
-  const settingsData = await fs.readFile(settingsPath, 'utf8');
-  const settings = JSON.parse(settingsData);
-  const hooks = settings.hooks || {};
+const [projectResult, globalResult] = await Promise.all([
+  loadHooks(path.join(projectRoot, '.claude', 'settings.json'), 'project'),
+  loadHooks(path.join(globalRoot, 'settings.json'), 'global'),
+]);
 
-  // Note: Claude Code settings.json can have different structures, 
-  // this is a simplified analysis based on observed patterns.
-  console.log(JSON.stringify({ hooks }, null, 2));
-} catch (error) {
-  console.error(JSON.stringify({ error: "Failed to parse settings.json", details: error.message }));
-  process.exit(1);
+// Merge hooks by event, preserving origin label
+const mergedHooks = {};
+for (const { origin, hooks } of [projectResult, globalResult]) {
+  for (const [event, eventHooks] of Object.entries(hooks)) {
+    if (!mergedHooks[event]) mergedHooks[event] = [];
+    const hookList = Array.isArray(eventHooks) ? eventHooks : [eventHooks];
+    for (const hook of hookList) {
+      mergedHooks[event].push({ origin, ...hook });
+    }
+  }
 }
+
+const knownEvents = ['SessionStart', 'PreToolUse', 'PostToolUse', 'Stop'];
+const missingEvents = knownEvents.filter(e => !mergedHooks[e]);
+const coveredEvents = knownEvents.filter(e => mergedHooks[e]);
+
+console.log(JSON.stringify({
+  coveredEvents,
+  missingEvents,
+  mergedHooks,
+  errors: [projectResult.error, globalResult.error].filter(Boolean),
+}, null, 2));

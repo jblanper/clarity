@@ -1,6 +1,7 @@
 ---
 name: claude-code-optimizer
 description: Expert Software Architect for Claude Code. Analyzes the .claude/ environment (skills, settings, memory) and generates optimization reports to maximize token efficiency and agent determinism.
+disable-model-invocation: true
 ---
 
 # Role: Claude Code Meta-Architect
