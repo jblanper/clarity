@@ -1,7 +1,7 @@
 # Sprint 8 — Touch, Copy & Polish
 
 **Dates:** 2026-03-08 – (TBD)
-**Status:** active
+**Status:** completed
 **Release:** v2.1.6 (patch)
 
 ---
@@ -428,4 +428,29 @@ Proceed to `/calma-sync` → `/deploy`
 
 ## Retrospective
 
-<!-- To be filled in after the sprint using /sprint-retro -->
+**Date:** 2026-03-09
+
+### What went well
+
+- Validation process was smoother than Sprint 7 — running `sprint-validate` and `sprint-qa` in the background removed noise and kept the main context focused.
+- Arch review caught the `replace_all` indent mismatch on `Step`→`Increment` before it could ship to production — exactly the gate doing its job.
+- The arch note about `scaleX` needing 0–1 decimals (not percentage strings) was non-obvious and prevented a silent animation bug.
+- `/sprint-kickoff` with detailed task specs made execution fast and precise.
+- `/sprint-pre-flight` identified blockers early and confirmed the sprint was well-scoped before any code was written.
+- All 9 HIGH audit findings closed, zero regressions — a clean result for a quality pass.
+
+### What was harder than expected
+
+- The `replace_all` indent mismatch on ManageView required a second pass. Two parallel JSX subtrees (inline edit form + add-habit form) at different indentation levels caused a silent miss — pattern has now occurred twice.
+- The `scaleX` animation change was more careful to implement than it appeared in the brief: percentage strings don't work directly with `scaleX`.
+- Sprint doc and skill output verbosity is high for human reading. The content is right for agent context, but a human-readable terminal summary would reduce cognitive load during the sprint.
+
+### Process improvements for next sprint
+
+- Implement the skill improvement plan (`docs/claude-code-optimizer/skill-improvement-plan-2026-03-08.md`) before Sprint 9: D5/D6 (pre-flight report → brief) will reduce irrelevant audit runs and token cost; D1 parallel audit execution will speed up validation.
+- Evaluate token cost of the validation phase — run only audits relevant to the sprint scope (pre-flight report already seeds this).
+- Consider a lightweight human-readable summary at the end of `sprint-validate` and `sprint-qa` (terminal only, no file write) — one line per audit with a pass/fail count.
+
+### Planning accuracy
+
+The brief was accurate: scope was right-sized, task ordering (typography → touch targets → animation → microcopy → UI text) was logical and worked cleanly. Two minor misses caught by arch: H8 import-side already implemented (scope reduction), and M15 appearing in two ManageView locations rather than one. Both are recurring patterns now documented in CLAUDE.md.

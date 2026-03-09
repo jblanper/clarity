@@ -1,4 +1,4 @@
-<!-- Last reviewed: 2026-03-08 (update-claude-md, sprint-08) -->
+<!-- Last reviewed: 2026-03-09 (update-claude-md, sprint-08-retro) -->
 # Clarity — Project Guide
 
 ## What is Clarity?
@@ -124,7 +124,7 @@ Types live in `types/entry.ts` (`HabitEntry`, `HabitState`) and `lib/habitConfig
 
 ### Animations (Framer Motion)
 - **Motion animations** — use `LazyMotion + domAnimation` (~17 KB) via `MotionProvider`. For height reveals use `animate={{ height: "auto" }}` with `style={{ overflow: "hidden" }}`. For directional slides (e.g. calendar) use named `variants` + `custom` prop on both `AnimatePresence` and `m.*` — inline function syntax on `initial`/`exit` is NOT called with `custom` and must not be used. Duration ≤ 320 ms, ease-out for enters, ease-in for exits.
-- **Permitted animation properties** — opacity · translate · height/max-height (reveals) · scaleX/scaleY (reflow-free substitute for width animations — keep the natural width as a static `style` and set `transformOrigin` to the growth edge). Never animate `width` or `height` directly (layout reflow on every frame). Never use `scale` or `transition-transform` on interactive press states — use `active:opacity-70` instead.
+- **Permitted animation properties** — opacity · translate · height/max-height (reveals) · scaleX/scaleY (reflow-free substitute for width animations — animate `scaleX` from `0` to `1`; set the target width as a static `style={{ width: barWidth }}` and `transformOrigin` to the growth edge. Never pass a percentage string to `scaleX`). Never animate `width` or `height` directly (layout reflow on every frame). Never use `scale` or `transition-transform` on interactive press states — use `active:opacity-70` instead.
 - **Exit animation snap** — when `exit={{ height: 0 }}` is on an element that has padding or margin via className, those must also be animated to 0 in `exit` (e.g. `paddingTop: 0, paddingBottom: 0, marginBottom: 0`). With `box-sizing: border-box`, `height: 0` does not collapse `py-*` padding; the element stays visible at `paddingTop + paddingBottom` height until unmount, causing a snap.
 
 ### Theming & Dark Mode
