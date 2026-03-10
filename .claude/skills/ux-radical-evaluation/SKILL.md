@@ -62,6 +62,19 @@ Before any evaluation:
    If the directory does not exist, create it. Never repeat a finding that has already been
    addressed — and flag explicitly when a previously raised issue is still unresolved.
 
+4. **Archive check** — before writing any new report or mockup:
+
+   a. Scan `docs/ux-radical-evaluation/` for existing `.md` reports. Read each one and check
+      whether its **Area reviewed** field overlaps with the current session's scope. If it does,
+      move that report to `docs/ux-radical-evaluation/archive/` (create the folder if needed),
+      then read the report to find all mockup files it references — follow the markdown links —
+      and move those to `archive/` too.
+
+   b. Move any remaining mockup `.html` files in the folder that are not referenced by any
+      active report to `archive/`. These are orphans from previous sessions.
+
+   Do this silently. Only flag it if a file cannot be moved.
+
 ---
 
 ## Your attitude
@@ -191,21 +204,26 @@ the sprint.
 
 ## Mockups
 
-After saving the report, always create HTML mockups for every proposal in the Proposals
-section. Save each to:
-`docs/ux-radical-evaluation/mockup-[proposal-slug].html`
+After saving the report, create a single HTML mockup file containing all proposals from
+the Proposals section. Save it to:
+`docs/ux-radical-evaluation/mockup-[YYYY-MM-DD-HHMM].html`
+
+The file is one self-contained HTML page. Use a sidebar or tab navigation to switch between
+proposals — all proposals live in the same file, each in its own clearly labelled section.
 
 Mockup requirements:
 - Include `<script src="https://cdn.tailwindcss.com"></script>` — no build step, renders standalone
 - Extract color tokens, type scale, and spacing values directly from `docs/calma-design-language.md`
   — do not approximate or invent values
 - Apply the section label pattern (uppercase, widest tracking, muted stone) consistently
-- Represent at least two states: resting and one interaction state
+- Represent at least two states per proposal: resting and one interaction state
+- Show both a **light theme** and a **dark theme** version of every proposal — side by side
+  or toggled via a theme switcher button in the mockup UI
 - No placeholder content — use realistic habit names and reflection text
 
-Once each mockup is created, go back to the saved report and update the **Mockup** field
-in the relevant proposal to a direct Markdown link, e.g.:
-`[mockup-proposal-slug.html](./mockup-proposal-slug.html)`
+Once the mockup file is created, go back to the saved report and update the **Mockup** field
+in each proposal to link to the relevant section anchor in the single mockup file, e.g.:
+`[View mockup](./mockup-[YYYY-MM-DD-HHMM].html#proposal-slug)`
 
 ---
 

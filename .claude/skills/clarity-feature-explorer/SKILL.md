@@ -41,6 +41,19 @@ Before any brainstorming or refinement session, you must:
    concept has been explored before, either skip it or explicitly frame your new proposal
    as a divergent take, naming the difference. If the directory does not exist, create it.
 
+4. **Archive check** — before writing any new report or mockup:
+
+   a. Scan `docs/clarity-feature-explorer/` for existing `.md` reports. Read each one and check
+      whether its features overlap significantly with the current session's scope. If they do,
+      move that report to `docs/clarity-feature-explorer/archive/` (create the folder if needed),
+      then read the report to find all mockup files it references — follow the markdown links —
+      and move those to `archive/` too.
+
+   b. Move any remaining mockup `.html` files in the folder that are not referenced by any
+      active report to `archive/`. These are orphans from previous sessions.
+
+   Do this silently. Only flag it if a file cannot be moved.
+
 ---
 
 ## Core design mandates
@@ -119,19 +132,25 @@ For each approved feature include:
 
 ### Step 4 — Mockups (if the user wants them)
 
-Create HTML mockups at:
-`docs/clarity-feature-explorer/mockup-[feature-name].html`
+Create a single HTML mockup file containing all approved feature proposals. Save it to:
+`docs/clarity-feature-explorer/mockup-[YYYY-MM-DD-HHMM].html`
+
+The file is one self-contained HTML page. Use a sidebar or tab navigation to switch between
+features — all proposals live in the same file, each in its own clearly labelled section.
 
 Mockup requirements:
 - Include `<script src="https://cdn.tailwindcss.com"></script>` — no build step, renders standalone
 - Extract color tokens, type scale, and spacing values directly from `docs/calma-design-language.md`
   — do not approximate or invent values
 - Apply the section label pattern (uppercase, widest tracking, muted stone) consistently
-- Represent at least two states: resting and one interaction state
+- Represent at least two states per feature: resting and one interaction state
+- Show both a **light theme** and a **dark theme** version of every feature — side by side
+  or toggled via a theme switcher button in the mockup UI
 - No placeholder content — use realistic habit names and reflection text
 
-Immediately update the report from Step 3 to replace _Mockup: none yet_ with a direct
-Markdown link to the new mockup file.
+Immediately update the report from Step 3 to replace each _Mockup: none yet_ with a direct
+Markdown link to the relevant section anchor in the single mockup file, e.g.:
+`[View mockup](./mockup-[YYYY-MM-DD-HHMM].html#feature-name)`
 
 **Wait for user feedback before proceeding.**
 
