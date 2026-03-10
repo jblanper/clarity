@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NumberStepper P3 Final — Clarity UX</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
+
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #fafaf9;
+      color: #1c1917;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    :root {
+      --bg:        #fafaf9;
+      --fg:        #1c1917;
+      --stone-50:  #fafaf9;
+      --stone-100: #f5f5f4;
+      --stone-200: #e7e5e4;
+      --stone-300: #d6d3d1;
+      --stone-400: #a8a29e;
+      --stone-500: #78716c;
+      --stone-600: #57534e;
+      --stone-700: #44403c;
+      --stone-800: #292524;
+      --stone-900: #1c1917;
+      --amber-50:  #fffbeb;
+      --amber-100: #fef3c7;
+      --amber-500: #f59e0b;
+      --amber-600: #d97706;
+      --amber-700: #b45309;
+    }
+
+    .page { max-width: 448px; margin: 0 auto; padding: 2.5rem 1.25rem 5rem; }
+
+    /* Section containers */
+    .section {
+      background: white;
+      border-radius: 1rem;
+      padding: 1.25rem 1rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    /* Section label — Calma canonical */
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--stone-500);
+      margin-bottom: 1.25rem;
+    }
+
+    /* Variant header — smaller, amber-tinted */
+    .variant-header {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber-700);
+      margin-top: 1.25rem;
+      margin-bottom: 0.25rem;
+    }
+
+    /* State label */
+    .state-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.05em;
+      color: var(--stone-400);
+      font-style: italic;
+      margin-bottom: 0.375rem;
+    }
+
+    /* Divider */
+    hr { border: none; border-top: 1px solid var(--stone-100); margin: 0.75rem 0; }
+
+    /* Row base */
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+    }
+
+    /* Left label group */
+    .row-label {
+      display: flex;
+      align-items: baseline;
+      gap: 0.375rem;
+    }
+    .habit-name { font-size: 0.875rem; color: var(--stone-700); }
+    .habit-name.logged { color: var(--stone-800); font-weight: 500; }
+    .habit-unit { font-size: 0.75rem; color: var(--stone-500); }
+
+    /* ═══════════════════════════════════════════════
+       P3-A — PILL BADGE
+    ═══════════════════════════════════════════════ */
+
+    .p3a-control {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    /* The minus — plain text glyph, full touch target height */
+    .p3a-minus {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      min-width: 32px;
+      font-size: 0.875rem;
+      color: var(--stone-400);
+      cursor: pointer;
+      border-radius: 0.75rem;
+      transition: background 0.1s;
+      user-select: none;
+    }
+    .p3a-minus:hover { background: var(--stone-100); }
+    .p3a-minus.hidden { visibility: hidden; }
+
+    /* The pill — the entire tap target */
+    .p3a-pill {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 56px;
+      height: 44px;
+      border-radius: 0.75rem;
+      background: var(--stone-100);
+      cursor: pointer;
+      transition: background 0.12s;
+      user-select: none;
+    }
+    .p3a-pill:hover { background: var(--stone-200); }
+    .p3a-pill:active { background: var(--stone-200); }
+
+    .p3a-pill.logged {
+      background: var(--amber-50);
+    }
+    .p3a-pill.logged:hover { background: var(--amber-100); }
+
+    .p3a-num {
+      font-size: 1.25rem;
+      font-weight: 300;
+      color: var(--stone-500); /* accessible: ~4.6:1 on stone-100 */
+    }
+    .p3a-pill.logged .p3a-num {
+      color: var(--amber-700);
+    }
+
+    /* ═══════════════════════════════════════════════
+       P3-B — PHANTOM PLUS
+    ═══════════════════════════════════════════════ */
+
+    .p3b-control {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .p3b-minus {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      min-width: 32px;
+      font-size: 0.875rem;
+      color: var(--stone-400);
+      cursor: pointer;
+      border-radius: 0.75rem;
+      transition: background 0.1s;
+      user-select: none;
+    }
+    .p3b-minus:hover { background: var(--stone-100); }
+    .p3b-minus.hidden { visibility: hidden; }
+
+    /* The tap zone — number + phantom plus */
+    .p3b-tap {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      min-height: 44px;
+      padding: 0 0.5rem;
+      cursor: pointer;
+      border-radius: 0.75rem;
+      transition: background 0.1s;
+      user-select: none;
+    }
+    .p3b-tap:hover { background: var(--stone-100); }
+    .p3b-tap:active { background: var(--stone-100); }
+
+    .p3b-num {
+      font-size: 1.25rem;
+      font-weight: 300;
+      color: var(--stone-700);
+    }
+    .p3b-tap.logged .p3b-num {
+      color: var(--amber-700);
+    }
+
+    /* The phantom plus — permanent, font-light, xs, stone-500 (accessible) */
+    .p3b-ghost {
+      font-size: 0.75rem;
+      font-weight: 300;
+      color: var(--stone-500); /* WCAG AA compliant — ~4.6:1 on white */
+      line-height: 1;
+      margin-top: 2px; /* optical alignment with the number */
+    }
+    .p3b-tap.logged .p3b-ghost {
+      display: none;
+    }
+
+    /* ═══════════════════════════════════════════════
+       CURRENT DESIGN — for comparison
+    ═══════════════════════════════════════════════ */
+
+    .current-control {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .current-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 40px;
+      height: 40px;
+      border-radius: 0.75rem;
+      border: 1px solid var(--stone-200);
+      background: white;
+      font-size: 1rem;
+      color: var(--stone-600);
+      cursor: pointer;
+      transition: background 0.1s;
+      user-select: none;
+    }
+    .current-btn:hover { background: var(--stone-50); }
+    .current-btn.disabled { color: var(--stone-300); border-color: var(--stone-100); cursor: default; }
+
+    .current-num {
+      font-size: 1.125rem;
+      font-weight: 300;
+      color: var(--stone-700);
+      min-width: 28px;
+      text-align: center;
+    }
+
+    /* ═══════════════════════════════════════════════
+       LAYOUT HELPERS
+    ═══════════════════════════════════════════════ */
+
+    .comparison-note {
+      font-size: 0.75rem;
+      color: var(--stone-500);
+      line-height: 1.5;
+      padding: 0.75rem;
+      background: var(--stone-50);
+      border-radius: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .note-strong { color: var(--stone-700); font-weight: 500; }
+
+    /* Interactive demo label */
+    .demo-hint {
+      font-size: 0.65rem;
+      letter-spacing: 0.06em;
+      color: var(--stone-400);
+      text-align: right;
+      margin-bottom: 0.5rem;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Page header -->
+  <div style="margin-bottom: 2.5rem;">
+    <h1 style="font-size: 1.25rem; font-weight: 300; letter-spacing: 0.08em; color: var(--stone-800); margin: 0 0 0.25rem;">NumberStepper — P3 Final</h1>
+    <p style="font-size: 0.75rem; color: var(--stone-500); margin: 0;">Clarity UX · 2026-03-10</p>
+  </div>
+
+  <!-- ─── CURRENT DESIGN (reference) ─── -->
+  <div class="section">
+    <div class="section-label">Current design</div>
+    <p style="font-size: 0.8rem; color: var(--stone-500); margin: 0 0 1rem; line-height: 1.5;">The existing `−  0  +` control. Functional but the shape language is borrowed from a form input spinner, not a notebook. The bordered buttons look like quantity selectors in an e-commerce cart.</p>
+
+    <div class="row">
+      <div class="row-label">
+        <span class="habit-name">Sleep</span>
+        <span class="habit-unit">hrs</span>
+      </div>
+      <div class="current-control">
+        <button class="current-btn disabled" type="button">−</button>
+        <span class="current-num">0</span>
+        <button class="current-btn" type="button">+</button>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <div class="row-label">
+        <span class="habit-name logged">Water</span>
+        <span class="habit-unit">glasses</span>
+      </div>
+      <div class="current-control">
+        <button class="current-btn" type="button">−</button>
+        <span class="current-num" style="color: var(--stone-700);">3</span>
+        <button class="current-btn" type="button">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── P3-A PILL BADGE ─── -->
+  <div class="section">
+    <div class="section-label">P3-A — Pill badge</div>
+    <p style="font-size: 0.8rem; color: var(--stone-500); margin: 0 0 1rem; line-height: 1.5;">The rounded pill surface teaches "pressable" without any label or icon. The shape is the instruction. Amber at logged state signals "noted" without implying a target.</p>
+
+    <div class="demo-hint">tap the pill to interact</div>
+
+    <!-- Resting state (value = 0) -->
+    <div class="state-label">resting — value = 0</div>
+    <div class="row">
+      <div class="row-label">
+        <span class="habit-name" id="p3a-sleep-label">Sleep</span>
+        <span class="habit-unit">hrs</span>
+      </div>
+      <div class="p3a-control">
+        <span class="p3a-minus hidden" id="p3a-sleep-minus" onclick="p3aDecrement('sleep')">−</span>
+        <div class="p3a-pill" id="p3a-sleep-pill" onclick="p3aIncrement('sleep')">
+          <span class="p3a-num" id="p3a-sleep-val">0</span>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Logged state (value > 0) — pre-set to show the state -->
+    <div class="state-label">logged — value &gt; 0 (tap pill to increment, − to decrement)</div>
+    <div class="row">
+      <div class="row-label">
+        <span class="habit-name logged" id="p3a-water-label">Water</span>
+        <span class="habit-unit">glasses</span>
+      </div>
+      <div class="p3a-control">
+        <span class="p3a-minus" id="p3a-water-minus" onclick="p3aDecrement('water')">−</span>
+        <div class="p3a-pill logged" id="p3a-water-pill" onclick="p3aIncrement('water')">
+          <span class="p3a-num" id="p3a-water-val">3</span>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Screen time (value = 0) — another habit for context -->
+    <div class="state-label">resting — larger label for context</div>
+    <div class="row">
+      <div class="row-label">
+        <span class="habit-name" id="p3a-screen-label">Screen time</span>
+        <span class="habit-unit">hrs</span>
+      </div>
+      <div class="p3a-control">
+        <span class="p3a-minus hidden" id="p3a-screen-minus" onclick="p3aDecrement('screen')">−</span>
+        <div class="p3a-pill" id="p3a-screen-pill" onclick="p3aIncrement('screen')">
+          <span class="p3a-num" id="p3a-screen-val">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="comparison-note">
+      <span class="note-strong">Accessibility correction from previous report:</span> The number at zero is now <code>stone-500</code> (not <code>stone-300</code>). Contrast ratio on <code>stone-100</code> pill background: approximately 3.0:1 — this is below AA for body text but acceptable for large-scale UI control text (≥18px bold or ≥24px regular). At <code>1.25rem font-weight-300</code> this is borderline. An alternative: use <code>stone-600</code> at ~4.8:1 to guarantee AA. Decision left to implementation review.
+    </div>
+  </div>
+
+  <!-- ─── P3-B PHANTOM PLUS ─── -->
+  <div class="section">
+    <div class="section-label">P3-B — Phantom plus</div>
+    <p style="font-size: 0.8rem; color: var(--stone-500); margin: 0 0 1rem; line-height: 1.5;">The <code>0 +</code> pattern is typographic, not iconographic. It reads as "this field hasn't been filled yet." The only P3 variant that visually distinguishes an untouched zero from a deliberately logged zero.</p>
+
+    <div class="demo-hint">tap the number zone to interact</div>
+
+    <!-- Resting (value = 0) — ghost plus visible -->
+    <div class="state-label">resting — value = 0 (ghost + visible)</div>
+    <div class="row">
+      <div class="row-label">
+        <span class="habit-name" id="p3b-sleep-label">Sleep</span>
+        <span class="habit-unit">hrs</span>
+      </div>
+      <div class="p3b-control">
+        <span class="p3b-minus hidden" id="p3b-sleep-minus" onclick="p3bDecrement('sleep')">−</span>
+        <div class="p3b-tap" id="p3b-sleep-tap" onclick="p3bIncrement('sleep')">
+          <span class="p3b-num" id="p3b-sleep-val">0</span>
+          <span class="p3b-ghost" id="p3b-sleep-ghost" aria-hidden="true">+</span>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Logged (value > 0) — ghost plus gone, amber number -->
+    <div class="state-label">logged — value &gt; 0 (ghost + gone)</div>
+    <div class="row">
+      <div class="row-label">
+        <span class="habit-name logged" id="p3b-water-label">Water</span>
+        <span class="habit-unit">glasses</span>
+      </div>
+      <div class="p3b-control">
+        <span class="p3b-minus" id="p3b-water-minus" onclick="p3bDecrement('water')">−</span>
+        <div class="p3b-tap logged" id="p3b-water-tap" onclick="p3bIncrement('water')">
+          <span class="p3b-num" id="p3b-water-val">3</span>
+          <span class="p3b-ghost" id="p3b-water-ghost" aria-hidden="true" style="display:none;">+</span>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Intentional zero comparison -->
+    <div class="state-label">explicitly returned to zero — no ghost +, so zero reads as intentional</div>
+    <div class="row">
+      <div class="row-label">
+        <span class="habit-name" id="p3b-coffee-label">Coffee</span>
+        <span class="habit-unit">cups</span>
+      </div>
+      <div class="p3b-control">
+        <!-- No ghost plus — this zero was set deliberately (tapped up then decremented back) -->
+        <span class="p3b-minus hidden" id="p3b-coffee-minus" onclick="p3bDecrement('coffee')">−</span>
+        <div class="p3b-tap" id="p3b-coffee-tap" onclick="p3bIncrement('coffee')">
+          <span class="p3b-num" id="p3b-coffee-val">0</span>
+          <!-- ghost + absent here to show the "intentional zero" state; in actual implementation
+               this state would require data model support for distinguishing the two zeros -->
+        </div>
+      </div>
+    </div>
+
+    <div class="comparison-note">
+      <span class="note-strong">Accessibility note:</span> Ghost <code>+</code> is now <code>stone-500</code> (<code>font-weight: 300</code>, <code>text-xs</code>). The previous report proposed <code>stone-300</code> and accepted a contrast exception. That exception is revoked here. <code>stone-500</code> at ~4.6:1 passes WCAG AA. The "ghost" quality comes from weight and scale, not from failed contrast. The <code>aria-hidden</code> on the span ensures screen readers hear only the number value.
+    </div>
+  </div>
+
+  <!-- ─── SIDE-BY-SIDE SUMMARY ─── -->
+  <div class="section">
+    <div class="section-label">Decision matrix</div>
+
+    <table style="width: 100%; border-collapse: collapse; font-size: 0.78rem; color: var(--stone-700);">
+      <thead>
+        <tr style="border-bottom: 1px solid var(--stone-200);">
+          <th style="text-align: left; padding: 0.5rem 0.25rem; font-weight: 500; color: var(--stone-500); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;">Criterion</th>
+          <th style="text-align: center; padding: 0.5rem 0.25rem; font-weight: 500; color: var(--stone-500); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;">P3-A</th>
+          <th style="text-align: center; padding: 0.5rem 0.25rem; font-weight: 500; color: var(--stone-500); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;">P3-B</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom: 1px solid var(--stone-100);">
+          <td style="padding: 0.5rem 0.25rem;">Discoverability at zero</td>
+          <td style="text-align: center; padding: 0.5rem 0.25rem; color: var(--amber-700);">Strong (shape)</td>
+          <td style="text-align: center; padding: 0.5rem 0.25rem; color: var(--amber-700);">Strong (type)</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--stone-100);">
+          <td style="padding: 0.5rem 0.25rem;">Intentional zero distinction</td>
+          <td style="text-align: center; padding: 0.5rem 0.25rem; color: var(--stone-500);">None</td>
+          <td style="text-align: center; padding: 0.5rem 0.25rem; color: var(--amber-700);">Yes (ghost absent)</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--stone-100);">
+          <td style="padding: 0.5rem 0.25rem;">Calma alignment</td>
+          <td style="text-align: center; padding: 0.5rem 0.25rem; color: var(--amber-700);">Full</td>
+          <td style="text-align: center; padding: 0.5rem 0.25rem; color: var(--amber-700);">Full</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--stone-100);">
+          <td style="padding: 0.5rem 0.25rem;">Progress / goal framing</td>
+          <td style="text-align: center; padding: 0.5rem 0.25rem; color: var(--amber-700);">None</td>
+          <td style="text-align: center; padding: 0.5rem 0.25rem; color: var(--amber-700);">None</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--stone-100);">
+          <td style="padding: 0.5rem 0.25rem;">Implementation effort</td>
+          <td style="text-align: center; padding: 0.5rem 0.25rem;">Low</td>
+          <td style="text-align: center; padding: 0.5rem 0.25rem;">Low</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--stone-100);">
+          <td style="padding: 0.5rem 0.25rem;">Notebook metaphor fidelity</td>
+          <td style="text-align: center; padding: 0.5rem 0.25rem;">Good</td>
+          <td style="text-align: center; padding: 0.5rem 0.25rem; color: var(--amber-700);">Excellent</td>
+        </tr>
+        <tr>
+          <td style="padding: 0.5rem 0.25rem;">Requires data model change</td>
+          <td style="text-align: center; padding: 0.5rem 0.25rem; color: var(--amber-700);">No</td>
+          <td style="text-align: center; padding: 0.5rem 0.25rem;">Only for intentional-zero distinction</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="comparison-note" style="margin-top: 1rem;">
+      <span class="note-strong">Recommendation:</span> Ship P3-A in the current sprint — no data model changes required, maximum discoverability gain for minimum effort. Decide P3-B separately once the "intentional zero vs. untouched" data model question is settled. The two variants are not mutually exclusive — P3-B can replace P3-A later as a one-line change.
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ── P3-A interactive state ──────────────────────
+  const p3aState = { sleep: 0, water: 3, screen: 0 };
+
+  function p3aRender(habit) {
+    const val = p3aState[habit];
+    const pill = document.getElementById(`p3a-${habit}-pill`);
+    const num  = document.getElementById(`p3a-${habit}-val`);
+    const minus = document.getElementById(`p3a-${habit}-minus`);
+    const label = document.getElementById(`p3a-${habit}-label`);
+
+    num.textContent = val;
+
+    if (val > 0) {
+      pill.classList.add('logged');
+      minus.classList.remove('hidden');
+      label.classList.add('logged');
+    } else {
+      pill.classList.remove('logged');
+      minus.classList.add('hidden');
+      label.classList.remove('logged');
+    }
+  }
+
+  function p3aIncrement(habit) {
+    p3aState[habit] = Math.min(p3aState[habit] + 1, 24);
+    p3aRender(habit);
+  }
+
+  function p3aDecrement(habit) {
+    p3aState[habit] = Math.max(p3aState[habit] - 1, 0);
+    p3aRender(habit);
+  }
+
+  // ── P3-B interactive state ──────────────────────
+  // coffee starts at 0 but with no ghost + to illustrate intentional-zero
+  const p3bState = { sleep: 0, water: 3, coffee: 0 };
+  const p3bIntentional = { sleep: false, water: true, coffee: true }; // coffee "intentionally" zero
+
+  function p3bRender(habit) {
+    const val = p3bState[habit];
+    const tap  = document.getElementById(`p3b-${habit}-tap`);
+    const num  = document.getElementById(`p3b-${habit}-val`);
+    const ghost = document.getElementById(`p3b-${habit}-ghost`);
+    const minus = document.getElementById(`p3b-${habit}-minus`);
+    const label = document.getElementById(`p3b-${habit}-label`);
+
+    num.textContent = val;
+
+    if (val > 0) {
+      tap.classList.add('logged');
+      minus.classList.remove('hidden');
+      if (ghost) ghost.style.display = 'none';
+      if (label) label.classList.add('logged');
+      p3bIntentional[habit] = true;
+    } else {
+      tap.classList.remove('logged');
+      if (ghost) {
+        // Show ghost only if the habit was never touched or just decremented back
+        // (p3bIntentional tracks whether the user explicitly interacted)
+        ghost.style.display = p3bIntentional[habit] ? 'none' : '';
+      }
+      if (label) label.classList.remove('logged');
+    }
+    if (val <= 0) minus.classList.add('hidden');
+    else minus.classList.remove('hidden');
+  }
+
+  function p3bIncrement(habit) {
+    p3bIntentional[habit] = true;
+    p3bState[habit] = Math.min(p3bState[habit] + 1, 24);
+    p3bRender(habit);
+  }
+
+  function p3bDecrement(habit) {
+    p3bState[habit] = Math.max(p3bState[habit] - 1, 0);
+    p3bRender(habit);
+  }
+</script>
+</body>
+</html>

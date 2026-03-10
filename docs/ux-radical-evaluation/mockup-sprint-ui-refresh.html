@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sprint UI Refresh — Clarity Check-in</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #e7e5e4;
+      color: #1c1917;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+    }
+
+    /* ── Calma tokens ── */
+    :root {
+      --bg:         #fafaf9;
+      --bg-dark:    #1c1917;
+      --stone-50:   #fafaf9;
+      --stone-100:  #f5f5f4;
+      --stone-200:  #e7e5e4;
+      --stone-300:  #d6d3d1;
+      --stone-400:  #a8a29e;
+      --stone-500:  #78716c;
+      --stone-600:  #57534e;
+      --stone-700:  #44403c;
+      --stone-800:  #292524;
+      --stone-900:  #1c1917;
+      /* dark surface */
+      --dark-800:   #292524;
+      --dark-900:   #1c1917;
+      /* amber */
+      --amber-50:   #fffbeb;
+      --amber-100:  #fef3c7;
+      --amber-400:  #fbbf24;
+      --amber-500:  #f59e0b;
+      --amber-600:  #d97706;
+      --amber-700:  #b45309;
+    }
+
+    /* ── Page layout ── */
+    .layout {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .page-header h1 {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--stone-600);
+      margin: 0 0 0.25rem;
+    }
+    .page-header p {
+      font-size: 0.7rem;
+      color: var(--stone-500);
+      margin: 0;
+    }
+
+    .panels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 600px) {
+      .panels { grid-template-columns: 1fr; }
+    }
+
+    /* ── Mode label ── */
+    .mode-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--stone-500);
+      text-align: center;
+      margin-bottom: 0.75rem;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       LIGHT MODE PHONE
+    ═══════════════════════════════════════════════════ */
+
+    .phone-light {
+      background: var(--bg);
+      border-radius: 1.5rem;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .phone-light .app-header {
+      padding: 1.5rem 1.25rem 1rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .phone-light .app-title {
+      font-size: 1.125rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      color: var(--stone-800);
+      margin: 0 0 0.125rem;
+    }
+    .phone-light .app-date {
+      font-size: 0.7rem;
+      color: var(--stone-500);
+      margin: 0;
+    }
+    .phone-light .app-settings {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--stone-600);
+      padding-top: 0.25rem;
+    }
+
+    .phone-light .section {
+      padding: 0 1.25rem 1.5rem;
+    }
+    .phone-light .section-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--stone-500);
+      margin-bottom: 0.625rem;
+    }
+
+    /* Habit rows */
+    .phone-light .habit-list {
+      border-top: 1px solid var(--stone-100);
+    }
+    .phone-light .habit-row {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+      min-height: 44px;
+      padding: 0.625rem 0;
+      text-align: left;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--stone-100);
+      cursor: pointer;
+      transition: background 0.1s, opacity 0.1s;
+      font-family: inherit;
+    }
+    .phone-light .habit-row:active { opacity: 0.7; }
+    .phone-light .habit-row.done {
+      background: var(--amber-50);
+    }
+    .phone-light .habit-dot {
+      flex-shrink: 0;
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 9999px;
+      background: var(--stone-200);
+      transition: background 0.15s;
+    }
+    .phone-light .habit-row.done .habit-dot {
+      background: var(--amber-500);
+    }
+    .phone-light .habit-name {
+      font-size: 0.875rem;
+      color: var(--stone-700);
+      transition: color 0.15s;
+    }
+    .phone-light .habit-row.done .habit-name {
+      color: var(--stone-800);
+    }
+
+    /* Numeric stepper rows */
+    .phone-light .num-list {
+      border-top: 1px solid var(--stone-100);
+    }
+    .phone-light .num-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--stone-100);
+    }
+    .phone-light .num-label-group {
+      display: flex;
+      align-items: baseline;
+      gap: 0.35rem;
+    }
+    .phone-light .num-label {
+      font-size: 0.875rem;
+      color: var(--stone-700);
+      transition: color 0.15s;
+    }
+    .phone-light .num-label.logged { color: var(--stone-800); }
+    .phone-light .num-unit {
+      font-size: 0.7rem;
+      color: var(--stone-500);
+    }
+    .phone-light .num-control {
+      display: flex;
+      align-items: center;
+      gap: 0.125rem;
+    }
+    .phone-light .num-minus {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      min-width: 28px;
+      font-size: 0.8rem;
+      color: var(--stone-400);
+      cursor: pointer;
+      border-radius: 0.75rem;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      transition: background 0.1s, opacity 0.1s;
+    }
+    .phone-light .num-minus:hover { background: var(--stone-100); }
+    .phone-light .num-minus:active { opacity: 0.7; }
+    .phone-light .num-minus.hidden { visibility: hidden; }
+
+    .phone-light .num-pill {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 52px;
+      height: 44px;
+      border-radius: 0.75rem;
+      background: var(--stone-100);
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      transition: background 0.1s, opacity 0.1s;
+    }
+    .phone-light .num-pill:hover { background: var(--stone-200); }
+    .phone-light .num-pill:active { opacity: 0.7; }
+    .phone-light .num-pill.logged { background: var(--amber-50); }
+    .phone-light .num-pill.logged:hover { background: var(--amber-100); }
+    .phone-light .num-val {
+      font-size: 1.125rem;
+      font-weight: 300;
+      color: var(--stone-500);
+      transition: color 0.15s;
+    }
+    .phone-light .num-pill.logged .num-val { color: var(--amber-700); }
+
+    /* Moments */
+    .phone-light .moments {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .phone-light .moment-chip {
+      padding: 0.3rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      border: 1px solid var(--stone-200);
+      background: white;
+      color: var(--stone-700);
+      cursor: pointer;
+    }
+    .phone-light .moment-chip.active {
+      background: var(--stone-800);
+      color: white;
+      border-color: var(--stone-800);
+    }
+
+    /* Reflection */
+    .phone-light .reflection {
+      font-size: 0.875rem;
+      font-weight: 300;
+      color: var(--stone-500);
+      line-height: 1.5;
+      font-style: italic;
+    }
+
+    /* Save button */
+    .phone-light .save-btn {
+      display: block;
+      width: 100%;
+      margin: 0 1.25rem 1.5rem;
+      width: calc(100% - 2.5rem);
+      padding: 0.75rem;
+      border-radius: 1rem;
+      background: var(--stone-800);
+      color: white;
+      font-size: 0.875rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      text-align: center;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       DARK MODE PHONE
+    ═══════════════════════════════════════════════════ */
+
+    .phone-dark {
+      background: var(--bg-dark);
+      border-radius: 1.5rem;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.40), 0 1px 4px rgba(0,0,0,0.20);
+    }
+
+    .phone-dark .app-header {
+      padding: 1.5rem 1.25rem 1rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .phone-dark .app-title {
+      font-size: 1.125rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      color: #e7e5e4; /* stone-200 */
+      margin: 0 0 0.125rem;
+    }
+    .phone-dark .app-date {
+      font-size: 0.7rem;
+      color: var(--stone-500);
+      margin: 0;
+    }
+    .phone-dark .app-settings {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--stone-500);
+      padding-top: 0.25rem;
+    }
+
+    .phone-dark .section {
+      padding: 0 1.25rem 1.5rem;
+    }
+    .phone-dark .section-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--stone-500);
+      margin-bottom: 0.625rem;
+    }
+
+    /* Dark habit rows */
+    .phone-dark .habit-list {
+      border-top: 1px solid #292524; /* stone-800 */
+    }
+    .phone-dark .habit-row {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+      min-height: 44px;
+      padding: 0.625rem 0;
+      text-align: left;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid #292524;
+      cursor: pointer;
+      transition: background 0.1s, opacity 0.1s;
+      font-family: inherit;
+    }
+    .phone-dark .habit-row:active { opacity: 0.7; }
+    .phone-dark .habit-row.done {
+      background: rgba(120, 63, 4, 0.15); /* amber-900/15 approx */
+    }
+    .phone-dark .habit-dot {
+      flex-shrink: 0;
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 9999px;
+      background: #44403c; /* stone-700 */
+      transition: background 0.15s;
+    }
+    .phone-dark .habit-row.done .habit-dot {
+      background: var(--amber-500);
+    }
+    .phone-dark .habit-name {
+      font-size: 0.875rem;
+      color: #d6d3d1; /* stone-300 */
+      transition: color 0.15s;
+    }
+    .phone-dark .habit-row.done .habit-name {
+      color: #fafaf9; /* stone-100 */
+    }
+
+    /* Dark numeric rows */
+    .phone-dark .num-list {
+      border-top: 1px solid #292524;
+    }
+    .phone-dark .num-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #292524;
+    }
+    .phone-dark .num-label-group {
+      display: flex;
+      align-items: baseline;
+      gap: 0.35rem;
+    }
+    .phone-dark .num-label {
+      font-size: 0.875rem;
+      color: #d6d3d1; /* stone-300 */
+      transition: color 0.15s;
+    }
+    .phone-dark .num-label.logged { color: #fafaf9; /* stone-100 */ }
+    .phone-dark .num-unit {
+      font-size: 0.7rem;
+      color: var(--stone-500);
+    }
+    .phone-dark .num-control {
+      display: flex;
+      align-items: center;
+      gap: 0.125rem;
+    }
+    .phone-dark .num-minus {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      min-width: 28px;
+      font-size: 0.8rem;
+      color: var(--stone-500);
+      cursor: pointer;
+      border-radius: 0.75rem;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      transition: background 0.1s, opacity 0.1s;
+    }
+    .phone-dark .num-minus:hover { background: #292524; }
+    .phone-dark .num-minus:active { opacity: 0.7; }
+    .phone-dark .num-minus.hidden { visibility: hidden; }
+
+    .phone-dark .num-pill {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 52px;
+      height: 44px;
+      border-radius: 0.75rem;
+      background: #292524; /* stone-800 */
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      transition: background 0.1s, opacity 0.1s;
+    }
+    .phone-dark .num-pill:hover { background: #44403c; /* stone-700 */ }
+    .phone-dark .num-pill:active { opacity: 0.7; }
+    .phone-dark .num-pill.logged { background: rgba(120, 63, 4, 0.20); }
+    .phone-dark .num-pill.logged:hover { background: rgba(120, 63, 4, 0.28); }
+    .phone-dark .num-val {
+      font-size: 1.125rem;
+      font-weight: 300;
+      color: #a8a29e; /* stone-400 */
+      transition: color 0.15s;
+    }
+    .phone-dark .num-pill.logged .num-val { color: #f59e0b; /* amber-500 */ }
+
+    /* Dark moments */
+    .phone-dark .moments {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .phone-dark .moment-chip {
+      padding: 0.3rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      border: 1px solid #44403c;
+      background: transparent;
+      color: #d6d3d1;
+      cursor: pointer;
+    }
+    .phone-dark .moment-chip.active {
+      background: #e7e5e4; /* stone-200 */
+      color: #1c1917;
+      border-color: #e7e5e4;
+    }
+
+    /* Dark reflection */
+    .phone-dark .reflection {
+      font-size: 0.875rem;
+      font-weight: 300;
+      color: var(--stone-500);
+      line-height: 1.5;
+      font-style: italic;
+    }
+
+    /* Dark save */
+    .phone-dark .save-btn {
+      display: block;
+      margin: 0 1.25rem 1.5rem;
+      width: calc(100% - 2.5rem);
+      padding: 0.75rem;
+      border-radius: 1rem;
+      background: #e7e5e4; /* stone-200 */
+      color: #1c1917;
+      font-size: 0.875rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      text-align: center;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    /* ── Shared divider ── */
+    .section-divider {
+      height: 1px;
+      background: var(--stone-100);
+      margin: 0 1.25rem;
+    }
+    .section-divider-dark {
+      height: 1px;
+      background: #292524;
+      margin: 0 1.25rem;
+    }
+
+    /* ── Annotation strip ── */
+    .annotation {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background: white;
+      border-radius: 0.75rem;
+      font-size: 0.7rem;
+      color: var(--stone-500);
+      line-height: 1.7;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .annotation strong { color: var(--stone-700); }
+    .annotation code {
+      font-family: monospace;
+      font-size: 0.65rem;
+      background: var(--stone-100);
+      padding: 0.1em 0.3em;
+      border-radius: 0.2rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+
+  <div class="page-header">
+    <h1>Sprint UI Refresh — Check-in</h1>
+    <p>HabitToggle: P1 + Alt 4 &nbsp;·&nbsp; NumberStepper: P3-A &nbsp;·&nbsp; Clarity 2026-03-10</p>
+  </div>
+
+  <div class="panels">
+
+    <!-- ───────────────── LIGHT MODE ───────────────── -->
+    <div>
+      <div class="mode-label">Light mode</div>
+      <div class="phone-light" id="light-phone">
+
+        <div class="app-header">
+          <div>
+            <p class="app-title">Today</p>
+            <p class="app-date">Tuesday, March 10</p>
+          </div>
+          <span class="app-settings">Settings</span>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Boolean habits -->
+        <div class="section" style="padding-bottom: 0.75rem; padding-top: 1rem;">
+          <div class="section-label">Habits</div>
+          <div class="habit-list">
+            <button type="button" class="habit-row" onclick="toggleLight('med')">
+              <span class="habit-dot" id="l-dot-med"></span>
+              <span class="habit-name" id="l-name-med">Meditation</span>
+            </button>
+            <button type="button" class="habit-row done" onclick="toggleLight('ex')">
+              <span class="habit-dot" id="l-dot-ex" style="background: var(--amber-500);"></span>
+              <span class="habit-name" id="l-name-ex" style="color: var(--stone-800);">Exercise</span>
+            </button>
+            <button type="button" class="habit-row" onclick="toggleLight('read')">
+              <span class="habit-dot" id="l-dot-read"></span>
+              <span class="habit-name" id="l-name-read">Reading</span>
+            </button>
+            <button type="button" class="habit-row done" onclick="toggleLight('journal')">
+              <span class="habit-dot" id="l-dot-journal" style="background: var(--amber-500);"></span>
+              <span class="habit-name" id="l-name-journal" style="color: var(--stone-800);">Journaling</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Numeric habits -->
+        <div class="section" style="padding-bottom: 0.75rem; padding-top: 1rem;">
+          <div class="section-label">By the numbers</div>
+          <div class="num-list">
+            <!-- Sleep: 0 -->
+            <div class="num-row">
+              <div class="num-label-group">
+                <span class="num-label" id="l-nlabel-sleep">Sleep</span>
+                <span class="num-unit">hrs</span>
+              </div>
+              <div class="num-control">
+                <button type="button" class="num-minus hidden" id="l-minus-sleep" onclick="numDecrement('l','sleep')">−</button>
+                <button type="button" class="num-pill" id="l-pill-sleep" onclick="numIncrement('l','sleep')">
+                  <span class="num-val" id="l-val-sleep">0</span>
+                </button>
+              </div>
+            </div>
+            <!-- Water: 3 -->
+            <div class="num-row">
+              <div class="num-label-group">
+                <span class="num-label logged" id="l-nlabel-water">Water</span>
+                <span class="num-unit">glasses</span>
+              </div>
+              <div class="num-control">
+                <button type="button" class="num-minus" id="l-minus-water" onclick="numDecrement('l','water')">−</button>
+                <button type="button" class="num-pill logged" id="l-pill-water" onclick="numIncrement('l','water')">
+                  <span class="num-val" id="l-val-water">3</span>
+                </button>
+              </div>
+            </div>
+            <!-- Screen time: 0 -->
+            <div class="num-row">
+              <div class="num-label-group">
+                <span class="num-label" id="l-nlabel-screen">Screen time</span>
+                <span class="num-unit">hrs</span>
+              </div>
+              <div class="num-control">
+                <button type="button" class="num-minus hidden" id="l-minus-screen" onclick="numDecrement('l','screen')">−</button>
+                <button type="button" class="num-pill" id="l-pill-screen" onclick="numIncrement('l','screen')">
+                  <span class="num-val" id="l-val-screen">0</span>
+                </button>
+              </div>
+            </div>
+            <!-- Coffee: 1 -->
+            <div class="num-row" style="border-bottom: none;">
+              <div class="num-label-group">
+                <span class="num-label logged" id="l-nlabel-coffee">Coffee</span>
+                <span class="num-unit">cups</span>
+              </div>
+              <div class="num-control">
+                <button type="button" class="num-minus" id="l-minus-coffee" onclick="numDecrement('l','coffee')">−</button>
+                <button type="button" class="num-pill logged" id="l-pill-coffee" onclick="numIncrement('l','coffee')">
+                  <span class="num-val" id="l-val-coffee">1</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Moments -->
+        <div class="section" style="padding-top: 1rem;">
+          <div class="section-label">Moments</div>
+          <div class="moments">
+            <button type="button" class="moment-chip active">Good meal</button>
+            <button type="button" class="moment-chip">Interesting conversation</button>
+            <button type="button" class="moment-chip">Inspiring song</button>
+            <button type="button" class="moment-chip">Time in nature</button>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Reflection -->
+        <div class="section" style="padding-top: 1rem;">
+          <div class="section-label">Reflection</div>
+          <p class="reflection">Morning was slow but the run helped. Good coffee.</p>
+        </div>
+
+        <button type="button" class="save-btn">Save</button>
+
+      </div>
+
+      <div class="annotation">
+        <strong>HabitToggle:</strong> Full-row button. Done rows: <code>bg-amber-50</code> wash + <code>bg-amber-500</code> dot + <code>text-stone-800</code> label. Off rows: transparent + <code>bg-stone-200</code> dot + <code>text-stone-700</code> label.<br>
+        <strong>NumberStepper:</strong> Pill = <code>bg-stone-100</code> at zero, <code>bg-amber-50</code> when logged. Number = <code>text-stone-500</code> at zero, <code>text-amber-700</code> when logged. Minus glyph invisible at zero.
+      </div>
+    </div>
+
+    <!-- ───────────────── DARK MODE ───────────────── -->
+    <div>
+      <div class="mode-label">Dark mode</div>
+      <div class="phone-dark" id="dark-phone">
+
+        <div class="app-header">
+          <div>
+            <p class="app-title">Today</p>
+            <p class="app-date">Tuesday, March 10</p>
+          </div>
+          <span class="app-settings">Settings</span>
+        </div>
+
+        <div class="section-divider-dark"></div>
+
+        <!-- Boolean habits -->
+        <div class="section" style="padding-bottom: 0.75rem; padding-top: 1rem;">
+          <div class="section-label">Habits</div>
+          <div class="habit-list">
+            <button type="button" class="habit-row" onclick="toggleDark('med')">
+              <span class="habit-dot" id="d-dot-med"></span>
+              <span class="habit-name" id="d-name-med">Meditation</span>
+            </button>
+            <button type="button" class="habit-row done" onclick="toggleDark('ex')">
+              <span class="habit-dot" id="d-dot-ex" style="background: var(--amber-500);"></span>
+              <span class="habit-name" id="d-name-ex" style="color: #fafaf9;">Exercise</span>
+            </button>
+            <button type="button" class="habit-row" onclick="toggleDark('read')">
+              <span class="habit-dot" id="d-dot-read"></span>
+              <span class="habit-name" id="d-name-read">Reading</span>
+            </button>
+            <button type="button" class="habit-row done" onclick="toggleDark('journal')">
+              <span class="habit-dot" id="d-dot-journal" style="background: var(--amber-500);"></span>
+              <span class="habit-name" id="d-name-journal" style="color: #fafaf9;">Journaling</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="section-divider-dark"></div>
+
+        <!-- Numeric habits -->
+        <div class="section" style="padding-bottom: 0.75rem; padding-top: 1rem;">
+          <div class="section-label">By the numbers</div>
+          <div class="num-list">
+            <div class="num-row">
+              <div class="num-label-group">
+                <span class="num-label" id="d-nlabel-sleep">Sleep</span>
+                <span class="num-unit">hrs</span>
+              </div>
+              <div class="num-control">
+                <button type="button" class="num-minus hidden" id="d-minus-sleep" onclick="numDecrement('d','sleep')">−</button>
+                <button type="button" class="num-pill" id="d-pill-sleep" onclick="numIncrement('d','sleep')">
+                  <span class="num-val" id="d-val-sleep">0</span>
+                </button>
+              </div>
+            </div>
+            <div class="num-row">
+              <div class="num-label-group">
+                <span class="num-label logged" id="d-nlabel-water">Water</span>
+                <span class="num-unit">glasses</span>
+              </div>
+              <div class="num-control">
+                <button type="button" class="num-minus" id="d-minus-water" onclick="numDecrement('d','water')">−</button>
+                <button type="button" class="num-pill logged" id="d-pill-water" onclick="numIncrement('d','water')">
+                  <span class="num-val" id="d-val-water">3</span>
+                </button>
+              </div>
+            </div>
+            <div class="num-row">
+              <div class="num-label-group">
+                <span class="num-label" id="d-nlabel-screen">Screen time</span>
+                <span class="num-unit">hrs</span>
+              </div>
+              <div class="num-control">
+                <button type="button" class="num-minus hidden" id="d-minus-screen" onclick="numDecrement('d','screen')">−</button>
+                <button type="button" class="num-pill" id="d-pill-screen" onclick="numIncrement('d','screen')">
+                  <span class="num-val" id="d-val-screen">0</span>
+                </button>
+              </div>
+            </div>
+            <div class="num-row" style="border-bottom: none;">
+              <div class="num-label-group">
+                <span class="num-label logged" id="d-nlabel-coffee">Coffee</span>
+                <span class="num-unit">cups</span>
+              </div>
+              <div class="num-control">
+                <button type="button" class="num-minus" id="d-minus-coffee" onclick="numDecrement('d','coffee')">−</button>
+                <button type="button" class="num-pill logged" id="d-pill-coffee" onclick="numIncrement('d','coffee')">
+                  <span class="num-val" id="d-val-coffee">1</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-divider-dark"></div>
+
+        <!-- Moments -->
+        <div class="section" style="padding-top: 1rem;">
+          <div class="section-label">Moments</div>
+          <div class="moments">
+            <button type="button" class="moment-chip active">Good meal</button>
+            <button type="button" class="moment-chip">Interesting conversation</button>
+            <button type="button" class="moment-chip">Inspiring song</button>
+            <button type="button" class="moment-chip">Time in nature</button>
+          </div>
+        </div>
+
+        <div class="section-divider-dark"></div>
+
+        <!-- Reflection -->
+        <div class="section" style="padding-top: 1rem;">
+          <div class="section-label">Reflection</div>
+          <p class="reflection">Morning was slow but the run helped. Good coffee.</p>
+        </div>
+
+        <button type="button" class="save-btn">Save</button>
+
+      </div>
+
+      <div class="annotation" style="background: #292524; color: var(--stone-500);">
+        <strong style="color: #d6d3d1;">HabitToggle:</strong> Done rows: <code style="background: #44403c; color: #d6d3d1;">rgba(120,63,4,0.15)</code> wash + <code style="background: #44403c; color: #d6d3d1;">bg-amber-500</code> dot + <code style="background: #44403c; color: #d6d3d1;">stone-100</code> label. Off: transparent + <code style="background: #44403c; color: #d6d3d1;">stone-700</code> dot + <code style="background: #44403c; color: #d6d3d1;">stone-300</code> label.<br>
+        <strong style="color: #d6d3d1;">NumberStepper:</strong> Pill = <code style="background: #44403c; color: #d6d3d1;">stone-800</code> at zero, <code style="background: #44403c; color: #d6d3d1;">amber-900/20</code> when logged. Number = <code style="background: #44403c; color: #d6d3d1;">stone-400</code> at zero, <code style="background: #44403c; color: #d6d3d1;">amber-500</code> when logged.
+      </div>
+    </div>
+
+  </div><!-- /panels -->
+
+</div><!-- /layout -->
+
+<script>
+  // ── Light mode state ──────────────────────────────
+  const lHabits = { med: false, ex: true, read: false, journal: true };
+  const lNums = { sleep: 0, water: 3, screen: 0, coffee: 1 };
+
+  function toggleLight(id) {
+    lHabits[id] = !lHabits[id];
+    const row = document.getElementById(`l-dot-${id}`).closest('.habit-row');
+    const dot = document.getElementById(`l-dot-${id}`);
+    const name = document.getElementById(`l-name-${id}`);
+    if (lHabits[id]) {
+      row.classList.add('done');
+      dot.style.background = 'var(--amber-500)';
+      name.style.color = 'var(--stone-800)';
+    } else {
+      row.classList.remove('done');
+      dot.style.background = 'var(--stone-200)';
+      name.style.color = 'var(--stone-700)';
+    }
+  }
+
+  function numIncrement(mode, id) {
+    const state = mode === 'l' ? lNums : dNums;
+    state[id] = Math.min(state[id] + 1, 24);
+    renderNum(mode, id);
+  }
+
+  function numDecrement(mode, id) {
+    const state = mode === 'l' ? lNums : dNums;
+    state[id] = Math.max(state[id] - 1, 0);
+    renderNum(mode, id);
+  }
+
+  function renderNum(mode, id) {
+    const state = mode === 'l' ? lNums : dNums;
+    const val = state[id];
+    const pill = document.getElementById(`${mode}-pill-${id}`);
+    const valEl = document.getElementById(`${mode}-val-${id}`);
+    const minus = document.getElementById(`${mode}-minus-${id}`);
+    const label = document.getElementById(`${mode}-nlabel-${id}`);
+
+    valEl.textContent = val;
+
+    if (val > 0) {
+      pill.classList.add('logged');
+      minus.classList.remove('hidden');
+      if (label) label.classList.add('logged');
+    } else {
+      pill.classList.remove('logged');
+      minus.classList.add('hidden');
+      if (label) label.classList.remove('logged');
+    }
+  }
+
+  // ── Dark mode state ───────────────────────────────
+  const dHabits = { med: false, ex: true, read: false, journal: true };
+  const dNums = { sleep: 0, water: 3, screen: 0, coffee: 1 };
+
+  function toggleDark(id) {
+    dHabits[id] = !dHabits[id];
+    const row = document.getElementById(`d-dot-${id}`).closest('.habit-row');
+    const dot = document.getElementById(`d-dot-${id}`);
+    const name = document.getElementById(`d-name-${id}`);
+    if (dHabits[id]) {
+      row.classList.add('done');
+      dot.style.background = 'var(--amber-500)';
+      name.style.color = '#fafaf9';
+    } else {
+      row.classList.remove('done');
+      dot.style.background = '#44403c';
+      name.style.color = '#d6d3d1';
+    }
+  }
+</script>
+
+</body>
+</html>

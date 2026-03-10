@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NumberStepper Alternatives — Clarity UX Evaluation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
+    body { font-family: 'Inter', system-ui, sans-serif; background: #f5f4f0; }
+
+    /* Hide native number spinner */
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; appearance: none; }
+
+    /* Section label: Calma spec — uppercase, widest tracking, muted stone, font-medium */
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #78716c; /* stone-500 */
+    }
+
+    /* Current design reference */
+    .current-note {
+      font-size: 0.7rem;
+      color: #a8a29e;
+      letter-spacing: 0.04em;
+      font-style: italic;
+    }
+
+    .alt-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #b45309; /* amber-700 */
+      margin-bottom: 0.25rem;
+    }
+
+    /* Chip base */
+    .chip {
+      padding: 0.2rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 400;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      border: none;
+      background: #e7e5e4; /* stone-200 */
+      color: #78716c; /* stone-500 */
+    }
+    .chip.selected {
+      background: #fef3c7; /* amber-100 */
+      color: #92400e; /* amber-800 */
+    }
+
+    /* Dot track */
+    .dot {
+      width: 0.65rem;
+      height: 0.65rem;
+      border-radius: 9999px;
+      background: #d6d3d1; /* stone-300 */
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .dot.filled { background: #57534e; } /* stone-600 */
+    .dot.active { background: #b45309; } /* amber-700 — last filled = current value */
+
+    /* Scrub row */
+    .scrub-row { user-select: none; cursor: ew-resize; }
+
+    /* Split zone */
+    .split-zone {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 6rem;
+      height: 2.75rem;
+      border-radius: 0.75rem;
+      background: #e7e5e4;
+    }
+    .split-zone.logged { background: #fef9c3; } /* yellow-100 ≈ amber-50 */
+    .split-zone-hit {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 50%;
+      cursor: pointer;
+    }
+    .split-zone-hit.left { left: 0; }
+    .split-zone-hit.right { right: 0; }
+    .split-zone-corner {
+      position: absolute;
+      font-size: 0.6rem;
+      color: #a8a29e;
+      font-weight: 400;
+      pointer-events: none;
+    }
+    .split-zone-corner.tl { top: 0.3rem; left: 0.45rem; }
+    .split-zone-corner.tr { top: 0.3rem; right: 0.45rem; }
+
+    .divider { border: none; border-top: 1px solid #e7e5e4; margin: 0; }
+
+    /* Reveal expand (P1) */
+    .reveal-controls {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.2s ease;
+    }
+    .reveal-controls.open { max-height: 60px; }
+  </style>
+</head>
+<body class="min-h-screen flex items-start justify-center py-10 px-4">
+
+<div class="w-full max-w-sm space-y-8">
+
+  <!-- Header -->
+  <div>
+    <p class="text-xs font-medium tracking-widest uppercase text-stone-400 mb-1">UX Evaluation · 2026-03-09</p>
+    <h1 class="text-xl font-light text-stone-800 tracking-tight">NumberStepper Alternatives</h1>
+    <p class="text-xs text-stone-500 mt-1">Six proposals for the "By the Numbers" input. Each shown in resting state and logged state.</p>
+  </div>
+
+  <!-- ── CURRENT (reference) ─────────────────────────────────────────── -->
+  <section class="bg-white rounded-2xl px-5 py-5 shadow-sm">
+    <p class="section-label mb-4">Current design — reference</p>
+    <p class="current-note mb-4">The existing component. Two flanking circle buttons; small neutral value display; no visual distinction between untouched (0) and logged.</p>
+
+    <!-- Untouched state -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mb-2" style="font-size:0.6rem;">Untouched (value = 0)</p>
+    <div class="flex items-center justify-between py-3">
+      <div class="flex items-baseline gap-2">
+        <span class="text-sm text-stone-700">Sleep</span>
+        <span class="text-xs text-stone-500">hrs</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button" disabled class="flex items-center justify-center rounded-full border border-stone-300 text-stone-600 opacity-30" style="min-width:44px;min-height:44px;">−</button>
+        <input type="number" value="0" class="w-12 bg-transparent text-center text-stone-700 text-sm focus:outline-none" readonly />
+        <button type="button" class="flex items-center justify-center rounded-full border border-stone-300 text-stone-600" style="min-width:44px;min-height:44px;">+</button>
+      </div>
+    </div>
+    <hr class="divider" />
+
+    <!-- Logged state -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mt-3 mb-2" style="font-size:0.6rem;">Logged (value = 8) — visually identical to above</p>
+    <div class="flex items-center justify-between py-3">
+      <div class="flex items-baseline gap-2">
+        <span class="text-sm text-stone-700">Sleep</span>
+        <span class="text-xs text-stone-500">hrs</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button" class="flex items-center justify-center rounded-full border border-stone-300 text-stone-600" style="min-width:44px;min-height:44px;">−</button>
+        <input type="number" value="8" class="w-12 bg-transparent text-center text-stone-700 text-sm focus:outline-none" readonly />
+        <button type="button" class="flex items-center justify-center rounded-full border border-stone-300 text-stone-600" style="min-width:44px;min-height:44px;">+</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── P1: TYPOGRAPHY-FIRST REVEAL ─────────────────────────────────── -->
+  <section class="bg-white rounded-2xl px-5 py-5 shadow-sm">
+    <div class="alt-label">P1 — Typography-first reveal</div>
+    <p class="current-note mb-4">Collapsed by default — just text. Tap to reveal stepper. Control chrome is peripheral until needed.</p>
+
+    <!-- Collapsed / untouched -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mb-2" style="font-size:0.6rem;">Untouched (collapsed)</p>
+    <div id="p1-collapsed" class="flex items-center justify-between py-3 cursor-pointer rounded-xl active:bg-stone-50" onclick="toggleP1()">
+      <div class="flex items-baseline gap-2">
+        <span class="text-sm text-stone-700 font-medium">Sleep</span>
+        <span class="text-xs text-stone-500">hrs</span>
+      </div>
+      <span class="text-sm text-stone-400">–</span>
+    </div>
+    <hr class="divider" />
+
+    <!-- Expanded state -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mt-3 mb-2" style="font-size:0.6rem;">Expanded (tapped → controls visible)</p>
+    <div class="flex items-center justify-between py-3 rounded-xl bg-stone-50">
+      <div class="flex items-baseline gap-2">
+        <span class="text-sm text-stone-700 font-medium">Sleep</span>
+        <span class="text-xs text-stone-500">hrs</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button" disabled class="flex items-center justify-center rounded-full border border-stone-300 text-stone-600 opacity-30 text-sm" style="min-width:40px;min-height:40px;">−</button>
+        <input type="number" value="0" class="w-10 bg-transparent text-center text-stone-700 text-sm focus:outline-none" readonly />
+        <button type="button" class="flex items-center justify-center rounded-full border border-stone-300 text-stone-600 text-sm" style="min-width:40px;min-height:40px;">+</button>
+      </div>
+    </div>
+    <hr class="divider" />
+
+    <!-- Logged / collapsed again -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mt-3 mb-2" style="font-size:0.6rem;">Logged and collapsed (value = 8)</p>
+    <div class="flex items-center justify-between py-3 cursor-pointer rounded-xl">
+      <div class="flex items-baseline gap-2">
+        <span class="text-sm text-stone-700 font-medium">Sleep</span>
+        <span class="text-xs text-stone-500">hrs</span>
+      </div>
+      <!-- Non-zero value displayed in amber — clear logged signal -->
+      <div class="flex items-baseline gap-1">
+        <span class="text-base font-medium" style="color:#b45309;">8</span>
+        <span class="text-xs text-stone-400">hrs</span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── P2: PRESET CHIPS ──────────────────────────────────────────────── -->
+  <section class="bg-white rounded-2xl px-5 py-5 shadow-sm">
+    <div class="alt-label">P2 — Preset value chips</div>
+    <p class="current-note mb-4">Pre-set range chips. Tap to select. One tap, correct value. Amber selected state. Best for bounded integer ranges.</p>
+
+    <!-- Water: 1-8 glasses -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mb-2" style="font-size:0.6rem;">Water · glasses — none selected</p>
+    <div class="flex items-start justify-between py-3 gap-3">
+      <span class="text-sm text-stone-700 flex-shrink-0 pt-0.5">Water</span>
+      <div class="flex flex-wrap gap-1.5 justify-end">
+        <button class="chip">1</button>
+        <button class="chip">2</button>
+        <button class="chip">3</button>
+        <button class="chip">4</button>
+        <button class="chip">5</button>
+        <button class="chip">6</button>
+        <button class="chip">7</button>
+        <button class="chip">8</button>
+      </div>
+    </div>
+    <hr class="divider" />
+
+    <!-- Sleep: 6-9.5 hrs, 0.5 step -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mt-3 mb-2" style="font-size:0.6rem;">Sleep · hrs — 7.5 selected</p>
+    <div class="flex items-start justify-between py-3 gap-3">
+      <span class="text-sm text-stone-700 flex-shrink-0 pt-0.5">Sleep</span>
+      <div class="flex flex-wrap gap-1.5 justify-end">
+        <button class="chip">6</button>
+        <button class="chip">6.5</button>
+        <button class="chip">7</button>
+        <button class="chip selected">7.5</button>
+        <button class="chip">8</button>
+        <button class="chip">8.5</button>
+        <button class="chip">9</button>
+      </div>
+    </div>
+    <hr class="divider" />
+
+    <!-- Coffee: 0-5 cups -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mt-3 mb-2" style="font-size:0.6rem;">Coffee · cups — 2 selected</p>
+    <div class="flex items-start justify-between py-3 gap-3">
+      <span class="text-sm text-stone-700 flex-shrink-0 pt-0.5">Coffee</span>
+      <div class="flex flex-wrap gap-1.5 justify-end">
+        <button class="chip">1</button>
+        <button class="chip selected">2</button>
+        <button class="chip">3</button>
+        <button class="chip">4</button>
+        <button class="chip">5</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── P3: TAP-THE-NUMBER ────────────────────────────────────────────── -->
+  <section class="bg-white rounded-2xl px-5 py-5 shadow-sm">
+    <div class="alt-label">P3 — Tap the number to increment · amber logged state</div>
+    <p class="current-note mb-4">The number itself is the tap target. Tapping increments. Small − on left when value &gt; 0. Number turns amber when logged. Control chrome nearly disappears.</p>
+
+    <!-- Untouched -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mb-2" style="font-size:0.6rem;">Untouched (value = 0)</p>
+    <div class="flex items-center justify-between py-3">
+      <div class="flex items-baseline gap-2">
+        <span class="text-sm text-stone-700">Sleep</span>
+        <span class="text-xs text-stone-500">hrs</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <!-- No − button when 0 — phantom spacing to hold layout -->
+        <span style="min-width:28px;min-height:44px;"></span>
+        <button type="button" class="flex items-center justify-center rounded-xl active:bg-stone-100" style="min-width:52px;min-height:44px;">
+          <span class="text-2xl font-light text-stone-300">0</span>
+        </button>
+      </div>
+    </div>
+    <hr class="divider" />
+
+    <!-- Logged: 8 -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mt-3 mb-2" style="font-size:0.6rem;">Logged (value = 8) — amber signal</p>
+    <div class="flex items-center justify-between py-3">
+      <div class="flex items-baseline gap-2">
+        <span class="text-sm font-medium text-stone-800">Sleep</span>
+        <span class="text-xs text-stone-500">hrs</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <button type="button" class="flex items-center justify-center text-stone-400 hover:text-stone-700 rounded-full" style="min-width:28px;min-height:44px;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 7h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button type="button" class="flex items-center justify-center rounded-xl active:bg-amber-50" style="min-width:52px;min-height:44px;">
+          <span class="text-2xl font-light" style="color:#b45309;">8</span>
+        </button>
+      </div>
+    </div>
+    <hr class="divider" />
+
+    <!-- Logged: Water 3 -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mt-3 mb-2" style="font-size:0.6rem;">Water · 3 glasses logged</p>
+    <div class="flex items-center justify-between py-3">
+      <div class="flex items-baseline gap-2">
+        <span class="text-sm font-medium text-stone-800">Water</span>
+        <span class="text-xs text-stone-500">glasses</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <button type="button" class="flex items-center justify-center text-stone-400 rounded-full" style="min-width:28px;min-height:44px;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 7h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button type="button" class="flex items-center justify-center rounded-xl active:bg-amber-50" style="min-width:52px;min-height:44px;">
+          <span class="text-2xl font-light" style="color:#b45309;">3</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── P4: DOT TRACK ────────────────────────────────────────────────── -->
+  <section class="bg-white rounded-2xl px-5 py-5 shadow-sm">
+    <div class="alt-label">P4 — Dot track (analog scale)</div>
+    <p class="current-note mb-4">Horizontal dots representing the range. Tap a dot to set value. Last filled dot renders in amber. The range and current position are visible at a glance — the most "Hobonichi" of the proposals.</p>
+
+    <!-- Water: 0/8 -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mb-2" style="font-size:0.6rem;">Water · 0 glasses (untouched)</p>
+    <div class="flex items-center justify-between py-3">
+      <div class="flex items-baseline gap-2">
+        <span class="text-sm text-stone-700">Water</span>
+        <span class="text-xs text-stone-500">glasses</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+    <hr class="divider" />
+
+    <!-- Water: 5/8 -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mt-3 mb-2" style="font-size:0.6rem;">Water · 5 glasses logged</p>
+    <div class="flex items-center justify-between py-3">
+      <div class="flex items-baseline gap-2">
+        <span class="text-sm font-medium text-stone-800">Water</span>
+        <span class="text-xs text-stone-500">glasses</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="dot filled"></div>
+        <div class="dot filled"></div>
+        <div class="dot filled"></div>
+        <div class="dot filled"></div>
+        <div class="dot active"></div><!-- current = amber -->
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+    <hr class="divider" />
+
+    <!-- Coffee: 2/5 -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mt-3 mb-2" style="font-size:0.6rem;">Coffee · 2 cups logged</p>
+    <div class="flex items-center justify-between py-3">
+      <div class="flex items-baseline gap-2">
+        <span class="text-sm font-medium text-stone-800">Coffee</span>
+        <span class="text-xs text-stone-500">cups</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="dot filled"></div>
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+    <hr class="divider" />
+
+    <!-- Sleep: half-step with number label fallback -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mt-3 mb-2" style="font-size:0.6rem;">Sleep · 7 hrs logged (dot track with numeric label for decimal steps)</p>
+    <div class="flex items-center justify-between py-3">
+      <div class="flex items-baseline gap-2">
+        <span class="text-sm font-medium text-stone-800">Sleep</span>
+        <span class="text-xs text-stone-500">hrs</span>
+      </div>
+      <div class="flex items-center gap-2.5">
+        <div class="flex items-center gap-1.5">
+          <div class="dot filled" style="width:0.5rem;height:0.5rem;"></div><!-- 6 -->
+          <div class="dot filled" style="width:0.5rem;height:0.5rem;"></div><!-- 6.5 -->
+          <div class="dot active" style="width:0.5rem;height:0.5rem;"></div><!-- 7 = current -->
+          <div class="dot" style="width:0.5rem;height:0.5rem;"></div><!-- 7.5 -->
+          <div class="dot" style="width:0.5rem;height:0.5rem;"></div><!-- 8 -->
+          <div class="dot" style="width:0.5rem;height:0.5rem;"></div><!-- 8.5 -->
+          <div class="dot" style="width:0.5rem;height:0.5rem;"></div><!-- 9 -->
+        </div>
+        <span class="text-sm font-medium" style="color:#b45309;">7</span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── P5: INLINE SCRUB GESTURE ─────────────────────────────────────── -->
+  <section class="bg-white rounded-2xl px-5 py-5 shadow-sm">
+    <div class="alt-label">P5 — Inline scrub gesture</div>
+    <p class="current-note mb-4">No buttons. Swipe left/right on the row to adjust. One-time hint fades after first use. Maximum calm — chrome is nearly zero. High effort to implement correctly.</p>
+
+    <!-- Untouched with hint -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mb-2" style="font-size:0.6rem;">Untouched — first-time hint visible</p>
+    <div class="flex items-center justify-between py-3 scrub-row rounded-xl">
+      <div>
+        <div class="flex items-baseline gap-2">
+          <span class="text-sm text-stone-700">Sleep</span>
+          <span class="text-xs text-stone-500">hrs</span>
+        </div>
+        <span class="text-xs text-stone-400" style="font-size:0.65rem; letter-spacing:0.04em;">← swipe to adjust →</span>
+      </div>
+      <span class="text-2xl font-light text-stone-300">0</span>
+    </div>
+    <hr class="divider" />
+
+    <!-- Mid-swipe -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mt-3 mb-2" style="font-size:0.6rem;">Mid-swipe — value updating in real time</p>
+    <div class="flex items-center justify-between py-3 scrub-row rounded-xl bg-amber-50">
+      <div class="flex items-baseline gap-2">
+        <span class="text-sm font-medium text-stone-800">Sleep</span>
+        <span class="text-xs text-stone-500">hrs</span>
+      </div>
+      <span class="text-2xl font-medium" style="color:#b45309;">5</span>
+    </div>
+    <hr class="divider" />
+
+    <!-- Logged, hint gone -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mt-3 mb-2" style="font-size:0.6rem;">Logged (8 hrs) — hint dismissed, clean state</p>
+    <div class="flex items-center justify-between py-3 scrub-row rounded-xl">
+      <div class="flex items-baseline gap-2">
+        <span class="text-sm font-medium text-stone-800">Sleep</span>
+        <span class="text-xs text-stone-500">hrs</span>
+      </div>
+      <span class="text-2xl font-light" style="color:#b45309;">8</span>
+    </div>
+    <hr class="divider" />
+
+    <!-- Water -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mt-3 mb-2" style="font-size:0.6rem;">Water · 4 glasses</p>
+    <div class="flex items-center justify-between py-3 scrub-row rounded-xl">
+      <div class="flex items-baseline gap-2">
+        <span class="text-sm font-medium text-stone-800">Water</span>
+        <span class="text-xs text-stone-500">glasses</span>
+      </div>
+      <span class="text-2xl font-light" style="color:#b45309;">4</span>
+    </div>
+  </section>
+
+
+  <!-- ── P6: DIRECTIONAL SPLIT ZONE ────────────────────────────────────── -->
+  <section class="bg-white rounded-2xl px-5 py-5 shadow-sm">
+    <div class="alt-label">P6 — Directional split zone</div>
+    <p class="current-note mb-4">One cohesive tap zone replaces two separate circle buttons. Left half = decrement, right half = increment. Corner glyphs provide a static affordance hint. Amber tint when logged.</p>
+
+    <!-- Untouched -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mb-2" style="font-size:0.6rem;">Untouched (value = 0)</p>
+    <div class="flex items-center justify-between py-3">
+      <div class="flex items-baseline gap-2">
+        <span class="text-sm text-stone-700">Sleep</span>
+        <span class="text-xs text-stone-500">hrs</span>
+      </div>
+      <div class="split-zone">
+        <span class="split-zone-corner tl text-stone-400">−</span>
+        <span class="split-zone-corner tr text-stone-400">+</span>
+        <span class="text-xl font-light text-stone-400">0</span>
+        <div class="split-zone-hit left"></div>
+        <div class="split-zone-hit right"></div>
+      </div>
+    </div>
+    <hr class="divider" />
+
+    <!-- Logged: 8 -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mt-3 mb-2" style="font-size:0.6rem;">Logged (value = 8) — amber zone tint</p>
+    <div class="flex items-center justify-between py-3">
+      <div class="flex items-baseline gap-2">
+        <span class="text-sm font-medium text-stone-800">Sleep</span>
+        <span class="text-xs text-stone-500">hrs</span>
+      </div>
+      <div class="split-zone logged">
+        <span class="split-zone-corner tl" style="color:#b45309;">−</span>
+        <span class="split-zone-corner tr" style="color:#b45309;">+</span>
+        <span class="text-xl font-medium" style="color:#b45309;">8</span>
+        <div class="split-zone-hit left"></div>
+        <div class="split-zone-hit right"></div>
+      </div>
+    </div>
+    <hr class="divider" />
+
+    <!-- Water: 3 -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mt-3 mb-2" style="font-size:0.6rem;">Water · 3 glasses logged</p>
+    <div class="flex items-center justify-between py-3">
+      <div class="flex items-baseline gap-2">
+        <span class="text-sm font-medium text-stone-800">Water</span>
+        <span class="text-xs text-stone-500">glasses</span>
+      </div>
+      <div class="split-zone logged">
+        <span class="split-zone-corner tl" style="color:#b45309;">−</span>
+        <span class="split-zone-corner tr" style="color:#b45309;">+</span>
+        <span class="text-xl font-medium" style="color:#b45309;">3</span>
+        <div class="split-zone-hit left"></div>
+        <div class="split-zone-hit right"></div>
+      </div>
+    </div>
+    <hr class="divider" />
+
+    <!-- Coffee: 0 untouched -->
+    <p class="text-xs text-stone-400 uppercase tracking-widest mt-3 mb-2" style="font-size:0.6rem;">Screen time · 0 hrs — explicitly untouched (gray 0)</p>
+    <div class="flex items-center justify-between py-3">
+      <div class="flex items-baseline gap-2">
+        <span class="text-sm text-stone-700">Screen time</span>
+        <span class="text-xs text-stone-500">hrs</span>
+      </div>
+      <div class="split-zone">
+        <span class="split-zone-corner tl text-stone-400">−</span>
+        <span class="split-zone-corner tr text-stone-400">+</span>
+        <span class="text-xl font-light text-stone-300">0</span>
+        <div class="split-zone-hit left"></div>
+        <div class="split-zone-hit right"></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── RECOMMENDATION SUMMARY ──────────────────────────────────────── -->
+  <section class="bg-stone-800 rounded-2xl px-5 py-5">
+    <p class="section-label mb-3" style="color:#a8a29e;">Sprint recommendation</p>
+    <ol class="space-y-2 text-sm text-stone-300 font-light">
+      <li><span class="text-amber-400 font-medium">1.</span> P3 — Tap-the-number + amber state <span class="text-stone-500 text-xs">(low effort, solves two core problems)</span></li>
+      <li><span class="text-amber-400 font-medium">2.</span> P6 — Split zone <span class="text-stone-500 text-xs">(pairs with P3, replaces chrome)</span></li>
+      <li><span class="text-amber-400 font-medium">3.</span> P2 — Preset chips for bounded integer habits <span class="text-stone-500 text-xs">(water, coffee)</span></li>
+      <li><span class="text-amber-400 font-medium">4.</span> P4 — Dot track <span class="text-stone-500 text-xs">(most analog, best for small integer ranges)</span></li>
+      <li><span class="text-amber-400 font-medium">5.</span> P1 — Typographic reveal <span class="text-stone-500 text-xs">(best for dense forms)</span></li>
+      <li><span class="text-amber-400 font-medium">6.</span> P5 — Scrub gesture <span class="text-stone-500 text-xs">(highest effort, revisit later)</span></li>
+    </ol>
+  </section>
+
+  <p class="text-center text-xs text-stone-400 pb-4">Clarity UX Radical Evaluation · 2026-03-09</p>
+
+</div>
+
+<script>
+  // P1 toggle demo
+  function toggleP1() {
+    // This is just a static mockup — no actual expand needed
+    // In the live component this would toggle a state
+  }
+
+  // Make chips interactive for demonstration
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', function() {
+      const siblings = this.closest('div').querySelectorAll('.chip');
+      siblings.forEach(s => s.classList.remove('selected'));
+      this.classList.toggle('selected');
+    });
+  });
+</script>
+</body>
+</html>

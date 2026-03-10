@@ -152,6 +152,16 @@ Immediately update the report from Step 3 to replace each _Mockup: none yet_ wit
 Markdown link to the relevant section anchor in the single mockup file, e.g.:
 `[View mockup](./mockup-[YYYY-MM-DD-HHMM].html#feature-name)`
 
+To preview a mockup with Playwright, serve it over HTTP first — Playwright blocks
+`file://` URLs. Always start the server from the mockup directory, not the repo root:
+
+```bash
+(cd /absolute/path/to/mockup/dir && python3 -m http.server 9000) &
+sleep 1
+# Navigate Playwright to: http://localhost:9000/mockup-filename.html
+pkill -f "python3 -m http.server 9000"
+```
+
 **Wait for user feedback before proceeding.**
 
 ### Step 5 — Implementation blueprint

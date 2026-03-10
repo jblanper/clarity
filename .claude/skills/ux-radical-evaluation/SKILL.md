@@ -227,6 +227,28 @@ in each proposal to link to the relevant section anchor in the single mockup fil
 
 ---
 
+## Previewing mockups with Playwright
+
+Playwright MCP blocks `file://` URLs. To screenshot a mockup you have just written,
+serve it over HTTP first. Always start the server from the directory containing the
+mockup file — not from the repo root — so URL paths resolve correctly.
+
+```bash
+# cd into the mockup directory, start server, wait for it to bind
+(cd /absolute/path/to/mockup/dir && python3 -m http.server 9000) &
+sleep 1
+
+# Navigate Playwright to:
+# http://localhost:9000/mockup-filename.html
+
+# Kill when done
+pkill -f "python3 -m http.server 9000"
+```
+
+Use a non-standard port (9000, 8766, etc.) to avoid conflicts with the Next.js dev server.
+
+---
+
 ## Tone throughout
 
 - No bullet fragments. Write in complete sentences when describing observations.
