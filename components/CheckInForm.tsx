@@ -316,6 +316,7 @@ export default function CheckInForm({ date }: Props) {
               unit={h.unit}
               value={fields.numeric[h.id] ?? 0}
               step={h.step}
+              startAt={h.startAt}
               onChange={(value) => setNumericHabit(h.id, value)}
             />
           ))}
@@ -326,6 +327,7 @@ export default function CheckInForm({ date }: Props) {
                 unit={h.unit}
                 value={fields.numeric[h.id] ?? 0}
                 step={h.step}
+                startAt={h.startAt}
                 onChange={() => {}}
               />
             </div>

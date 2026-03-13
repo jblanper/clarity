@@ -1,7 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
-
 interface Props {
   label: string;
   unit: string;
@@ -9,6 +7,7 @@ interface Props {
   min?: number;
   max?: number;
   step: number;
+  startAt?: number;
   onChange: (value: number) => void;
 }
 
@@ -28,34 +27,17 @@ export default function NumberStepper({
   min = 0,
   max = Infinity,
   step,
+  startAt,
   onChange,
 }: Props) {
-  // Local string tracks what the user is actively typing before blur
-  const [inputValue, setInputValue] = useState(String(value));
-
-  // Keep local string in sync when the parent value changes (e.g. on data load)
-  useEffect(() => {
-    setInputValue(String(value));
-  }, [value]);
-
-  const decrement = () => onChange(clamp(addStep(value, -step), min, max));
-  const increment = () => onChange(clamp(addStep(value, step), min, max));
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
-
-  /** Commit the typed value on blur, clamping to valid range. Resets on invalid input. */
-  const handleBlur = () => {
-    const parsed = parseFloat(inputValue);
-    if (!isNaN(parsed)) {
-      const clamped = clamp(parsed, min, max);
-      onChange(clamped);
-      setInputValue(String(clamped));
+  const handleTap = () => {
+    if (value === 0 && startAt && startAt > 0) {
+      onChange(clamp(startAt, min, max));
     } else {
-      setInputValue(String(value));
+      onChange(clamp(addStep(value, step), min, max));
     }
   };
+  const decrement = () => onChange(clamp(addStep(value, -step), min, max));
 
   return (
     <div className="flex items-center justify-between py-3.5">
@@ -63,39 +45,31 @@ export default function NumberStepper({
         <span className="text-sm text-stone-700 dark:text-stone-300">{label}</span>
         <span className="text-xs text-stone-500 dark:text-stone-500">{unit}</span>
       </div>
-
       <div className="flex items-center gap-2">
+        {value > 0 && (
+          <button
+            type="button"
+            onClick={decrement}
+            aria-label={`Decrease ${label}`}
+            className="min-h-[44px] min-w-[44px] flex items-center justify-center text-stone-500 dark:text-stone-400 transition-colors hover:text-stone-700 dark:hover:text-stone-200 active:opacity-70"
+          >
+            −
+          </button>
+        )}
         <button
           type="button"
-          onClick={decrement}
-          disabled={value <= min}
-          aria-label={`Decrease ${label}`}
-          className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-stone-300 dark:border-stone-700 text-stone-600 dark:text-stone-500 transition-colors hover:border-stone-400 dark:hover:border-stone-600 hover:text-stone-800 dark:hover:text-stone-300 active:bg-stone-50 dark:active:bg-stone-800 disabled:opacity-30"
-        >
-          −
-        </button>
-
-        {/* Hide native number spinner arrows */}
-        <input
-          type="number"
-          value={inputValue}
-          onChange={handleInputChange}
-          onBlur={handleBlur}
-          min={min}
-          max={max === Infinity ? undefined : max}
-          step={step}
+          onClick={handleTap}
+          role="spinbutton"
+          aria-valuenow={value}
+          aria-valuemin={min}
           aria-label={label}
-          className="w-12 bg-transparent text-center text-stone-700 dark:text-stone-300 focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-        />
-
-        <button
-          type="button"
-          onClick={increment}
-          disabled={value >= max}
-          aria-label={`Increase ${label}`}
-          className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-stone-300 dark:border-stone-700 text-stone-600 dark:text-stone-500 transition-colors hover:border-stone-400 dark:hover:border-stone-600 hover:text-stone-800 dark:hover:text-stone-300 active:bg-stone-50 dark:active:bg-stone-800 disabled:opacity-30"
+          className={`min-h-[44px] min-w-[44px] px-4 rounded-full transition-colors active:opacity-70 ${
+            value > 0
+              ? "bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300"
+              : "bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400"
+          }`}
         >
-          +
+          {value}
         </button>
       </div>
     </div>

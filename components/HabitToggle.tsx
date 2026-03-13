@@ -20,33 +20,24 @@ export default function HabitToggle({ label, value, joyByDefault, onChange }: Pr
   };
 
   return (
-    <div className="flex items-center justify-between py-3.5">
+    <button
+      type="button"
+      role="switch"
+      aria-checked={value.done}
+      aria-label={label}
+      onClick={handleToggle}
+      className={`w-full flex items-center gap-3 min-h-[44px] py-3 rounded-xl px-2 -mx-2 transition-colors active:opacity-70 ${
+        value.done ? "bg-amber-50 dark:bg-amber-900/15" : ""
+      }`}
+    >
+      <span
+        className={`h-2.5 w-2.5 flex-shrink-0 rounded-full transition-colors ${
+          value.done
+            ? "bg-amber-500 dark:bg-amber-400"
+            : "bg-stone-300 dark:bg-stone-600"
+        }`}
+      />
       <span className="text-sm text-stone-700 dark:text-stone-300">{label}</span>
-      {/* Toggle switch — slides left (off) / right (on).
-          Uses explicit `left` instead of translate to avoid transform
-          initialisation issues in Tailwind v4. */}
-      <button
-        type="button"
-        role="switch"
-        aria-checked={value.done}
-        aria-label={label}
-        onClick={handleToggle}
-        className="min-h-[44px] flex-shrink-0 flex items-center focus:outline-none"
-      >
-        <span
-          className={`relative h-7 w-12 rounded-full transition-colors duration-200 ${
-            value.done
-              ? "bg-stone-500 dark:bg-stone-300"
-              : "bg-stone-300 dark:bg-stone-600"
-          }`}
-        >
-          <span
-            className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow-sm transition-all duration-200 ${
-              value.done ? "left-6" : "left-1"
-            }`}
-          />
-        </span>
-      </button>
-    </div>
+    </button>
   );
 }
