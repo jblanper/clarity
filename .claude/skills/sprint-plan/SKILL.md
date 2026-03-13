@@ -25,7 +25,8 @@ synthesise everything into a clear, executable sprint document.
 2. Also read:
    - `CLAUDE.md`
    - `docs/calma-design-language.md`
-   - The most recent completed sprint doc for format reference
+   - The most recent completed sprint doc — header block and first task only (for format
+     reference; read lines 1–60 or stop after the first task's "Definition of done" line)
 
 ## Writing the sprint document
 

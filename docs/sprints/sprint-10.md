@@ -174,11 +174,11 @@ Replace with:
 After each edit, verify the surrounding context is unchanged. Do not touch the analysis or output sections of any skill.
 
 **Validation steps:**
-- [ ] `sprint-validate/SKILL.md` Setup step 1: reads Goal → Definition of done only; also reads brief for audits list
-- [ ] `sprint-qa/SKILL.md` Setup step 1: reads Goal → Definition of done only
-- [ ] `sprint-plan/SKILL.md` Setup step 2: reads header + first task of previous doc only (not full doc)
-- [ ] No other sections of any SKILL.md are changed
-- [ ] `npm run lint && npm test` passes (skill files are not compiled, but confirms no accidental app file changes)
+- [x] `sprint-validate/SKILL.md` Setup step 1: reads Goal → Definition of done only; also reads brief for audits list
+- [x] `sprint-qa/SKILL.md` Setup step 1: reads Goal → Definition of done only
+- [x] `sprint-plan/SKILL.md` Setup step 2: reads header + first task of previous doc only (not full doc)
+- [x] No other sections of any SKILL.md are changed
+- [x] `npm run lint && npm test` passes (skill files are not compiled, but confirms no accidental app file changes)
 
 **Definition of done:** Three SKILL.md files updated with scoped read instructions; surrounding skill logic unchanged.
 

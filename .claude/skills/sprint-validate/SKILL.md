@@ -14,7 +14,10 @@ and report progress in the sprint document.
 
 1. Find the current sprint doc:
    - List `docs/sprints/sprint-[0-9][0-9].md`, sort, take the latest with status `active`
-   - Read it in full to understand what was built and which audits the UX reviewer flagged
+   - Read the sprint doc from `## Goal` through `## Definition of done — Sprint` only
+     (stop before any appended review sections — Architecture Review, QA, Validation, etc.)
+   - Also read the current sprint brief (`docs/sprints/sprint-NN-brief.md`) for the
+     "Audits to run" field — this is set by sprint-ux in the brief, not copied to the sprint doc
 
 2. Identify which audits to run:
    - Look for an "Audits to run" list in the sprint doc (added by `/sprint-ux`)

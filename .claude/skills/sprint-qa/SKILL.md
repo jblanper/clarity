@@ -17,7 +17,9 @@ interactions) — never internal DOM structure — so they survive component ref
 
 1. Find the current sprint doc:
    - List `docs/sprints/sprint-[0-9][0-9].md`, sort, take the latest with status `active`
-   - Read it in full — the task list and validation steps are the test specification
+   - Read the sprint doc from `## Goal` through `## Definition of done — Sprint` only
+     (stop before any appended review sections — the task list and validation steps are
+     the test specification; Architecture Review, QA, and Validation sections are not needed)
 
 2. Check whether `e2e/` exists and contains any test files.
 
