@@ -1,7 +1,7 @@
 # Sprint 10 — Tooling: e2e Baseline & Sprint Pipeline
 
 **Dates:** 2026-03-13 – (TBD)
-**Status:** active
+**Status:** completed
 **Release:** v2.3.1 (patch)
 
 ---
@@ -341,4 +341,22 @@ After writing the file, verify it renders correctly by reading it back and check
 
 ## Retrospective
 
-<!-- To be filled in after the sprint using /sprint-retro -->
+**Date:** 2026-03-13
+
+### What went well
+- Planning was frictionless — precise task specs meant each task could be executed without back-and-forth
+- `sprint-pipeline` implementation was easier than expected given its complexity
+- Scoped-reads task (Task 3) was unusually clean — three targeted edits, all validated in one pass
+- Task ordering was correct: scoped reads landed before the pipeline skill was written, so the pipeline invokes the already-improved skills
+
+### What was harder than expected
+- `/skill-creator` run was slow, generated a lot of boilerplate, and the eval results didn't provide useful signal for prose-format skills — not worth the cost
+- Token burn in the workflow still feels high despite the scoped-reads work; more skills likely still read more than they need
+
+### Process improvements for next sprint
+- Continue reducing token consumption — next targets are likely arch and UX skills (still pull in CLAUDE.md + calma in full even for tooling sprints)
+- After finishing each task during the development phase, explicitly update its validation checklist (`[x]`) before moving to the next task — keeps the doc as a live record and reduces QA guesswork
+- Avoid running `/skill-creator` for prose-format skills; its eval harness is designed for measurable output, not workflow skills
+
+### Planning accuracy
+Scope, estimates, and task ordering were all accurate. The sprint-pipeline grew slightly beyond spec during implementation (tier-aware phases and extra skill references appeared in validation checks without being in the original task spec) — worth monitoring in future sprints.

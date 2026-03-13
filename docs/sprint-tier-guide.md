@@ -177,6 +177,7 @@ lint + tests + build alone.
 
 ## Notes for the PO
 
+- Run `/sprint-pipeline` at any point to see where the current sprint sits in the full sequence (pre-flight → brief → plan → execute → validate → retro → deploy) and to advance to the next phase with human approval.
 - When scope comes from the audit action list, check each finding's
   severity level: clearing all High findings in one sprint is a Tier 2 sprint
   (use Tier 2 even if there are many items — they're pre-classified by the

@@ -69,6 +69,7 @@ instead, consult `docs/sprint-tier-guide.md` or run `bash scripts/sprint-tier.sh
 
 | Skill | When to use |
 |---|---|
+| `/sprint-pipeline` | Orchestrates the full sprint workflow — shows current position in the pipeline with phases marked done/active/pending, offers to invoke the next skill, supports skipping optional phases and resuming mid-pipeline. Run at any point to see where a sprint stands. |
 | `/ux-radical-evaluation` | Conversational UX/UI evaluation by a senior designer persona. Uses Playwright to capture live screenshots of the deployed app, then produces a structured sprint-ready report with HTML mockups. Each report is saved as a datetime-stamped file in `docs/ux-radical-evaluation/` — never overwrites previous evaluations. Use before a UX-heavy sprint, after new features land, or whenever you want an honest outside-eye design critique. |
 | `/clarity-feature-explorer` | Strategic design partner for exploring, proposing, and refining new features. Grounds every proposal in the Calma design language and the calm/solarpunk/analog research corpus. Runs as a structured conversation (brainstorm or refine mode), produces a timestamped feature report in `docs/clarity-feature-explorer/`, and optionally generates standalone HTML mockups. Use before a feature-heavy sprint or when ideating new directions for the app. |
 | `/retro-report` | Analyse all past retrospectives, produce process recommendations. Archives previous report to `docs/retros/archive/`, writes fixed filename `docs/retros/retro-report.md`. |

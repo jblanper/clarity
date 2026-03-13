@@ -1,4 +1,4 @@
-<!-- Last reviewed: 2026-03-13 (update-claude-md, sprint-09-retro) -->
+<!-- Last reviewed: 2026-03-13 (update-claude-md, sprint-10-retro) -->
 # Clarity — Project Guide
 
 ## What is Clarity?
@@ -30,6 +30,8 @@ Before implementing anything that would:
 - When asked to 'update' or 'enrich' a file like CLAUDE.md, edit the file — don't just read it
 - Avoid unnecessary intermediate/temporary files; prefer direct transformations
 - Keep solutions simple; don't add complexity (e.g., 'lightweight modes') unless explicitly requested
+- **Never run `/skill-creator` for prose-format or workflow skills** — its eval harness is designed for measurable output and produces low-signal boilerplate for narrative skills.
+- **After completing each task during the development phase, update its validation checklist (`[x]`) in the sprint doc before moving on** — keeps the doc as a live record and reduces QA guesswork.
 
 ## Project Structure (Claude-specific)
 - Skills are located in `.claude/skills/` — each skill is a markdown file
