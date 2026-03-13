@@ -911,6 +911,7 @@
       <div class="anatomy-item"><span>Section labels</span><span style="color:var(--stone-500);font-family:'Jost',sans-serif;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;">stone-500</span></div>
       <div class="anatomy-item"><span>Metadata</span><span style="color:var(--stone-400);font-family:'Jost',sans-serif;font-size:0.7rem;">stone-400</span></div>
       <div class="anatomy-item"><span>Accent · joy · selection</span><span style="color:var(--amber-700);font-family:'Jost',sans-serif;font-size:0.7rem;">amber-700</span></div>
+      <div class="anatomy-item"><span>Completion wash</span><span style="background:#fffbeb;border:1px solid #fde68a;border-radius:4px;padding:0.1rem 0.5rem;font-family:'Jost',sans-serif;font-size:0.7rem;color:#92400e;">amber-50</span></div>
       <div class="anatomy-item" style="border-bottom:none;"><span>Error</span><span style="color:var(--red-700);font-family:'Jost',sans-serif;font-size:0.7rem;">red-700</span></div>
     </div>
 
@@ -1129,8 +1130,10 @@
 
     <p>In read-only review contexts, the filled state may be used as a static display indicator — no press state, no animation, no button wrapper. The filled amber form communicates a marked state without implying interactivity.</p>
 
+    <p><strong>Status dot variant:</strong> When the indicator is small (≤12 px) or where an outlined form would be too delicate to read, use a filled dot that shifts color: stone-300/600 at rest, amber-500/400 when active. The dot is always filled — the color alone carries the state change. Place it at the label's leading edge so it reads as an attribute of the row, not a standalone icon.</p>
+
     <h3>Touch targets</h3>
-    <p>Minimum 44×44px on all tappable elements. Disabled elements are dimmed, never hidden — absence without explanation is confusing.</p>
+    <p>Minimum 44×44px on all tappable elements. Disabled elements are dimmed, never hidden — absence without explanation is confusing. This rule applies to controls that exist but are temporarily unavailable. Controls that only become relevant at a specific state — where their absence is itself informative — may appear contextually. An affordance that disappears when its action is meaningless is clearer than one that persists in a dimmed, unclearable state.</p>
   </section>
 
   <hr class="section-divider">

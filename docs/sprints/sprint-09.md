@@ -1,7 +1,7 @@
 # Sprint 9 — Check-In Controls Redesign
 
 **Dates:** 2026-03-10 – (TBD)
-**Status:** active
+**Status:** completed
 **Release:** v2.2.0 (minor)
 
 ---
@@ -407,7 +407,32 @@ return {
 
 ## Retrospective
 
-<!-- To be filled in after the sprint using /sprint-retro -->
+**Date:** 2026-03-13
+
+### What went well
+
+- The workflow is functioning well — the `sprint-daily` skill in particular was well-received.
+- Design and mockup quality was high; the visual style of the app improved significantly and sets a more professional foundation.
+- The "Start at" idea emerged during mediation from a conflict between UX and Arch positions — neither had proposed it independently. That kind of creative resolution signals the review process is working as intended.
+- Both redesigned components ended up simpler than what they replaced: HabitToggle lost its thumb animation entirely; NumberStepper dropped its input state and `useEffect`.
+- All 6 tasks shipped per spec with high plan fidelity.
+
+### What was harder than expected
+
+- Nothing major — the sprint went smoothly.
+- The dev server couldn't start during QA, so e2e results were predicted from static source analysis rather than a live run. Worked around cleanly (spec file written and ready), but a constraint worth noting.
+- Three Sprint 8 touch-target tests broke by design (old control shapes). Required awareness to distinguish expected failure from regression — a small paperwork cost.
+
+### Process improvements for next sprint
+
+- **Token cost:** The pipeline is token-heavy. sprint-09.md grew to 618 lines by end of sprint; each subsequent skill re-reads the full document. Explore scoped reads per phase (only the relevant section, not the whole doc) to reduce repeated context without changing output quality.
+- **Pipeline automation:** The workflow has a clear order and well-defined inputs/outputs. Consider a `/sprint-pipeline` orchestrator that runs phases in sequence (or in parallel where safe) with human approval checkpoints. Manual skill invocation should remain available.
+- **Generalisation:** Most skills are already project-agnostic except for Calma-specific references and Clarity-specific CLAUDE.md rules. Extracting those as configuration is the main work needed to turn the workflow into a reusable plugin for other projects.
+- **Edge cases in task specs:** The `placeholder="0"` vs `"Optional"` discrepancy and the `startAt: 0` edge case both stemmed from specs that described intent but not all edge cases. A small "edge cases / gotchas" subsection in data-model task specs would catch these at brief time rather than at arch review.
+
+### Planning accuracy
+
+Accurate. The brief-to-execution match was tight — implementation order held up, all tasks shipped per spec, and the mediation-resolved "Start at" feature slotted in without disrupting the plan.
 
 ---
 
@@ -591,3 +616,27 @@ The 3 existing failures are expected design-obsolescence from Sprint 8 touch-tar
 2. **Run e2e suite live**: `npx next dev & npx playwright test` — expect 49 pass / 3 fail on existing; 16/16 on sprint-09.
 3. **Update sprint-08-touch-targets.spec.ts**: the 3 obsolete HabitToggle/NumberStepper assertions should be removed or replaced to keep the baseline green.
 4. **Deploy** with `/deploy` once manual checks pass.
+
+---
+
+## Calma Sync
+
+**Date:** 2026-03-13
+
+### Spec changes made
+
+- **Color roles — surface table** — added "Completion wash" row (`amber-50` / `amber-900/15`) to document the HabitToggle done-state row wash as a named semantic surface role.
+- **Semantic color rules** — expanded the Amber bullet to include row-level completion: "A full-row amber wash marks a checked-off item without urgency."
+- **Symbols and two-state icons** — added "Status dot variant" paragraph documenting the always-filled, color-shifting dot (stone-300/600 → amber-500/400) as a micro-indicator pattern distinct from the outlined-to-filled BlossomIcon pattern.
+- **Interaction > Principles** — clarified the "Disabled elements are dimmed, never hidden" rule: it applies to temporarily unavailable controls; controls that only become relevant at a specific state may appear contextually (e.g. the NumberStepper decrement glyph).
+
+All four changes mirrored in `public/calma-design-language.html`.
+
+### CLAUDE.md token updates
+
+None — amber-50 and amber-900/15 are already recorded in the HabitToggle implementation note.
+
+### Open design decisions identified
+
+- **Two-step nav-link hover** (`stone-600 → stone-800`) remains undocumented in the Calma spec (interaction medium, carried forward from Sprint 8 validation).
+- **NumberStepper pill value** has no explicit `text-sm` — inherits browser default. Cosmetic; noted for future cleanup.

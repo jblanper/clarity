@@ -50,6 +50,7 @@ Dark mode is always user-selected, never system-inferred. Respect the user's del
 | Page background | background | (token)      |
 | Card / input    | white      | stone-900    |
 | Subtle panel    | stone-50   | stone-800/50 |
+| Completion wash | amber-50   | amber-900/15 |
 | Error panel     | red-50     | red-950/20   |
 
 ### Color roles — border
@@ -62,7 +63,7 @@ Dark mode is always user-selected, never system-inferred. Respect the user's del
 
 ### Semantic color rules
 
-- **Amber** signals: accent actions, joy, selection, reversible operations.
+- **Amber** signals: accent actions, joy, selection, reversible operations, and row-level completion. A full-row amber wash marks a checked-off item without urgency.
 - **Red** signals: errors and permanent destructive actions only.
 - **Never use red for reversible actions.** Amber communicates "significant but recoverable." Red communicates "gone."
 
@@ -128,7 +129,7 @@ Max content width: 448px. Horizontal padding: 20px. This keeps lines short and r
 
 - Every interactive element transitions its colors on hover and active. No exceptions. Color transitions are subtle — one step along the scale. Spatial motion is reserved for layout changes.
 - Hover always shifts darker in light mode, lighter in dark mode.
-- Disabled elements are dimmed (40–50% opacity), never hidden. Absence without explanation is confusing.
+- Disabled elements are dimmed (40–50% opacity), never hidden. Absence without explanation is confusing. This rule applies to controls that exist but are temporarily unavailable. Controls that only become relevant at a specific state — where their absence is itself informative — may appear contextually. An affordance that disappears when its action is meaningless is clearer than one that persists in a dimmed, unclearable state.
 - Touch targets are minimum 44×44px on all tappable elements.
 
 ### States
@@ -153,6 +154,8 @@ When a symbol needs to communicate two states — resting and active — use an 
 This pattern works with any simple shape: circles, leaves, petals, sparks. The system does not prescribe a specific symbol — only the two-state principle.
 
 In read-only review contexts, the filled state may be used as a static display indicator — no press state, no animation, no button wrapper. The filled amber form communicates a marked state without implying interactivity.
+
+**Status dot variant:** When the indicator is small (≤12 px) or where an outlined form would be too delicate to read, use a filled dot that shifts color: stone-300/600 at rest, amber-500/400 when active. The dot is always filled — the color alone carries the state change. Place it at the label's leading edge so it reads as an attribute of the row, not a standalone icon.
 
 ---
 

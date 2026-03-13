@@ -1,4 +1,4 @@
-<!-- Last reviewed: 2026-03-09 (update-claude-md, sprint-08-retro) -->
+<!-- Last reviewed: 2026-03-13 (update-claude-md, sprint-09-retro) -->
 # Clarity — Project Guide
 
 ## What is Clarity?
@@ -115,6 +115,7 @@ Types live in `types/entry.ts` (`HabitEntry`, `HabitState`) and `lib/habitConfig
 - **Default UUIDs** — stable hardcoded IDs (`00000000-...`): 1–4 boolean, 6–9 numeric, 11–14 moments. User-created items use `crypto.randomUUID()`.
 - **Archived items** (`archived: true`) — kept in storage forever so historical UUIDs resolve correctly. Never delete a used config.
 - **AppConfigs** — always read-modify-write via `getConfigs()` / `saveConfigs()`. No partial helpers.
+- **`NumericHabitConfig.startAt`** — optional `startAt?: number` field added in Sprint 9. Omitting it means first tap = one step from 0. Never store `startAt: 0` (no-op at runtime; guard with `v <= 0 ? undefined : v` when parsing form input).
 - **Import** (`importBackup`) — merges entries (skips existing dates), **replaces configs entirely**.
 
 ## Key Implementation Notes
@@ -148,6 +149,7 @@ Types live in `types/entry.ts` (`HabitEntry`, `HabitState`) and `lib/habitConfig
 - **DayDetail labels** — resolve by iterating the entry's UUIDs, not the config list, so archived and imported habits display correctly.
 - **ManageView** — all inline editors are mutually exclusive via `closeAllEditors()`. Archive buttons use `text-amber-700` (reversible, not destructive). The add-habit form and the inline edit form are separate JSX subtrees with different indentation — when editing label copy in one, always verify the other is updated too.
 - **HabitToggle** — full-row `<button>` (`w-full flex items-center gap-3 min-h-[44px] py-3 rounded-xl px-2 -mx-2`). An amber dot `<span>` (h-2.5 w-2.5 rounded-full) sits left of the label `<span>`; amber-50 row wash when done, transparent when off. `active:opacity-70` for press feedback. No sliding thumb or separate hit area.
+- **NumberStepper** — tap-to-increment pill (`role="spinbutton"`) beside a conditionally rendered decrement glyph (`−`). Zero state: `bg-stone-100 text-stone-600` (never `text-stone-500` — fails AA on stone-100). Active state: `bg-amber-50 text-amber-800` light / `bg-amber-900/20 text-amber-300` dark. The decrement button is not rendered at all when `value <= 0` — no `disabled` state. `startAt?: number` prop: if set and `value === 0`, first tap jumps to `startAt` rather than incrementing by step; subsequent taps always increment by step regardless of `startAt`. No direct type-in input.
 - **Save flow** (CheckInForm) — three states: `idle → saving → confirmed`. `saveEntry()` deferred one tick so "Saving…" renders first. Redirects after 1200 ms.
 - **Joy section** (CheckInForm) — appears between Moments and Reflection when at least one boolean habit is done. Lists done habits with `BlossomIcon` buttons to mark `joy` independently of `done`. `joyByDefault` on the config pre-fills joy when a habit is first toggled on. Factual logging (Habits) and emotional reflection (Joy) are intentionally separate moments in the form.
 - **DayDetail scroll lock** — uses `useLayoutEffect` (not `useEffect`) for `document.body.style.overflow = "hidden"`. The layout-effect cleanup runs synchronously during the React commit, so the lock is never left behind when the user navigates away mid-animation.
