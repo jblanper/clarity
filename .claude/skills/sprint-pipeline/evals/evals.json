@@ -1,0 +1,46 @@
+{
+  "skill_name": "sprint-pipeline",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Run /sprint-pipeline — show me where we are in the sprint workflow",
+      "expected_output": "Displays a Tier 3 pipeline with phases 1-5, marks Execute as [active] with ▶, shows Pre-flight and Plan as [done], prints the Tier 3 Execute checkpoint message (edit → lint + test + build)",
+      "files": [],
+      "expectations": [
+        "Output header includes 'Tier 3' or 'No review'",
+        "Execute phase is marked with ▶ and [active]",
+        "Pre-flight phase is marked [done]",
+        "Plan phase is marked [done]",
+        "Deploy phase is marked [ ] (not yet started)",
+        "Retrospective phase is marked [ ] (not yet started)",
+        "Checkpoint message references 'lint' or 'lint + test + build' (Tier 3 execute message)",
+        "Output does NOT reference /sprint-kickoff (that is Tier 1/2 only)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Check the sprint pipeline status (pre-flight-report.md is temporarily absent)",
+      "expected_output": "Prints a 'no sprint in progress' guard message and directs user to run /sprint-pre-flight. Does NOT show a pipeline display.",
+      "files": [],
+      "expectations": [
+        "Output contains a message indicating no sprint is in progress or pre-flight is missing",
+        "Output mentions /sprint-pre-flight as the command to run",
+        "Output does NOT show a full pipeline display when pre-flight is absent",
+        "Output does NOT show any phase markers ([done], [active], [ ]) when pre-flight is absent"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Where are we in the sprint pipeline? (sprint-11-brief.md with Status: reviewed exists, no sprint-11.md doc)",
+      "expected_output": "Identifies sprint 11 as the current sprint, shows Plan as the next active step (brief reviewed but no sprint doc), offers /sprint-plan at the checkpoint.",
+      "files": [],
+      "expectations": [
+        "Skill identifies sprint 11 as the current sprint (reads sprint-11-brief.md as the latest brief)",
+        "Plan phase is marked as the current/next active step",
+        "Checkpoint offers to run /sprint-plan",
+        "Deploy and Retrospective phases are marked [ ]",
+        "Brief status 'reviewed' correctly maps to 'Plan pending' pipeline position"
+      ]
+    }
+  ]
+}

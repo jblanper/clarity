@@ -316,14 +316,14 @@ After writing the file, verify it renders correctly by reading it back and check
 - The checkpoint logic handles both `yes` and `skip` inputs
 
 **Validation steps:**
-- [ ] `.claude/skills/sprint-pipeline/SKILL.md` exists and has valid YAML frontmatter
-- [ ] State detection table covers: draft, ux-reviewed, arch-reviewed, reviewed, finalized+active, finalized+completed
-- [ ] Display block shows all 10 phases with `▶` marking current position
-- [ ] Optional phases (UX, Arch) are marked and can be skipped
-- [ ] Required phases (Brief, Plan, Retro, Deploy) warn on skip attempt
-- [ ] "Execute phase" message correctly directs developer to the sprint doc
-- [ ] Resume behavior is described (stateless — reads Status on every invocation)
-- [ ] `npm run lint && npm test` passes
+- [x] `.claude/skills/sprint-pipeline/SKILL.md` exists and has valid YAML frontmatter
+- [x] State detection table covers: draft, ux-reviewed, arch-reviewed, reviewed, finalized+active, finalized+completed
+- [x] Display block shows all phases with `▶` marking current position (tier-aware: 5 phases Tier 3, 10 phases Tier 2, 11 phases Tier 1 — redesigned per user feedback to include /sprint-pre-flight, /sprint-post-code, /calma-sync)
+- [x] Optional phases (UX, Arch) are marked and can be skipped
+- [x] Required phases (Brief, Plan, Retro, Deploy) warn on skip attempt
+- [x] "Execute phase" message correctly directs developer to the sprint doc
+- [x] Resume behavior is described (stateless — reads Status on every invocation)
+- [x] `npm run lint && npm test` passes
 
 **Definition of done:** `/sprint-pipeline` skill written; state machine covers all Status combinations; checkpoints with `yes`/`skip` inputs; execute phase message; resume by re-invocation.
 
