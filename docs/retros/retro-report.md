@@ -105,6 +105,7 @@ One accuracy failure: a claim in the Sprint 7 implementation notes that two Sett
 | Sprint 7 | Verify "already correct" claims before writing sprint tasks | **Done** — guard added to `/sprint-plan` SKILL.md: read relevant lines before writing any "already correct" claim into implementation notes. |
 | Sprint 7 | Evaluate `.claude/agents/` to de-duplicate skill role definitions | **Partially acted on** — additive model adopted 2026-03-07. `architect` and `ux-designer` agents created in `.claude/agents/` as standalone reviewers. Existing skills untouched. Skill de-duplication deferred pending real-sprint validation. See `docs/claude-code-optimizer/agents-design.md`. |
 | Sprint 7 | Playwright smoke run at start of manual testing | **Done** — Phase 4 in `/sprint-qa` now runs `e2e/smoke.spec.ts` before handing off the manual checklist. |
+| Sprint 8 | Implement skill improvement plan (`docs/claude-code-optimizer/skill-improvement-plan-2026-03-08.md`) — D5/D6 (pre-flight report → brief) and D1 (parallel audit execution) | **Done** — completed 2026-03-10. |
 
 ---
 
