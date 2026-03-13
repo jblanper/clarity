@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NumberStepper — Option A — Clarity</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #e7e5e4;
+      color: #1c1917;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+    }
+
+    :root {
+      --bg:          #fafaf9;
+      --bg-dark:     #1c1917;
+      --stone-100:   #f5f5f4;
+      --stone-200:   #e7e5e4;
+      --stone-300:   #d6d3d1;
+      --stone-400:   #a8a29e;
+      --stone-500:   #78716c;
+      --stone-600:   #57534e;
+      --stone-700:   #44403c;
+      --stone-800:   #292524;
+      --stone-900:   #1c1917;
+      --amber-50:    #fffbeb;
+      --amber-100:   #fef3c7;
+      --amber-500:   #f59e0b;
+      --amber-600:   #d97706;
+      --amber-700:   #b45309;
+    }
+
+    .layout {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .page-header h1 {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--stone-600);
+      margin: 0 0 0.25rem;
+    }
+    .page-header p {
+      font-size: 0.7rem;
+      color: var(--stone-500);
+      margin: 0;
+    }
+
+    .panels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+    @media (max-width: 600px) { .panels { grid-template-columns: 1fr; } }
+
+    .mode-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--stone-500);
+      text-align: center;
+      margin-bottom: 0.75rem;
+    }
+
+    /* ═══════════════════ LIGHT ═══════════════════ */
+
+    .phone-light {
+      background: var(--bg);
+      border-radius: 1.5rem;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .phone-light .app-header {
+      padding: 1.5rem 1.25rem 1rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .phone-light .app-title {
+      font-size: 1.125rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      color: var(--stone-800);
+      margin: 0 0 0.125rem;
+    }
+    .phone-light .app-date {
+      font-size: 0.7rem;
+      color: var(--stone-500);
+      margin: 0;
+    }
+    .phone-light .app-settings {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--stone-600);
+      padding-top: 0.25rem;
+    }
+
+    .phone-light .section {
+      padding: 0 1.25rem 1.5rem;
+    }
+    .phone-light .section-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--stone-500);
+      margin-bottom: 0.625rem;
+    }
+
+    /* ── Option A: num rows with secondary input ── */
+    .phone-light .num-list { border-top: 1px solid var(--stone-200); }
+
+    .phone-light .num-row {
+      display: flex;
+      flex-direction: column;
+      padding: 0.625rem 0 0.5rem;
+      border-bottom: 1px solid var(--stone-200);
+    }
+
+    .phone-light .num-row-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+    }
+
+    .phone-light .num-label-group {
+      display: flex;
+      align-items: baseline;
+      gap: 0.35rem;
+    }
+    .phone-light .num-label {
+      font-size: 0.875rem;
+      color: var(--stone-700);
+      transition: color 0.15s;
+    }
+    .phone-light .num-label.logged { color: var(--stone-800); }
+    .phone-light .num-unit {
+      font-size: 0.7rem;
+      color: var(--stone-500);
+    }
+
+    .phone-light .num-control {
+      display: flex;
+      align-items: center;
+      gap: 0.125rem;
+    }
+
+    .phone-light .num-minus {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      min-width: 28px;
+      font-size: 0.875rem;
+      color: var(--stone-400);
+      cursor: pointer;
+      border-radius: 0.75rem;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      transition: background 0.1s, opacity 0.1s;
+    }
+    .phone-light .num-minus:hover { background: var(--stone-100); }
+    .phone-light .num-minus:active { opacity: 0.7; }
+    .phone-light .num-minus.invisible { visibility: hidden; }
+
+    .phone-light .num-pill {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 52px;
+      height: 44px;
+      border-radius: 0.75rem;
+      background: var(--stone-100);
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      transition: background 0.1s, opacity 0.1s;
+    }
+    .phone-light .num-pill:hover { background: var(--stone-200); }
+    .phone-light .num-pill:active { opacity: 0.7; }
+    .phone-light .num-pill.logged { background: var(--amber-50); }
+    .phone-light .num-pill.logged:hover { background: var(--amber-100); }
+
+    .phone-light .num-val {
+      font-size: 1.125rem;
+      font-weight: 300;
+      color: var(--stone-600);
+      transition: color 0.15s;
+    }
+    .phone-light .num-pill.logged .num-val { color: var(--amber-700); }
+
+    /* ── Secondary input row ── */
+    .phone-light .num-row-secondary {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.375rem;
+      padding-top: 0.25rem;
+      padding-bottom: 0.125rem;
+    }
+    .phone-light .num-type-label {
+      font-size: 0.65rem;
+      color: var(--stone-400);
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .phone-light .num-input {
+      width: 56px;
+      height: 24px;
+      border-radius: 0.375rem;
+      border: 1px solid var(--stone-200);
+      background: transparent;
+      text-align: center;
+      font-size: 0.75rem;
+      font-family: inherit;
+      color: var(--stone-600);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .phone-light .num-input:focus {
+      border-color: var(--stone-400);
+    }
+    .phone-light .num-input::placeholder {
+      color: var(--stone-300);
+    }
+
+    .section-divider {
+      height: 1px;
+      background: var(--stone-200);
+      margin: 0 1.25rem;
+    }
+
+    /* Habit rows (for context above) */
+    .phone-light .habit-list { border-top: 1px solid var(--stone-200); }
+    .phone-light .habit-row {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+      min-height: 44px;
+      padding: 0.625rem 0;
+      text-align: left;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--stone-200);
+      cursor: pointer;
+      transition: background 0.1s, opacity 0.1s;
+      font-family: inherit;
+    }
+    .phone-light .habit-row:active { opacity: 0.7; }
+    .phone-light .habit-row.done { background: var(--amber-50); }
+    .phone-light .habit-dot {
+      flex-shrink: 0;
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 9999px;
+      background: var(--stone-200);
+      transition: background 0.15s;
+    }
+    .phone-light .habit-row.done .habit-dot { background: var(--amber-500); }
+    .phone-light .habit-name {
+      font-size: 0.875rem;
+      color: var(--stone-700);
+      transition: color 0.15s;
+    }
+    .phone-light .habit-row.done .habit-name { color: var(--stone-800); }
+
+    /* ═══════════════════ DARK ═══════════════════ */
+
+    .phone-dark {
+      background: var(--bg-dark);
+      border-radius: 1.5rem;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.40), 0 1px 4px rgba(0,0,0,0.20);
+    }
+
+    .phone-dark .app-header {
+      padding: 1.5rem 1.25rem 1rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .phone-dark .app-title {
+      font-size: 1.125rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      color: #e7e5e4;
+      margin: 0 0 0.125rem;
+    }
+    .phone-dark .app-date {
+      font-size: 0.7rem;
+      color: var(--stone-500);
+      margin: 0;
+    }
+    .phone-dark .app-settings {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--stone-500);
+      padding-top: 0.25rem;
+    }
+
+    .phone-dark .section {
+      padding: 0 1.25rem 1.5rem;
+    }
+    .phone-dark .section-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--stone-500);
+      margin-bottom: 0.625rem;
+    }
+
+    .phone-dark .num-list { border-top: 1px solid #292524; }
+
+    .phone-dark .num-row {
+      display: flex;
+      flex-direction: column;
+      padding: 0.625rem 0 0.5rem;
+      border-bottom: 1px solid #292524;
+    }
+
+    .phone-dark .num-row-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+    }
+
+    .phone-dark .num-label-group {
+      display: flex;
+      align-items: baseline;
+      gap: 0.35rem;
+    }
+    .phone-dark .num-label {
+      font-size: 0.875rem;
+      color: #d6d3d1;
+      transition: color 0.15s;
+    }
+    .phone-dark .num-label.logged { color: #fafaf9; }
+    .phone-dark .num-unit {
+      font-size: 0.7rem;
+      color: var(--stone-500);
+    }
+
+    .phone-dark .num-control {
+      display: flex;
+      align-items: center;
+      gap: 0.125rem;
+    }
+
+    .phone-dark .num-minus {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      min-width: 28px;
+      font-size: 0.875rem;
+      color: var(--stone-500);
+      cursor: pointer;
+      border-radius: 0.75rem;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      transition: background 0.1s, opacity 0.1s;
+    }
+    .phone-dark .num-minus:hover { background: #292524; }
+    .phone-dark .num-minus:active { opacity: 0.7; }
+    .phone-dark .num-minus.invisible { visibility: hidden; }
+
+    .phone-dark .num-pill {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 52px;
+      height: 44px;
+      border-radius: 0.75rem;
+      background: #292524;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      transition: background 0.1s, opacity 0.1s;
+    }
+    .phone-dark .num-pill:hover { background: #44403c; }
+    .phone-dark .num-pill:active { opacity: 0.7; }
+    .phone-dark .num-pill.logged { background: rgba(120, 63, 4, 0.20); }
+    .phone-dark .num-pill.logged:hover { background: rgba(120, 63, 4, 0.28); }
+
+    .phone-dark .num-val {
+      font-size: 1.125rem;
+      font-weight: 300;
+      color: var(--stone-400);
+      transition: color 0.15s;
+    }
+    .phone-dark .num-pill.logged .num-val { color: #f59e0b; }
+
+    .phone-dark .num-row-secondary {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.375rem;
+      padding-top: 0.25rem;
+      padding-bottom: 0.125rem;
+    }
+    .phone-dark .num-type-label {
+      font-size: 0.65rem;
+      color: var(--stone-600);
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .phone-dark .num-input {
+      width: 56px;
+      height: 24px;
+      border-radius: 0.375rem;
+      border: 1px solid #44403c;
+      background: transparent;
+      text-align: center;
+      font-size: 0.75rem;
+      font-family: inherit;
+      color: var(--stone-400);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .phone-dark .num-input:focus { border-color: var(--stone-500); }
+    .phone-dark .num-input::placeholder { color: var(--stone-700); }
+
+    .section-divider-dark {
+      height: 1px;
+      background: #292524;
+      margin: 0 1.25rem;
+    }
+
+    .phone-dark .habit-list { border-top: 1px solid #292524; }
+    .phone-dark .habit-row {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+      min-height: 44px;
+      padding: 0.625rem 0;
+      text-align: left;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid #292524;
+      cursor: pointer;
+      transition: background 0.1s, opacity 0.1s;
+      font-family: inherit;
+    }
+    .phone-dark .habit-row:active { opacity: 0.7; }
+    .phone-dark .habit-row.done { background: rgba(120, 63, 4, 0.15); }
+    .phone-dark .habit-dot {
+      flex-shrink: 0;
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 9999px;
+      background: #44403c;
+      transition: background 0.15s;
+    }
+    .phone-dark .habit-row.done .habit-dot { background: var(--amber-500); }
+    .phone-dark .habit-name {
+      font-size: 0.875rem;
+      color: #d6d3d1;
+      transition: color 0.15s;
+    }
+    .phone-dark .habit-row.done .habit-name { color: #fafaf9; }
+
+    /* ── Annotation ── */
+    .annotation {
+      margin-top: 1rem;
+      padding: 0.875rem;
+      background: white;
+      border-radius: 0.75rem;
+      font-size: 0.7rem;
+      color: var(--stone-500);
+      line-height: 1.75;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .annotation strong { color: var(--stone-700); }
+    .annotation .pill-tag {
+      display: inline-block;
+      padding: 0.1em 0.5em;
+      border-radius: 9999px;
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-right: 0.25rem;
+    }
+    .pill-primary { background: var(--stone-800); color: white; }
+    .pill-secondary { background: var(--stone-200); color: var(--stone-600); }
+
+    .annotation-dark {
+      background: #292524;
+      color: var(--stone-500);
+    }
+    .annotation-dark strong { color: #d6d3d1; }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+
+  <div class="page-header">
+    <h1>NumberStepper — Option A</h1>
+    <p>Tap pill to increment &nbsp;·&nbsp; Type in field for exact values &nbsp;·&nbsp; Clarity 2026-03-10</p>
+  </div>
+
+  <div class="panels">
+
+    <!-- ── LIGHT ── -->
+    <div>
+      <div class="mode-label">Light mode</div>
+      <div class="phone-light">
+
+        <div class="app-header">
+          <div>
+            <p class="app-title">Today</p>
+            <p class="app-date">Tuesday, March 10</p>
+          </div>
+          <span class="app-settings">Settings</span>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Habits (context only) -->
+        <div class="section" style="padding-bottom: 0.5rem; padding-top: 1rem;">
+          <div class="section-label">Habits</div>
+          <div class="habit-list">
+            <button type="button" class="habit-row done">
+              <span class="habit-dot" style="background: var(--amber-500);"></span>
+              <span class="habit-name" style="color: var(--stone-800);">Exercise</span>
+            </button>
+            <button type="button" class="habit-row">
+              <span class="habit-dot"></span>
+              <span class="habit-name">Meditation</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Numbers — Option A -->
+        <div class="section" style="padding-top: 1rem; padding-bottom: 1.25rem;">
+          <div class="section-label">By the numbers</div>
+          <div class="num-list">
+
+            <!-- Sleep: 6.5 (logged, decimal step) -->
+            <div class="num-row">
+              <div class="num-row-main">
+                <div class="num-label-group">
+                  <span class="num-label logged" id="l-nlabel-sleep">Sleep</span>
+                  <span class="num-unit">hrs</span>
+                </div>
+                <div class="num-control">
+                  <button type="button" class="num-minus" id="l-minus-sleep" onclick="lDecrement('sleep')">−</button>
+                  <button type="button" class="num-pill logged" id="l-pill-sleep" onclick="lIncrement('sleep')">
+                    <span class="num-val" id="l-val-sleep">6.5</span>
+                  </button>
+                </div>
+              </div>
+              <div class="num-row-secondary">
+                <span class="num-type-label">or type</span>
+                <input type="number"
+                  class="num-input"
+                  id="l-input-sleep"
+                  value="6.5"
+                  step="0.5"
+                  min="0"
+                  max="24"
+                  placeholder="—"
+                  onchange="lSetFromInput('sleep')"
+                />
+              </div>
+            </div>
+
+            <!-- Water: 3 (logged, integer step) -->
+            <div class="num-row">
+              <div class="num-row-main">
+                <div class="num-label-group">
+                  <span class="num-label logged" id="l-nlabel-water">Water</span>
+                  <span class="num-unit">glasses</span>
+                </div>
+                <div class="num-control">
+                  <button type="button" class="num-minus" id="l-minus-water" onclick="lDecrement('water')">−</button>
+                  <button type="button" class="num-pill logged" id="l-pill-water" onclick="lIncrement('water')">
+                    <span class="num-val" id="l-val-water">3</span>
+                  </button>
+                </div>
+              </div>
+              <div class="num-row-secondary">
+                <span class="num-type-label">or type</span>
+                <input type="number"
+                  class="num-input"
+                  id="l-input-water"
+                  value="3"
+                  step="1"
+                  min="0"
+                  max="20"
+                  placeholder="—"
+                  onchange="lSetFromInput('water')"
+                />
+              </div>
+            </div>
+
+            <!-- Coffee: 0 (zero state) -->
+            <div class="num-row" style="border-bottom: none;">
+              <div class="num-row-main">
+                <div class="num-label-group">
+                  <span class="num-label" id="l-nlabel-coffee">Coffee</span>
+                  <span class="num-unit">cups</span>
+                </div>
+                <div class="num-control">
+                  <button type="button" class="num-minus invisible" id="l-minus-coffee" onclick="lDecrement('coffee')">−</button>
+                  <button type="button" class="num-pill" id="l-pill-coffee" onclick="lIncrement('coffee')">
+                    <span class="num-val" id="l-val-coffee">0</span>
+                  </button>
+                </div>
+              </div>
+              <div class="num-row-secondary">
+                <span class="num-type-label">or type</span>
+                <input type="number"
+                  class="num-input"
+                  id="l-input-coffee"
+                  value=""
+                  step="1"
+                  min="0"
+                  max="10"
+                  placeholder="—"
+                  onchange="lSetFromInput('coffee')"
+                />
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="annotation">
+        <span class="pill-tag pill-primary">Primary</span> Tap pill to increment by step. One-handed, discoverable.<br>
+        <span class="pill-tag pill-secondary">Secondary</span> <strong>or type</strong> field: always visible, right-aligned with pill. Accepts any valid value. Updates pill on commit (blur / Enter).<br><br>
+        <strong>Sleep (step 0.5):</strong> 6.5 hrs set by typing — not by tapping 13 times.<br>
+        <strong>Water (step 1):</strong> tap path is equally fast; input adds no friction.<br>
+        <strong>Coffee (zero):</strong> placeholder <em>—</em> communicates "nothing logged yet" without implying a default.
+      </div>
+    </div>
+
+    <!-- ── DARK ── -->
+    <div>
+      <div class="mode-label">Dark mode</div>
+      <div class="phone-dark">
+
+        <div class="app-header">
+          <div>
+            <p class="app-title">Today</p>
+            <p class="app-date">Tuesday, March 10</p>
+          </div>
+          <span class="app-settings">Settings</span>
+        </div>
+
+        <div class="section-divider-dark"></div>
+
+        <!-- Habits (context) -->
+        <div class="section" style="padding-bottom: 0.5rem; padding-top: 1rem;">
+          <div class="section-label">Habits</div>
+          <div class="habit-list">
+            <button type="button" class="habit-row done">
+              <span class="habit-dot" style="background: var(--amber-500);"></span>
+              <span class="habit-name" style="color: #fafaf9;">Exercise</span>
+            </button>
+            <button type="button" class="habit-row">
+              <span class="habit-dot"></span>
+              <span class="habit-name">Meditation</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="section-divider-dark"></div>
+
+        <!-- Numbers — Option A -->
+        <div class="section" style="padding-top: 1rem; padding-bottom: 1.25rem;">
+          <div class="section-label">By the numbers</div>
+          <div class="num-list">
+
+            <!-- Sleep: 6.5 -->
+            <div class="num-row">
+              <div class="num-row-main">
+                <div class="num-label-group">
+                  <span class="num-label logged" id="d-nlabel-sleep">Sleep</span>
+                  <span class="num-unit">hrs</span>
+                </div>
+                <div class="num-control">
+                  <button type="button" class="num-minus" id="d-minus-sleep" onclick="dDecrement('sleep')">−</button>
+                  <button type="button" class="num-pill logged" id="d-pill-sleep" onclick="dIncrement('sleep')">
+                    <span class="num-val" id="d-val-sleep">6.5</span>
+                  </button>
+                </div>
+              </div>
+              <div class="num-row-secondary">
+                <span class="num-type-label">or type</span>
+                <input type="number"
+                  class="num-input"
+                  id="d-input-sleep"
+                  value="6.5"
+                  step="0.5"
+                  min="0"
+                  max="24"
+                  placeholder="—"
+                  onchange="dSetFromInput('sleep')"
+                />
+              </div>
+            </div>
+
+            <!-- Water: 3 -->
+            <div class="num-row">
+              <div class="num-row-main">
+                <div class="num-label-group">
+                  <span class="num-label logged" id="d-nlabel-water">Water</span>
+                  <span class="num-unit">glasses</span>
+                </div>
+                <div class="num-control">
+                  <button type="button" class="num-minus" id="d-minus-water" onclick="dDecrement('water')">−</button>
+                  <button type="button" class="num-pill logged" id="d-pill-water" onclick="dIncrement('water')">
+                    <span class="num-val" id="d-val-water">3</span>
+                  </button>
+                </div>
+              </div>
+              <div class="num-row-secondary">
+                <span class="num-type-label">or type</span>
+                <input type="number"
+                  class="num-input"
+                  id="d-input-water"
+                  value="3"
+                  step="1"
+                  min="0"
+                  max="20"
+                  placeholder="—"
+                  onchange="dSetFromInput('water')"
+                />
+              </div>
+            </div>
+
+            <!-- Coffee: 0 -->
+            <div class="num-row" style="border-bottom: none;">
+              <div class="num-row-main">
+                <div class="num-label-group">
+                  <span class="num-label" id="d-nlabel-coffee">Coffee</span>
+                  <span class="num-unit">cups</span>
+                </div>
+                <div class="num-control">
+                  <button type="button" class="num-minus invisible" id="d-minus-coffee" onclick="dDecrement('coffee')">−</button>
+                  <button type="button" class="num-pill" id="d-pill-coffee" onclick="dIncrement('coffee')">
+                    <span class="num-val" id="d-val-coffee">0</span>
+                  </button>
+                </div>
+              </div>
+              <div class="num-row-secondary">
+                <span class="num-type-label">or type</span>
+                <input type="number"
+                  class="num-input"
+                  id="d-input-coffee"
+                  value=""
+                  step="1"
+                  min="0"
+                  max="10"
+                  placeholder="—"
+                  onchange="dSetFromInput('coffee')"
+                />
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="annotation annotation-dark">
+        <strong>Dark mode notes:</strong> Input border is <code style="background:#44403c;color:#d6d3d1;">stone-700</code>, text <code style="background:#44403c;color:#d6d3d1;">stone-400</code>. On focus, border shifts to <code style="background:#44403c;color:#d6d3d1;">stone-500</code>. Placeholder: <code style="background:#44403c;color:#d6d3d1;">stone-700</code>.<br><br>
+        <strong>Pill + input parity:</strong> Tapping the pill and typing in the field both produce the same amber logged state. Neither path is privileged in the data model — only in the interaction.
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  // Light state
+  const lState = {
+    sleep:  { val: 6.5, step: 0.5, min: 0, max: 24 },
+    water:  { val: 3,   step: 1,   min: 0, max: 20 },
+    coffee: { val: 0,   step: 1,   min: 0, max: 10 },
+  };
+
+  function lRender(id) {
+    const s = lState[id];
+    const v = s.val;
+    const pill     = document.getElementById(`l-pill-${id}`);
+    const valEl    = document.getElementById(`l-val-${id}`);
+    const minus    = document.getElementById(`l-minus-${id}`);
+    const label    = document.getElementById(`l-nlabel-${id}`);
+    const inputEl  = document.getElementById(`l-input-${id}`);
+
+    valEl.textContent = v % 1 === 0 ? v : v.toFixed(1);
+    inputEl.value = v > 0 ? (v % 1 === 0 ? v : v.toFixed(1)) : '';
+
+    if (v > s.min) {
+      pill.classList.add('logged');
+      minus.classList.remove('invisible');
+      label && label.classList.add('logged');
+    } else {
+      pill.classList.remove('logged');
+      minus.classList.add('invisible');
+      label && label.classList.remove('logged');
+    }
+  }
+
+  function lIncrement(id) {
+    const s = lState[id];
+    s.val = Math.min(Math.round((s.val + s.step) * 1000) / 1000, s.max);
+    lRender(id);
+  }
+  function lDecrement(id) {
+    const s = lState[id];
+    s.val = Math.max(Math.round((s.val - s.step) * 1000) / 1000, s.min);
+    lRender(id);
+  }
+  function lSetFromInput(id) {
+    const s = lState[id];
+    const raw = parseFloat(document.getElementById(`l-input-${id}`).value);
+    if (!isNaN(raw)) {
+      s.val = Math.min(Math.max(Math.round(raw * 1000) / 1000, s.min), s.max);
+    }
+    lRender(id);
+  }
+
+  // Dark state
+  const dState = {
+    sleep:  { val: 6.5, step: 0.5, min: 0, max: 24 },
+    water:  { val: 3,   step: 1,   min: 0, max: 20 },
+    coffee: { val: 0,   step: 1,   min: 0, max: 10 },
+  };
+
+  function dRender(id) {
+    const s = dState[id];
+    const v = s.val;
+    const pill     = document.getElementById(`d-pill-${id}`);
+    const valEl    = document.getElementById(`d-val-${id}`);
+    const minus    = document.getElementById(`d-minus-${id}`);
+    const label    = document.getElementById(`d-nlabel-${id}`);
+    const inputEl  = document.getElementById(`d-input-${id}`);
+
+    valEl.textContent = v % 1 === 0 ? v : v.toFixed(1);
+    inputEl.value = v > 0 ? (v % 1 === 0 ? v : v.toFixed(1)) : '';
+
+    if (v > s.min) {
+      pill.classList.add('logged');
+      minus.classList.remove('invisible');
+      label && label.classList.add('logged');
+    } else {
+      pill.classList.remove('logged');
+      minus.classList.add('invisible');
+      label && label.classList.remove('logged');
+    }
+  }
+
+  function dIncrement(id) {
+    const s = dState[id];
+    s.val = Math.min(Math.round((s.val + s.step) * 1000) / 1000, s.max);
+    dRender(id);
+  }
+  function dDecrement(id) {
+    const s = dState[id];
+    s.val = Math.max(Math.round((s.val - s.step) * 1000) / 1000, s.min);
+    dRender(id);
+  }
+  function dSetFromInput(id) {
+    const s = dState[id];
+    const raw = parseFloat(document.getElementById(`d-input-${id}`).value);
+    if (!isNaN(raw)) {
+      s.val = Math.min(Math.max(Math.round(raw * 1000) / 1000, s.min), s.max);
+    }
+    dRender(id);
+  }
+</script>
+
+</body>
+</html>
