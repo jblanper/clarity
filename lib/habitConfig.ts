@@ -15,6 +15,7 @@ export interface NumericHabitConfig {
   type: "numeric";
   unit: string;
   step: number;
+  startAt?: number;
   archived: boolean;
 }
 

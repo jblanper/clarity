@@ -361,7 +361,7 @@ export default function CheckInForm({ date }: Props) {
             <button
               type="button"
               onClick={() => setIsAddingMoment(true)}
-              className="rounded-full border border-dashed border-stone-300 dark:border-stone-600 bg-transparent px-4 py-2 text-sm text-stone-500 dark:text-stone-500 transition-colors hover:border-stone-400 dark:hover:border-stone-500 hover:text-stone-500 dark:hover:text-stone-400"
+              className="min-h-[44px] flex items-center rounded-full border border-dashed border-stone-300 dark:border-stone-600 bg-transparent px-4 py-2 text-sm text-stone-500 dark:text-stone-500 transition-colors hover:border-stone-400 dark:hover:border-stone-500 hover:text-stone-500 dark:hover:text-stone-400"
             >
               ＋ New moment
             </button>
@@ -395,14 +395,14 @@ export default function CheckInForm({ date }: Props) {
                   <button
                     type="button"
                     onClick={handleAddMoment}
-                    className="rounded-full bg-stone-800 dark:bg-stone-200 px-4 py-2 text-sm text-white dark:text-stone-900 transition-colors hover:bg-stone-700 dark:hover:bg-stone-300"
+                    className="min-h-[44px] flex items-center rounded-full bg-stone-800 dark:bg-stone-200 px-4 py-2 text-sm text-white dark:text-stone-900 transition-colors hover:bg-stone-700 dark:hover:bg-stone-300"
                   >
                     Add
                   </button>
                   <button
                     type="button"
                     onClick={dismissAddMoment}
-                    className="text-stone-500 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
+                    className="min-h-[44px] min-w-[44px] flex items-center justify-center text-stone-500 dark:text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
                   >
                     ✕
                   </button>
