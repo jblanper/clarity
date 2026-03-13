@@ -23,6 +23,7 @@ interface EditingHabit {
   type: "boolean" | "numeric";
   unit: string;
   step: number;
+  startAt?: number;
 }
 
 interface EditingTag {
@@ -33,7 +34,7 @@ interface EditingTag {
 type AddHabitStep =
   | { stage: "type" }
   | { stage: "form-boolean"; label: string; joyByDefault: boolean }
-  | { stage: "form-numeric"; label: string; unit: string; step: number };
+  | { stage: "form-numeric"; label: string; unit: string; step: number; startAt?: number };
 
 // ── Shared style constants ─────────────────────────────────────────────────
 
@@ -113,6 +114,7 @@ export default function ManageView() {
       type: h.type,
       unit: h.type === "numeric" ? h.unit : "",
       step: h.type === "numeric" ? h.step : 1,
+      startAt: h.type === "numeric" ? h.startAt : undefined,
     });
   }
 
@@ -131,6 +133,7 @@ export default function ManageView() {
           type: "numeric",
           unit: editingHabit.unit,
           step: editingHabit.step,
+          ...(editingHabit.startAt !== undefined && { startAt: editingHabit.startAt }),
           archived: h.archived,
         };
       }),
@@ -174,7 +177,7 @@ export default function ManageView() {
     const newHabit: HabitConfig =
       addHabit.stage === "form-boolean"
         ? { id, label: addHabit.label.trim(), type: "boolean", joyByDefault: addHabit.joyByDefault, archived: false }
-        : { id, label: addHabit.label.trim(), type: "numeric", unit: addHabit.unit.trim(), step: addHabit.step, archived: false };
+        : { id, label: addHabit.label.trim(), type: "numeric", unit: addHabit.unit.trim(), step: addHabit.step, ...(addHabit.startAt !== undefined && { startAt: addHabit.startAt }), archived: false };
     applyConfigs({ ...configs, habits: [...configs.habits, newHabit] });
     setAddHabit(null);
   }
@@ -341,6 +344,25 @@ export default function ManageView() {
                             className={TEXT_INPUT}
                           />
                         </div>
+                        <div>
+                          <label className={FIELD_LABEL}>
+                            Start at{editingHabit.unit ? ` · ${editingHabit.unit}` : ""}
+                          </label>
+                          <input
+                            type="number"
+                            min={0}
+                            step={editingHabit.step}
+                            placeholder="0"
+                            value={editingHabit.startAt ?? ""}
+                            onChange={(e) =>
+                              setEditingHabit({
+                                ...editingHabit,
+                                startAt: e.target.value === "" ? undefined : parseFloat(e.target.value),
+                              })
+                            }
+                            className={TEXT_INPUT}
+                          />
+                        </div>
                       </>
                     )}
                     <div className="flex gap-3 pt-1">
@@ -491,6 +513,25 @@ export default function ManageView() {
                     value={addHabit.step}
                     onChange={(e) =>
                       setAddHabit({ ...addHabit, step: parseFloat(e.target.value) || 1 })
+                    }
+                    className={TEXT_INPUT}
+                  />
+                </div>
+                <div>
+                  <label className={FIELD_LABEL}>
+                    Start at{addHabit.unit ? ` · ${addHabit.unit}` : ""}
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    step={addHabit.step}
+                    placeholder="0"
+                    value={addHabit.startAt ?? ""}
+                    onChange={(e) =>
+                      setAddHabit({
+                        ...addHabit,
+                        startAt: e.target.value === "" ? undefined : parseFloat(e.target.value),
+                      })
                     }
                     className={TEXT_INPUT}
                   />
