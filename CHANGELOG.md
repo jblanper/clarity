@@ -1,5 +1,19 @@
 # Changelog
 
+## [v2.3.0] — 2026-03-13
+
+### Features
+
+- **HabitToggle full-row tap** — the entire row is now a single `<button>` with an amber row wash when done, replacing the pill + separate hit-area approach.
+- **NumberStepper tap-to-increment pill** — tapping the value pill increments by one step; long-tap still opens the inline stepper.
+- **ManageView `startAt` field** — numeric habits expose a "Start at" input so users can set an initial value other than zero.
+- **WCAG + touch-target fixes** — additional touch-target and colour-contrast corrections identified in the Sprint 9 audit.
+
+### Tooling
+
+- Added Playwright e2e suite for Sprint 9 (144/144 passing).
+- New UX skills: `clarity-feature-explorer`, `ux-radical-evaluation` (with calm-research corpus and mockup pipeline).
+
 ## [v2.2.0] — 2026-03-08
 
 ### Improvements
