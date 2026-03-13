@@ -42,6 +42,13 @@ old sprints are no longer matched.
 
 **Files:** [List of files expected to be touched. Max 4–5 per task.]
 
+**Gotchas / edge cases:**
+[Optional — data-model edge cases, backwards-compatibility constraints, or known
+failure modes that implementation notes must address. Leave blank if none. Examples:
+"guard `v <= 0 ? undefined : v` when parsing numeric input", "archived UUIDs must
+remain resolvable — never delete config entries", "first tap vs subsequent taps
+behave differently when `startAt` is set".]
+
 **Implementation notes:**
 [Specific guidance that a fresh session with only CLAUDE.md and the listed files
 could follow correctly. Reference existing patterns to reuse. Flag any CLAUDE.md
