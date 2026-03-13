@@ -494,14 +494,14 @@ These three failures are by design. The Sprint 8 tests described the old control
 
 The following items require device or browser DevTools verification and cannot be automated by Playwright:
 
-- [ ] **Dark mode — HabitToggle amber wash:** toggle a habit on with dark mode active; confirm `dark:bg-amber-900/15` wash is visible but subtle. Toggle off; confirm wash disappears.
-- [ ] **Dark mode — NumberStepper amber pill:** increment a number > 0 in dark mode; confirm `dark:bg-amber-900/20` background is visible on the pill. At zero, confirm `dark:bg-stone-800` stone background.
-- [ ] **Archived habit rows are non-interactive:** in the Today check-in form, if any archived habits are shown, confirm clicking their rows does nothing (`pointer-events-none` on the wrapping div suppresses the full-row button).
-- [ ] **`startAt` first-tap jump:** in ManageView, edit a numeric habit (e.g. Sleep) and set "Start at" to 7. Save. Navigate to Today. Confirm the Sleep pill shows 0. Tap once — value should jump to 7, not to one step (0.5). Tap again — value should increment to 7.5.
-- [ ] **ManageView "Start at" round-trip:** edit a numeric habit, set "Start at" to 5, save. Reopen the edit form for the same habit — confirm "Start at" shows 5. Clear the field (leave blank), save. Reopen — confirm field is blank (no `startAt` stored).
-- [ ] **375px mobile viewport — light mode:** open Today on a 375px viewport. Confirm HabitToggle rows are full-width and tap targets feel natural. Confirm NumberStepper pill and decrement glyph are correctly positioned.
-- [ ] **375px mobile viewport — dark mode:** repeat the above check in dark mode. Amber washes should be visible at both amber-900/15 and amber-900/20 opacity levels.
-- [ ] **No OS-style toggle switch visible:** confirm no sliding thumb or oval pill toggle UI remains anywhere in the Today or Edit pages.
+- [x] **Dark mode — HabitToggle amber wash:** toggle a habit on with dark mode active; confirm `dark:bg-amber-900/15` wash is visible but subtle. Toggle off; confirm wash disappears.
+- [x] **Dark mode — NumberStepper amber pill:** increment a number > 0 in dark mode; confirm `dark:bg-amber-900/20` background is visible on the pill. At zero, confirm `dark:bg-stone-800` stone background.
+- [x] **Archived habit rows are non-interactive:** in the Today check-in form, if any archived habits are shown, confirm clicking their rows does nothing (`pointer-events-none` on the wrapping div suppresses the full-row button).
+- [x] **`startAt` first-tap jump:** in ManageView, edit a numeric habit (e.g. Sleep) and set "Start at" to 7. Save. Navigate to Today. Confirm the Sleep pill shows 0. Tap once — value should jump to 7, not to one step (0.5). Tap again — value should increment to 7.5.
+- [x] **ManageView "Start at" round-trip:** edit a numeric habit, set "Start at" to 5, save. Reopen the edit form for the same habit — confirm "Start at" shows 5. Clear the field (leave blank), save. Reopen — confirm field is blank (no `startAt` stored).
+- [x] **375px mobile viewport — light mode:** open Today on a 375px viewport. Confirm HabitToggle rows are full-width and tap targets feel natural. Confirm NumberStepper pill and decrement glyph are correctly positioned.
+- [x] **375px mobile viewport — dark mode:** repeat the above check in dark mode. Amber washes should be visible at both amber-900/15 and amber-900/20 opacity levels.
+- [x] **No OS-style toggle switch visible:** confirm no sliding thumb or oval pill toggle UI remains anywhere in the Today or Edit pages.
 
 ### QA result
 

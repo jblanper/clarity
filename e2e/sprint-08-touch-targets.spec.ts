@@ -29,32 +29,37 @@ test("HabitToggle — switch button is at least 44px tall", async ({ page }) => 
 
 test("HabitToggle — label has text-sm (14px) font size (M17)", async ({ page }) => {
   await page.goto("/clarity/");
-  // The label span is the first child of the HabitToggle row div, before the switch button
-  const row = page.locator(".flex.items-center.justify-between.py-3\\.5").first();
-  const labelSpan = row.locator("span").first();
+  // Label span is the second span inside the full-row button (first is the amber dot)
+  const button = page.getByRole("switch").first();
+  await expect(button).toBeVisible();
+  const labelSpan = button.locator("span").nth(1);
   if (await labelSpan.isVisible()) {
     const fontSize = await labelSpan.evaluate((node) => getComputedStyle(node).fontSize);
     expect(parseFloat(fontSize), "HabitToggle label should be text-sm (14px)").toBe(14);
   }
 });
 
-test("HabitToggle — toggle visual pill is smaller than the button (28px height)", async ({ page }) => {
+test("HabitToggle — amber dot indicator is smaller than the button (10px)", async ({ page }) => {
   await page.goto("/clarity/");
   const button = page.getByRole("switch").first();
   await expect(button).toBeVisible();
 
-  // The inner pill span should be h-7 = 28px, while the button is ≥44px
-  const pillHeight = await button.evaluate((node) => {
-    const pill = node.querySelector("span");
-    return pill ? pill.getBoundingClientRect().height : 0;
+  // Sprint 9: inner dot is h-2.5 = 10px; full button is ≥44px
+  const dotHeight = await button.evaluate((node) => {
+    const dot = node.querySelector("span");
+    return dot ? dot.getBoundingClientRect().height : 0;
   });
-  expect(pillHeight, "Inner pill should be 28px (h-7)").toBe(28);
+  expect(dotHeight, "Amber dot should be 10px (h-2.5)").toBeCloseTo(10, 0);
 });
 
 // ── NumberStepper (H6) ──────────────────────────────────────────────────────
 
 test("NumberStepper — decrement button is at least 44px tall and 44px wide", async ({ page }) => {
   await page.goto("/clarity/");
+  // Sprint 9: decrement is only rendered when value > 0 — tap the pill first
+  const pill = page.getByRole("spinbutton").first();
+  await expect(pill).toBeVisible();
+  await pill.click();
   const decrementBtn = page.getByRole("button", { name: /decrease/i }).first();
   await expect(decrementBtn).toBeVisible();
   const box = await decrementBtn.boundingBox();
@@ -62,13 +67,14 @@ test("NumberStepper — decrement button is at least 44px tall and 44px wide", a
   expect(box?.width, "Decrement button must be ≥ 44px wide").toBeGreaterThanOrEqual(44);
 });
 
-test("NumberStepper — increment button is at least 44px tall and 44px wide", async ({ page }) => {
+test("NumberStepper — pill (spinbutton) is at least 44px tall and 44px wide", async ({ page }) => {
   await page.goto("/clarity/");
-  const incrementBtn = page.getByRole("button", { name: /increase/i }).first();
-  await expect(incrementBtn).toBeVisible();
-  const box = await incrementBtn.boundingBox();
-  expect(box?.height, "Increment button must be ≥ 44px tall").toBeGreaterThanOrEqual(44);
-  expect(box?.width, "Increment button must be ≥ 44px wide").toBeGreaterThanOrEqual(44);
+  // Sprint 9: increment is now a tap-to-increment pill with role="spinbutton"
+  const pill = page.getByRole("spinbutton").first();
+  await expect(pill).toBeVisible();
+  const box = await pill.boundingBox();
+  expect(box?.height, "Spinbutton pill must be ≥ 44px tall").toBeGreaterThanOrEqual(44);
+  expect(box?.width, "Spinbutton pill must be ≥ 44px wide").toBeGreaterThanOrEqual(44);
 });
 
 test("NumberStepper — label has text-sm (14px) font size (M18)", async ({ page }) => {
