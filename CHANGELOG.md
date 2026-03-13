@@ -1,5 +1,17 @@
 # Changelog
 
+## [v2.3.1] — 2026-03-13
+
+### Tooling
+
+- **`/sprint-pipeline` skill** — new orchestrator skill that reads pre-flight tier and brief/doc Status fields to display the tier-appropriate pipeline (Tier 1: 11 phases, Tier 2: 10, Tier 3: 5), marks the current position with ▶, and offers to advance with human approval at each checkpoint.
+- **Scoped reads** — `sprint-validate`, `sprint-qa`, and `sprint-plan` SKILL.md files updated to read only the sections each skill needs (Goal → Definition of done, not the full appended doc).
+- **Task template gotchas field** — `sprint-plan/template.md` now includes a `Gotchas / edge cases` subsection between Files and Implementation notes.
+
+### Tests
+
+- **e2e baseline** — verified full Playwright suite passes against a live dev server; Sprint 8 touch-target tests confirmed working with Sprint 9 control shapes.
+
 ## [v2.3.0] — 2026-03-13
 
 ### Features
