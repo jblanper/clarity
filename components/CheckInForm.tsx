@@ -433,7 +433,7 @@ export default function CheckInForm({ date }: Props) {
                 className="mb-10"
               >
                 <h2 className="mb-3 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
-                  What felt particularly good today?
+                  Highlights
                 </h2>
                 <div className="rounded-2xl bg-stone-50 dark:bg-stone-800/50 border border-stone-100 dark:border-stone-800 px-4 py-4">
                   <AnimatePresence initial={false}>

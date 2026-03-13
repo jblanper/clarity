@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UX Mockup — CheckInForm inputs — 2026-03-13</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['system-ui', '-apple-system', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #f5f5f4; }
+    body.dark { background: #1c1917; }
+    .proposal-anchor { scroll-margin-top: 5rem; }
+  </style>
+</head>
+<body id="body" class="transition-colors duration-300">
+
+  <!-- Nav -->
+  <nav class="sticky top-0 z-50 flex items-center justify-between px-6 py-3 bg-stone-100 dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800">
+    <div class="flex gap-1 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 overflow-x-auto">
+      <a href="#p1-moment-chip" class="px-3 py-1.5 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 whitespace-nowrap transition-colors">P1 — Moment chip</a>
+      <a href="#p2-joy-heading" class="px-3 py-1.5 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 whitespace-nowrap transition-colors">P2 — Joy heading</a>
+      <a href="#p3-add-moment-form" class="px-3 py-1.5 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 whitespace-nowrap transition-colors">P3 — Add moment</a>
+      <a href="#p4-reflection-textarea" class="px-3 py-1.5 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 whitespace-nowrap transition-colors">P4 — Reflection</a>
+    </div>
+    <button onclick="toggleTheme()" class="ml-4 flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium uppercase tracking-widest bg-stone-800 dark:bg-stone-200 text-white dark:text-stone-900 transition-colors">
+      <span id="theme-label">Dark</span>
+    </button>
+  </nav>
+
+  <main class="max-w-4xl mx-auto px-6 py-12 space-y-20">
+
+    <!-- ─── P1 — MomentChip ──────────────────────────────────────── -->
+    <section id="p1-moment-chip" class="proposal-anchor">
+      <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-2">P1 — Moment chip</h2>
+      <p class="text-sm text-stone-600 dark:text-stone-400 mb-8 max-w-lg">Selected chips currently use a stone-500 grey fill — cold and inconsistent with the amber language established by HabitToggle and NumberStepper. This proposal aligns selected chips with the amber-tinted completion signal used throughout the rest of the form.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <!-- Current -->
+        <div class="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-6">
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-5">Current</p>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-3">Moments</p>
+          <div class="flex flex-wrap gap-2">
+            <!-- selected — current stone fill -->
+            <button class="min-h-[44px] flex items-center rounded-full px-4 py-2 text-sm bg-stone-500 dark:bg-stone-300 text-white dark:text-stone-900 transition-colors">
+              Good meal
+            </button>
+            <button class="min-h-[44px] flex items-center rounded-full px-4 py-2 text-sm bg-stone-500 dark:bg-stone-300 text-white dark:text-stone-900 transition-colors">
+              Inspiring song
+            </button>
+            <!-- unselected -->
+            <button class="min-h-[44px] flex items-center rounded-full px-4 py-2 text-sm border border-stone-200 dark:border-stone-700 bg-transparent dark:bg-stone-800 text-stone-500 dark:text-stone-400 transition-colors">
+              Interesting conversation
+            </button>
+            <button class="min-h-[44px] flex items-center rounded-full px-4 py-2 text-sm border border-stone-200 dark:border-stone-700 bg-transparent dark:bg-stone-800 text-stone-500 dark:text-stone-400 transition-colors">
+              Time in nature
+            </button>
+          </div>
+          <p class="mt-4 text-xs text-stone-400 dark:text-stone-600">Selected: stone-500 fill. No amber signal — inconsistent with habit and number states above.</p>
+        </div>
+
+        <!-- Proposed -->
+        <div class="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-6">
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-5">Proposed</p>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-3">Moments</p>
+          <div class="flex flex-wrap gap-2">
+            <!-- selected — proposed amber tint -->
+            <button class="min-h-[44px] flex items-center rounded-full px-4 py-2 text-sm border border-amber-300 dark:border-amber-700/40 bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300 transition-colors">
+              Good meal
+            </button>
+            <button class="min-h-[44px] flex items-center rounded-full px-4 py-2 text-sm border border-amber-300 dark:border-amber-700/40 bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300 transition-colors">
+              Inspiring song
+            </button>
+            <!-- unselected — transparent (no stone-800 fill in dark) -->
+            <button class="min-h-[44px] flex items-center rounded-full px-4 py-2 text-sm border border-stone-200 dark:border-stone-700 bg-transparent text-stone-500 dark:text-stone-400 transition-colors">
+              Interesting conversation
+            </button>
+            <button class="min-h-[44px] flex items-center rounded-full px-4 py-2 text-sm border border-stone-200 dark:border-stone-700 bg-transparent text-stone-500 dark:text-stone-400 transition-colors">
+              Time in nature
+            </button>
+          </div>
+          <p class="mt-4 text-xs text-stone-400 dark:text-stone-600">Selected: amber-50 bg + amber-300 border + amber-800 text (light) / amber-900/20 + amber-700/40 + amber-300 (dark). Consistent with form's amber language.</p>
+        </div>
+
+      </div>
+
+      <!-- Full form context: showing coherence across sections -->
+      <div class="mt-8 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-6">
+        <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-5">Full form context — proposed (coherence check)</p>
+        <div class="max-w-md space-y-8">
+          <!-- Habits section -->
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-3">Habits</p>
+            <div class="divide-y divide-stone-100 dark:divide-stone-800">
+              <!-- Done habit -->
+              <button class="w-full flex items-center gap-3 min-h-[44px] py-3 rounded-xl px-2 -mx-2 bg-amber-50 dark:bg-amber-900/15 transition-colors active:opacity-70 text-left">
+                <span class="flex-shrink-0 h-2.5 w-2.5 rounded-full bg-amber-500"></span>
+                <span class="text-sm text-stone-800 dark:text-stone-100">Meditation</span>
+              </button>
+              <!-- Undone habit -->
+              <button class="w-full flex items-center gap-3 min-h-[44px] py-3 rounded-xl px-2 -mx-2 transition-colors active:opacity-70 text-left">
+                <span class="flex-shrink-0 h-2.5 w-2.5 rounded-full bg-stone-200 dark:bg-stone-700"></span>
+                <span class="text-sm text-stone-700 dark:text-stone-300">Exercise</span>
+              </button>
+            </div>
+          </div>
+          <!-- Numbers section -->
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-3">By the numbers</p>
+            <div class="divide-y divide-stone-100 dark:divide-stone-800">
+              <div class="flex items-center justify-between py-3.5">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm text-stone-800 dark:text-stone-100">Water</span>
+                  <span class="text-xs text-stone-500">glasses</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <button class="flex items-center justify-center min-h-[44px] min-w-[32px] text-sm rounded-xl text-stone-400 dark:text-stone-500 active:opacity-70">−</button>
+                  <button class="flex items-center justify-center min-w-[52px] h-[44px] rounded-xl bg-amber-50 dark:bg-amber-900/20 active:bg-amber-100">
+                    <span class="text-xl font-light text-amber-700 dark:text-amber-500">3</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Moments section with proposed amber -->
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-3">Moments</p>
+            <div class="flex flex-wrap gap-2">
+              <button class="min-h-[44px] flex items-center rounded-full px-4 py-2 text-sm border border-amber-300 dark:border-amber-700/40 bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300">Good meal</button>
+              <button class="min-h-[44px] flex items-center rounded-full px-4 py-2 text-sm border border-stone-200 dark:border-stone-700 bg-transparent text-stone-500 dark:text-stone-400">Time in nature</button>
+              <button class="min-h-[44px] flex items-center rounded-full px-4 py-2 text-sm border border-dashed border-stone-300 dark:border-stone-600 text-stone-500 dark:text-stone-500">＋ New moment</button>
+            </div>
+          </div>
+        </div>
+        <p class="mt-4 text-xs text-stone-400 dark:text-stone-600">Amber reads consistently across all three logged states: habit wash → number pill → moment chip. The visual language is coherent end-to-end.</p>
+      </div>
+    </section>
+
+    <hr class="border-stone-200 dark:border-stone-800" />
+
+    <!-- ─── P2 — Joy heading ──────────────────────────────────────── -->
+    <section id="p2-joy-heading" class="proposal-anchor">
+      <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-2">P2 — Joy section heading</h2>
+      <p class="text-sm text-stone-600 dark:text-stone-400 mb-8 max-w-lg">The current section label is a 35-character interrogative sentence. Calma section labels are concise chapter markers. "Highlights" is self-explanatory on first encounter and sits cleanly alongside "Habits", "Moments", "Reflection".</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <!-- Current -->
+        <div class="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-6">
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-5">Current</p>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-3">What felt particularly good today?</p>
+          <div class="rounded-2xl bg-stone-50 dark:bg-stone-800/50 border border-stone-100 dark:border-stone-800 px-4 py-4">
+            <div class="flex items-center justify-between py-2">
+              <span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span>
+              <button class="min-h-[44px] min-w-[44px] flex items-center justify-end active:opacity-70">
+                <!-- Blossom filled -->
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 3C12 3 9 6 9 9C9 10.657 10.343 12 12 12C13.657 12 15 10.657 15 9C15 6 12 3 12 3Z" fill="#f59e0b"/>
+                  <path d="M12 21C12 21 15 18 15 15C15 13.343 13.657 12 12 12C10.343 12 9 13.343 9 15C9 18 12 21 12 21Z" fill="#f59e0b"/>
+                  <path d="M3 12C3 12 6 9 9 9C10.657 9 12 10.343 12 12C12 13.657 10.657 15 9 15C6 15 3 12 3 12Z" fill="#f59e0b"/>
+                  <path d="M21 12C21 12 18 15 15 15C13.343 15 12 13.657 12 12C12 10.343 13.343 9 15 9C18 9 21 12 21 12Z" fill="#f59e0b"/>
+                  <circle cx="12" cy="12" r="2" fill="#fbbf24"/>
+                </svg>
+              </button>
+            </div>
+            <div class="flex items-center justify-between py-2">
+              <span class="text-sm text-stone-700 dark:text-stone-300">Exercise</span>
+              <button class="min-h-[44px] min-w-[44px] flex items-center justify-end active:opacity-70">
+                <!-- Blossom empty -->
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 3C12 3 9 6 9 9C9 10.657 10.343 12 12 12C13.657 12 15 10.657 15 9C15 6 12 3 12 3Z" stroke="#a8a29e" stroke-width="1.5" fill="none"/>
+                  <path d="M12 21C12 21 15 18 15 15C15 13.343 13.657 12 12 12C10.343 12 9 13.343 9 15C9 18 12 21 12 21Z" stroke="#a8a29e" stroke-width="1.5" fill="none"/>
+                  <path d="M3 12C3 12 6 9 9 9C10.657 9 12 10.343 12 12C12 13.657 10.657 15 9 15C6 15 3 12 3 12Z" stroke="#a8a29e" stroke-width="1.5" fill="none"/>
+                  <path d="M21 12C21 12 18 15 15 15C13.343 15 12 13.657 12 12C12 10.343 13.343 9 15 9C18 9 21 12 21 12Z" stroke="#a8a29e" stroke-width="1.5" fill="none"/>
+                  <circle cx="12" cy="12" r="2" stroke="#a8a29e" stroke-width="1.5" fill="none"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <p class="mt-4 text-xs text-stone-400 dark:text-stone-600">35 characters. A survey question in a chapter-marker slot. Interrupts the formal rhythm of single-word section labels above it.</p>
+        </div>
+
+        <!-- Proposed -->
+        <div class="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-6">
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-5">Proposed</p>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-3">Highlights</p>
+          <div class="rounded-2xl bg-stone-50 dark:bg-stone-800/50 border border-stone-100 dark:border-stone-800 px-4 py-4">
+            <div class="flex items-center justify-between py-2">
+              <span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span>
+              <button class="min-h-[44px] min-w-[44px] flex items-center justify-end active:opacity-70">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 3C12 3 9 6 9 9C9 10.657 10.343 12 12 12C13.657 12 15 10.657 15 9C15 6 12 3 12 3Z" fill="#f59e0b"/>
+                  <path d="M12 21C12 21 15 18 15 15C15 13.343 13.657 12 12 12C10.343 12 9 13.343 9 15C9 18 12 21 12 21Z" fill="#f59e0b"/>
+                  <path d="M3 12C3 12 6 9 9 9C10.657 9 12 10.343 12 12C12 13.657 10.657 15 9 15C6 15 3 12 3 12Z" fill="#f59e0b"/>
+                  <path d="M21 12C21 12 18 15 15 15C13.343 15 12 13.657 12 12C12 10.343 13.343 9 15 9C18 9 21 12 21 12Z" fill="#f59e0b"/>
+                  <circle cx="12" cy="12" r="2" fill="#fbbf24"/>
+                </svg>
+              </button>
+            </div>
+            <div class="flex items-center justify-between py-2">
+              <span class="text-sm text-stone-700 dark:text-stone-300">Exercise</span>
+              <button class="min-h-[44px] min-w-[44px] flex items-center justify-end active:opacity-70">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 3C12 3 9 6 9 9C9 10.657 10.343 12 12 12C13.657 12 15 10.657 15 9C15 6 12 3 12 3Z" stroke="#a8a29e" stroke-width="1.5" fill="none"/>
+                  <path d="M12 21C12 21 15 18 15 15C15 13.343 13.657 12 12 12C10.343 12 9 13.343 9 15C9 18 12 21 12 21Z" stroke="#a8a29e" stroke-width="1.5" fill="none"/>
+                  <path d="M3 12C3 12 6 9 9 9C10.657 9 12 10.343 12 12C12 13.657 10.657 15 9 15C6 15 3 12 3 12Z" stroke="#a8a29e" stroke-width="1.5" fill="none"/>
+                  <path d="M21 12C21 12 18 15 15 15C13.343 15 12 13.657 12 12C12 10.343 13.343 9 15 9C18 9 21 12 21 12Z" stroke="#a8a29e" stroke-width="1.5" fill="none"/>
+                  <circle cx="12" cy="12" r="2" stroke="#a8a29e" stroke-width="1.5" fill="none"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <p class="mt-4 text-xs text-stone-400 dark:text-stone-600">"Highlights" — self-explanatory on first encounter, plural (correctly implies more than one can be marked), sits cleanly alongside "Habits", "Moments", "Reflection".</p>
+        </div>
+      </div>
+
+      <!-- Full section label rhythm comparison -->
+      <div class="mt-8 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-6">
+        <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-5">Section label rhythm — proposed vs current</p>
+        <div class="grid grid-cols-2 gap-8 max-w-lg">
+          <div>
+            <p class="text-xs text-stone-400 dark:text-stone-600 mb-3">Current</p>
+            <div class="space-y-4">
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Habits</p>
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">By the numbers</p>
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Moments</p>
+              <p class="text-xs font-medium uppercase tracking-widest text-red-500">What felt particularly good today?</p>
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Reflection</p>
+            </div>
+          </div>
+          <div>
+            <p class="text-xs text-stone-400 dark:text-stone-600 mb-3">Proposed</p>
+            <div class="space-y-4">
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Habits</p>
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">By the numbers</p>
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Moments</p>
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Highlights</p>
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Reflection</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="border-stone-200 dark:border-stone-800" />
+
+    <!-- ─── P3 — Add moment inline form ─────────────────────────── -->
+    <section id="p3-add-moment-form" class="proposal-anchor">
+      <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-2">P3 — Add-moment inline form</h2>
+      <p class="text-sm text-stone-600 dark:text-stone-400 mb-8 max-w-lg">The text input's <code>py-2</code> gives ~36px visual height. The Add button has <code>min-h-[44px]</code>. Adding <code>min-h-[44px]</code> to the input fixes the proportional mismatch and brings the input into 44px touch-target compliance.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <!-- Current -->
+        <div class="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-6">
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-5">Current</p>
+          <div class="flex items-center gap-2">
+            <input
+              type="text"
+              placeholder="e.g. Morning light"
+              class="flex-1 rounded-full border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-2 text-sm text-stone-700 dark:text-stone-300 placeholder-stone-400 dark:placeholder-stone-600 focus:border-stone-500 focus:outline-none"
+            />
+            <button class="min-h-[44px] flex items-center rounded-full bg-stone-800 dark:bg-stone-200 px-4 py-2 text-sm text-white dark:text-stone-900 transition-colors">Add</button>
+            <button class="min-h-[44px] min-w-[44px] flex items-center justify-center text-stone-500 dark:text-stone-500">✕</button>
+          </div>
+          <p class="mt-4 text-xs text-stone-400 dark:text-stone-600">Input: ~36px (py-2). Button: 44px. The button is visibly taller — it dominates the row.</p>
+        </div>
+
+        <!-- Proposed -->
+        <div class="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-6">
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-5">Proposed</p>
+          <div class="flex items-center gap-2">
+            <input
+              type="text"
+              placeholder="e.g. Morning light"
+              class="flex-1 min-h-[44px] rounded-full border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-2 text-sm text-stone-700 dark:text-stone-300 placeholder-stone-400 dark:placeholder-stone-600 focus:border-stone-500 focus:outline-none"
+            />
+            <button class="min-h-[44px] flex items-center rounded-full bg-stone-800 dark:bg-stone-200 px-4 py-2 text-sm text-white dark:text-stone-900 transition-colors">Add</button>
+            <button class="min-h-[44px] min-w-[44px] flex items-center justify-center text-stone-500 dark:text-stone-500">✕</button>
+          </div>
+          <p class="mt-4 text-xs text-stone-400 dark:text-stone-600">Input: 44px (min-h-[44px]). Both elements share the same height. The row reads as a coherent pair.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <hr class="border-stone-200 dark:border-stone-800" />
+
+    <!-- ─── P4 — Reflection textarea ─────────────────────────────── -->
+    <section id="p4-reflection-textarea" class="proposal-anchor">
+      <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-2">P4 — Reflection textarea</h2>
+      <p class="text-sm text-stone-600 dark:text-stone-400 mb-8 max-w-lg">The textarea uses <code>border-stone-300</code> in light mode — one step heavier than the Calma "Card, input" border token (<code>stone-200</code>). The heavier border adds unnecessary formality to the softest, most optional section of the form.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <!-- Current -->
+        <div class="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-6">
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-5">Current</p>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-3">Reflection</p>
+          <textarea
+            rows="4"
+            placeholder="Anything about today worth remembering?"
+            class="w-full resize-none rounded-2xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-3 text-sm font-light text-stone-700 dark:text-stone-300 placeholder-stone-400 dark:placeholder-stone-600 focus:border-stone-500 dark:focus:border-stone-500 focus:outline-none"
+          ></textarea>
+          <p class="mt-4 text-xs text-stone-400 dark:text-stone-600">Border: stone-300 in light mode. Heavier than spec (stone-200). Adds boxed, mandatory-field energy to an optional, reflective input.</p>
+        </div>
+
+        <!-- Proposed -->
+        <div class="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-6">
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-5">Proposed</p>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-3">Reflection</p>
+          <textarea
+            rows="4"
+            placeholder="Anything about today worth remembering?"
+            class="w-full resize-none rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-3 text-sm font-light text-stone-700 dark:text-stone-300 placeholder-stone-400 dark:placeholder-stone-600 focus:border-stone-400 dark:focus:border-stone-500 focus:outline-none"
+          ></textarea>
+          <p class="mt-4 text-xs text-stone-400 dark:text-stone-600">Border: stone-200 in light mode (Calma spec). Focus: stone-400 (lighter than before). Softer presence — the textarea invites rather than frames.</p>
+        </div>
+
+      </div>
+
+      <!-- Complete form preview with all proposals applied -->
+      <div class="mt-8 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-6">
+        <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-6">All proposals together — complete form preview</p>
+        <div class="max-w-md mx-auto space-y-8">
+
+          <!-- Habits -->
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-3">Habits</p>
+            <div class="divide-y divide-stone-100 dark:divide-stone-800">
+              <button class="w-full flex items-center gap-3 min-h-[44px] py-3 rounded-xl px-2 -mx-2 bg-amber-50 dark:bg-amber-900/15 transition-colors text-left">
+                <span class="flex-shrink-0 h-2.5 w-2.5 rounded-full bg-amber-500"></span>
+                <span class="text-sm text-stone-800 dark:text-stone-100">Meditation</span>
+              </button>
+              <button class="w-full flex items-center gap-3 min-h-[44px] py-3 rounded-xl px-2 -mx-2 transition-colors text-left">
+                <span class="flex-shrink-0 h-2.5 w-2.5 rounded-full bg-stone-200 dark:bg-stone-700"></span>
+                <span class="text-sm text-stone-700 dark:text-stone-300">Exercise</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Numbers -->
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-3">By the numbers</p>
+            <div class="divide-y divide-stone-100 dark:divide-stone-800">
+              <div class="flex items-center justify-between py-3.5">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm text-stone-800 dark:text-stone-100">Sleep</span>
+                  <span class="text-xs text-stone-500">hrs</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <button class="flex items-center justify-center min-h-[44px] min-w-[32px] text-sm rounded-xl text-stone-400 dark:text-stone-500">−</button>
+                  <button class="flex items-center justify-center min-w-[52px] h-[44px] rounded-xl bg-amber-50 dark:bg-amber-900/20">
+                    <span class="text-xl font-light text-amber-700 dark:text-amber-500">7</span>
+                  </button>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-3.5">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Water</span>
+                  <span class="text-xs text-stone-500">glasses</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <button class="invisible flex items-center justify-center min-h-[44px] min-w-[32px] text-sm rounded-xl text-stone-400 dark:text-stone-500">−</button>
+                  <button class="flex items-center justify-center min-w-[52px] h-[44px] rounded-xl bg-stone-100 dark:bg-stone-800">
+                    <span class="text-xl font-light text-stone-500 dark:text-stone-400">0</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Moments — P1 applied -->
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-3">Moments</p>
+            <div class="flex flex-wrap gap-2">
+              <button class="min-h-[44px] flex items-center rounded-full px-4 py-2 text-sm border border-amber-300 dark:border-amber-700/40 bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300">Good meal</button>
+              <button class="min-h-[44px] flex items-center rounded-full px-4 py-2 text-sm border border-stone-200 dark:border-stone-700 bg-transparent text-stone-500 dark:text-stone-400">Inspiring song</button>
+              <button class="min-h-[44px] flex items-center rounded-full px-4 py-2 text-sm border border-stone-200 dark:border-stone-700 bg-transparent text-stone-500 dark:text-stone-400">Time in nature</button>
+              <button class="min-h-[44px] flex items-center rounded-full px-4 py-2 text-sm border border-dashed border-stone-300 dark:border-stone-600 bg-transparent text-stone-500 dark:text-stone-500">＋ New moment</button>
+            </div>
+          </div>
+
+          <!-- Joy — P2 applied ("Highlights" heading) -->
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-3">Highlights</p>
+            <div class="rounded-2xl bg-stone-50 dark:bg-stone-800/50 border border-stone-100 dark:border-stone-800 px-4 py-4">
+              <div class="flex items-center justify-between py-2">
+                <span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span>
+                <button class="min-h-[44px] min-w-[44px] flex items-center justify-end">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 3C12 3 9 6 9 9C9 10.657 10.343 12 12 12C13.657 12 15 10.657 15 9C15 6 12 3 12 3Z" fill="#f59e0b"/>
+                    <path d="M12 21C12 21 15 18 15 15C15 13.343 13.657 12 12 12C10.343 12 9 13.343 9 15C9 18 12 21 12 21Z" fill="#f59e0b"/>
+                    <path d="M3 12C3 12 6 9 9 9C10.657 9 12 10.343 12 12C12 13.657 10.657 15 9 15C6 15 3 12 3 12Z" fill="#f59e0b"/>
+                    <path d="M21 12C21 12 18 15 15 15C13.343 15 12 13.657 12 12C12 10.343 13.343 9 15 9C18 9 21 12 21 12Z" fill="#f59e0b"/>
+                    <circle cx="12" cy="12" r="2" fill="#fbbf24"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reflection — P4 applied (stone-200 border) -->
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-3">Reflection</p>
+            <textarea
+              rows="4"
+              placeholder="Anything about today worth remembering?"
+              class="w-full resize-none rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-3 text-sm font-light text-stone-700 dark:text-stone-300 placeholder-stone-400 dark:placeholder-stone-600 focus:border-stone-400 dark:focus:border-stone-500 focus:outline-none"
+            ></textarea>
+          </div>
+
+          <!-- Save button -->
+          <button class="w-full rounded-2xl py-4 text-sm tracking-widest bg-stone-800 text-white dark:bg-stone-200 dark:text-stone-900 hover:bg-stone-700 dark:hover:bg-stone-300 transition-colors">
+            Save
+          </button>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    let isDark = false;
+    function toggleTheme() {
+      isDark = !isDark;
+      document.documentElement.classList.toggle('dark', isDark);
+      document.getElementById('body').classList.toggle('dark', isDark);
+      document.getElementById('theme-label').textContent = isDark ? 'Light' : 'Dark';
+    }
+  </script>
+</body>
+</html>
