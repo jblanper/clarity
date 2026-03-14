@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Settings UX Proposals — Clarity</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        fontFamily: { sans: ['system-ui', '-apple-system', 'sans-serif'] },
+        colors: {
+          stone: {
+            50:  '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4',
+            300: '#d6d3d1', 400: '#a8a29e', 500: '#78716c',
+            600: '#57534e', 700: '#44403c', 800: '#292524',
+            900: '#1c1917',
+          },
+          amber: {
+            50:  '#fffbeb', 100: '#fef3c7', 200: '#fde68a',
+            300: '#fcd34d', 400: '#fbbf24', 500: '#f59e0b',
+            700: '#b45309', 800: '#92400e', 900: '#78350f',
+          }
+        }
+      }
+    }
+  }
+</script>
+<style>
+  body { background: #f0ede8; font-family: system-ui, -apple-system, sans-serif; }
+  .dark body { background: #111110; }
+
+  /* Page nav */
+  .nav-tab { cursor: pointer; padding: 6px 16px; border-radius: 99px; font-size: 13px; transition: background 0.15s, color 0.15s; }
+  .nav-tab.active { background: #292524; color: white; }
+  .nav-tab:not(.active) { color: #78716c; }
+  .nav-tab:not(.active):hover { background: #e7e5e4; color: #292524; }
+
+  .dark .nav-tab.active { background: #e7e5e4; color: #1c1917; }
+  .dark .nav-tab:not(.active) { color: #a8a29e; }
+  .dark .nav-tab:not(.active):hover { background: #292524; color: #e7e5e4; }
+
+  .proposal-section { display: none; }
+  .proposal-section.visible { display: block; }
+
+  /* Chevron SVG */
+  .chevron-right::after {
+    content: '';
+    display: inline-block;
+    width: 5px; height: 5px;
+    border-right: 1.5px solid currentColor;
+    border-top: 1.5px solid currentColor;
+    transform: rotate(45deg) translateY(-1px);
+    vertical-align: middle;
+    margin-left: 4px;
+  }
+  .chevron-left::before {
+    content: '';
+    display: inline-block;
+    width: 5px; height: 5px;
+    border-left: 1.5px solid currentColor;
+    border-top: 1.5px solid currentColor;
+    transform: rotate(-45deg) translateY(-1px);
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+</style>
+</head>
+
+<body class="min-h-screen transition-colors duration-200">
+
+<!-- ── Top bar ─────────────────────────────────────────────────────────── -->
+<div class="sticky top-0 z-20 border-b border-stone-200 dark:border-stone-800 bg-white/80 dark:bg-stone-900/80 backdrop-blur-sm px-4 py-3 flex items-center justify-between">
+  <span class="text-xs font-medium tracking-widest uppercase text-stone-500">Settings Proposals</span>
+  <button
+    id="themeToggle"
+    onclick="document.documentElement.classList.toggle('dark')"
+    class="text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors px-3 py-1 rounded-full border border-stone-200 dark:border-stone-700"
+  >
+    Toggle theme
+  </button>
+</div>
+
+<!-- ── Proposal nav ────────────────────────────────────────────────────── -->
+<div class="sticky top-[49px] z-10 bg-white/80 dark:bg-stone-900/80 backdrop-blur-sm border-b border-stone-100 dark:border-stone-800 px-4 py-2 flex gap-2 overflow-x-auto">
+  <button class="nav-tab active" onclick="showProposal('s1-theme-toggle', this)">S1 — Theme toggle</button>
+  <button class="nav-tab" onclick="showProposal('s2-your-data', this)">S2 — Your data</button>
+  <button class="nav-tab" onclick="showProposal('s3-reset-escalation', this)">S3 — Reset</button>
+  <button class="nav-tab" onclick="showProposal('s4-manage-card', this)">S4 — Manage card</button>
+  <button class="nav-tab" onclick="showProposal('full-page', this)">Full page</button>
+</div>
+
+<div class="max-w-5xl mx-auto px-4 py-10">
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- S1 — Theme segmented pill control                                    -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<section id="s1-theme-toggle" class="proposal-section visible">
+  <div class="mb-8">
+    <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-1">S1 — Theme toggle</p>
+    <h2 class="text-xl font-light tracking-wide text-stone-800 dark:text-stone-200 mb-2">Segmented pill control</h2>
+    <p class="text-sm text-stone-500 dark:text-stone-400 max-w-lg">
+      Replaces the two anonymous text buttons with a contained segmented control. The active option gets a filled indicator using the primary button token. The enclosure makes the control self-explanatory — two options, one selected.
+    </p>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-6">
+    <!-- Before — Light -->
+    <div>
+      <p class="text-xs uppercase tracking-widest text-stone-400 mb-3">Before — Light</p>
+      <div class="rounded-2xl bg-white border border-stone-200 px-6 py-8 max-w-sm">
+        <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-4">Theme</p>
+        <div class="flex gap-6">
+          <button class="text-sm text-stone-500">Light</button>
+          <button class="text-sm font-medium text-stone-900">Dark</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- After — Light -->
+    <div>
+      <p class="text-xs uppercase tracking-widest text-stone-400 mb-3">After — Light</p>
+      <div class="rounded-2xl bg-white border border-stone-200 px-6 py-8 max-w-sm">
+        <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-4">Theme</p>
+        <div id="s1-demo" class="inline-flex rounded-full border border-stone-200 p-0.5">
+          <button
+            onclick="s1Select('light')"
+            id="s1-light"
+            class="rounded-full px-4 py-1.5 text-sm transition-colors bg-stone-800 text-white"
+          >Light</button>
+          <button
+            onclick="s1Select('dark')"
+            id="s1-dark"
+            class="rounded-full px-4 py-1.5 text-sm transition-colors text-stone-500 hover:text-stone-700"
+          >Dark</button>
+        </div>
+        <p class="mt-4 text-xs text-stone-400">← tap to switch</p>
+      </div>
+    </div>
+
+    <!-- Before — Dark -->
+    <div>
+      <p class="text-xs uppercase tracking-widest text-stone-400 mb-3">Before — Dark</p>
+      <div class="rounded-2xl bg-stone-900 border border-stone-700 px-6 py-8 max-w-sm">
+        <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-4">Theme</p>
+        <div class="flex gap-6">
+          <button class="text-sm text-stone-400">Light</button>
+          <button class="text-sm font-medium text-stone-100">Dark</button>
+        </div>
+        <p class="mt-3 text-xs text-stone-600">Reads as "Light | <strong class="text-stone-100">Dark</strong>" — a label, not a control</p>
+      </div>
+    </div>
+
+    <!-- After — Dark -->
+    <div>
+      <p class="text-xs uppercase tracking-widest text-stone-400 mb-3">After — Dark</p>
+      <div class="rounded-2xl bg-stone-900 border border-stone-700 px-6 py-8 max-w-sm">
+        <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-4">Theme</p>
+        <div class="inline-flex rounded-full border border-stone-700 p-0.5">
+          <button class="rounded-full px-4 py-1.5 text-sm text-stone-400 hover:text-stone-200 transition-colors">Light</button>
+          <button class="rounded-full px-4 py-1.5 text-sm bg-stone-200 text-stone-900 transition-colors">Dark</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-8 rounded-2xl border border-stone-100 dark:border-stone-800 bg-stone-50 dark:bg-stone-800/50 px-5 py-4 max-w-lg">
+    <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-2">Implementation note</p>
+    <p class="text-sm text-stone-600 dark:text-stone-400">The filled active state uses the primary button token — <code class="text-xs bg-stone-100 dark:bg-stone-800 px-1 rounded">bg-stone-800 dark:bg-stone-200 text-white dark:text-stone-900</code>. Stone rather than amber is correct here — theme is a structural preference, not an emotional selection. No logic changes required, only the wrapper and button classes.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- S2 — Your Data sub-labels + tertiary buttons                         -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<section id="s2-your-data" class="proposal-section">
+  <div class="mb-8">
+    <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-1">S2 — Your data</p>
+    <h2 class="text-xl font-light tracking-wide text-stone-800 dark:text-stone-200 mb-2">Sub-labels + tertiary initiating actions</h2>
+    <p class="text-sm text-stone-500 dark:text-stone-400 max-w-lg">
+      Adds BACKUP and RESTORE sub-labels to make the section scannable. Drops the initiating action buttons from full-width secondary to tertiary weight — they open system dialogs, not perform primary actions. The Import confirm button (after file selection) retains primary weight.
+    </p>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-6">
+    <!-- Before — Light -->
+    <div>
+      <p class="text-xs uppercase tracking-widest text-stone-400 mb-3">Before — Light</p>
+      <div class="rounded-2xl bg-white border border-stone-200 px-6 py-8 max-w-sm">
+        <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-4">Your data</p>
+        <div class="mb-6">
+          <p class="text-sm text-stone-500 mb-4">Download a backup of all your entries.</p>
+          <button class="w-full rounded-2xl border border-stone-200 bg-white py-4 text-sm tracking-widest text-stone-700 hover:bg-stone-50 transition-colors">Export backup</button>
+        </div>
+        <div>
+          <p class="text-sm text-stone-500 mb-4">Restore entries from a backup file. Dates that already have an entry will not be overwritten.</p>
+          <button class="w-full rounded-2xl border border-stone-200 bg-white py-4 text-sm tracking-widest text-stone-700 hover:bg-stone-50 transition-colors">Choose file</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- After — Light -->
+    <div>
+      <p class="text-xs uppercase tracking-widest text-stone-400 mb-3">After — Light</p>
+      <div class="rounded-2xl bg-white border border-stone-200 px-6 py-8 max-w-sm">
+        <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-5">Your data</p>
+        <div class="mb-6">
+          <p class="text-xs font-normal uppercase tracking-wide text-stone-500 mb-3">Backup</p>
+          <p class="text-sm text-stone-500 mb-3">Keep a copy of your entries on your device.</p>
+          <button class="inline-flex items-center rounded-xl border border-stone-200 px-4 py-2 text-xs text-stone-600 hover:bg-stone-50 transition-colors">Save a copy</button>
+        </div>
+        <div class="pt-5 border-t border-stone-100">
+          <p class="text-xs font-normal uppercase tracking-wide text-stone-500 mb-3">Restore</p>
+          <p class="text-sm text-stone-500 mb-3">Load a backup file. Days you&apos;ve already logged won&apos;t change.</p>
+          <button class="inline-flex items-center rounded-xl border border-stone-200 px-4 py-2 text-xs text-stone-600 hover:bg-stone-50 transition-colors">Choose a file</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- After — file ready state — Light -->
+    <div>
+      <p class="text-xs uppercase tracking-widest text-stone-400 mb-3">After — file selected state — Light</p>
+      <div class="rounded-2xl bg-white border border-stone-200 px-6 py-8 max-w-sm">
+        <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-5">Your data</p>
+        <div class="mb-6">
+          <p class="text-xs font-normal uppercase tracking-wide text-stone-500 mb-3">Backup</p>
+          <p class="text-sm text-stone-500 mb-3">Keep a copy of your entries on your device.</p>
+          <button class="inline-flex items-center rounded-xl border border-stone-200 px-4 py-2 text-xs text-stone-600 hover:bg-stone-50 transition-colors">Save a copy</button>
+        </div>
+        <div class="pt-5 border-t border-stone-100">
+          <p class="text-xs font-normal uppercase tracking-wide text-stone-500 mb-3">Restore</p>
+          <p class="text-sm text-stone-500 mb-3">Load a backup file. Days you&apos;ve already logged won&apos;t change.</p>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3">
+              <span class="truncate text-sm text-stone-600">clarity-backup-2026-03-14.json</span>
+              <button class="ml-3 text-stone-500 hover:text-stone-700 flex-shrink-0">✕</button>
+            </div>
+            <!-- Restore is the primary action -->
+            <button class="w-full rounded-2xl bg-stone-800 py-4 text-sm tracking-widest text-white hover:bg-stone-700 transition-colors">Restore</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- After — Dark -->
+    <div>
+      <p class="text-xs uppercase tracking-widest text-stone-400 mb-3">After — Dark</p>
+      <div class="rounded-2xl bg-stone-900 border border-stone-700 px-6 py-8 max-w-sm">
+        <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-5">Your data</p>
+        <div class="mb-6">
+          <p class="text-xs font-normal uppercase tracking-wide text-stone-500 mb-3">Backup</p>
+          <p class="text-sm text-stone-400 mb-3">Keep a copy of your entries on your device.</p>
+          <button class="inline-flex items-center rounded-xl border border-stone-700 px-4 py-2 text-xs text-stone-400 hover:bg-stone-800/50 transition-colors">Save a copy</button>
+        </div>
+        <div class="pt-5 border-t border-stone-800">
+          <p class="text-xs font-normal uppercase tracking-wide text-stone-500 mb-3">Restore</p>
+          <p class="text-sm text-stone-400 mb-3">Load a backup file. Days you&apos;ve already logged won&apos;t change.</p>
+          <button class="inline-flex items-center rounded-xl border border-stone-700 px-4 py-2 text-xs text-stone-400 hover:bg-stone-800/50 transition-colors">Choose a file</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- S3 — Reset button + copy + confirmation escalation                   -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<section id="s3-reset-escalation" class="proposal-section">
+  <div class="mb-8">
+    <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-1">S3 — Reset</p>
+    <h2 class="text-xl font-light tracking-wide text-stone-800 dark:text-stone-200 mb-2">Button affordance + human copy + red at the terminal action</h2>
+    <p class="text-sm text-stone-500 dark:text-stone-400 max-w-lg">
+      Three changes: (1) the bare text link becomes a proper tertiary button with amber border — gives it affordance without urgency; (2) copy shifts from technical ("factory defaults") to human ("Start fresh"); (3) the confirmation action escalates to red — the only moment where irreversibility is crossed. Calma: "Red signals permanent destructive actions only."
+    </p>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-6">
+    <!-- Before — Light -->
+    <div>
+      <p class="text-xs uppercase tracking-widest text-stone-400 mb-3">Before — Light</p>
+      <div class="rounded-2xl bg-white border border-stone-200 px-6 py-8 max-w-sm">
+        <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-4">Reset</p>
+        <div class="space-y-4">
+          <div>
+            <p class="text-xs text-stone-400 mb-2">Initial — bare text, technical label:</p>
+            <button class="text-sm text-amber-700">Reset to factory defaults</button>
+          </div>
+          <div class="border-t border-stone-100 pt-4">
+            <p class="text-xs text-stone-400 mb-2">Confirmation — still amber, no escalation:</p>
+            <p class="text-xs text-stone-500 mb-3">This will delete all entries and restore default habits and moments.</p>
+            <div class="flex gap-5">
+              <button class="text-sm text-amber-700">Yes, reset everything</button>
+              <button class="text-sm text-stone-500">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- After — Light -->
+    <div>
+      <p class="text-xs uppercase tracking-widest text-stone-400 mb-3">After — Light</p>
+      <div class="rounded-2xl bg-white border border-stone-200 px-6 py-8 max-w-sm">
+        <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-4">Reset</p>
+        <div class="space-y-4">
+          <div>
+            <p class="text-xs text-stone-400 mb-2">Initial — amber border button, human label:</p>
+            <button class="inline-flex items-center rounded-xl border border-amber-200 px-4 py-2 text-xs text-amber-700 hover:bg-amber-50 transition-colors">Start fresh</button>
+          </div>
+          <div class="border-t border-stone-100 pt-4">
+            <p class="text-xs text-stone-400 mb-2">Confirmation — red escalation, calm copy:</p>
+            <p class="text-xs text-stone-500 mb-3">Your entries will be removed and habits reset to defaults.</p>
+            <div class="flex gap-5">
+              <button class="text-sm text-red-700 hover:text-red-900 transition-colors">Yes, start fresh</button>
+              <button class="text-sm text-stone-500">Keep my data</button>
+            </div>
+          </div>
+          <p class="text-xs text-stone-400">Amber button → red confirm = visible escalation at the threshold</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Before — Dark -->
+    <div>
+      <p class="text-xs uppercase tracking-widest text-stone-400 mb-3">Before — Dark</p>
+      <div class="rounded-2xl bg-stone-900 border border-stone-700 px-6 py-8 max-w-sm">
+        <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-4">Reset</p>
+        <div class="space-y-4">
+          <div>
+            <button class="text-sm text-amber-500">Reset to factory defaults</button>
+          </div>
+          <div class="border-t border-stone-800 pt-4">
+            <p class="text-xs text-stone-400 mb-3">This will delete all entries and restore default habits and moments.</p>
+            <div class="flex gap-5">
+              <button class="text-sm text-amber-500">Yes, reset everything</button>
+              <button class="text-sm text-stone-500">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- After — Dark -->
+    <div>
+      <p class="text-xs uppercase tracking-widest text-stone-400 mb-3">After — Dark</p>
+      <div class="rounded-2xl bg-stone-900 border border-stone-700 px-6 py-8 max-w-sm">
+        <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-4">Reset</p>
+        <div class="space-y-4">
+          <div>
+            <button class="inline-flex items-center rounded-xl border px-4 py-2 text-xs transition-colors hover:bg-amber-900/20" style="border-color:rgba(253,230,138,0.3);color:#f59e0b;">Start fresh</button>
+          </div>
+          <div class="border-t border-stone-800 pt-4">
+            <p class="text-xs text-stone-400 mb-3">Your entries will be removed and habits reset to defaults.</p>
+            <div class="flex gap-5">
+              <button class="text-sm text-red-400 hover:text-red-300 transition-colors">Yes, start fresh</button>
+              <button class="text-sm text-stone-500">Keep my data</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-8 rounded-2xl border border-stone-100 dark:border-stone-800 bg-stone-50 dark:bg-stone-800/50 px-5 py-4 max-w-lg">
+    <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-2">What changes</p>
+    <p class="text-sm text-stone-600 dark:text-stone-400 space-y-1">
+      Button style: <code class="text-xs bg-stone-100 dark:bg-stone-800 px-1 rounded">border border-amber-200 dark:border-amber-700/40 rounded-xl px-4 py-2 text-xs text-amber-700 dark:text-amber-500</code>.<br>
+      Initial label: "Reset to factory defaults" → <strong>"Start fresh"</strong>.<br>
+      Confirmation text: shorter and direct. Confirmation action: "Yes, reset everything" → "Yes, start fresh" in <code class="text-xs bg-stone-100 dark:bg-stone-800 px-1 rounded">text-red-700 dark:text-red-400</code>. Cancel: "Cancel" → "Keep my data".
+    </p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- S4 — Manage entry card                                               -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<section id="s4-manage-card" class="proposal-section">
+  <div class="mb-8">
+    <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-1">S4 — Manage entry card</p>
+    <h2 class="text-xl font-light tracking-wide text-stone-800 dark:text-stone-200 mb-2">Card wrapper aligns Settings with Manage vocabulary</h2>
+    <p class="text-sm text-stone-500 dark:text-stone-400 max-w-lg">
+      Wraps the Manage navigation link in the same section card pattern being introduced on the Manage page (B1). Creates visual continuity between Settings and the page it navigates to. Best shipped alongside or after the Manage B1 card structure.
+    </p>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-6">
+    <!-- Before — Light -->
+    <div>
+      <p class="text-xs uppercase tracking-widest text-stone-400 mb-3">Before — Light</p>
+      <div class="rounded-2xl bg-white border border-stone-200 px-6 py-8 max-w-sm">
+        <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-4">Manage</p>
+        <a href="#" class="inline-flex items-center gap-2 py-2 text-sm text-stone-700 hover:text-stone-900 transition-colors">
+          <span>Habits and moments</span>
+          <span class="text-stone-500 chevron-right"></span>
+        </a>
+      </div>
+    </div>
+
+    <!-- After — Light -->
+    <div>
+      <p class="text-xs uppercase tracking-widest text-stone-400 mb-3">After — Light</p>
+      <div class="rounded-2xl bg-white border border-stone-200 px-6 py-8 max-w-sm">
+        <div class="rounded-2xl bg-stone-50 border border-stone-200 px-4 pt-4 pb-3">
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Manage</p>
+          <a href="#" class="flex items-center justify-between min-h-[44px] text-sm text-stone-700 hover:text-stone-900 transition-colors">
+            <span>Habits and moments</span>
+            <span class="text-stone-400 chevron-right"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Before — Dark -->
+    <div>
+      <p class="text-xs uppercase tracking-widest text-stone-400 mb-3">Before — Dark</p>
+      <div class="rounded-2xl bg-stone-900 border border-stone-700 px-6 py-8 max-w-sm">
+        <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-4">Manage</p>
+        <a href="#" class="inline-flex items-center gap-2 py-2 text-sm text-stone-300 hover:text-stone-100 transition-colors">
+          <span>Habits and moments</span>
+          <span class="text-stone-500 chevron-right"></span>
+        </a>
+      </div>
+    </div>
+
+    <!-- After — Dark -->
+    <div>
+      <p class="text-xs uppercase tracking-widest text-stone-400 mb-3">After — Dark</p>
+      <div class="rounded-2xl bg-stone-900 border border-stone-700 px-6 py-8 max-w-sm">
+        <div class="rounded-2xl border border-stone-800 px-4 pt-4 pb-3" style="background: rgba(41,37,36,0.5);">
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Manage</p>
+          <a href="#" class="flex items-center justify-between min-h-[44px] text-sm text-stone-300 hover:text-stone-100 transition-colors">
+            <span>Habits and moments</span>
+            <span class="text-stone-500 chevron-right"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-8 rounded-2xl border border-stone-100 dark:border-stone-800 bg-stone-50 dark:bg-stone-800/50 px-5 py-4 max-w-lg">
+    <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-2">Open question</p>
+    <p class="text-sm text-stone-600 dark:text-stone-400">If S4 ships, the `border-t` divider after the Manage section sits between a card and bare text. Resolve by either removing the divider and relying on spacing, or applying the same card treatment to the Help section. Both are trivially low effort.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- Full page — all proposals combined                                   -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<section id="full-page" class="proposal-section">
+  <div class="mb-8">
+    <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-1">Full page</p>
+    <h2 class="text-xl font-light tracking-wide text-stone-800 dark:text-stone-200 mb-2">All proposals combined</h2>
+    <p class="text-sm text-stone-500 dark:text-stone-400 max-w-lg">
+      S1 + S2 + S3 + S4 combined into a single Settings page view. Light and dark side by side.
+    </p>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-8">
+    <!-- Light full page -->
+    <div>
+      <p class="text-xs uppercase tracking-widest text-stone-400 mb-4">Light — all proposals</p>
+      <div class="mx-auto max-w-sm rounded-3xl bg-stone-50 border border-stone-200 px-5 py-10">
+
+        <!-- Header -->
+        <header class="mb-10 flex items-start justify-between">
+          <h1 class="text-xl font-light tracking-widest text-stone-800">Settings</h1>
+          <button class="mt-2 text-xs uppercase tracking-widest text-stone-600 hover:text-stone-800 transition-colors flex items-center">
+            <span class="chevron-left"></span>Today
+          </button>
+        </header>
+
+        <!-- Manage — S4: card wrapper -->
+        <section class="mb-8">
+          <div class="rounded-2xl bg-white border border-stone-200 px-4 pt-4 pb-3">
+            <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Manage</h2>
+            <a href="#" class="flex items-center justify-between min-h-[44px] text-sm text-stone-700 hover:text-stone-900 transition-colors">
+              <span>Habits and moments</span>
+              <span class="text-stone-400 chevron-right"></span>
+            </a>
+          </div>
+        </section>
+
+        <!-- Theme — S1: segmented pill -->
+        <section class="mb-8">
+          <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-4">Theme</h2>
+          <div class="inline-flex rounded-full border border-stone-200 p-0.5">
+            <button class="rounded-full px-4 py-1.5 text-sm bg-stone-800 text-white transition-colors">Light</button>
+            <button class="rounded-full px-4 py-1.5 text-sm text-stone-500 transition-colors">Dark</button>
+          </div>
+        </section>
+
+        <div class="mb-8 border-t border-stone-200"></div>
+
+        <!-- Your Data — S2: sub-labels + tertiary buttons -->
+        <section class="mb-8">
+          <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-5">Your data</h2>
+          <div class="mb-6">
+            <h3 class="text-xs font-normal uppercase tracking-wide text-stone-500 mb-3">Backup</h3>
+            <p class="text-sm text-stone-500 mb-3">Keep a copy of your entries on your device.</p>
+            <button class="inline-flex items-center rounded-xl border border-stone-200 px-4 py-2 text-xs text-stone-600 hover:bg-stone-50 transition-colors">Save a copy</button>
+          </div>
+          <div class="pt-5 border-t border-stone-200">
+            <h3 class="text-xs font-normal uppercase tracking-wide text-stone-500 mb-3">Restore</h3>
+            <p class="text-sm text-stone-500 mb-3">Load a backup file. Days you&apos;ve already logged won&apos;t change.</p>
+            <button class="inline-flex items-center rounded-xl border border-stone-200 px-4 py-2 text-xs text-stone-600 hover:bg-stone-50 transition-colors">Choose a file</button>
+          </div>
+        </section>
+
+        <!-- Help — card wrapper, no dividers (card edges provide separation) -->
+        <section class="mb-8">
+          <div class="rounded-2xl bg-white border border-stone-200 px-4 pt-4 pb-3">
+            <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Help</h2>
+            <a href="#" class="flex items-center justify-between min-h-[44px] text-sm text-stone-700 hover:text-stone-900 transition-colors">
+              <span>How Clarity works</span>
+              <span class="text-stone-400 chevron-right"></span>
+            </a>
+          </div>
+        </section>
+
+        <!-- Reset — S3: button affordance + human copy + red escalation -->
+        <section>
+          <h3 class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Reset</h3>
+          <div id="full-reset-light">
+            <div id="full-reset-light-initial">
+              <button onclick="fullResetLight()" class="inline-flex items-center rounded-xl border border-amber-200 px-4 py-2 text-xs text-amber-700 hover:bg-amber-50 transition-colors">Start fresh</button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- Dark full page -->
+    <div>
+      <p class="text-xs uppercase tracking-widest text-stone-400 mb-4">Dark — all proposals</p>
+      <div class="mx-auto max-w-sm rounded-3xl bg-stone-900 border border-stone-800 px-5 py-10">
+
+        <!-- Header -->
+        <header class="mb-10 flex items-start justify-between">
+          <h1 class="text-xl font-light tracking-widest text-stone-200">Settings</h1>
+          <button class="mt-2 text-xs uppercase tracking-widest text-stone-500 hover:text-stone-300 transition-colors flex items-center">
+            <span class="chevron-left"></span>Today
+          </button>
+        </header>
+
+        <!-- Manage — S4: card -->
+        <section class="mb-8">
+          <div class="rounded-2xl border border-stone-800 px-4 pt-4 pb-3" style="background:rgba(41,37,36,0.5)">
+            <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Manage</h2>
+            <a href="#" class="flex items-center justify-between min-h-[44px] text-sm text-stone-300 hover:text-stone-100 transition-colors">
+              <span>Habits and moments</span>
+              <span class="text-stone-500 chevron-right"></span>
+            </a>
+          </div>
+        </section>
+
+        <!-- Theme — S1: segmented pill -->
+        <section class="mb-8">
+          <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-4">Theme</h2>
+          <div class="inline-flex rounded-full border border-stone-700 p-0.5">
+            <button class="rounded-full px-4 py-1.5 text-sm text-stone-400 transition-colors">Light</button>
+            <button class="rounded-full px-4 py-1.5 text-sm bg-stone-200 text-stone-900 transition-colors">Dark</button>
+          </div>
+        </section>
+
+        <div class="mb-8 border-t border-stone-800"></div>
+
+        <!-- Your Data — S2 -->
+        <section class="mb-8">
+          <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-5">Your data</h2>
+          <div class="mb-6">
+            <h3 class="text-xs font-normal uppercase tracking-wide text-stone-500 mb-3">Backup</h3>
+            <p class="text-sm text-stone-400 mb-3">Keep a copy of your entries on your device.</p>
+            <button class="inline-flex items-center rounded-xl border border-stone-700 px-4 py-2 text-xs text-stone-400 transition-colors">Save a copy</button>
+          </div>
+          <div class="pt-5 border-t border-stone-800">
+            <h3 class="text-xs font-normal uppercase tracking-wide text-stone-500 mb-3">Restore</h3>
+            <p class="text-sm text-stone-400 mb-3">Load a backup file. Days you&apos;ve already logged won&apos;t change.</p>
+            <button class="inline-flex items-center rounded-xl border border-stone-700 px-4 py-2 text-xs text-stone-400 transition-colors">Choose a file</button>
+          </div>
+        </section>
+
+        <!-- Help — no dividers around the card -->
+        <section class="mb-8">
+          <div class="rounded-2xl border border-stone-800 px-4 pt-4 pb-3" style="background:rgba(41,37,36,0.5)">
+            <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Help</h2>
+            <a href="#" class="flex items-center justify-between min-h-[44px] text-sm text-stone-300 hover:text-stone-100 transition-colors">
+              <span>How Clarity works</span>
+              <span class="text-stone-500 chevron-right"></span>
+            </a>
+          </div>
+        </section>
+
+        <!-- Reset — S3 -->
+        <section>
+          <h3 class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Reset</h3>
+          <div id="full-reset-dark-initial">
+            <button onclick="fullResetDark()" class="inline-flex items-center rounded-xl border px-4 py-2 text-xs transition-colors" style="border-color:rgba(253,230,138,0.3);color:#f59e0b;">Start fresh</button>
+          </div>
+          <div id="full-reset-dark-confirm" class="hidden">
+            <p class="text-xs text-stone-400 mb-3">Your entries will be removed and habits reset to defaults.</p>
+            <div class="flex gap-5">
+              <button class="text-sm text-red-400 hover:text-red-300 transition-colors">Yes, start fresh</button>
+              <button onclick="fullResetDarkCancel()" class="text-sm text-stone-500">Keep my data</button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</div><!-- /max-w-5xl -->
+
+<script>
+function showProposal(id, tab) {
+  document.querySelectorAll('.proposal-section').forEach(s => s.classList.remove('visible'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('visible');
+  tab.classList.add('active');
+}
+
+// S1 theme toggle demo
+function s1Select(theme) {
+  const lightBtn = document.getElementById('s1-light');
+  const darkBtn = document.getElementById('s1-dark');
+  if (theme === 'light') {
+    lightBtn.className = 'rounded-full px-4 py-1.5 text-sm transition-colors bg-stone-800 text-white';
+    darkBtn.className = 'rounded-full px-4 py-1.5 text-sm transition-colors text-stone-500 hover:text-stone-700';
+  } else {
+    darkBtn.className = 'rounded-full px-4 py-1.5 text-sm transition-colors bg-stone-800 text-white';
+    lightBtn.className = 'rounded-full px-4 py-1.5 text-sm transition-colors text-stone-500 hover:text-stone-700';
+  }
+}
+
+// Full page reset light demo
+function fullResetLight() {
+  document.getElementById('full-reset-light').innerHTML = `
+    <p class="text-xs text-stone-500 mb-3">Your entries will be removed and habits reset to defaults.</p>
+    <div class="flex gap-5">
+      <button class="text-sm text-red-700 hover:text-red-900 transition-colors">Yes, start fresh</button>
+      <button onclick="fullResetLightCancel()" class="text-sm text-stone-500">Keep my data</button>
+    </div>
+  `;
+}
+function fullResetLightCancel() {
+  document.getElementById('full-reset-light').innerHTML = `
+    <div id="full-reset-light-initial">
+      <button onclick="fullResetLight()" class="inline-flex items-center rounded-xl border border-amber-200 px-4 py-2 text-xs text-amber-700 hover:bg-amber-50 transition-colors">Start fresh</button>
+    </div>
+  `;
+}
+
+// Full page reset dark demo
+function fullResetDark() {
+  document.getElementById('full-reset-dark-initial').classList.add('hidden');
+  document.getElementById('full-reset-dark-confirm').classList.remove('hidden');
+}
+function fullResetDarkCancel() {
+  document.getElementById('full-reset-dark-initial').classList.remove('hidden');
+  document.getElementById('full-reset-dark-confirm').classList.add('hidden');
+}
+</script>
+</body>
+</html>
