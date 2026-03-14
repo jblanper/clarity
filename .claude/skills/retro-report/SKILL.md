@@ -2,7 +2,7 @@
 name: retro-report
 description: Analyse all past sprint retrospectives and produce a process recommendations report. Outputs docs/retros/retro-report.md (fixed filename, always overwritten).
 disable-model-invocation: true
-allowed-tools: Read, Glob, Write, Bash(node *), Bash(date *)
+allowed-tools: Read, Glob, Grep, Write, Bash(node *), Bash(date *)
 ---
 
 # Retrospective Report
@@ -13,9 +13,17 @@ brief or when the planning process feels like it needs a reset.
 
 ## Setup
 
-Read every file in `docs/sprints/sprint-[0-9][0-9].md` that contains a
-`## Retrospective` section. Also read `docs/sprints/sprint-[0-9][0-9]-brief.md`
-files to understand what was planned vs what shipped.
+Use Grep (not Read) to extract only the relevant sections from sprint files — this
+avoids loading thousands of lines of task detail into context.
+
+- **Retrospective content** — Grep for `## Retrospective` with `-A 80` across
+  `docs/sprints/sprint-[0-9][0-9].md`. This captures wins, blockers, process
+  improvements, and arch notes without the full file.
+- **Planning accuracy** — Grep for `## Tasks` with `-A 30` across
+  `docs/sprints/sprint-[0-9][0-9]-brief.md` to see what was scoped, then Grep for
+  task completion markers (`- [x]` / `- [ ]`) in the corresponding sprint docs.
+
+Do not Read full sprint files unless a specific section is missing from Grep output.
 
 Announce:
 > "Reading retrospectives from Sprint 1 through Sprint N."
