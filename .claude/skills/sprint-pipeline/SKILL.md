@@ -2,7 +2,7 @@
 name: sprint-pipeline
 description: Orchestrates the full sprint workflow — shows the tier-appropriate pipeline, marks current position, and offers to advance to the next phase with human approval at each checkpoint. Supports skipping optional phases and resuming mid-pipeline.
 disable-model-invocation: true
-allowed-tools: Read, Glob, Edit
+allowed-tools: Read, Glob, Edit, Skill
 ---
 
 # Sprint Pipeline
@@ -26,14 +26,10 @@ Perform all three reads in parallel:
 
 ### No pre-flight report
 
-```
-No sprint in progress.
+No pre-flight report found. Running `/sprint-pre-flight` now to surface blockers,
+determine the tier, and write the report.
 
-Run /sprint-pre-flight first — it surfaces blockers, determines the tier, and
-outputs the exact skill sequence to follow.
-```
-
-Stop here.
+Invoke the `sprint-pre-flight` skill, then continue to Step 2 once it completes.
 
 ### Derive current position
 
@@ -144,16 +140,19 @@ Run this pipeline again when you're ready to Deploy.
 Offer to run the next skill:
 
 ```
-Next: /sprint-ux (UX review) — or type `skip` to skip for this sprint.
+Next: /sprint-ux (UX review) — run it now? [yes / skip / pause]
+
+Tip: you can also start a fresh session and run /sprint-pipeline to continue from here.
 ```
 
 Wait for user input. Do not invoke the next skill without approval.
 
 Accepted inputs:
-- `yes` / `y` / `run` — invoke the next skill
-- `skip` — skip the current optional phase (mark `[skip]`); advance to next
+- `yes` / `y` / `run` — invoke the next skill using the `Skill` tool, then return to
+  Step 2 to re-derive state and display the updated pipeline
+- `skip` — skip the current optional phase (mark `[skip]`); advance to next checkpoint
 - `status` — re-display pipeline without advancing
-- `done` — exit; user will resume manually
+- `pause` — exit; user will resume in a new session with `/sprint-pipeline`
 
 ### Optional phases (skip without warning)
 
@@ -182,7 +181,7 @@ When brief status is `finalized` and doc status is `completed`:
 
 ```
 Sprint N is complete.
-All phases done. Start the next sprint with /sprint-pre-flight.
+All phases done. Start the next sprint with /sprint-pipeline (pre-flight will run automatically).
 ```
 
 ## Resuming
