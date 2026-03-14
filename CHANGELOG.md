@@ -1,5 +1,23 @@
 # Changelog
 
+## [v2.4.0] — 2026-03-14
+
+### Features
+- **MomentChip amber selected state** — selected chips now render amber (bg-amber-50/border-amber-300/text-amber-800 light; bg-amber-900/20/border-amber-700/40/text-amber-300 dark), unifying the completion language with HabitToggle and NumberStepper.
+- **DayDetail Highlights section** — joy-marked habits from a historical entry now surface as a dedicated "Highlights" section in the day detail sheet.
+- **CheckInForm "Capture" label** — new-entry save button now reads "Capture" → "Capturing…" → "Day captured"; edit path retains "Save" / "Saving…" / "Saved".
+- **CheckInForm polish** — add-moment input gains `min-h-[44px]` touch target; reflection textarea border softened to `border-stone-200` in light mode.
+
+### Fixes
+- **HistoryView** — Frequency toggle no longer appears when there are no entries (removes confusing dead UI for new users).
+
+### Docs
+- Sprint 11 brief and implementation doc added.
+- Audit files updated and archived (2026-03-14 snapshots).
+- Retro report updated and archived (2026-03-14).
+- Calma design language updated; HTML export refreshed.
+- CLAUDE.md updated with amber language tokens.
+
 ## [v2.3.1] — 2026-03-13
 
 ### Tooling
