@@ -1,4 +1,4 @@
-<!-- Last reviewed: 2026-03-13 (update-claude-md, sprint-10-retro) -->
+<!-- Last reviewed: 2026-03-14 (update-claude-md, sprint-11-retro) -->
 # Clarity — Project Guide
 
 ## What is Clarity?
@@ -18,13 +18,7 @@ Next.js App Router · TypeScript strict · Tailwind CSS v4 · localStorage · Je
 - **Never add partial helpers to AppConfigs** — always read-modify-write via `getConfigs()` / `saveConfigs()`.
 
 ## When you're unsure — stop first
-Before implementing anything that would:
-- Touch more than ~4 files you didn't plan for
-- Modify the data model or localStorage keys
-- Change a navigation pattern or routing behaviour
-- Affect the Calma design spec
-
-→ State your interpretation, list affected files, flag assumptions, then wait for a go-ahead.
+Before touching >4 unplanned files, the data model, localStorage keys, navigation patterns, or the Calma spec: state your interpretation, list affected files, flag assumptions, and wait for go-ahead.
 
 ## Workflow Preferences
 - When asked to 'update' or 'enrich' a file like CLAUDE.md, edit the file — don't just read it
@@ -32,6 +26,7 @@ Before implementing anything that would:
 - Keep solutions simple; don't add complexity (e.g., 'lightweight modes') unless explicitly requested
 - **Never run `/skill-creator` for prose-format or workflow skills** — its eval harness is designed for measurable output and produces low-signal boilerplate for narrative skills.
 - **After completing each task during the development phase, update its validation checklist (`[x]`) in the sprint doc before moving on** — keeps the doc as a live record and reduces QA guesswork.
+- **Each workflow step must update the sprint Status field** — QA, validation, calma-sync, and deploy each set `**Status:**` on completion so sprint-pipeline can skip already-done phases.
 
 ## Project Structure (Claude-specific)
 - Skills are located in `.claude/skills/` — each skill is a markdown file
@@ -51,7 +46,7 @@ Sprint phases, audit skills, and release pipeline: see `docs/workflow.md`.
 
 All design decisions — palette, typography, spacing, motion, interaction, and microcopy — are in `docs/calma-design-language.md`. "Calma" is the name of this project's design system. It is the single source of truth. Read it before any UI work.
 
-**Spec vs. CLAUDE.md boundary** — `docs/calma-design-language.md` holds design principles. CLAUDE.md holds code-level implementation rules (Tailwind classes, permitted Framer Motion properties, component patterns). Never add implementation specifics to the Calma spec; add them here instead.
+**Spec vs. CLAUDE.md boundary** — `docs/calma-design-language.md` holds design principles; CLAUDE.md holds code-level implementation rules. Never add implementation specifics to the Calma spec.
 
 ### Tailwind implementation tokens
 
@@ -82,26 +77,10 @@ These translate the Calma spec to concrete Tailwind classes. The spec defines th
 
 ## Project Structure
 ```
-app/
-  page.tsx / history / settings / manage   # server component shells
-  edit/page.tsx                            # client component — reads ?date= query param
-  globals.css / layout.tsx
-components/
-  CheckInForm.tsx    # today + edit mode (date? prop)
-  HabitToggle.tsx / NumberStepper.tsx / MomentChip.tsx
-  BlossomIcon.tsx    # SVG blossom for joy marking (empty / filled states)
-  MotionProvider.tsx # LazyMotion + domAnimation + MotionConfig reducedMotion="user"
-  ManageView.tsx / SettingsView.tsx / HelpView.tsx / CalendarHeatmap.tsx
-  FrequencyList.tsx  # ranked habit/moment count list with period selector and calendar filter
-  DayDetail.tsx / BottomNav.tsx
-lib/
-  storage.ts         # saveEntry, getEntry, getAllEntries
-  habitConfig.ts     # AppConfigs types, defaults, getConfigs(), saveConfigs()
-  transferData.ts    # exportBackup, importBackup, parseImportFile
-  habits.ts / theme.ts
-  *.test.ts          # Jest unit tests
-types/
-  entry.ts           # HabitEntry, HabitState — data model source of truth
+app/          server shells (page.tsx, history, settings, manage); edit/page.tsx is the only client page (?date= query param)
+components/   CheckInForm.tsx (today+edit) · DayDetail.tsx · CalendarHeatmap.tsx · FrequencyList.tsx · HabitToggle.tsx · NumberStepper.tsx · MomentChip.tsx · BlossomIcon.tsx · MotionProvider.tsx · ManageView.tsx · SettingsView.tsx · HelpView.tsx · BottomNav.tsx
+lib/          storage.ts · habitConfig.ts · transferData.ts · habits.ts · theme.ts · *.test.ts
+types/        entry.ts — HabitEntry, HabitState (data model source of truth)
 ```
 
 ## Data Model
@@ -149,11 +128,13 @@ Types live in `types/entry.ts` (`HabitEntry`, `HabitState`) and `lib/habitConfig
 - **Heatmap palette** — "sunset" two-axis blend. `b` = fraction of boolean habits done (0–1); `y` = (joy count + moments count) / 6, capped at 1. Habits map to dusk blue (hsl 210), moments/joy map to warm ember (hsl 23). When both are non-zero the hue, saturation, and lightness are blended proportionally by weight. Empty/zero days use a muted stone tone.
 - **HeatmapFilter** — exported type `{ type: "boolean-habit" | "numeric-habit" | "moment"; id: string }` from `CalendarHeatmap.tsx`. When set, non-matching cells drop to 25% opacity; matching cells use the exact palette colour for their type. Filter is owned by `HistoryView` state and passed to both `CalendarHeatmap` and `FrequencyList`.
 - **FrequencyList** — collapsible section below the heatmap (toggle button). Counts occurrences per UUID across the selected period (`Period = "month" | "3m" | "always"`). The `"month"` period follows the calendar's currently viewed month via `viewedYear`/`viewedMonth` props (synced through `CalendarHeatmap`'s `onMonthChange` callback). Tapping a row sets or clears the `HeatmapFilter`. A one-time hint ("Tap any item to filter the calendar") fades out on first tap and is persisted to `clarity-frequency-hint-seen`.
+- **HistoryView Frequency section** — wrapped in `{entries.length > 0 && ...}`; empty-state message renders directly below the heatmap when no entries exist.
 - **DayDetail labels** — resolve by iterating the entry's UUIDs, not the config list, so archived and imported habits display correctly.
+- **DayDetail Highlights** — amber panel section above Habits when `checkedHabits.some(h => h.joy)`. Lists joy-marked habits with `BlossomIcon filled={true}`. Done-habit checkmark: `text-amber-600 dark:text-amber-400`. Inline per-row BlossomIcon removed once the section exists.
 - **ManageView** — all inline editors are mutually exclusive via `closeAllEditors()`. Archive buttons use `text-amber-700` (reversible, not destructive). The add-habit form and the inline edit form are separate JSX subtrees with different indentation — when editing label copy in one, always verify the other is updated too.
 - **HabitToggle** — full-row `<button>` (`w-full flex items-center gap-3 min-h-[44px] py-3 rounded-xl px-2 -mx-2`). An amber dot `<span>` (h-2.5 w-2.5 rounded-full) sits left of the label `<span>`; amber-50 row wash when done, transparent when off. `active:opacity-70` for press feedback. No sliding thumb or separate hit area.
 - **NumberStepper** — tap-to-increment pill (`role="spinbutton"`) beside a conditionally rendered decrement glyph (`−`). Zero state: `bg-stone-100 text-stone-600` (never `text-stone-500` — fails AA on stone-100). Active state: `bg-amber-50 text-amber-800` light / `bg-amber-900/20 text-amber-300` dark. The decrement button is not rendered at all when `value <= 0` — no `disabled` state. `startAt?: number` prop: if set and `value === 0`, first tap jumps to `startAt` rather than incrementing by step; subsequent taps always increment by step regardless of `startAt`. No direct type-in input.
-- **Save flow** (CheckInForm) — three states: `idle → saving → confirmed`. `saveEntry()` deferred one tick so "Saving…" renders first. Redirects after 1200 ms.
+- **Save flow** (CheckInForm) — three states: idle → saving → confirmed. Labels branch on `isEditMode`: new entries "Capture"/"Capturing…"/"Day captured"; edit mode "Save"/"Saving…"/"Saved". `saveEntry()` deferred one tick; redirects after 1200 ms.
 - **Joy section** (CheckInForm) — appears between Moments and Reflection when at least one boolean habit is done. Lists done habits with `BlossomIcon` buttons to mark `joy` independently of `done`. `joyByDefault` on the config pre-fills joy when a habit is first toggled on. Factual logging (Habits) and emotional reflection (Joy) are intentionally separate moments in the form.
 - **DayDetail scroll lock** — uses `useLayoutEffect` (not `useEffect`) for `document.body.style.overflow = "hidden"`. The layout-effect cleanup runs synchronously during the React commit, so the lock is never left behind when the user navigates away mid-animation.
 - **Scroll position before collapse** — when collapsing a section that could shift page scroll (e.g. FrequencyList), call `window.scrollTo({ top: savedPosition, behavior: "auto" })` synchronously before the state update that triggers the collapse. The call must be synchronous and before state update — `"auto"` (not `"smooth"`) prevents a visible jump. Discovered in Sprint 7.

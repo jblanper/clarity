@@ -1,7 +1,7 @@
 # Sprint 11 — Amber Language Completion
 
 **Dates:** 2026-03-14 – (TBD)
-**Status:** active
+**Status:** completed
 **Release:** v2.4.0 (minor — visible language change across multiple surfaces)
 
 ---
@@ -267,11 +267,11 @@ The empty-state `<p>` moves to immediately after the closing `</div>` of the hea
 
 ## Definition of done — Sprint
 
-- [ ] All tasks above are complete and validated
-- [ ] `npm run lint && npm test && npm run build` passes clean
-- [ ] Tested manually on mobile viewport in both light and dark mode
-- [ ] No regressions on existing features (check Today, History, Settings, Manage, Edit)
-- [ ] Ready for `/deploy`
+- [x] All tasks above are complete and validated
+- [x] `npm run lint && npm test && npm run build` passes clean
+- [x] Tested manually on mobile viewport in both light and dark mode
+- [x] No regressions on existing features (check Today, History, Settings, Manage, Edit)
+- [x] Ready for `/deploy`
 
 ---
 
@@ -331,20 +331,20 @@ None
 - `e2e/sprint-08-microcopy.spec.ts:172` — "Edit link uses nav-link style" test replaced with "Edit this day" label + navigation test (Task 4: link restyled as tertiary button)
 
 ### Manual checklist
-- [ ] MomentChip: selected chip shows warm amber tint in light mode; dim amber in dark mode; unselected is transparent in dark mode (no stone wash)
-- [ ] CheckInForm: idle save button reads "Capture"; mid-save reads "Capturing…"; confirmed reads "Day captured"
-- [ ] CheckInForm edit mode: idle save button reads "Save"; mid-save reads "Saving…"; confirmed reads "Saved"
-- [ ] DayDetail: done-habit checkmark `✓` is amber in both light and dark modes
-- [ ] DayDetail: moment chips render amber-tinted (not stone-filled); no pointer cursor, no hover response
-- [ ] DayDetail: Highlights section appears above Habits when ≥1 habit is joy-marked; BlossomIcon visible per entry
-- [ ] DayDetail: Highlights section absent on days with no joy-marked habits
-- [ ] DayDetail: "Edit this day" renders as a small bordered button (tertiary style); tapping navigates to edit
-- [ ] HistoryView (new user / empty state): Frequency toggle not visible; empty-state message appears directly below calendar
-- [ ] HistoryView (with entries): Frequency toggle visible and collapses/expands correctly
-- [ ] Animations feel smooth on enter and exit
-- [ ] Dark mode: no invisible text, no layout shifts
-- [ ] Mobile (390px): no horizontal overflow, touch targets feel reachable
-- [ ] Reduced motion: enable in OS settings, verify animations are suppressed
+- [x] MomentChip: selected chip shows warm amber tint in light mode; dim amber in dark mode; unselected is transparent in dark mode (no stone wash)
+- [x] CheckInForm: idle save button reads "Capture"; mid-save reads "Capturing…"; confirmed reads "Day captured"
+- [x] CheckInForm edit mode: idle save button reads "Save"; mid-save reads "Saving…"; confirmed reads "Saved"
+- [x] DayDetail: done-habit checkmark `✓` is amber in both light and dark modes
+- [x] DayDetail: moment chips render amber-tinted (not stone-filled); no pointer cursor, no hover response
+- [x] DayDetail: Highlights section appears above Habits when ≥1 habit is joy-marked; BlossomIcon visible per entry
+- [x] DayDetail: Highlights section absent on days with no joy-marked habits
+- [x] DayDetail: "Edit this day" renders as a small bordered button (tertiary style); tapping navigates to edit
+- [x] HistoryView (new user / empty state): Frequency toggle not visible; empty-state message appears directly below calendar
+- [x] HistoryView (with entries): Frequency toggle visible and collapses/expands correctly
+- [x] Animations feel smooth on enter and exit
+- [x] Dark mode: no invisible text, no layout shifts
+- [x] Mobile (390px): no horizontal overflow, touch targets feel reachable
+- [x] Reduced motion: enable in OS settings, verify animations are suppressed
 
 ---
 
@@ -429,4 +429,21 @@ None — tertiary button token was already added in Task 4.
 
 ## Retrospective
 
-<!-- To be filled in after the sprint using /sprint-retro -->
+**Date:** 2026-03-14
+
+### What went well
+- Development was smooth end-to-end — all 5 tasks shipped exactly as specified with zero deviations
+- Sprint scoping during the brief was on point; mediation resolved all open questions (Highlights position, tertiary button token, BlossomIcon guard) before coding started
+- QA friction was minimal — only 3 stale tests needed updating, no failures
+
+### What was harder than expected
+- Nothing notable — execution matched the plan throughout
+- The colour-audit did catch a WCAG improvement on the checkmark glyph (`amber-500` → `amber-600`) post-implementation, but that was caught in review at the right stage
+
+### Process improvements for next sprint
+- **Each workflow step must update the sprint `**Status:**` field** — QA, validation, calma-sync, and deploy should each update the sprint status as part of their completion so the sprint-pipeline skill can read current state reliably and skip already-done phases
+- **Sprint-pipeline skill needs state awareness** — it should read the sprint doc first and only suggest phases not yet completed; the skill has already been updated to auto-invoke the corresponding workflow skills when the user proceeds
+- **Address carry-forward debt** — 7 pre-existing findings are accumulating (ManageView stone-400, CalendarHeatmap dark labels, touch targets in Settings/Manage/Help, undocumented nav-link hover, microcopy). Sprint 12 should include at minimum the ManageView two-liner (lines 402/631) since it's already scoped
+
+### Planning accuracy
+Scope, effort, and task ordering were accurate. The brief's mediation step proved its value — all decisions that could have caused mid-sprint rework were resolved upfront. No changes needed to the planning process itself.
