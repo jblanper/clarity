@@ -77,8 +77,9 @@ test("Save flow: toggle a habit, save, see confirmation", async ({ page }) => {
   await firstSwitch.click();
   await expect(firstSwitch).toHaveAttribute("aria-checked", "true");
 
-  const saveButton = page.getByRole("button", { name: "Save" });
+  // Sprint 11: save button label changed to "Capture" for new entries
+  const saveButton = page.getByRole("button", { name: "Capture" });
   await saveButton.click();
-  // Should show "Saving..." then "Day captured"
+  // Should show "Capturing…" then "Day captured"
   await expect(page.getByRole("button", { name: /Day captured/i })).toBeVisible({ timeout: 3000 });
 });

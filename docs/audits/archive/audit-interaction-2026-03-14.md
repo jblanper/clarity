@@ -1,13 +1,10 @@
 # Interaction & Motion Audit
 
-Generated: 2026-03-14 00:00
+Calma principles reviewed against every interactive element and animation in the codebase.
+Date: 2026-03-13.
+Severity: **High** (breaks experience or accessibility) · **Medium** (noticeable deviation) · **Low** (polish/consistency)
 
-Archived previous report → docs/audits/archive/audit-interaction-2026-03-14.md
-
-Calma principles reviewed against every interactive element and animation.
-Severity: High (breaks experience or accessibility) · Medium (noticeable deviation) · Low (polish/consistency)
-
-Sprint 11 context: Task 1 replaced MomentChip stone selected state with amber — `transition-colors` retained. Task 2 added `min-h-[44px]` to the add-moment text input in CheckInForm (resolving 1 medium touch-target finding), softened textarea border, branched save-button labels. Task 3 changed DayDetail moment chip spans and checkmark colour — read-only spans, no interaction required. Task 4 added Highlights section (amber panel) and "Edit this day" tertiary button in DayDetail — `transition-colors` present on edit link. Task 5 wrapped HistoryView Frequency section in `{entries.length > 0 && ...}` and moved empty state — no new animations introduced.
+Sprint 9 context: Task 2 added `min-h-[44px]` to the three add-moment buttons in CheckInForm (resolving 3 medium touch-target findings from Sprint 8). Task 3 replaced the HabitToggle OS switch with a full-row `<button>` — `role="switch"`, `aria-checked`, and `active:opacity-70` are all retained; the old sliding-thumb CSS animation is removed. Task 4 replaced the NumberStepper three-zone layout with a tap-to-increment pill (`role="spinbutton"`, `aria-valuenow`, `aria-valuemin`) and a conditional decrement button. Task 5 added "Start at" number inputs in ManageView (not interactive controls — standard text inputs, no special interaction requirements).
 
 ---
 
@@ -19,31 +16,31 @@ Sprint 11 context: Task 1 replaced MomentChip stone selected state with amber �
 |---|---|---|
 | HabitToggle full-row button | HabitToggle.tsx:29 | `transition-colors` |
 | HabitToggle dot indicator | HabitToggle.tsx:34 | `transition-colors` |
-| MomentChip | MomentChip.tsx:15 | `transition-colors` |
+| MomentChip | MomentChip.tsx:11 | `transition-colors` |
 | NumberStepper decrement button | NumberStepper.tsx:54 | `transition-colors` |
 | NumberStepper pill button | NumberStepper.tsx:66 | `transition-colors` |
 | "＋ New moment" ghost button | CheckInForm.tsx:366 | `transition-colors` |
 | "Add" confirm button | CheckInForm.tsx:400 | `transition-colors` |
 | "✕" dismiss button | CheckInForm.tsx:407 | `transition-colors` |
 | Joy blossom button | CheckInForm.tsx:458 | `transition-opacity` |
-| Save/Capture button | CheckInForm.tsx:494 | `transition-colors duration-500` |
+| Save button | CheckInForm.tsx:494 | `transition-colors duration-500` |
 | Back / Settings links | CheckInForm.tsx:263,271 | `transition-colors` |
 | BottomNav tabs | BottomNav.tsx:31 | `transition-colors` |
 | DayDetail close button | DayDetail.tsx:150 | `transition-colors` |
-| DayDetail "Edit this day" link | DayDetail.tsx:264 | `transition-colors` |
+| DayDetail edit link | DayDetail.tsx:248 | `transition-colors` |
 | CalendarHeatmap year-nav buttons | CalendarHeatmap.tsx:226,237 | `transition-colors` |
 | CalendarHeatmap month nav buttons | CalendarHeatmap.tsx:248,271 | `transition-colors` |
 | Calendar day cells | CalendarHeatmap.tsx | `transition-colors` |
 | HistoryView Settings link | HistoryView.tsx:70 | `transition-colors` |
-| Frequency toggle button | HistoryView.tsx:99 | `transition-colors` |
-| Period selector buttons | HistoryView.tsx:136–148 | `transition-colors` |
+| Frequency toggle button | HistoryView.tsx:103 | `transition-colors` |
+| Period selector buttons | HistoryView.tsx:129–139 | `transition-colors` |
 | ManageView "Jump to Moments" anchor | ManageView.tsx:258 | `transition-colors` |
 | ManageView header link + action buttons | ManageView.tsx (via constants) | `transition-colors` |
 | FrequencyList rows | FrequencyList.tsx:142 | `transition-colors` |
 | SettingsView all interactive buttons | SettingsView.tsx (many) | `transition-colors` |
 | HelpView back + design-language link | HelpView.tsx:23,105 | `transition-colors` |
 
-Note: "Edit this day" link in DayDetail (Sprint 11 Task 4) correctly carries `transition-colors` as the tertiary button token specifies. ✅
+Note: the HabitToggle thumb slide animation (`transition-all duration-200` on the old thumb span) is removed. The new dot indicator has `transition-colors` — appropriate for a colour-only change. ✅
 
 ### Failing
 
@@ -61,18 +58,17 @@ Note: "Edit this day" link in DayDetail (Sprint 11 Task 4) correctly carries `tr
 
 | Element | Hover class | Assessment |
 |---|---|---|
-| Joy blossom button | `active:opacity-70` | ✅ |
-| HabitToggle full-row button | `active:opacity-70` | ✅ |
-| NumberStepper decrement button | `active:opacity-70` | ✅ |
-| NumberStepper pill button | `active:opacity-70` | ✅ |
+| Joy blossom button | `active:opacity-70` | ✅ Sprint 8 fix — scale replaced with opacity |
+| HabitToggle full-row button | `active:opacity-70` | ✅ Sprint 9 — correct Calma press feedback |
+| NumberStepper decrement button | `active:opacity-70` | ✅ Sprint 9 — correct |
+| NumberStepper pill button | `active:opacity-70` | ✅ Sprint 9 — correct |
 | All nav links | `hover:text-stone-800 dark:hover:text-stone-300` | ✅ (documented two-step exception) |
-| DayDetail "Edit this day" link | `hover:bg-stone-50 dark:hover:bg-stone-800/50` | ✅ — Tertiary button hover wash. Correct pattern for a transparent-bg button. |
 
 ### Remaining violations
 
 | Component | Line | Description | Severity |
 |---|---|---|---|
-| CheckInForm / SettingsView / HelpView nav links | various | `text-stone-600 hover:text-stone-800` — two steps darker. Documented in CLAUDE.md as intended nav-link hover; recommend documenting this exception in the Calma spec. | **Medium** (pre-existing) |
+| CheckInForm / SettingsView / HelpView nav links | various | `text-stone-600 hover:text-stone-800` — two steps darker. CLAUDE.md codifies this as intended nav-link hover; recommend explicitly documenting this exception in the Calma design language. | **Medium** (pre-existing) |
 
 ---
 
@@ -87,22 +83,19 @@ Minimum 44 × 44 px for every tappable element.
 | HabitToggle full-row button | HabitToggle.tsx:29 | `min-h-[44px]` + `w-full` |
 | NumberStepper decrement button | NumberStepper.tsx:50 | `min-h-[44px] min-w-[44px]` |
 | NumberStepper pill button | NumberStepper.tsx:59 | `min-h-[44px] min-w-[44px]` |
-| "＋ New moment" ghost button | CheckInForm.tsx:363 | `min-h-[44px] flex items-center` |
-| "Add" confirm button | CheckInForm.tsx:397 | `min-h-[44px] flex items-center` |
-| "✕" dismiss button | CheckInForm.tsx:404 | `min-h-[44px] min-w-[44px] flex items-center justify-center` |
-| Add-moment text input | CheckInForm.tsx:395 | `min-h-[44px]` (Sprint 11 Task 2 fix) |
-| MomentChip | MomentChip.tsx:11 | `min-h-[44px]` |
-| CalendarHeatmap year-prev button | CalendarHeatmap.tsx:226 | `min-h-[44px]` |
-| CalendarHeatmap year-next button | CalendarHeatmap.tsx:237 | `min-h-[44px]` |
+| "＋ New moment" ghost button | CheckInForm.tsx:363 | `min-h-[44px] flex items-center` (Sprint 9 fix) |
+| "Add" confirm button | CheckInForm.tsx:397 | `min-h-[44px] flex items-center` (Sprint 9 fix) |
+| "✕" dismiss button | CheckInForm.tsx:404 | `min-h-[44px] min-w-[44px] flex items-center justify-center` (Sprint 9 fix) |
+| MomentChip | MomentChip.tsx:11 | `min-h-[44px]` (Sprint 8 fix) |
+| CalendarHeatmap year-prev button | CalendarHeatmap.tsx:226 | `min-h-[44px]` (Sprint 8 fix) |
+| CalendarHeatmap year-next button | CalendarHeatmap.tsx:237 | `min-h-[44px]` (Sprint 8 fix) |
 | Joy blossom button | CheckInForm.tsx:454 | `min-h-[44px] min-w-[44px]` |
 | DayDetail close button | DayDetail.tsx:150 | `min-h-[44px] min-w-[44px]` |
 | CalendarHeatmap month nav buttons | CalendarHeatmap.tsx | `min-h-[44px]` |
 | Calendar day cells | CalendarHeatmap.tsx | `h-11 w-11` (44 × 44 px) |
-| Frequency toggle button | HistoryView.tsx:99 | `min-h-[44px]` |
+| Frequency toggle button | HistoryView.tsx:103 | `min-h-[44px]` |
 | FrequencyList rows | FrequencyList.tsx:142 | `min-h-[44px]` |
 | Full-width form buttons | SettingsView.tsx | `py-4 w-full` |
-
-Note: Sprint 11 Task 2 added `min-h-[44px]` to the add-moment text input (CheckInForm.tsx:395), resolving 1 medium touch-target finding. ✅
 
 ### Failing
 
@@ -114,7 +107,7 @@ Note: Sprint 11 Task 2 added `min-h-[44px]` to the add-moment text input (CheckI
 | ManageView | 244, 278, 289, 292, 345, 353, 388, 439, 446, 597 | Various bare-text controls | No min-h | Medium (pre-existing) |
 | HelpView | 21, 102 | Back link + design link | `text-xs` only | Medium (pre-existing) |
 
-Note: DayDetail "Edit this day" link uses `px-4 py-2` text-xs — the vertical padding gives approximately 28–32px, which is below the 44px minimum. **New finding (Low)** — the link is low-traffic and in a scrollable sheet, so the risk is modest. Recommend adding `min-h-[44px] flex items-center` in a future pass.
+Note: Sprint 9 resolved all three CheckInForm add-moment touch-target mediums. The remaining medium findings in Settings, Manage, and Help are pre-existing and not in Sprint 9 scope.
 
 ---
 
@@ -129,23 +122,23 @@ Note: DayDetail "Edit this day" link uses `px-4 py-2` text-xs — the vertical p
 | DayDetail backdrop | DayDetail.tsx:132 | `opacity` via `.daydetail-backdrop` | 300 ms | ✅ `@media` in globals.css | Pass |
 | DayDetail bottom sheet | DayDetail.tsx:142 | `transform` via `.daydetail-sheet` | 300 ms | ✅ `@media` in globals.css | Pass |
 
+Note: The HabitToggle thumb `transition-all` finding from Sprint 8 is now **resolved** — the thumb element (and its animation) no longer exists. The new dot indicator uses `transition-colors`, which is correctly scoped. ✅
+
 ### Motion (JS) animations
 
 | Element | File | Lines | Duration | Notes | Severity |
 |---|---|---|---|---|---|
 | Add-moment reveal | CheckInForm.tsx | 373–379 | 220 ms ease-out | ✅ via MotionProvider | Pass |
-| Joy/Highlights section reveal/exit | CheckInForm.tsx | 427–432 | 280 ms ease-out | ✅ | Pass |
+| Joy section reveal/exit | CheckInForm.tsx | 427–432 | 280 ms ease-out | ✅ | Pass |
 | Joy row enter/exit | CheckInForm.tsx | 443–448 | 160 ms | ✅ | Pass |
-| Month heading crossfade | CalendarHeatmap.tsx | 255–264 | 120 ms | ✅ | Pass |
+| Month heading crossfade | CalendarHeatmap.tsx | 255–264 | 120 ms | ✅ Sprint 8 fix | Pass |
 | Calendar grid slide | CalendarHeatmap.tsx | 283–291 | 220 ms ease-out | ✅ | Pass |
-| Frequency section reveal | HistoryView.tsx | 117–129 | 280 ms ease-out | ✅ | Pass |
+| Frequency section reveal | HistoryView.tsx | 110–121 | 280 ms ease-out | ✅ | Pass |
 | FrequencyList hint exit | FrequencyList.tsx | 118–121 | 300 ms | ✅ | Pass |
-| FrequencyList bar grow | FrequencyList.tsx | 155–165 | 250 ms | `scaleX` with static width — ✅ | Pass |
+| FrequencyList bar grow | FrequencyList.tsx | 155–165 | 250 ms | `scaleX` with static width — ✅ Sprint 8 fix | Pass |
 | ManageView type picker reveal | ManageView.tsx | 425–455 | 220 ms ease-out | ✅ | Pass |
 | ManageView inline edit forms | ManageView.tsx | various | 220 ms ease-out | ✅ | Pass |
 | ManageView add-habit form | ManageView.tsx | 458–559 | 220 ms ease-out | ✅ | Pass |
-
-Note: DayDetail Highlights section (Sprint 11 Task 4) does not use Motion for its appear/disappear — it is rendered conditionally with `&&` (no AnimatePresence). This is acceptable: the section appears only when entry data has already loaded, not as a real-time toggle response. No animation violation. ✅
 
 ---
 
@@ -155,18 +148,16 @@ Note: DayDetail Highlights section (Sprint 11 Task 4) does not use Motion for it
 
 | Element | File | ARIA | Assessment |
 |---|---|---|---|
-| HabitToggle | HabitToggle.tsx:25–27 | `role="switch"` `aria-checked={value.done}` `aria-label={label}` | ✅ |
-| NumberStepper pill | NumberStepper.tsx:62–65 | `role="spinbutton"` `aria-valuenow={value}` `aria-valuemin={min}` `aria-label={label}` | ✅ |
-| NumberStepper decrement | NumberStepper.tsx:53 | `` aria-label={`Decrease ${label}`} `` | ✅ |
-| DayDetail dialog | DayDetail.tsx:124–127 | `role="dialog"` `aria-modal` `aria-label` | ✅ |
-| MomentChip | MomentChip.tsx:14 | `aria-pressed={selected}` | ✅ Sprint 11 — amber state change does not break ARIA |
+| HabitToggle | HabitToggle.tsx:25–27 | `role="switch"` `aria-checked={value.done}` `aria-label={label}` | ✅ Correct switch semantics |
+| NumberStepper pill | NumberStepper.tsx:62–65 | `role="spinbutton"` `aria-valuenow={value}` `aria-valuemin={min}` `aria-label={label}` | ✅ Spinbutton semantics present |
+| NumberStepper decrement | NumberStepper.tsx:53 | `aria-label={\`Decrease ${label}\`}` | ✅ Descriptive label |
 
 ### Findings
 
 | Component | Line | Issue | Severity |
 |---|---|---|---|
-| NumberStepper pill | 59 | `role="spinbutton"` has no `onKeyDown` arrow-key handler — keyboard users cannot increment/decrement with arrow keys | **Low** (pre-existing, accepted) |
-| NumberStepper pill | 59 | `aria-valuemax` absent when `max !== Infinity` | **Low** (pre-existing) |
+| NumberStepper pill | 59 | `role="spinbutton"` has no `onKeyDown` arrow-key handler — keyboard users cannot increment/decrement with arrow keys | **Low** (accepted per sprint plan; documented in Architecture Review M3) |
+| NumberStepper pill | 59 | `aria-valuemax` absent when `max !== Infinity` — harmless for default config (no upper bound); revisit if max becomes configurable | **Low** |
 
 ---
 
@@ -176,7 +167,7 @@ Note: DayDetail Highlights section (Sprint 11 Task 4) does not use Motion for it
 
 | Element | File | Mechanism |
 |---|---|---|
-| NumberStepper decrement | NumberStepper.tsx:49 | Not rendered at all when `value <= 0` ✅ |
+| NumberStepper decrement | NumberStepper.tsx:49 | Not rendered at all when `value <= 0` — intentional (no disabled state needed) ✅ |
 | ManageView Save when label empty | ManageView.tsx:372, 545 | `disabled:opacity-40` ✅ |
 | CalendarHeatmap nav at boundary | CalendarHeatmap.tsx | `disabled:opacity-30` ✅ |
 
@@ -215,12 +206,11 @@ Note: DayDetail Highlights section (Sprint 11 Task 4) does not use Motion for it
 6. **FrequencyList invisible chevron**: Replace `invisible` with `opacity-0`.
 7. **BottomNav inactive tabs**: Add `hover:text-stone-700 dark:hover:text-stone-300`.
 8. **Missing `transition-colors`**: SettingsView:229, ManageView:439, ManageView:446.
-9. **"Edit this day" link touch target**: Add `min-h-[44px] flex items-center` (new, low priority).
 
 ---
 
 ## Summary
 
-**0 high · 1 medium · 9 low**
+**0 high · 1 medium · 8 low**
 
-Sprint 11 resolved 1 medium touch-target finding (add-moment input `min-h-[44px]`) and introduced 1 new low finding ("Edit this day" link touch target below 44px). Net: 1 medium resolved, 1 low added. The one remaining medium (two-step nav-link hover) is pre-existing and carries forward.
+Sprint 9 resolved 3 medium touch-target findings from Sprint 8 (CheckInForm add-moment buttons) and 1 pre-existing low (HabitToggle thumb `transition-all` — element removed). Sprint 9 introduced 2 new low findings (NumberStepper spinbutton keyboard support; `aria-valuemax`). Net: 3 mediums resolved, 2 lows added. The one remaining medium (two-step nav-link hover) is pre-existing and carries forward.

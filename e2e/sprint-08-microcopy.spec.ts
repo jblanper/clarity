@@ -169,7 +169,9 @@ test("History — empty state not shown when entries exist", async ({ page }) =>
 
 // ── DayDetail Edit link style (H4) ───────────────────────────────────────────
 
-test("DayDetail — Edit link uses nav-link style (uppercase, tracked)", async ({ page }) => {
+test("DayDetail — Edit link is labelled 'Edit this day' and navigates to edit page", async ({ page }) => {
+  // Sprint 11: Edit link replaced plain nav-link style with tertiary button style.
+  // Verify correct label and navigation target.
   const today = new Date();
   const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   await page.goto("/clarity/");
@@ -191,21 +193,13 @@ test("DayDetail — Edit link uses nav-link style (uppercase, tracked)", async (
 
   const dialog = page.getByRole("dialog");
   if (await dialog.isVisible()) {
-    const editLink = dialog.getByRole("link", { name: /edit/i });
-    if (await editLink.isVisible()) {
-      // Check text-transform: uppercase
-      const textTransform = await editLink.evaluate((node) => getComputedStyle(node).textTransform);
-      expect(textTransform, "Edit link should be uppercase").toBe("uppercase");
+    // Sprint 11: link text changed from "Edit" to "Edit this day"
+    const editLink = dialog.getByRole("link", { name: "Edit this day" });
+    await expect(editLink, "Edit this day link should be visible in DayDetail").toBeVisible();
 
-      // Check letter-spacing is wide (tracking-widest = 0.1em)
-      const letterSpacing = await editLink.evaluate((node) => getComputedStyle(node).letterSpacing);
-      const pxSpacing = parseFloat(letterSpacing);
-      expect(pxSpacing, "Edit link should have wide letter-spacing (tracking-widest)").toBeGreaterThan(0);
-
-      // Check font-size is text-xs (12px)
-      const fontSize = await editLink.evaluate((node) => getComputedStyle(node).fontSize);
-      expect(parseFloat(fontSize), "Edit link should be text-xs (12px)").toBe(12);
-    }
+    // Check font-size is text-xs (12px)
+    const fontSize = await editLink.evaluate((node) => getComputedStyle(node).fontSize);
+    expect(parseFloat(fontSize), "Edit this day link should be text-xs (12px)").toBe(12);
   }
 });
 

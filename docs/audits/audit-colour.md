@@ -1,10 +1,12 @@
 # Colour & Contrast Audit
 
-Audited: all files in `components/`, `app/globals.css`.
+Audited: all files in `components/`, `app/`, `app/globals.css`.
 Reference: `docs/calma-design-language.md`.
-Date: 2026-03-13.
+Generated: 2026-03-14 00:00
 
-Sprint 9 context: Task 2 fixed `text-stone-400` → `text-stone-500` on the three inactive period selector buttons in HistoryView (resolving the one remaining medium finding from Sprint 8). Task 3 introduced HabitToggle's amber-50 row wash (`bg-amber-50 dark:bg-amber-900/15`) and amber-500/400 dot indicator. Task 4 introduced NumberStepper's amber-50 non-zero pill (`bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300`) and stone-100 zero-state pill (`bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400`). Task 5 added "Start at" field in ManageView using the existing `FIELD_LABEL` constant (`text-xs text-stone-500 dark:text-stone-400`).
+Archived previous report → docs/audits/archive/audit-colour-2026-03-14.md
+
+Sprint 11 context: Task 1 replaced MomentChip's stone selected state (`bg-stone-500 text-white`) with amber (`bg-amber-50 border-amber-300 text-amber-800` / dark equivalents) and removed `dark:bg-stone-800` from the unselected dark state. Task 3 replaced DayDetail static moment chip stone spans with amber display tokens (`bg-amber-50 border border-amber-200 text-amber-800` / dark equivalents) and changed the done-habit checkmark from `text-stone-500` to `text-amber-600 dark:text-amber-400`. Task 4 added a Highlights section in DayDetail using the amber panel card token (`bg-amber-50 dark:bg-amber-900/15 border border-amber-100 dark:border-amber-900/30 rounded-2xl`).
 
 ---
 
@@ -20,38 +22,35 @@ Stone-400 (`#a8a29e`) fails WCAG AA on the light background (≈2.4:1, minimum 4
 
 | Component | Line | Current value | Expected | Severity |
 |---|---|---|---|---|
-| ManageView.tsx | 402 | `text-xs text-stone-400 dark:text-stone-500` (archived habit confirmation note) | `text-stone-500 dark:text-stone-400` | **low** (intentional archival dimming — pre-existing) |
+| ManageView.tsx | 402 | `text-xs text-stone-400 dark:text-stone-500` (archived habit confirmation note) | `text-stone-500 dark:text-stone-400` | **low** (intentional archival dimming — pre-existing; recommended fix in Sprint 11 arch review) |
 | ManageView.tsx | 631 | `text-xs text-stone-400 dark:text-stone-500` (archived moment confirmation note) | `text-stone-500 dark:text-stone-400` | **low** (intentional archival dimming — pre-existing) |
 
-Sprint 9 resolved the HistoryView period selector finding carried from Sprint 8:
-- HistoryView inactive period buttons (lines 129, 134, 139): `text-stone-400 dark:text-stone-500` → `text-stone-500 dark:text-stone-500` ✅ (Task 2)
+No new stone-400 violations introduced in Sprint 11. ✅
 
 ---
 
-## 2. New colour tokens introduced in Sprint 9
+## 2. New colour tokens introduced in Sprint 11
 
-### HabitToggle (components/HabitToggle.tsx)
-
-| Token | Usage | Role | Contrast / Assessment |
-|---|---|---|---|
-| `bg-amber-50` | Done-state row wash (light) | Background only | N/A — background, no WCAG text-contrast requirement ✅ |
-| `dark:bg-amber-900/15` | Done-state row wash (dark) | Background only | N/A — background ✅ |
-| `bg-amber-500` | Done-state dot (light) | Decorative indicator | Decorative non-text element — no WCAG contrast requirement ✅ |
-| `dark:bg-amber-400` | Done-state dot (dark) | Decorative indicator | Decorative ✅ |
-| `bg-stone-300` | Off-state dot (light) | Decorative indicator | Decorative ✅ |
-| `dark:bg-stone-600` | Off-state dot (dark) | Decorative indicator | Decorative ✅ |
-| `text-stone-700 dark:text-stone-300` | Label text | Body text | ✅ Passes AA |
-
-### NumberStepper (components/NumberStepper.tsx)
+### MomentChip (components/MomentChip.tsx)
 
 | Token | Usage | Role | Contrast / Assessment |
 |---|---|---|---|
-| `bg-amber-50 text-amber-800` | Non-zero pill (light) | Value display | amber-800 (#92400e) on amber-50 (#fffbeb) ≈ 9:1 ✅ |
-| `dark:bg-amber-900/20 dark:text-amber-300` | Non-zero pill (dark) | Value display | amber-300 on dark bg — passes AA ✅ |
-| `bg-stone-100 text-stone-600` | Zero-state pill (light) | Value display | stone-600 (~#57534e) on stone-100 (~#f5f4f2) ≈ 5.1:1 ✅ |
-| `dark:bg-stone-800 dark:text-stone-400` | Zero-state pill (dark) | Value display | `dark:text-stone-400` is a `dark:` variant — safe per rule ✅ |
-| `text-stone-500 dark:text-stone-400` | Decrement `−` button | Control glyph | stone-500 on white ≈ 4.6:1 ✅; `dark:` variant safe ✅ |
-| `text-stone-500 dark:text-stone-500` | Unit label | Metadata | stone-500 (~#78716c) on white ≈ 4.6:1 ✅ |
+| `bg-amber-50 border border-amber-300 text-amber-800` | Selected state (light) | Selected chip | amber-800 (#92400e) on amber-50 (#fffbeb) ≈ 9:1 ✅ |
+| `dark:bg-amber-900/20 dark:border dark:border-amber-700/40 dark:text-amber-300` | Selected state (dark) | Selected chip | amber-300 on dark bg — passes AA ✅ |
+| `border border-stone-200 dark:border-stone-700 bg-transparent text-stone-500 dark:text-stone-400` | Unselected state | Unselected chip | stone-500 on white ≈ 4.6:1 ✅; `dark:text-stone-400` is a `dark:` variant — safe per rule ✅ |
+
+Note: `dark:bg-stone-800` removed from unselected dark state — transparent background at rest is cleaner and matches HabitToggle's unselected dark pattern. ✅
+
+### DayDetail (components/DayDetail.tsx)
+
+| Token | Usage | Role | Contrast / Assessment |
+|---|---|---|---|
+| `bg-amber-50 border border-amber-200 text-amber-800` | Moment chips (light) | Read-only display | amber-800 (#92400e) on amber-50 (#fffbeb) ≈ 9:1 ✅ |
+| `dark:bg-amber-900/20 dark:border dark:border-amber-700/40 dark:text-amber-300` | Moment chips (dark) | Read-only display | amber-300 on dark bg — passes AA ✅ |
+| `text-amber-600 dark:text-amber-400` | Done-habit checkmark (✓) | Completion indicator | amber-600 (#d97706) on white ≈ 3.1:1 — decorative non-text character; WCAG 1.4.11 (non-text contrast) requires 3:1 for UI components; 3.1:1 passes ✅ |
+| `bg-amber-50 dark:bg-amber-900/15 border border-amber-100 dark:border-amber-900/30` | Highlights panel card | Background | Background only — no text-contrast requirement ✅ |
+
+Note: The checkmark glyph was changed to `text-amber-600` (rather than `text-amber-500` as originally spec'd) during Architecture Review — a reviewer-initiated WCAG improvement. amber-600 provides ~3.1:1 vs white vs amber-500's ~2.8:1. Both are borderline decorative, but amber-600 is the stronger choice. ✅
 
 ---
 
@@ -63,9 +62,9 @@ All page titles use `text-stone-800 dark:text-stone-200` consistently. ✅
 
 All body text / item labels use `text-stone-700 dark:text-stone-300`. ✅
 
-Section labels correctly use `text-stone-500 dark:text-stone-500` via `SECTION_LABEL` constant in ManageView, HistoryView frequency toggle, and inline in CheckInForm. ✅
+Section labels in DayDetail Highlights section use `text-stone-500 dark:text-stone-500` — matching the `SECTION_LABEL` constant pattern. ✅
 
-Amber is used for: joy blossom (BlossomIcon), joy selection in FrequencyList, joyByDefault active state in ManageView, HabitToggle done-state dot and wash, NumberStepper non-zero pill, reset action in SettingsView. All uses are within the designated amber role. ✅
+Amber tokens are now used for: MomentChip selected state, DayDetail moment chips, DayDetail checkmark, DayDetail Highlights panel, joy blossom (BlossomIcon), joy selection in FrequencyList, joyByDefault active state in ManageView, HabitToggle done-state dot and wash, NumberStepper non-zero pill. All within the designated amber completion/joy role. ✅
 
 Red is used exclusively for error messages. ✅
 
@@ -79,9 +78,9 @@ Red is used exclusively for error messages. ✅
 
 ## 4. Dark mode completeness
 
-All foreground tokens have appropriate dark variants. No failures found. ✅
+All foreground tokens introduced in Sprint 11 have appropriate dark variants. ✅
 
-**Borderline:** `SettingsView.tsx ~line 332` — Cancel button has `text-stone-500` with only `dark:hover:text-stone-300`; no explicit `dark:text-*` base. stone-500 (#78716c) on the dark background (#1c1917) has adequate contrast; this is a cosmetic consistency gap, not a WCAG failure. **Low** (pre-existing).
+**Borderline carry-forward:** `SettingsView.tsx ~line 332` — Cancel button has `text-stone-500` with only `dark:hover:text-stone-300`; no explicit `dark:text-*` base. stone-500 (#78716c) on the dark background (#1c1917) has adequate contrast; cosmetic consistency gap only, not a WCAG failure. **Low** (pre-existing).
 
 ---
 
@@ -101,7 +100,7 @@ Severity key: **Critical** = WCAG AA failure · **High** = spec contradiction ·
 |---|---|---|
 | Critical | 0 | — |
 | High | 0 | — |
-| Medium | 0 | (HistoryView period selector finding resolved in Sprint 9) |
+| Medium | 0 | — |
 | Low | 3 | ManageView archived confirmation notes (×2, pre-existing); CalendarHeatmap day-of-week dark variant (pre-existing) |
 
-**Sprint 9 impact:** The one remaining medium finding from Sprint 8 (HistoryView inactive period selector `text-stone-400`) was resolved in Task 2. All new Sprint 9 colour tokens in HabitToggle and NumberStepper pass WCAG AA. Net improvement: 1 medium resolved, 0 new findings. Carry-forward lows unchanged.
+**Sprint 11 impact:** All new amber tokens in MomentChip, DayDetail moment chips, checkmark, and Highlights panel pass WCAG AA. No new findings introduced. Carry-forward lows (3) unchanged from Sprint 9 baseline.

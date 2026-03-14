@@ -84,84 +84,86 @@ export default function HistoryView() {
         />
       </div>
 
-      {/* ── Section divider + Frequency ─────────────────────── */}
-      <div className="mt-10 border-t border-stone-100 dark:border-stone-800 pt-8">
-
-        {/* Toggle */}
-        <button
-          ref={frequencyToggleRef}
-          type="button"
-          onClick={() => {
-            if (frequencyOpen && frequencyToggleRef.current) {
-              // Scroll the toggle to the top of the viewport synchronously before
-              // the section collapses, so the page shrink never clamps scroll position.
-              const top = window.scrollY + frequencyToggleRef.current.getBoundingClientRect().top;
-              window.scrollTo({ top, behavior: "auto" });
-            }
-            setFrequencyOpen((o) => !o);
-          }}
-          className="w-full min-h-[44px] flex items-center gap-1.5 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 transition-colors hover:text-stone-700 dark:hover:text-stone-400"
-        >
-          <span>Frequency</span>
-          <Chevron direction="down" className={`frequency-chevron${frequencyOpen ? " is-open" : ""}`} />
-        </button>
-
-        <AnimatePresence initial={false}>
-          {frequencyOpen && (
-            <m.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1, transition: { duration: 0.28, ease: "easeOut" } }}
-              exit={{
-                opacity: 0,
-                height: 0,
-                transition: {
-                  opacity: { duration: 0.1, ease: "easeIn" },
-                  height: { duration: 0.08, ease: "easeIn", delay: 0.1 },
-                },
-              }}
-              style={{ overflow: "hidden", overflowAnchor: "none" }}
-            >
-              <div className={`frequency-list${isUpdating ? " is-updating" : ""}`}>
-
-                {/* Period selector */}
-                <div className="mt-5 mb-6 flex items-center justify-center gap-3">
-                  <button type="button" onClick={() => handlePeriodChange("month")}
-                    className={`text-xs uppercase tracking-widest transition-colors ${period === "month" ? "text-stone-900 dark:text-stone-100 font-medium" : "text-stone-500 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300"}`}>
-                    Month
-                  </button>
-                  <span className="text-stone-300 dark:text-stone-600">·</span>
-                  <button type="button" onClick={() => handlePeriodChange("3m")}
-                    className={`text-xs uppercase tracking-widest transition-colors ${period === "3m" ? "text-stone-900 dark:text-stone-100 font-medium" : "text-stone-500 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300"}`}>
-                    3 Months
-                  </button>
-                  <span className="text-stone-300 dark:text-stone-600">·</span>
-                  <button type="button" onClick={() => handlePeriodChange("always")}
-                    className={`text-xs uppercase tracking-widest transition-colors ${period === "always" ? "text-stone-900 dark:text-stone-100 font-medium" : "text-stone-500 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300"}`}>
-                    Always
-                  </button>
-                </div>
-
-                {/* Frequency list */}
-                <FrequencyList
-                  entries={entries}
-                  period={period}
-                  viewedYear={viewedYear}
-                  viewedMonth={viewedMonth}
-                  activeFilter={activeFilter}
-                  onFilterChange={setActiveFilter}
-                />
-
-              </div>
-            </m.div>
-          )}
-        </AnimatePresence>
-      </div>
-
       {/* ── Empty state ───────────────────────────────────────── */}
       {entries.length === 0 && (
         <p className="mt-10 text-center text-sm text-stone-500 dark:text-stone-500">
           Your days will appear here once you start logging.
         </p>
+      )}
+
+      {/* ── Section divider + Frequency ─────────────────────── */}
+      {entries.length > 0 && (
+        <div className="mt-10 border-t border-stone-100 dark:border-stone-800 pt-8">
+
+          {/* Toggle */}
+          <button
+            ref={frequencyToggleRef}
+            type="button"
+            onClick={() => {
+              if (frequencyOpen && frequencyToggleRef.current) {
+                // Scroll the toggle to the top of the viewport synchronously before
+                // the section collapses, so the page shrink never clamps scroll position.
+                const top = window.scrollY + frequencyToggleRef.current.getBoundingClientRect().top;
+                window.scrollTo({ top, behavior: "auto" });
+              }
+              setFrequencyOpen((o) => !o);
+            }}
+            className="w-full min-h-[44px] flex items-center gap-1.5 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 transition-colors hover:text-stone-700 dark:hover:text-stone-400"
+          >
+            <span>Frequency</span>
+            <Chevron direction="down" className={`frequency-chevron${frequencyOpen ? " is-open" : ""}`} />
+          </button>
+
+          <AnimatePresence initial={false}>
+            {frequencyOpen && (
+              <m.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1, transition: { duration: 0.28, ease: "easeOut" } }}
+                exit={{
+                  opacity: 0,
+                  height: 0,
+                  transition: {
+                    opacity: { duration: 0.1, ease: "easeIn" },
+                    height: { duration: 0.08, ease: "easeIn", delay: 0.1 },
+                  },
+                }}
+                style={{ overflow: "hidden", overflowAnchor: "none" }}
+              >
+                <div className={`frequency-list${isUpdating ? " is-updating" : ""}`}>
+
+                  {/* Period selector */}
+                  <div className="mt-5 mb-6 flex items-center justify-center gap-3">
+                    <button type="button" onClick={() => handlePeriodChange("month")}
+                      className={`text-xs uppercase tracking-widest transition-colors ${period === "month" ? "text-stone-900 dark:text-stone-100 font-medium" : "text-stone-500 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300"}`}>
+                      Month
+                    </button>
+                    <span className="text-stone-300 dark:text-stone-600">·</span>
+                    <button type="button" onClick={() => handlePeriodChange("3m")}
+                      className={`text-xs uppercase tracking-widest transition-colors ${period === "3m" ? "text-stone-900 dark:text-stone-100 font-medium" : "text-stone-500 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300"}`}>
+                      3 Months
+                    </button>
+                    <span className="text-stone-300 dark:text-stone-600">·</span>
+                    <button type="button" onClick={() => handlePeriodChange("always")}
+                      className={`text-xs uppercase tracking-widest transition-colors ${period === "always" ? "text-stone-900 dark:text-stone-100 font-medium" : "text-stone-500 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300"}`}>
+                      Always
+                    </button>
+                  </div>
+
+                  {/* Frequency list */}
+                  <FrequencyList
+                    entries={entries}
+                    period={period}
+                    viewedYear={viewedYear}
+                    viewedMonth={viewedMonth}
+                    activeFilter={activeFilter}
+                    onFilterChange={setActiveFilter}
+                  />
+
+                </div>
+              </m.div>
+            )}
+          </AnimatePresence>
+        </div>
       )}
 
       {/* ── Day detail sheet ──────────────────────────────────── */}

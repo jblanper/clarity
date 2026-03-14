@@ -152,8 +152,19 @@ test("HelpView — section labels are font-medium", async ({ page }) => {
 // ── HistoryView ─────────────────────────────────────────────────────────────
 
 test("HistoryView — Frequency toggle label is font-medium", async ({ page }) => {
+  // Sprint 11: Frequency toggle is hidden when no entries — seed data first
+  const today = new Date();
+  const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   await page.goto("/clarity/history");
+  await page.evaluate((d) => {
+    const entry = { date: d, habits: {}, numeric: {}, moments: [], reflection: "test" };
+    const stored = JSON.parse(localStorage.getItem("clarity_entries") ?? "{}");
+    stored[d] = entry;
+    localStorage.setItem("clarity_entries", JSON.stringify(stored));
+  }, dateStr);
+  await page.reload();
   const toggle = page.getByRole("button", { name: /frequency/i });
+  await expect(toggle).toBeVisible();
   const weight = await toggle.evaluate((node) => getComputedStyle(node).fontWeight);
   expect(weight, "Frequency toggle should be font-medium").toBe("500");
 });

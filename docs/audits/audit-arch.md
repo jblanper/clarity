@@ -1,85 +1,94 @@
-# Architecture Audit
+# Architecture & Code Health Audit
 
-Audited: Sprint 9 changes (commits 10df89f, 683ea49, ffd7634).
-Reference: `CLAUDE.md` + `docs/calma-design-language.md`.
-Date: 2026-03-13.
+Generated: 2026-03-14 21:23
+Scope: components/ · app/ · lib/ · types/
+Reference: CLAUDE.md
 
-Sprint 9 context: Check-In Controls Redesign — HabitToggle full-row button, NumberStepper tap-to-increment pill, `startAt` field for numeric habits, WCAG colour + touch-target fixes.
+---
+
+## Summary
+
+Sprint 11 introduced no new architecture violations. One pre-existing High finding
+(ManageView stone-400 light-mode foreground) surfaces for the first time in this
+audit — it was not introduced by this sprint and requires a one-line fix in a
+future sprint. One low finding carries forward from Sprint 9 (spinbutton keyboard).
+All sprint 11 changes are plan-faithful and CLAUDE.md-compliant.
+
+Severity key: **Critical** = data loss risk or build-breaking constraint violation
+· **High** = CLAUDE.md rule violation · **Medium** = structural signal worth addressing
+· **Low** = minor deviation
 
 ---
 
 ## 1. CLAUDE.md compliance
 
-| Rule | Status | Notes |
+| File | Line | Rule | Issue | Severity |
+|---|---|---|---|---|
+| `components/ManageView.tsx` | 402, 631 | Never `text-stone-400` as light-mode foreground | Archived confirmation note uses bare `text-stone-400` (light mode). Dark mode correctly overrides to `dark:text-stone-500`. Fix: change `text-stone-400` → `text-stone-500` on both lines. Pre-existing — not introduced by Sprint 11. | **High** |
+
+All Sprint 11 changed files (`MomentChip`, `CheckInForm`, `DayDetail`, `HistoryView`, `CLAUDE.md`): no violations found.
+
+Notable compliant patterns confirmed:
+- `toISOString()` in `CheckInForm.tsx:231` and `transferData.ts:66` record ISO *timestamps* (not date keys) — UTC offset rule does not apply.
+- All `dark:text-stone-400` usages correctly scoped to dark variant only.
+- All new Sprint 11 buttons carry `type="button"`; tertiary `<Link>` in DayDetail is not a `<button>`.
+- No `router.back()` introduced. No dynamic routes without `generateStaticParams`.
+
+## 2. TypeScript strictness
+
+| File | Line | Pattern | Issue | Severity |
+|---|---|---|---|---|
+
+No `any` annotations or unsafe casts found across components, app, lib, or types.
+
+## 3. Test coverage
+
+| lib/ file | Exported symbol | Test present | Notes | Severity |
+|---|---|---|---|---|
+| `lib/habits.ts` | `createEmptyEntry` | No | No `habits.test.ts` exists. Trivial empty-object constructor — low risk. | **Low** |
+| `lib/storage.ts` | All exports | Yes | `storage.test.ts` — full coverage | — |
+| `lib/transferData.ts` | All exports | Yes | `transferData.test.ts` — full coverage | — |
+| `lib/theme.ts` | All exports | Yes | `theme.test.ts` — full coverage | — |
+| `lib/habitConfig.ts` | All exports | Indirect | Covered via `storage.test.ts` and `transferData.test.ts` | — |
+
+## 4. Component structure signals
+
+| Component | Lines | Issue | Severity |
+|---|---|---|---|
+
+No new structural concerns introduced by Sprint 11.
+
+## 5. Static export constraints
+
+| File | Issue | Severity |
 |---|---|---|
-| Never delete an archived config | ✅ | No archive logic touched |
-| Never add interactivity to `app/` files | ✅ | No `app/` files modified |
-| Never use `toISOString()` | ✅ | No date handling changed |
-| Never use `text-stone-400` as light-mode foreground | ✅ | HistoryView period selector fixed (stone-400 → stone-500); pre-existing archival dimming intentionally unchanged |
-| Never use `router.back()` | ✅ | No navigation changes |
-| Never add partial helpers to AppConfigs | ✅ | `startAt` added via read-modify-write; `getConfigs()`/`saveConfigs()` unchanged |
-| `type="button"` on non-submit buttons | ✅ | All new buttons in HabitToggle, NumberStepper, CheckInForm carry `type="button"` |
-| `active:opacity-70` press feedback (not `active:scale-*`) | ✅ | Used on all new interactive elements |
-| No `animate:width/height` (layout reflow) | ✅ | No Framer Motion used in sprint changes |
-| Primary/secondary button token compliance | ✅ | No new primary/secondary buttons added |
+
+No issues. All static export constraints satisfied.
 
 ---
 
-## 2. Sprint plan fidelity
-
-| Task | Status | Notes |
-|---|---|---|
-| Task 1: `startAt?: number` in `NumericHabitConfig` | ✅ | Added after `step` field, optional, backward-compatible |
-| Task 2: WCAG stone-400 → stone-500 (HistoryView, 3 buttons) | ✅ | All three inactive period selector buttons corrected |
-| Task 2: Touch targets on add-moment buttons | ✅ | `min-h-[44px]` on all three (+ New moment, Add, ✕) |
-| Task 3: HabitToggle full-row button | ✅ | Matches plan spec exactly — `role="switch"`, amber dot, `active:opacity-70` |
-| Task 4: NumberStepper tap-to-increment pill | ✅ | Matches plan spec — pill, conditional `−` glyph, `startAt` first-tap |
-| Task 5: ManageView "Start at" field — inline edit | ✅ | Field present after "Increment" in edit form |
-| Task 5: ManageView "Start at" field — add-habit form | ✅ | Field present after "Increment" in add form |
-| Task 6: CLAUDE.md HabitToggle note updated | ✅ | Bullet now describes full-row button pattern |
+## Summary counts
+0 critical · 1 high · 0 medium · 2 low
 
 ---
 
-## 3. Findings
+## Comparison vs. Sprint 9 baseline
 
-### 3a. Minor deviations (non-blocking)
+| | Before (Sprint 9) | After (Sprint 11) | Fixed | Regressions |
+|---|---|---|---|---|
+| Critical | 0 | 0 | — | 0 |
+| High | 0 | 1 | 0 | 0 (pre-existing, newly surfaced) |
+| Medium | 0 | 0 | — | 0 |
+| Low | 3 | 2 | 1 (M1 placeholder — accepted) | 0 |
 
-**M1 — `startAt` input placeholder differs from plan**
-- Sprint plan specifies `placeholder="Optional"`. Implementation uses `placeholder="0"`.
-- Both edit and add forms affected.
-- `placeholder="0"` is arguably more informative (matches the default value). No functional difference.
-- Severity: **low** (cosmetic).
-
-**M2 — `startAt` clear logic differs from plan on boundary values**
-- Plan: `isNaN(v) || v <= 0 ? undefined : v` — clears on empty, `NaN`, or `≤ 0`.
-- Implementation: `e.target.value === "" ? undefined : parseFloat(e.target.value)` — allows `startAt: 0` to be saved.
-- Save condition: `...(editingHabit.startAt !== undefined && ...)` vs plan's truthy check `...(editingHabit.startAt ? ...)` — implementation would persist `startAt: 0`.
-- At runtime, `handleTap` condition `startAt && startAt > 0` means `startAt: 0` is a stored no-op.
-- Severity: **low** (harmless; stored value has no behavioral effect).
-
-**M3 — `role="spinbutton"` without keyboard interaction**
-- ARIA `spinbutton` role expects arrow-key support (`onKeyDown`). Pill button has `onClick` only.
-- Sprint plan explicitly specifies `role="spinbutton"` — intentional per plan.
-- Screen readers will announce it as a spinner but keyboard-only users cannot increment via arrow keys.
-- Severity: **low** (accepted per sprint plan; documented for future sprint consideration).
-
-### 3b. Dead code
-
-None detected. Removed imports (`useState`, `useEffect` from NumberStepper) and deleted JSX (toggle thumb, direct input) are fully cleaned up.
+The High finding was present in the Sprint 9 codebase but not caught by the scoped review (ManageView was not in the sprint-9 diff). Sprint 11 did not introduce it.
 
 ---
 
-## 4. Lint & tests
+## Gate decision
 
-| Check | Result |
-|---|---|
-| `npm run lint` | 0 errors, 7 warnings (all pre-existing, unrelated to sprint changes) |
-| `npm test` | 52 passed, 0 failed |
+**PASS** — No must-fix issues introduced by Sprint 11. The ManageView stone-400
+finding is flagged for a future sprint fix (two-line change).
 
----
-
-## 5. Gate decision
-
-**PASS** — No must-fix issues. All six sprint tasks implemented per plan. CLAUDE.md compliance confirmed. Three minor findings (M1–M3) documented; none require code changes before merging.
-
-Recommended follow-up (future sprint): add `onKeyDown` arrow-key support to NumberStepper pill if screen-reader keyboard navigation is a priority.
+Sprint plan fidelity: all 5 tasks implemented exactly as specified.
+CLAUDE.md updates: Tertiary button token added correctly during the sprint.

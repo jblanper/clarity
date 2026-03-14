@@ -41,7 +41,7 @@ Dark mode is always user-selected, never system-inferred. Respect the user's del
 | Accent / joy / selection     | amber-700 | amber-500     |
 | Error                        | red-700   | red-400       |
 
-**Accessibility rule:** stone-400 (#a8a29e) fails WCAG AA on the light background — 2.4:1 ratio, well below the 4.5:1 minimum. Never use it as text in light mode. stone-500 (#78716c) is the minimum safe value at ~4.6:1. stone-400 is safe only as a `dark:` variant, where it reaches ~7:1 on the charcoal background.
+**Accessibility rule:** stone-400 (#a8a29e) fails WCAG AA on the light background — 2.4:1 ratio, well below the 4.5:1 minimum. Never use it as text in light mode. stone-500 (#78716c) is the minimum safe value at ~4.6:1. stone-400 is safe only in dark mode, where it reaches ~7:1 on the charcoal background.
 
 ### Color roles — surface
 
@@ -132,6 +132,14 @@ Max content width: 448px. Horizontal padding: 20px. This keeps lines short and r
 - Disabled elements are dimmed (40–50% opacity), never hidden. Absence without explanation is confusing. This rule applies to controls that exist but are temporarily unavailable. Controls that only become relevant at a specific state — where their absence is itself informative — may appear contextually. An affordance that disappears when its action is meaningless is clearer than one that persists in a dimmed, unclearable state.
 - Touch targets are minimum 44×44px on all tappable elements.
 
+### Button hierarchy
+
+Three levels of visual weight organise actions by importance.
+
+- **Primary** — filled background, maximum visual weight. For the single most important action per screen.
+- **Secondary** — outlined, white or card-surface background, medium weight. For alternative actions alongside the primary.
+- **Tertiary** — transparent at rest, border, small text, subtle hover wash. For low-hierarchy contextual actions within a detail view. Never competes with primary or secondary.
+
 ### States
 
 | State    | Principle                                                                |
@@ -157,6 +165,8 @@ In read-only review contexts, the filled state may be used as a static display i
 
 **Status dot variant:** When the indicator is small (≤12 px) or where an outlined form would be too delicate to read, use a filled dot that shifts color: stone-300/600 at rest, amber-500/400 when active. The dot is always filled — the color alone carries the state change. Place it at the label's leading edge so it reads as an attribute of the row, not a standalone icon.
 
+**Chip / tag variant:** A pill-shaped chip communicates selection state through amber fill when selected; transparent background with stone border at rest. In interactive contexts chips carry standard touch-target height and a color transition. In read-only review contexts — no press handler, no hover — reduce padding by one step to signal static display. Never use a disabled treatment for read-only chips; reduced padding is the signal.
+
 ---
 
 ## Motion
@@ -176,7 +186,7 @@ Motion that draws attention to itself has already failed.
 
 ### Active press states
 
-Active press states use opacity dimming (e.g. `active:opacity-70`), not scale transforms. Scale creates a spatial jolt that contradicts the in-place, calm nature of Calma interactions. The "two steps" of active feedback is felt through opacity or color — never through movement.
+Active press states use opacity dimming, not scale transforms. Scale creates a spatial jolt that contradicts the in-place, calm nature of Calma interactions. The "two steps" of active feedback is felt through opacity or color — never through movement.
 
 ### Collapsible sections
 
@@ -215,6 +225,8 @@ Words are design material. They should feel as considered as any visual element.
 |-------|--------|
 | You missed this day | Nothing here yet |
 | Saved successfully! | Day captured |
+| Save (new entry) | Capture / Capturing… / Day captured |
+| Save (edit) | Save / Saving… / Saved |
 | Appearance Settings | Theme |
 | Invalid file format detected | That file doesn't look right — try exporting a fresh backup |
 | ← back | ← Today / ← History |

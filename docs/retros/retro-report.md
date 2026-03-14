@@ -1,7 +1,7 @@
 # Retrospective Report
 
-**Generated:** 2026-03-13 10:42
-**Sprints analysed:** Sprint 1 – Sprint 9
+**Generated:** 2026-03-14 14:35
+**Sprints analysed:** Sprint 1 – Sprint 10
 
 ---
 
@@ -9,41 +9,59 @@
 
 ### 1. Design constraints encoded reactively, not proactively — Sprints 1, 2, 3, 4, 5, 6
 
-Noted in the Sprint 7 retro report and still the most persistent pattern across all nine sprints. The stone-400 rule (Sprint 2), `type="button"` (Sprint 3), static export (Sprint 4), `font-medium` on section labels (Sprint 5–7) — each established a constraint that wasn't written down until it had already caused at least one violation. The systematic audit cycle in Sprint 7 caught the accumulated drift; Sprints 8–9 closed it. Post-Sprint 9 the codebase has no HIGH or medium open findings, which marks the first time the constraint-encoding discipline has been fully caught up.
+The most persistent pattern across the entire project history. The stone-400 foreground rule (Sprint 2), `type="button"` on form buttons (Sprint 3), static-export dynamic route constraint (Sprint 4), `font-medium` on section labels (Sprints 5–7) — each established a constraint only after a violation was already built and shipped. The systematic audit cycle in Sprint 7 cleared all accumulated drift; Sprints 8–9 closed what remained. Post-Sprint 9 the codebase has no HIGH or Critical open findings for the first time.
 
-**Suggested fix:** The encode-as-you-go discipline is now well-established via Calma Sync + CLAUDE.md token update steps. The remaining risk is new patterns introduced in feature sprints. Ensure every Sprint N+1 brief explicitly asks: "Does this introduce any new pattern that must be encoded?"
+**Status:** Substantially addressed. The encode-as-you-go discipline is now well-established via the Calma Sync + CLAUDE.md token update steps in the sprint pipeline. The remaining risk is new patterns introduced in future feature sprints.
+
+**Suggested fix:** Every Sprint N+1 brief should explicitly ask: "Does this introduce any new pattern that must be encoded?" before scope is finalised.
 
 ---
 
-### 2. The `replace_all` parallel-form indent miss — Sprints 8, 9 (both)
+### 2. The `replace_all` parallel-form indent miss — Sprints 8, 9
 
-In Sprint 8, the `Step` → `Increment` rename was missed in the add-habit form because two JSX subtrees at different indentation levels in ManageView look identical to a `replace_all` call that matches only one. In Sprint 9, the same risk applied to the "Start at" field (required explicit parallel-form note in the brief). This is a structural property of ManageView — it has two form paths (inline edit + add-habit form) at different indentation depths rendering similar but not identical JSX.
+In Sprint 8, the `Step` → `Increment` rename was missed in the add-habit form because ManageView has two JSX subtrees at different indentation levels (inline edit form + add-habit form) that look identical to a `replace_all` call matching only one. In Sprint 9, the same risk applied to the "Start at" field — only avoided because the brief explicitly flagged it. This is a structural property of ManageView, not a one-off error.
 
-**Suggested fix:** Encode a standing CLAUDE.md note that ManageView has two parallel form paths. Any change to a numeric field in ManageView must be applied to both paths. After any such edit, grep the file for the changed string before committing. This is already done informally in Sprint 9's brief — formalise it.
+**Status:** Partially addressed. A CLAUDE.md note documents the ManageView parallel-form risk. The pattern has now cost at least one arch-review correction and one near-miss.
+
+**Suggested fix:** After any edit to a shared field or label in ManageView, grep the file for the changed string before committing. This should be a standing rule in CLAUDE.md, not just a sprint-specific note.
 
 ---
 
 ### 3. "Already correct" claims that prove false — Sprints 7, 8
 
-In Sprint 7, implementation notes stated the SettingsView Theme and "Your data" labels were "already correct." They were not — caught in the Sprint 7 validation audit and deferred to Sprint 8 (M3). A guard was added to the `/sprint-plan` skill after Sprint 7, but the pattern has appeared once since then (M3 survived into Sprint 8 as a deferred finding, meaning the Sprint 7 brief carried the incorrect claim all the way to validation).
+In Sprint 7, implementation notes stated SettingsView Theme and "Your data" labels were "already correct." They were not — caught in Sprint 7 validation and deferred to Sprint 8 (M3). The guard was added to `/sprint-plan` after Sprint 7 but the pattern survived one more sprint as a deferred finding.
 
-**Suggested fix:** The guard is now in `/sprint-plan`. Monitor for recurrence. If it appears again in Sprint 10+, elevate to a pre-brief verification step: read the relevant source lines before stating any element's current state.
+**Status:** Guard in place in `/sprint-plan`. No recurrences since Sprint 8.
 
----
-
-### 4. QA run with a predicted (not live) dev server — Sprint 9
-
-Sprint 9 QA was performed via static source-code analysis because the dev server couldn't be started in that session. All 16 new tests were predicted to pass but not confirmed live. Three Sprint 8 tests were predicted to fail by design (old control shapes). The sprint shipped on prediction rather than observation.
-
-**Suggested fix:** The QA section should include a live server run before any final "PASS" verdict. If the dev server can't start, that is a blocker — escalate to the user rather than substituting prediction. The current workaround is acceptable for one sprint, but should not become normal practice.
+**Suggested fix:** Monitor for recurrence. If it reappears, elevate to a pre-brief verification step: read the relevant source lines before stating any element's current state.
 
 ---
 
-### 5. Token cost and sprint doc length — Sprint 9 (newly emerging)
+### 4. QA confirmed by prediction rather than live run — Sprint 9
 
-Sprint 9's sprint doc grew to 618 lines by end of sprint. Each subsequent skill re-reads the full document. The retrospective explicitly flagged token cost and suggested scoped reads per phase. No action has been taken yet — this is a brand-new concern that has appeared once and is not yet confirmed as systemic.
+Sprint 9 QA was performed via static source-code analysis because the dev server couldn't start. All 16 new tests were predicted to pass, and 3 Sprint 8 tests were predicted to fail by design. The sprint shipped on prediction rather than observation. Sprint 10 (Task 1) was specifically designed to confirm this prediction and clean up the stale tests — and it did.
 
-**Suggested fix:** Explore skill-level scoped reads (e.g. `/sprint-arch` reads only the tasks section, not the full doc). This is a workflow infrastructure change — assign to a dedicated tooling sprint rather than a feature sprint.
+**Status:** Resolved in Sprint 10. Sprint 10 Task 1 ran the full Playwright suite live and confirmed the Sprint 9 predictions were accurate. The e2e baseline is now clean and live-verified.
+
+**Suggested fix:** Formalise the rule in `/sprint-qa` and sprint process: a live server run is required before any final PASS verdict. Prediction is acceptable only as a documented intermediate step, not a final gate.
+
+---
+
+### 5. Token cost and sprint doc length — Sprints 9, 10
+
+Sprint 9's doc grew to 618 lines by end of sprint; each subsequent skill re-read the full document. Sprint 10 Task 3 introduced scoped reads for `sprint-validate`, `sprint-qa`, and `sprint-plan`, targeting the most expensive reads. The Sprint 10 retro still flags token burn as a concern — the arch and UX skills (which pull in CLAUDE.md + Calma in full even for tooling sprints) are the next targets.
+
+**Status:** Partially addressed. Scoped reads landed in Sprint 10. Full solution (arch/UX skill scoping) deferred.
+
+**Suggested fix:** Next tooling sprint should scope `sprint-arch` and `sprint-ux` reads — they currently pull full CLAUDE.md + calma-design-language.md even for tooling sprints where neither file is relevant.
+
+---
+
+### 6. Sprint scope too conservative at tier boundaries — Sprint 7
+
+Sprint 7 was too conservative — all six tasks were completed cleanly, but the sprint could have absorbed 8 more medium-severity findings and the 3 HIGH interaction findings without adding risk. The audit triage had identified them; they simply weren't pulled in. Sprint 8 corrected by targeting severity tiers completely rather than stopping at a subset.
+
+**Status:** Resolved. From Sprint 8 onwards, scope targets full severity tiers rather than cherry-picking. Sprint 8 cleared all 9 HIGH findings; Sprint 9 cleared all remaining mediums.
 
 ---
 
@@ -51,33 +69,42 @@ Sprint 9's sprint doc grew to 618 lines by end of sprint. Each subsequent skill 
 
 ### 1. Zero regressions across all sprints
 
-Sprints 7, 8, and 9 all report zero regressions. The combination of TypeScript strict mode, Jest unit tests, a growing Playwright e2e suite (6 → 112 → 144 tests across sprints), and careful task scoping has prevented any sprint from breaking previously working features. This is an exceptionally strong track record. Do not trade it for speed or scope.
+Every sprint from 7 onwards records zero regressions. TypeScript strict mode, 52 Jest unit tests, and a growing Playwright e2e suite (0 → 54 → 112 → 144 tests across Sprints 7–10) have prevented any sprint from breaking previously working features. Sprint 10 confirmed the e2e baseline live for the first time — the suite is now both clean and verified.
+
+Do not trade this record for speed or scope.
 
 ### 2. Narrow scope + precise briefs → high plan fidelity
 
-Every sprint from 7 onwards records "fully faithful" or "tight" plan-to-execution match. Sprint 9 brief-to-execution match was described as "tight — implementation order held up, all tasks shipped per spec." This began with Sprint 7's introduction of line-number-level task specs. The discipline of specifying exact line numbers, exact class strings, and edge-case gotchas in the brief eliminates ambiguity during coding.
+Every sprint from 7 onwards records "fully faithful," "accurate," or "tight" plan-to-execution match. The discipline of specifying exact line numbers, exact class strings, and edge-case gotchas in the brief eliminates ambiguity during coding. Sprint 10 noted "planning was frictionless — precise task specs meant each task could be executed without back-and-forth."
 
 ### 3. The audit cycle as a debt clearing mechanism
 
-The structured audit (colour · typography · interaction · microcopy) with before/after tables has proven to be the correct mechanism for closing accumulated debt. Sprints 7–9 together moved the codebase from:
-- **Colour:** 11 high · 7 medium · 3 low → 0 medium · 3 low
-- **Typography:** 4 critical · 6 high · 6 medium · 5 low → 0 medium · 4 low
-- **Interaction:** 3 high · 9 medium · 5 low → 0 high · 1 medium · 8 low
-- **Microcopy:** 4 high · 5 medium · 2 low → 0 high · 0 medium · 3 low
+The structured audit (colour · typography · interaction · microcopy) with before/after tables has proven to be the correct mechanism for closing accumulated debt. Sprints 7–9 together moved the codebase from a high-debt state to:
 
-All HIGH and critical findings cleared. All medium findings cleared except one (two-step nav-link hover, undocumented in Calma).
+| Audit | Starting state | Post-Sprint 9 |
+|---|---|---|
+| Colour (WCAG) | 11 high · 7 medium | 0 high · 0 medium · 3 low |
+| Typography | 4 critical · 6 high · 6 medium | 0 critical · 0 high · 0 medium · 4 low |
+| Interaction | 3 high · 9 medium | 0 high · 1 medium · 8 low |
+| Microcopy | 4 high · 5 medium | 0 high · 0 medium · 3 low |
 
-### 4. Design decisions resolved in mediation producing better outcomes than either position
+All HIGH and Critical findings cleared. One medium remains (two-step nav-link hover undocumented in Calma spec).
 
-Sprint 9's "Start at" field emerged from mediation between UX (Option A: visible input) and Arch (Option B: tap-only). Neither side had proposed it. The PO introduced it as a third path. The retrospective explicitly noted: "That kind of creative resolution signals the review process is working as intended." The mediation step is not overhead — it is where the best design decisions happen.
+### 4. Design decisions resolved in mediation producing better outcomes
+
+Sprint 9's "Start at" field emerged from mediation between UX and Arch positions — neither had independently proposed it. The retrospective explicitly noted: "That kind of creative resolution signals the review process is working as intended." The mediation step (UX review + arch review before planning) is not overhead; it is where the best design decisions happen.
 
 ### 5. GitHub Actions deployment — zero maintenance since Sprint 4
 
-Five sprints of zero deployment infrastructure failures. The static export approach is stable.
+Six sprints with zero deployment infrastructure failures. The static export approach is stable.
 
 ### 6. Components simplifying over time
 
-Sprint 9 noted that both redesigned components became simpler than what they replaced: HabitToggle lost its thumb animation entirely; NumberStepper dropped its input state and `useEffect`. The redesign process reliably finds simpler implementations. This is a signal that the Calma "recording over configuring" design philosophy actively guides toward better code, not just better aesthetics.
+Sprint 9 noted that both redesigned components became simpler than what they replaced: HabitToggle lost its thumb animation entirely; NumberStepper dropped its input state and `useEffect`. The redesign process reliably finds simpler implementations — a signal that the Calma "recording over configuring" design philosophy guides toward better code, not just better aesthetics.
+
+### 7. Sprint pipeline skill now operational — Sprint 10
+
+Sprint 10 delivered the `/sprint-pipeline` orchestrator, completing the workflow tooling investment started in retro recommendations from Sprint 9. The pipeline is self-describing, tier-aware, and resumable. Combined with the scoped reads (also Sprint 10) and pre-flight report (Sprint 8 infrastructure), the full planning → execution → validation loop is now guided end-to-end.
 
 ---
 
@@ -85,15 +112,13 @@ Sprint 9 noted that both redesigned components became simpler than what they rep
 
 **Sprints 1–6:** No formal pipeline. Scope set informally; recurring regrets about scale and omissions.
 
-**Sprints 7–9:** Formal pipeline in use. Plan fidelity recorded as "fully faithful" (Sprint 7), "accurate" (Sprint 8), and "tight" (Sprint 9) respectively.
+**Sprints 7–10:** Formal pipeline in use. Plan fidelity recorded as "fully faithful" (Sprint 7), "accurate" (Sprint 8), "tight" (Sprint 9), and "frictionless — precise task specs" (Sprint 10). The trend is consistently improving.
 
-**Scope estimation:** Sprint 7 was too conservative (left 8 medium findings and 3 HIGH on the table). Sprint 8 corrected by targeting severity tiers — cleared all 9 HIGH findings. Sprint 9 was right-sized. The tier-based scoping approach is working.
+**Scope estimation:** Sprint 7 was too conservative (left 8 medium findings and 3 HIGH on the table). Sprint 8 corrected by targeting severity tiers — cleared all 9 HIGH findings. Sprint 9 was right-sized for a feature sprint. Sprint 10 was a Tier 3 tooling sprint and shipped exactly as scoped.
 
-**Task breakdown accuracy:** The main miss pattern is parallel forms in ManageView (Sprint 8: Step→Increment missed in add-habit form; Sprint 9: "Start at" in two form paths caught only because the brief explicitly noted it). The fix is the CLAUDE.md parallel-form note recommended above.
+**Task breakdown accuracy:** The main miss pattern is ManageView parallel forms (Sprint 8: Step→Increment missed in add-habit form; Sprint 9: "Start at" in two form paths caught only because the brief explicitly warned about it). The Gotchas/edge-cases subsection added in Sprint 10 (Task 2) is the structural fix for this class of miss.
 
 **Review decisions in hindsight:** UX and Arch reviews have been consistently correct. The Sprint 8 arch finding (H8 import-side already done) saved time. Sprint 9 mediation produced the "Start at" feature. No review decision has proven wrong in hindsight.
-
-**Trend:** Strong and stable at the task level. Main remaining risk is ManageView parallel-form misses and the "already correct" claim failure mode.
 
 ---
 
@@ -101,33 +126,37 @@ Sprint 9 noted that both redesigned components became simpler than what they rep
 
 | Sprint | Improvement | Status |
 |---|---|---|
-| Sprint 3 | Verify multi-entry-point nav flows before shipping | **Acted on** — added as a permanent QA checklist item. |
-| Sprint 5 | Keep a running notes file during multi-session sprints | **Not acted on** — Sprints 7–9 were single-session, so this hasn't been needed. Still valid for future multi-session work. |
-| Sprint 7 | Evaluate `.claude/agents/` for skill de-duplication | **Partially acted on** — `architect` and `ux-designer` agents created (additive model). Skill de-duplication deferred pending trial validation. |
-| Sprint 8 | Add "Step"→"Increment" parallel-form lesson to CLAUDE.md | **Not acted on** — the lesson was noted in the Sprint 8 arch review, but no CLAUDE.md rule was written. This applies to all parallel-form edits in ManageView. |
-| Sprint 9 | Scoped reads per skill phase (token cost reduction) | **Not acted on** — identified as a tooling-sprint item, not yet started. |
-| Sprint 9 | `/sprint-pipeline` orchestrator with sequential phases + human approval checkpoints | **Not acted on** — flagged as a future improvement; no sprint assigned. |
-| Sprint 9 | Update `sprint-08-touch-targets.spec.ts` to remove 3 obsolete assertions | **Not confirmed** — the QA section recommended removing the old HabitToggle/NumberStepper assertions. Not verified whether this was done in the deploy step. |
-| Sprint 9 | Confirm live e2e run before deploy | **Unclear** — Sprint 9 QA was static analysis; the recommended action was to run `npx playwright test` against a live server before deploying. Not confirmed. |
+| Sprint 3 | Verify multi-entry-point nav flows before shipping | **Acted on** — added as a permanent QA checklist item |
+| Sprint 5 | Keep a running notes file during multi-session sprints | **Not acted on** — Sprints 7–10 were all single-session, so this hasn't been needed. Still valid for future multi-session work |
+| Sprint 7 | Evaluate `.claude/agents/` for skill de-duplication | **Partially acted on** — `architect` and `ux-designer` agents created. Full skill de-duplication deferred |
+| Sprint 8 | Add "Step"→"Increment" parallel-form lesson to CLAUDE.md | **Acted on** — Sprint 9 brief explicitly addressed it; CLAUDE.md ManageView parallel-form note added |
+| Sprint 9 | Scoped reads per skill phase | **Acted on** — Sprint 10 Task 3 delivered scoped reads for `sprint-validate`, `sprint-qa`, `sprint-plan` |
+| Sprint 9 | `/sprint-pipeline` orchestrator | **Acted on** — Sprint 10 Task 4 delivered the pipeline skill |
+| Sprint 9 | Update `sprint-08-touch-targets.spec.ts` | **Acted on** — Sprint 10 Task 1 confirmed all tests pass live; suite is green |
+| Sprint 9 | Confirm live e2e run before deploy | **Acted on** — Sprint 10 Task 1 ran the full suite against a live dev server |
+| Sprint 10 | Scope `sprint-arch` and `sprint-ux` reads for tooling sprints | **Not yet acted on** — identified in Sprint 10 retro; no sprint assigned |
+| Sprint 10 | Document two-step nav-link hover in Calma spec | **Not yet acted on** — carried as a medium finding since Sprint 8; a doc-only change with no code impact |
+| Sprint 10 | Add test coverage for `habitConfig.ts` (`getConfigs`, `saveConfigs`) | **Not yet acted on** — flagged in Sprint 8 arch review and retro report |
+| Sprint 10 | Generalise workflow skills for reuse across projects | **Not yet acted on** — low urgency for Clarity; deferred |
 
 ---
 
 ## Codebase health trend
 
-**Significantly improved.** The three-sprint audit cycle (Sprints 7–9) has cleared every HIGH and critical finding and all medium findings except one.
+**Significantly improved and now stable.** The three-sprint audit cycle (Sprints 7–9) cleared every HIGH and Critical finding and all medium findings except one. Sprint 10 delivered no app code changes and confirmed the baseline is clean.
 
-### Current state (post-Sprint 9)
+### Current state (post-Sprint 10)
 
-| Audit | Post-Sprint 9 | Trend from Sprint 1 baseline |
+| Audit | Post-Sprint 10 | Trend |
 |---|---|---|
-| Colour (WCAG) | 0 medium · 3 low | Major improvement from 11 high |
-| Typography | 0 medium · 4 low | Major improvement from 4 critical + 6 high |
-| Interaction | 0 high · 1 medium · 8 low | Cleared all HIGH; 1 medium remaining |
-| Microcopy | 0 high · 0 medium · 3 low | Cleared all HIGH + medium |
+| Colour (WCAG) | 0 medium · 3 low | Stable from post-Sprint 9 |
+| Typography | 0 medium · 4 low | Stable from post-Sprint 9 |
+| Interaction | 0 high · 1 medium · 8 low | Stable — 1 medium (two-step hover, doc-only fix needed) |
+| Microcopy | 0 high · 0 medium · 3 low | Stable from post-Sprint 9 |
 
-### Remaining debt
+### Remaining open debt
 
-**1 medium (interaction):** Two-step nav-link hover (`stone-600 → stone-800`) undocumented in Calma spec. Awaiting a design-language doc decision before code change.
+**1 medium (interaction):** Two-step nav-link hover (`stone-600 → stone-800`) undocumented in Calma spec. Code is intentional and correct; only a design-language doc entry is needed to close it.
 
 **Low findings (selected):**
 - ManageView archived confirmation notes: `text-stone-400` (intentional archival dimming — accepted)
@@ -137,28 +166,29 @@ Sprint 9 noted that both redesigned components became simpler than what they rep
 - ManageView "Start at" placeholder: `"0"` vs spec-intended `"Optional"`
 - Remaining touch targets in SettingsView/ManageView/HelpView bare-text controls
 
+**New medium finding (post-audit-list update, 2026-03-14):**
+- `HistoryView.tsx`: Frequency section and toggle visible when `entries.length === 0`, before the empty-state message — creates two competing signals. Fix: suppress Frequency section entirely when no entries; move empty-state message directly below the heatmap.
+
 **Structural debt (unchanged since Sprint 7):**
 - `ManageView.tsx` at ~660 lines — watch threshold; inline form rendering not yet extracted
-- `SECTION_LABEL` constant duplicated independently across six component files — infrastructure debt
-- No test coverage for `habitConfig.ts` (`getConfigs`, `saveConfigs`) — flagged in Sprint 8 arch review, not yet addressed
+- `SECTION_LABEL` constant duplicated independently across six component files — infrastructure debt, low urgency
+- No test coverage for `habitConfig.ts` (`getConfigs`, `saveConfigs`) — flagged in Sprint 8 arch review, still unaddressed
 - `CheckInForm.tsx` at ~507 lines — large but UI-state only; no extraction warranted yet
 
-**Health verdict:** The functional codebase is in its best state since the project began. Structural debt is contained and non-urgent. The test suite (52 Jest unit tests + 144 e2e tests) provides strong regression coverage.
+**Health verdict:** The functional codebase is in its best state since the project began. Structural debt is contained and non-urgent. The test suite (52 Jest unit tests + 144 live-verified e2e tests) provides strong regression coverage.
 
 ---
 
 ## Recommended actions
 
-**1. Add CLAUDE.md note on ManageView parallel forms** — Any edit to a numeric field in ManageView must be applied to both the inline edit form and the add-habit form. After any such edit, grep the file for the changed string before committing. This has caused a missed fix in Sprint 8 and required a pre-emptive warning note in Sprint 9's brief. Formalising it in CLAUDE.md prevents a third occurrence.
+**1. Close the HistoryView medium finding (empty state + Frequency section)** — Suppress the Frequency section entirely when `entries.length === 0`; move the empty-state message directly below the heatmap. This is a targeted single-file change — suitable for inclusion in the next feature sprint's polish pass or as a standalone Tier 2 sprint if the next sprint is unrelated.
 
-**2. Confirm live e2e run and fix obsolete touch-target tests before Sprint 10** — Sprint 9 QA was static analysis, not live. Before the next sprint, run `npx playwright test` against a live dev server to confirm the 16 new Sprint 9 tests pass and to remove or replace the 3 obsolete Sprint 8 touch-target assertions. A green baseline suite is the prerequisite for all future sprint QA.
+**2. Document the two-step nav-link hover in Calma spec** — The `stone-600 → stone-800` pattern appears in DayDetail and Settings back links. A Calma Sync entry documenting this as a named exception closes the last remaining medium finding in the codebase. This is a doc-only change (no code impact) — suitable for a Tier 3 sprint or as an add-on to any upcoming sprint.
 
-**3. Address the one remaining medium finding: document the two-step hover** — The `stone-600 → stone-800` nav-link hover pattern appears in DayDetail and Settings back links. It is flagged as undocumented in the Calma spec (interaction medium). A Calma Sync entry documenting this as a named exception ("navigation link hover: two-stop stone-600 → stone-800") would close the last medium finding in the codebase.
+**3. Add test coverage for `habitConfig.ts`** — `getConfigs()` and `saveConfigs()` are the read-modify-write functions that every config change flows through. Currently untested despite being flagged in Sprint 8 arch review. A brief Tier 2 session (no review required) would close a structural testing gap. Target: `lib/habitConfig.test.ts` covering round-trip get/save, archived item preservation, and UUID stability.
 
-**4. Plan a `habitConfig.ts` test coverage sprint** — Sprint 8 arch review flagged no test coverage for `getConfigs()` and `saveConfigs()`. These are the read-modify-write functions that every config change flows through. They are currently untested. A brief Tier 3 session (no review required) to add Jest coverage for these two functions would close a structural testing gap.
+**4. Scope `sprint-arch` and `sprint-ux` reads for tooling sprints** — Both skills currently pull CLAUDE.md and calma-design-language.md in full even for tooling sprints where app code is not touched. A conditional read (skip Calma and CLAUDE.md if the brief's scope confirms no UI changes) would meaningfully reduce token cost for Tier 2/3 sprints. Assign as part of the next tooling sprint.
 
-**5. Plan a tooling sprint for token cost reduction** — Sprint 9 identified that the sprint doc grows to 600+ lines and is re-read fully by every subsequent skill. Scoped reads per phase (only the relevant section) and a `/sprint-pipeline` orchestrator with sequential phases are both identified improvements that would meaningfully reduce cost per sprint. Assign as a Tier 3 infrastructure sprint before Sprint 11.
+**5. ManageView: formalise the parallel-form grep rule** — The `replace_all` indent-miss pattern has cost at least one arch-review correction (Sprint 8) and one near-miss (Sprint 9). The Gotchas field in task specs (Sprint 10 Task 2) addresses the symptom at brief time, but the underlying risk is structural. Add a standing CLAUDE.md note: "Any edit to a label or field in ManageView must be applied to both the inline edit form and the add-habit form. After any such edit, grep the file for the changed string before committing."
 
-**6. Generalise workflow skills for reuse** — Sprint 9 noted that most skills are project-agnostic except for Calma-specific references and Clarity-specific CLAUDE.md rules. Extracting those as configuration is the main work to turn the workflow into a reusable plugin. This is low urgency for Clarity itself but high value if the workflow is to be applied elsewhere.
-
-**7. Watch ManageView size** — At ~660 lines it is approaching the threshold where extraction becomes warranted. If the next feature sprint adds numeric habit UI or Manage-page features, evaluate extracting the inline form rendering into a sub-component at that point rather than deferring indefinitely.
+**6. Consider extracting ManageView inline forms** — At ~660 lines, ManageView is approaching the threshold where extraction warrants evaluation. The next feature sprint that touches Manage-page numeric UI should evaluate extracting the inline edit form into a sub-component at that point rather than deferring indefinitely. This is a watch item, not an immediate action.

@@ -168,6 +168,25 @@ export default function DayDetail({ date, entry, onClose }: Props) {
             </p>
           ) : (
             <>
+              {/* Highlights — joy-marked habits */}
+              {checkedHabits.some((h) => h.joy) && (
+                <section className="mb-6 bg-amber-50 dark:bg-amber-900/15 border border-amber-100 dark:border-amber-900/30 rounded-2xl px-4 py-4">
+                  <h3 className="mb-3 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
+                    Highlights
+                  </h3>
+                  <div className="space-y-1.5">
+                    {checkedHabits
+                      .filter((h) => h.joy)
+                      .map((h) => (
+                        <div key={h.id} className="flex items-center gap-2">
+                          <BlossomIcon filled={true} size={16} />
+                          <span className="text-sm text-stone-700 dark:text-stone-300">{h.label}</span>
+                        </div>
+                      ))}
+                  </div>
+                </section>
+              )}
+
               {/* Boolean habits — only checked ones */}
               {checkedHabits.length > 0 && (
                 <section className="mb-6">
@@ -177,11 +196,8 @@ export default function DayDetail({ date, entry, onClose }: Props) {
                   <div className="space-y-1">
                     {checkedHabits.map((h) => (
                       <div key={h.id} className="flex items-center gap-2">
-                        <span className="text-sm text-stone-500 dark:text-stone-500">✓</span>
+                        <span className="text-sm text-amber-600 dark:text-amber-400">✓</span>
                         <span className="text-sm text-stone-700 dark:text-stone-300">{h.label}</span>
-                        {h.joy && (
-                          <BlossomIcon filled={true} size={16} />
-                        )}
                       </div>
                     ))}
                   </div>
@@ -218,7 +234,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
                     {resolvedMoments.map((label) => (
                       <span
                         key={label}
-                        className="rounded-full bg-stone-500 dark:bg-stone-300 px-4 py-2 text-sm text-white dark:text-stone-900"
+                        className="rounded-full bg-amber-50 border border-amber-200 text-amber-800 dark:bg-amber-900/20 dark:border dark:border-amber-700/40 dark:text-amber-300 px-3 py-1.5 text-sm"
                       >
                         {label}
                       </span>
@@ -245,9 +261,9 @@ export default function DayDetail({ date, entry, onClose }: Props) {
           <div className="mt-4">
             <Link
               href={`/edit?date=${date}`}
-              className="text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
+              className="inline-flex items-center rounded-xl border border-stone-200 dark:border-stone-700 px-4 py-2 text-xs text-stone-600 dark:text-stone-400 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800/50"
             >
-              Edit
+              Edit this day
             </Link>
           </div>
 

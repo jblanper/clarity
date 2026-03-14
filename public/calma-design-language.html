@@ -915,7 +915,7 @@
       <div class="anatomy-item" style="border-bottom:none;"><span>Error</span><span style="color:var(--red-700);font-family:'Jost',sans-serif;font-size:0.7rem;">red-700</span></div>
     </div>
 
-    <p style="font-size:0.8rem;color:var(--stone-500);margin-top:0.5rem;"><strong style="color:var(--stone-700);">Accessibility note:</strong> stone-400 fails WCAG AA on a light background (2.4:1 ratio). Never use it as body text in light mode.</p>
+    <p style="font-size:0.8rem;color:var(--stone-500);margin-top:0.5rem;"><strong style="color:var(--stone-700);">Accessibility note:</strong> stone-400 fails WCAG AA on a light background (2.4:1 ratio). Never use it as body text in light mode. stone-400 is safe only in dark mode.</p>
 
     <h3>Two-axis blend</h3>
     <p>When a view carries two kinds of meaning at once — one structural, one felt — give each its own color. Cool tones hold presence and completion; warm tones hold feeling and spontaneity. Where both appear together, the colors meet in proportion to each signal's weight.</p>
@@ -1058,6 +1058,14 @@
       </div>
     </div>
 
+    <h3>Button hierarchy</h3>
+    <p>Three levels of visual weight organise actions by importance.</p>
+    <ul style="font-family:'Lora',Georgia,serif;font-size:0.9rem;color:var(--stone-700);line-height:1.8;padding-left:1.25rem;margin-bottom:1rem;">
+      <li><strong>Primary</strong> — filled background, maximum visual weight. For the single most important action per screen.</li>
+      <li><strong>Secondary</strong> — outlined, white or card-surface background, medium weight. For alternative actions alongside the primary.</li>
+      <li><strong>Tertiary</strong> — transparent at rest, border, small text, subtle hover wash. For low-hierarchy contextual actions within a detail view. Never competes with primary or secondary.</li>
+    </ul>
+
     <h3>States</h3>
     <div class="example">
       <div class="example-label">Interaction states</div>
@@ -1132,6 +1140,8 @@
 
     <p><strong>Status dot variant:</strong> When the indicator is small (≤12 px) or where an outlined form would be too delicate to read, use a filled dot that shifts color: stone-300/600 at rest, amber-500/400 when active. The dot is always filled — the color alone carries the state change. Place it at the label's leading edge so it reads as an attribute of the row, not a standalone icon.</p>
 
+    <p><strong>Chip / tag variant:</strong> A pill-shaped chip communicates selection state through amber fill when selected; transparent background with stone border at rest. In interactive contexts chips carry standard touch-target height and a color transition. In read-only review contexts — no press handler, no hover — reduce padding by one step to signal static display. Never use a disabled treatment for read-only chips; reduced padding is the signal.</p>
+
     <h3>Touch targets</h3>
     <p>Minimum 44×44px on all tappable elements. Disabled elements are dimmed, never hidden — absence without explanation is confusing. This rule applies to controls that exist but are temporarily unavailable. Controls that only become relevant at a specific state — where their absence is itself informative — may appear contextually. An affordance that disappears when its action is meaningless is clearer than one that persists in a dimmed, unclearable state.</p>
   </section>
@@ -1176,7 +1186,7 @@
     <p style="font-size:0.875rem;color:var(--stone-500);margin-top:1.5rem;font-style:italic;">Motion that draws attention to itself has already failed.</p>
 
     <h3>Active press states</h3>
-    <p>Active press states use opacity dimming (e.g. <code>active:opacity-70</code>), not scale transforms. Scale creates a spatial jolt that contradicts the in-place, calm nature of Calma interactions. The "two steps" of active feedback is felt through opacity or color — never through movement.</p>
+    <p>Active press states use opacity dimming, not scale transforms. Scale creates a spatial jolt that contradicts the in-place, calm nature of Calma interactions. The "two steps" of active feedback is felt through opacity or color — never through movement.</p>
 
     <h3>Collapsible sections</h3>
     <p>When a section's collapse would cause a scroll-position jump (because the page shrinks above the viewport), use a two-phase exit: fade opacity to zero first, then collapse height after a short delay. The layout shift happens while content is already invisible, so no jump is perceived. The total exit duration should remain well under 320 ms.</p>
@@ -1237,6 +1247,26 @@
           <div class="microcopy-col">
             <div class="microcopy-tag prefer">Prefer</div>
             <div class="microcopy-text prefer">Day captured</div>
+          </div>
+        </div>
+        <div class="microcopy-pair">
+          <div class="microcopy-col">
+            <div class="microcopy-tag avoid">Avoid</div>
+            <div class="microcopy-text avoid">Save (new entry)</div>
+          </div>
+          <div class="microcopy-col">
+            <div class="microcopy-tag prefer">Prefer</div>
+            <div class="microcopy-text prefer">Capture / Capturing… / Day captured</div>
+          </div>
+        </div>
+        <div class="microcopy-pair">
+          <div class="microcopy-col">
+            <div class="microcopy-tag avoid">Avoid</div>
+            <div class="microcopy-text avoid">Save (edit)</div>
+          </div>
+          <div class="microcopy-col">
+            <div class="microcopy-tag prefer">Prefer</div>
+            <div class="microcopy-text prefer">Save / Saving… / Saved</div>
           </div>
         </div>
         <div class="microcopy-pair">

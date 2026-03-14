@@ -14,8 +14,8 @@ export default function MomentChip({ label, selected, onToggle }: Props) {
       aria-pressed={selected}
       className={`min-h-[44px] flex items-center rounded-full px-4 py-2 text-sm transition-colors ${
         selected
-          ? "bg-stone-500 dark:bg-stone-300 text-white dark:text-stone-900"
-          : "border border-stone-200 dark:border-stone-700 bg-transparent dark:bg-stone-800 text-stone-500 dark:text-stone-400"
+          ? "bg-amber-50 border border-amber-300 text-amber-800 dark:bg-amber-900/20 dark:border dark:border-amber-700/40 dark:text-amber-300"
+          : "border border-stone-200 dark:border-stone-700 bg-transparent text-stone-500 dark:text-stone-400"
       }`}
     >
       {label}

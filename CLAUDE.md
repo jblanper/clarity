@@ -62,6 +62,7 @@ These translate the Calma spec to concrete Tailwind classes. The spec defines th
 - **Secondary button** — `border-stone-200 bg-white text-stone-700 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300`
 - **Interactive elements** — `rounded-2xl`, `min-h-[44px]` touch targets, `max-w-md` content width
 - **Critical WCAG constraint** — never `text-stone-400` as foreground in light mode (2.4:1, fails AA). Safe only as `dark:` variant.
+- **Tertiary button** — `inline-flex items-center rounded-xl border border-stone-200 dark:border-stone-700 px-4 py-2 text-xs text-stone-600 dark:text-stone-400 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800/50` — transparent bg at rest, border, small text, hover wash. Use for low-hierarchy actions within a detail view (e.g. "Edit this day" in DayDetail).
 - **Errors** — `text-red-700 dark:text-red-400`
 
 ## Navigation Architecture

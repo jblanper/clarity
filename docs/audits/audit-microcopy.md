@@ -1,9 +1,12 @@
 # Microcopy & Tone Audit
 
-Audited files: `CheckInForm.tsx`, `SettingsView.tsx`, `ManageView.tsx`, `HelpView.tsx`, `DayDetail.tsx`, `HistoryView.tsx`, `FrequencyList.tsx`, `BottomNav.tsx`, `CalendarHeatmap.tsx`, `lib/transferData.ts`, `app/layout.tsx`.
-Date: 2026-03-13.
+Generated: 2026-03-14 00:00
 
-Sprint 9 context: Task 5 added "Start at" field labels and `placeholder="0"` to both ManageView numeric habit forms. No other user-facing strings were added or changed in Sprint 9. The HabitToggle redesign (Task 3) and NumberStepper redesign (Task 4) retained existing `aria-label` patterns without introducing new copy.
+Archived previous report → docs/audits/archive/audit-microcopy-2026-03-14.md
+
+Audited files: `CheckInForm.tsx`, `SettingsView.tsx`, `ManageView.tsx`, `HelpView.tsx`, `DayDetail.tsx`, `HistoryView.tsx`, `FrequencyList.tsx`, `BottomNav.tsx`, `CalendarHeatmap.tsx`, `lib/transferData.ts`, `app/layout.tsx`.
+
+Sprint 11 context: Task 2 branched save-button labels on `isEditMode` — new entries now use `"Capture"` / `"Capturing…"` / `"Day captured"`; edit path retains `"Save"` / `"Saving…"` / `"Saved"`. Task 4 replaced the `EDIT` section-label link with `"Edit this day"` tertiary button in DayDetail. No other user-facing strings were changed.
 
 ---
 
@@ -11,11 +14,19 @@ Sprint 9 context: Task 5 added "Start at" field labels and `placeholder="0"` to 
 
 ### Technical language
 
-**None found.** All technical terms from prior sprints remain resolved. ✅
+**None found.** ✅
 
 ### Vague / generic
 
 **None found.** ✅
+
+### Accusatory or guilt-inducing
+
+**None found.** All empty-state messages remain inviting. ✅
+
+### Exclamation marks / ALL CAPS
+
+**None found.** Navigation items use CSS `uppercase` class, not string-level ALL CAPS. ✅
 
 ### Flat / functional phrasing
 
@@ -26,25 +37,22 @@ Sprint 9 context: Task 5 added "Start at" field labels and `placeholder="0"` to 
 
 ---
 
-## 2. New Sprint 9 Copy — "Start at" field
+## 2. Sprint 11 Copy Changes
 
-### Field label
+### Save button labels (CheckInForm.tsx:500–504)
 
-| Location | Current copy | Assessment |
+| Path | idle | saving | confirmed | Assessment |
+|---|---|---|---|---|
+| New entry | `"Capture"` | `"Capturing…"` | `"Day captured"` | ✅ Excellent. Single root verb `capture` carries through all three states. Human and analogue in register. Consistent with Calma tone. |
+| Edit mode | `"Save"` | `"Saving…"` | `"Saved"` | ✅ Appropriate for edit context — precise, brief, no false ceremony. |
+
+The branching is correctly implemented via `isEditMode`. ✅
+
+### "Edit this day" link (DayDetail.tsx:265–267)
+
+| Previous | Current | Assessment |
 |---|---|---|
-| `ManageView.tsx:349` (inline edit) | `Start at · ${editingHabit.unit}` or `"Start at"` when no unit | ✅ Correct Calma dot-separator usage. Dynamic unit suffix is informative without being verbose. |
-| `ManageView.tsx:522` (add-habit form) | `Start at · ${addHabit.unit}` or `"Start at"` when no unit | ✅ Same pattern — consistent between both form paths. |
-
-The Calma dot separator (`·`) is used here as a secondary qualifier, consistent with the established pattern (e.g. `text-xs uppercase tracking-widest` uses `·` in ManageView section dividers). ✅
-
-### Placeholder text
-
-| Location | Current copy | Sprint plan specified | Assessment |
-|---|---|---|---|
-| `ManageView.tsx:355` (inline edit) | `placeholder="0"` | `placeholder="Optional"` | **Low deviation** — `"0"` is technically accurate (field defaults to 0 if blank) but `"Optional"` would better communicate that the field is skippable. Noted in Architecture Review as M1. |
-| `ManageView.tsx:528` (add-habit form) | `placeholder="0"` | `placeholder="Optional"` | **Low deviation** — same issue as above. |
-
-The `"0"` placeholder is not harmful (it matches the implicit default), but it may mislead users into thinking they must enter a value. "Optional" would be clearer. This is a low-severity deviation from the sprint plan spec.
+| `"Edit"` (section-label-styled uppercase link) | `"Edit this day"` (tertiary button) | ✅ More specific and action-oriented. Lowercase reads as a considered phrase, not a heading. Matches Calma's human register. |
 
 ---
 
@@ -52,9 +60,9 @@ The `"0"` placeholder is not harmful (it matches the implicit default), but it m
 
 | Location | Current copy | Assessment |
 |---|---|---|
-| `DayDetail.tsx:166` | "Nothing here yet" | ✅ Inviting. |
+| `DayDetail.tsx:166` | "Nothing here yet" | ✅ Inviting, not accusatory. |
 | `FrequencyList.tsx:110–112` | "Nothing logged in this period" | ✅ Neutral and accurate. |
-| `HistoryView.tsx:161–164` | "Your days will appear here once you start logging." | ✅ Fixed in Sprint 8. |
+| `HistoryView.tsx:88–92` | "Your days will appear here once you start logging." | ✅ Now correctly positioned below the heatmap (Sprint 11 Task 5 fix). |
 
 ---
 
@@ -62,10 +70,12 @@ The `"0"` placeholder is not harmful (it matches the implicit default), but it m
 
 | Location | Current copy | Assessment |
 |---|---|---|
-| `CheckInForm.tsx:503` | "Day captured" | ✅ Perfect. Brief, human. |
-| `CheckInForm.tsx:501` | "Saving..." | ✅ Acceptable in-progress state. |
+| `CheckInForm.tsx:503` | `"Day captured"` (new entry) | ✅ Perfect. Brief, human. |
+| `CheckInForm.tsx:503` | `"Saved"` (edit mode) | ✅ Appropriate. |
+| `CheckInForm.tsx:501` | `"Capturing…"` (new entry saving) | ✅ In-progress state consistent with the root verb. |
+| `CheckInForm.tsx:501` | `"Saving…"` (edit mode saving) | ✅ Unchanged from Sprint 9. |
 | `ManageView.tsx:403, 632` | "Archived. Past entries are preserved." | ✅ Calm and reassuring. |
-| `SettingsView.tsx:248–254` | "{n} days added." / "{n} days were already in your history and weren't changed." | ✅ Fixed in Sprint 8. |
+| `SettingsView.tsx:248–254` | "{n} days added." / "{n} days were already in your history and weren't changed." | ✅ |
 
 ---
 
@@ -80,8 +90,8 @@ All errors follow the pattern: calm, specific, tells the user what to do next.
 | `transferData.ts:122–124` | "No recognisable entries were found in that file." | ✅ |
 | `transferData.ts:167, 178` | "Couldn't read that file — try a different one." | ✅ |
 | `SettingsView.tsx:185–188` | "Couldn't download the backup — try again." | ✅ |
-| `CheckInForm.tsx:190` | "Please enter a name." | Low — functional but cold. |
-| `CheckInForm.tsx:197` | "A moment with that name already exists." | Low — clinical. |
+| `CheckInForm.tsx:190` | "Please enter a name." | Low — functional but cold. Pre-existing. |
+| `CheckInForm.tsx:197` | "A moment with that name already exists." | Low — clinical. Pre-existing. |
 
 ---
 
@@ -90,42 +100,38 @@ All errors follow the pattern: calm, specific, tells the user what to do next.
 | Location | Current copy | Assessment |
 |---|---|---|
 | `CheckInForm.tsx:484` | "Anything about today worth remembering?" | ✅ Warm, open, non-directive. |
-| `CheckInForm.tsx:394` | "e.g. Morning light" | ✅ Fixed in Sprint 8. |
-| `ManageView.tsx:472` | "e.g. Stretching" / "e.g. Running" | ✅ Good. |
-| `ManageView.tsx:501` | "e.g. km, pages, cups" | ✅ Good. |
-| `ManageView.tsx:666` | "e.g. Long walk" | ✅ Good. |
-| `ManageView.tsx:355, 528` | `"0"` (Start at fields, both forms) | Low — see §2 above. Sprint plan specified `"Optional"`. |
+| `CheckInForm.tsx:394` | "e.g. Morning light" | ✅ |
+| `ManageView.tsx:472` | "e.g. Stretching" / "e.g. Running" | ✅ |
+| `ManageView.tsx:501` | "e.g. km, pages, cups" | ✅ |
+| `ManageView.tsx:666` | "e.g. Long walk" | ✅ |
+| `ManageView.tsx:355, 528` | `"0"` (Start at fields, both forms) | Low — Sprint plan specified `"Optional"`. Pre-existing carry-forward. |
 
 ---
 
-## 7. ARIA Labels — Sprint 9 components
+## 7. ARIA Labels
 
 | Element | Location | Label | Assessment |
 |---|---|---|---|
-| HabitToggle full-row button | HabitToggle.tsx:27 | `aria-label={label}` — resolves to the habit label string (e.g. "Morning walk") | ✅ Accurate. Combined with `role="switch"` and `aria-checked`, screen readers announce "Morning walk, switch, on/off". |
-| NumberStepper pill button | NumberStepper.tsx:65 | `aria-label={label}` — resolves to the habit label (e.g. "Sleep") | ✅ Accurate for the control context. `role="spinbutton"` and `aria-valuenow` provide the value. |
-| NumberStepper decrement button | NumberStepper.tsx:53 | `` aria-label={`Decrease ${label}`} `` — e.g. "Decrease Sleep" | ✅ Clear, actionable. |
+| HabitToggle full-row button | HabitToggle.tsx:27 | `aria-label={label}` | ✅ |
+| NumberStepper pill button | NumberStepper.tsx:65 | `aria-label={label}` | ✅ |
+| NumberStepper decrement button | NumberStepper.tsx:53 | `` aria-label={`Decrease ${label}`} `` | ✅ |
+| MomentChip | MomentChip.tsx:14 | `aria-pressed={selected}` | ✅ State communicated to screen readers. |
+| DayDetail close button | DayDetail.tsx:149 | `aria-label="Close"` | ✅ |
+| DayDetail dialog | DayDetail.tsx:126 | `aria-label={\`Details for ${date}\`}` | ✅ Specific. |
 
 ---
 
-## 8. Joy by Default Copy
+## 8. Consistency Check
 
-| Location | Current copy | Assessment |
-|---|---|---|
-| `ManageView.tsx:288` (active habits list) | "Brings joy by default" / "Tap to mark as joyful by default" | ✅ Clear and inviting. |
-| `ManageView.tsx:490` (add-habit form) | "Brings joy by default" / "Joy is marked separately" | ✅ Fixed in Sprint 8. |
+All terminology (Moments, Habits, Reflection, Archive/Restore, History, Start at, Highlights) is internally consistent. ✅
 
----
+"Highlights" is now used in both CheckInForm (Joy section heading) and DayDetail (joy-marked habits display). The same word for the same concept across both surfaces. ✅
 
-## 9. Consistency Check
+New entry save flow: idle → `"Capture"` → `"Capturing…"` → `"Day captured"`. Single root verb. ✅
 
-All terminology (Moments, Habits, Reflection, Archive/Restore, History, Start at) is internally consistent. ✅
+Edit mode save flow: idle → `"Save"` → `"Saving…"` → `"Saved"`. ✅
 
-"Start at" is used verbatim in both ManageView forms and in the NumberStepper's `startAt` prop documentation. ✅
-
-Navigation items render consistently via CSS `uppercase` class across all pages. ✅
-
-Save flow states: idle → "Save" → "Saving..." → "Day captured". ✅
+"Edit this day" vs earlier "Edit" label: the expanded phrase is more deliberate and contextually specific. ✅
 
 ---
 
@@ -143,4 +149,4 @@ Save flow states: idle → "Save" → "Saving..." → "Day captured". ✅
 
 **0 high · 0 medium · 3 low**
 
-Sprint 9 introduced 1 new low finding (ManageView "Start at" placeholder `"0"` vs sprint-plan-specified `"Optional"`, in both form paths). The 2 pre-existing low findings (CheckInForm inline validation messages) carry forward. No new medium or high findings.
+Sprint 11 introduced no new findings. The "Capture" label branching is a net improvement — unifies the three-state progression around a single root verb and strengthens Calma's human, analogue register. The "Edit this day" label upgrade is a minor improvement. Carry-forward lows (3) unchanged from Sprint 9 baseline.

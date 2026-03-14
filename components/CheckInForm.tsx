@@ -392,7 +392,7 @@ export default function CheckInForm({ date }: Props) {
                       if (e.key === "Escape") dismissAddMoment();
                     }}
                     placeholder="e.g. Morning light"
-                    className="flex-1 rounded-full border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-2 text-sm text-stone-700 dark:text-stone-300 placeholder-stone-400 dark:placeholder-stone-600 focus:border-stone-500 dark:focus:border-stone-500 focus:outline-none"
+                    className="flex-1 min-h-[44px] rounded-full border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-2 text-sm text-stone-700 dark:text-stone-300 placeholder-stone-400 dark:placeholder-stone-600 focus:border-stone-500 dark:focus:border-stone-500 focus:outline-none"
                   />
                   <button
                     type="button"
@@ -483,7 +483,7 @@ export default function CheckInForm({ date }: Props) {
           }
           placeholder="Anything about today worth remembering?"
           rows={4}
-          className="w-full resize-none rounded-2xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-3 text-sm font-light text-stone-700 dark:text-stone-300 placeholder-stone-400 dark:placeholder-stone-600 focus:border-stone-500 dark:focus:border-stone-500 focus:outline-none"
+          className="w-full resize-none rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-3 text-sm font-light text-stone-700 dark:text-stone-300 placeholder-stone-400 dark:placeholder-stone-600 focus:border-stone-500 dark:focus:border-stone-500 focus:outline-none"
         />
       </section>
 
@@ -498,10 +498,10 @@ export default function CheckInForm({ date }: Props) {
         }`}
       >
         {saveState === "saving"
-          ? "Saving..."
+          ? (isEditMode ? "Saving…" : "Capturing…")
           : saveState === "confirmed"
-            ? "Day captured"
-            : "Save"}
+            ? (isEditMode ? "Saved" : "Day captured")
+            : (isEditMode ? "Save" : "Capture")}
       </button>
 
     </form>
