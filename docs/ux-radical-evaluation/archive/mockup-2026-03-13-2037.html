@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UX Mockup — Manage Page — 2026-03-13</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['system-ui', '-apple-system', 'sans-serif'] },
+          colors: {
+            stone: {
+              50: '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4', 300: '#d6d3d1',
+              400: '#a8a29e', 500: '#78716c', 600: '#57534e', 700: '#44403c',
+              800: '#292524', 900: '#1c1917'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    /* Blossom SVG inline styles */
+    .blossom-filled { color: #d97706; }
+    .blossom-outline { color: #a8a29e; }
+    .blossom-outline-dark { color: #57534e; }
+    body { font-family: system-ui, -apple-system, sans-serif; }
+  </style>
+</head>
+<body class="bg-stone-100 min-h-screen">
+
+  <!-- Nav sidebar -->
+  <div class="flex min-h-screen">
+    <nav class="w-56 shrink-0 bg-white border-r border-stone-200 p-5 sticky top-0 h-screen overflow-y-auto">
+      <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-5">Manage page</p>
+      <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-2 mt-4">Proposals</p>
+      <ul class="space-y-1">
+        <li><a href="#p1-touch-targets" class="block text-sm text-stone-600 hover:text-stone-900 py-1">P1 — Touch targets (buttons)</a></li>
+        <li><a href="#p2-input-heights" class="block text-sm text-stone-600 hover:text-stone-900 py-1">P2 — Input heights</a></li>
+        <li><a href="#p3-joy-inline" class="block text-sm text-stone-600 hover:text-stone-900 py-1">P3 — Joy inline icon</a></li>
+        <li><a href="#p4-row-dividers" class="block text-sm text-stone-600 hover:text-stone-900 py-1">P4 — Row dividers</a></li>
+        <li><a href="#p5-type-selector" class="block text-sm text-stone-600 hover:text-stone-900 py-1">P5 — Type selector card</a></li>
+        <li><a href="#combined" class="block text-sm text-stone-700 font-medium hover:text-stone-900 py-1 mt-2">Combined view</a></li>
+      </ul>
+      <div class="mt-8 pt-4 border-t border-stone-100">
+        <p class="text-xs text-stone-400 mb-2">Calma tokens</p>
+        <div class="space-y-1 text-xs text-stone-500">
+          <div>bg: #fafaf9 / #1c1917</div>
+          <div>border: stone-200 / stone-700</div>
+          <div>divider: stone-100 / stone-800</div>
+          <div>accent: amber-700 / amber-500</div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main content -->
+    <main class="flex-1 p-8 overflow-y-auto">
+
+      <!-- ══════════════════════════════════════════════ -->
+      <!-- P1 — Touch targets: Edit / Archive buttons    -->
+      <!-- ══════════════════════════════════════════════ -->
+      <section id="p1-touch-targets" class="mb-16">
+        <div class="mb-6">
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-1">Proposal 1</p>
+          <h2 class="text-xl font-light text-stone-800">Touch targets — Edit / Archive buttons</h2>
+          <p class="text-sm text-stone-500 mt-2">Adding <code class="bg-stone-100 px-1 rounded text-xs">min-h-[44px] inline-flex items-center</code> to action buttons. Before: ~18px tap area. After: 44px minimum.</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-6">
+          <!-- Light / Before -->
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-3">Before — Light</p>
+            <div class="bg-stone-50 rounded-2xl p-5 max-w-sm border border-stone-200">
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Habits</p>
+              <div class="space-y-0.5">
+                <!-- Row: too small buttons -->
+                <div class="flex items-center justify-between gap-2 py-2">
+                  <span class="text-sm text-stone-700">Meditation</span>
+                  <div class="flex gap-3">
+                    <button class="text-xs text-stone-500 underline-offset-2 hover:underline">Edit</button>
+                    <button class="text-xs text-amber-700 underline-offset-2 hover:underline">Archive</button>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between gap-2 py-2">
+                  <span class="text-sm text-stone-700">Exercise</span>
+                  <div class="flex gap-3">
+                    <button class="text-xs text-stone-500 underline-offset-2 hover:underline">Edit</button>
+                    <button class="text-xs text-amber-700 underline-offset-2 hover:underline">Archive</button>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between gap-2 py-2">
+                  <span class="text-sm text-stone-700">Sleep <span class="text-xs text-stone-500">hrs</span></span>
+                  <div class="flex gap-3">
+                    <button class="text-xs text-stone-500 underline-offset-2 hover:underline">Edit</button>
+                    <button class="text-xs text-amber-700 underline-offset-2 hover:underline">Archive</button>
+                  </div>
+                </div>
+              </div>
+              <!-- Red indicator showing tap area -->
+              <div class="mt-3 flex items-center gap-2">
+                <div class="h-px flex-1 bg-red-200"></div>
+                <span class="text-xs text-red-400">~18px tap area</span>
+                <div class="h-px flex-1 bg-red-200"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Light / After -->
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-3">After — Light</p>
+            <div class="bg-stone-50 rounded-2xl p-5 max-w-sm border border-stone-200">
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Habits</p>
+              <div class="divide-y divide-stone-100">
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-700">Meditation</span>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-500 hover:underline underline-offset-2 transition-colors">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-700 hover:underline underline-offset-2 transition-colors">Archive</button>
+                  </div>
+                </div>
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-700">Exercise</span>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-500 hover:underline underline-offset-2 transition-colors">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-700 hover:underline underline-offset-2 transition-colors">Archive</button>
+                  </div>
+                </div>
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-700">Sleep <span class="text-xs text-stone-500">hrs</span></span>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-500 hover:underline underline-offset-2 transition-colors">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-700 hover:underline underline-offset-2 transition-colors">Archive</button>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3 flex items-center gap-2">
+                <div class="h-px flex-1 bg-green-200"></div>
+                <span class="text-xs text-green-500">44px tap area ✓</span>
+                <div class="h-px flex-1 bg-green-200"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dark / Before -->
+          <div class="dark">
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-3">Before — Dark</p>
+            <div class="bg-stone-900 rounded-2xl p-5 max-w-sm border border-stone-700">
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Habits</p>
+              <div class="space-y-0.5">
+                <div class="flex items-center justify-between gap-2 py-2">
+                  <span class="text-sm text-stone-300">Meditation</span>
+                  <div class="flex gap-3">
+                    <button class="text-xs text-stone-400 hover:underline underline-offset-2">Edit</button>
+                    <button class="text-xs text-amber-500 hover:underline underline-offset-2">Archive</button>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between gap-2 py-2">
+                  <span class="text-sm text-stone-300">Exercise</span>
+                  <div class="flex gap-3">
+                    <button class="text-xs text-stone-400 hover:underline underline-offset-2">Edit</button>
+                    <button class="text-xs text-amber-500 hover:underline underline-offset-2">Archive</button>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between gap-2 py-2">
+                  <span class="text-sm text-stone-300">Sleep <span class="text-xs text-stone-500">hrs</span></span>
+                  <div class="flex gap-3">
+                    <button class="text-xs text-stone-400 hover:underline underline-offset-2">Edit</button>
+                    <button class="text-xs text-amber-500 hover:underline underline-offset-2">Archive</button>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3 flex items-center gap-2">
+                <div class="h-px flex-1 bg-red-900"></div>
+                <span class="text-xs text-red-600">~18px tap area</span>
+                <div class="h-px flex-1 bg-red-900"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dark / After -->
+          <div class="dark">
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-3">After — Dark</p>
+            <div class="bg-stone-900 rounded-2xl p-5 max-w-sm border border-stone-700">
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Habits</p>
+              <div class="divide-y divide-stone-800">
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-300">Meditation</span>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-400 hover:underline underline-offset-2 transition-colors">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-500 hover:underline underline-offset-2 transition-colors">Archive</button>
+                  </div>
+                </div>
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-300">Exercise</span>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-400 hover:underline underline-offset-2 transition-colors">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-500 hover:underline underline-offset-2 transition-colors">Archive</button>
+                  </div>
+                </div>
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-300">Sleep <span class="text-xs text-stone-500">hrs</span></span>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-400 hover:underline underline-offset-2 transition-colors">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-500 hover:underline underline-offset-2 transition-colors">Archive</button>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3 flex items-center gap-2">
+                <div class="h-px flex-1 bg-green-900"></div>
+                <span class="text-xs text-green-600">44px tap area ✓</span>
+                <div class="h-px flex-1 bg-green-900"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════════ -->
+      <!-- P2 — Input and Save button heights            -->
+      <!-- ══════════════════════════════════════════════ -->
+      <section id="p2-input-heights" class="mb-16">
+        <div class="mb-6">
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-1">Proposal 2</p>
+          <h2 class="text-xl font-light text-stone-800">Input and Save button heights</h2>
+          <p class="text-sm text-stone-500 mt-2">Adding <code class="bg-stone-100 px-1 rounded text-xs">min-h-[44px]</code> to TEXT_INPUT and SAVE_BTN. Save button text also bumps from <code class="bg-stone-100 px-1 rounded text-xs">text-xs</code> to <code class="bg-stone-100 px-1 rounded text-xs">text-sm</code>.</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-6">
+          <!-- Light / Before -->
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-3">Before — Light</p>
+            <div class="bg-stone-50 rounded-2xl p-4 max-w-sm border border-stone-200 space-y-3">
+              <div>
+                <label class="mb-1 block text-xs text-stone-500">Label</label>
+                <input type="text" value="Sleep" readonly class="w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-800 focus:outline-none" />
+                <p class="text-xs text-red-400 mt-1">~36px height</p>
+              </div>
+              <div>
+                <label class="mb-1 block text-xs text-stone-500">Unit</label>
+                <input type="text" value="hrs" readonly class="w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-800 focus:outline-none" />
+              </div>
+              <div class="flex gap-3 pt-1">
+                <button class="rounded-xl bg-stone-800 px-4 py-2 text-xs text-white">Save</button>
+                <button class="text-xs text-stone-500">Cancel</button>
+              </div>
+              <p class="text-xs text-red-400">Save button: ~28px height</p>
+            </div>
+          </div>
+
+          <!-- Light / After -->
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-3">After — Light</p>
+            <div class="bg-stone-50 rounded-2xl p-4 max-w-sm border border-stone-200 space-y-3">
+              <div>
+                <label class="mb-1 block text-xs text-stone-500">Label</label>
+                <input type="text" value="Sleep" readonly class="w-full min-h-[44px] rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-800 focus:outline-none" />
+                <p class="text-xs text-green-500 mt-1">44px ✓</p>
+              </div>
+              <div>
+                <label class="mb-1 block text-xs text-stone-500">Unit</label>
+                <input type="text" value="hrs" readonly class="w-full min-h-[44px] rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-800 focus:outline-none" />
+              </div>
+              <div class="flex gap-3 pt-1 items-center">
+                <button class="inline-flex items-center min-h-[44px] rounded-xl bg-stone-800 px-4 text-sm text-white">Save</button>
+                <button class="inline-flex items-center min-h-[44px] text-sm text-stone-500">Cancel</button>
+              </div>
+              <p class="text-xs text-green-500">Save button: 44px ✓ · text-sm ✓</p>
+            </div>
+          </div>
+
+          <!-- Dark / Before -->
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-3">Before — Dark</p>
+            <div class="bg-stone-800 rounded-2xl p-4 max-w-sm border border-stone-700 space-y-3" style="background:rgba(41,37,36,0.5);">
+              <div>
+                <label class="mb-1 block text-xs text-stone-400">Label</label>
+                <input type="text" value="Sleep" readonly class="w-full rounded-xl border border-stone-700 bg-stone-900 px-3 py-2 text-sm text-stone-200 focus:outline-none" />
+                <p class="text-xs text-red-600 mt-1">~36px · border barely visible</p>
+              </div>
+              <div>
+                <label class="mb-1 block text-xs text-stone-400">Unit</label>
+                <input type="text" value="hrs" readonly class="w-full rounded-xl border border-stone-700 bg-stone-900 px-3 py-2 text-sm text-stone-200 focus:outline-none" />
+              </div>
+              <div class="flex gap-3 pt-1">
+                <button class="rounded-xl bg-stone-200 px-4 py-2 text-xs text-stone-900">Save</button>
+                <button class="text-xs text-stone-400">Cancel</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dark / After -->
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-3">After — Dark</p>
+            <div class="rounded-2xl p-4 max-w-sm border border-stone-700 space-y-3" style="background:rgba(41,37,36,0.5);">
+              <div>
+                <label class="mb-1 block text-xs text-stone-400">Label</label>
+                <input type="text" value="Sleep" readonly class="w-full min-h-[44px] rounded-xl border border-stone-600 bg-stone-900 px-3 py-2 text-sm text-stone-200 focus:outline-none" />
+                <p class="text-xs text-green-600 mt-1">44px ✓ · border bumped to stone-600 on stone-800/50</p>
+              </div>
+              <div>
+                <label class="mb-1 block text-xs text-stone-400">Unit</label>
+                <input type="text" value="hrs" readonly class="w-full min-h-[44px] rounded-xl border border-stone-600 bg-stone-900 px-3 py-2 text-sm text-stone-200 focus:outline-none" />
+              </div>
+              <div class="flex gap-3 pt-1 items-center">
+                <button class="inline-flex items-center min-h-[44px] rounded-xl bg-stone-200 px-4 text-sm text-stone-900">Save</button>
+                <button class="inline-flex items-center min-h-[44px] text-sm text-stone-400">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 p-3 bg-amber-50 rounded-xl border border-amber-100 max-w-xl">
+          <p class="text-xs text-amber-800">Note on dark mode input border: the report flags that <code class="bg-amber-100 px-1 rounded">stone-700</code> is nearly invisible on <code class="bg-amber-100 px-1 rounded">stone-800/50</code>. Bumping to <code class="bg-amber-100 px-1 rounded">stone-600</code> for the inline form context is a pragmatic fix within the spirit of the Calma spec.</p>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════════ -->
+      <!-- P3 — Joy-by-default inline icon              -->
+      <!-- ══════════════════════════════════════════════ -->
+      <section id="p3-joy-inline" class="mb-16">
+        <div class="mb-6">
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-1">Proposal 3</p>
+          <h2 class="text-xl font-light text-stone-800">Joy-by-default — inline icon</h2>
+          <p class="text-sm text-stone-500 mt-2">Remove the verbose second-line button. Move the blossom toggle to an inline icon in the label row. All rows become single-line; visual noise drops significantly.</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-6">
+          <!-- Light / Before -->
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-3">Before — Light (dense, uneven)</p>
+            <div class="bg-stone-50 rounded-2xl p-5 max-w-sm border border-stone-200">
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Habits</p>
+              <div class="space-y-0.5">
+                <div class="flex items-center justify-between gap-2 py-2">
+                  <div class="flex flex-col gap-0.5">
+                    <span class="text-sm text-stone-700">Meditation</span>
+                    <button class="self-start text-left">
+                      <span class="flex items-center gap-1 text-xs text-amber-600">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.5 2 7 5 7 7c-2.5 0-5 1.5-5 4.5 0 2 1.5 4 4.5 5l5.5 5 5.5-5c3-.5 4.5-3 4.5-5C22 8.5 19.5 7 17 7c0-2-1.5-5-5-5z"/></svg>
+                        Brings joy by default
+                      </span>
+                    </button>
+                  </div>
+                  <div class="flex gap-3">
+                    <button class="text-xs text-stone-500">Edit</button>
+                    <button class="text-xs text-amber-700">Archive</button>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between gap-2 py-2">
+                  <div class="flex flex-col gap-0.5">
+                    <span class="text-sm text-stone-700">Exercise</span>
+                    <button class="self-start text-left">
+                      <span class="flex items-center gap-1 text-xs text-stone-500">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.5 2 7 5 7 7c-2.5 0-5 1.5-5 4.5 0 2 1.5 4 4.5 5l5.5 5 5.5-5c3-.5 4.5-3 4.5-5C22 8.5 19.5 7 17 7c0-2-1.5-5-5-5z"/></svg>
+                        Tap to mark as joyful by default
+                      </span>
+                    </button>
+                  </div>
+                  <div class="flex gap-3">
+                    <button class="text-xs text-stone-500">Edit</button>
+                    <button class="text-xs text-amber-700">Archive</button>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between gap-2 py-2">
+                  <span class="text-sm text-stone-700">Sleep <span class="text-xs text-stone-500">hrs</span></span>
+                  <div class="flex gap-3">
+                    <button class="text-xs text-stone-500">Edit</button>
+                    <button class="text-xs text-amber-700">Archive</button>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between gap-2 py-2">
+                  <div class="flex flex-col gap-0.5">
+                    <span class="text-sm text-stone-700">Journaling</span>
+                    <button class="self-start text-left">
+                      <span class="flex items-center gap-1 text-xs text-stone-500">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.5 2 7 5 7 7c-2.5 0-5 1.5-5 4.5 0 2 1.5 4 4.5 5l5.5 5 5.5-5c3-.5 4.5-3 4.5-5C22 8.5 19.5 7 17 7c0-2-1.5-5-5-5z"/></svg>
+                        Tap to mark as joyful by default
+                      </span>
+                    </button>
+                  </div>
+                  <div class="flex gap-3">
+                    <button class="text-xs text-stone-500">Edit</button>
+                    <button class="text-xs text-amber-700">Archive</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Light / After -->
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-3">After — Light (single-line, clean)</p>
+            <div class="bg-stone-50 rounded-2xl p-5 max-w-sm border border-stone-200">
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Habits</p>
+              <div class="divide-y divide-stone-100">
+                <!-- Active joy -->
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-700 flex-1">Meditation</span>
+                  <!-- Blossom: filled amber -->
+                  <button class="inline-flex items-center min-h-[44px] px-2 text-amber-500 transition-colors" title="Joy by default — tap to remove">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.5 2 7 5 7 7c-2.5 0-5 1.5-5 4.5 0 2 1.5 4 4.5 5l5.5 5 5.5-5c3-.5 4.5-3 4.5-5C22 8.5 19.5 7 17 7c0-2-1.5-5-5-5z"/></svg>
+                  </button>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-500 hover:underline">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-700 hover:underline">Archive</button>
+                  </div>
+                </div>
+                <!-- Inactive joy -->
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-700 flex-1">Exercise</span>
+                  <!-- Blossom: outline stone -->
+                  <button class="inline-flex items-center min-h-[44px] px-2 text-stone-300 hover:text-amber-400 transition-colors" title="Mark as joy by default">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.5 2 7 5 7 7c-2.5 0-5 1.5-5 4.5 0 2 1.5 4 4.5 5l5.5 5 5.5-5c3-.5 4.5-3 4.5-5C22 8.5 19.5 7 17 7c0-2-1.5-5-5-5z"/></svg>
+                  </button>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-500 hover:underline">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-700 hover:underline">Archive</button>
+                  </div>
+                </div>
+                <!-- Numeric — no blossom -->
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-700">Sleep <span class="text-xs text-stone-500">hrs</span></span>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-500 hover:underline">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-700 hover:underline">Archive</button>
+                  </div>
+                </div>
+                <!-- Inactive joy -->
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-700 flex-1">Journaling</span>
+                  <button class="inline-flex items-center min-h-[44px] px-2 text-stone-300 hover:text-amber-400 transition-colors" title="Mark as joy by default">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.5 2 7 5 7 7c-2.5 0-5 1.5-5 4.5 0 2 1.5 4 4.5 5l5.5 5 5.5-5c3-.5 4.5-3 4.5-5C22 8.5 19.5 7 17 7c0-2-1.5-5-5-5z"/></svg>
+                  </button>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-500 hover:underline">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-700 hover:underline">Archive</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dark / After -->
+          <div class="col-span-2">
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-3">After — Dark</p>
+            <div class="bg-stone-900 rounded-2xl p-5 max-w-sm border border-stone-700">
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Habits</p>
+              <div class="divide-y divide-stone-800">
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-300 flex-1">Meditation</span>
+                  <button class="inline-flex items-center min-h-[44px] px-2 text-amber-400 transition-colors">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.5 2 7 5 7 7c-2.5 0-5 1.5-5 4.5 0 2 1.5 4 4.5 5l5.5 5 5.5-5c3-.5 4.5-3 4.5-5C22 8.5 19.5 7 17 7c0-2-1.5-5-5-5z"/></svg>
+                  </button>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-400 hover:underline">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-500 hover:underline">Archive</button>
+                  </div>
+                </div>
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-300 flex-1">Exercise</span>
+                  <button class="inline-flex items-center min-h-[44px] px-2 text-stone-700 hover:text-amber-500 transition-colors">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.5 2 7 5 7 7c-2.5 0-5 1.5-5 4.5 0 2 1.5 4 4.5 5l5.5 5 5.5-5c3-.5 4.5-3 4.5-5C22 8.5 19.5 7 17 7c0-2-1.5-5-5-5z"/></svg>
+                  </button>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-400 hover:underline">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-500 hover:underline">Archive</button>
+                  </div>
+                </div>
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-300">Sleep <span class="text-xs text-stone-500">hrs</span></span>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-400 hover:underline">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-500 hover:underline">Archive</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════════ -->
+      <!-- P4 — Row dividers                            -->
+      <!-- ══════════════════════════════════════════════ -->
+      <section id="p4-row-dividers" class="mb-16">
+        <div class="mb-6">
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-1">Proposal 4</p>
+          <h2 class="text-xl font-light text-stone-800">Row dividers</h2>
+          <p class="text-sm text-stone-500 mt-2">Replace <code class="bg-stone-100 px-1 rounded text-xs">space-y-0.5</code> with <code class="bg-stone-100 px-1 rounded text-xs">divide-y divide-stone-100</code>. Uses the Calma "Section divider" border token. Rows become clearly distinct without adding visual weight.</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-3">Before — space-y-0.5 (2px gap)</p>
+            <div class="bg-stone-50 rounded-2xl p-5 max-w-sm border border-stone-200">
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Moments</p>
+              <div class="space-y-0.5">
+                <div class="flex items-center justify-between gap-2 py-2">
+                  <span class="text-sm text-stone-700">Good meal</span>
+                  <div class="flex gap-3"><button class="text-xs text-stone-500">Edit</button><button class="text-xs text-amber-700">Archive</button></div>
+                </div>
+                <div class="flex items-center justify-between gap-2 py-2">
+                  <span class="text-sm text-stone-700">Interesting conversation</span>
+                  <div class="flex gap-3"><button class="text-xs text-stone-500">Edit</button><button class="text-xs text-amber-700">Archive</button></div>
+                </div>
+                <div class="flex items-center justify-between gap-2 py-2">
+                  <span class="text-sm text-stone-700">Inspiring song</span>
+                  <div class="flex gap-3"><button class="text-xs text-stone-500">Edit</button><button class="text-xs text-amber-700">Archive</button></div>
+                </div>
+                <div class="flex items-center justify-between gap-2 py-2">
+                  <span class="text-sm text-stone-700">Time in nature</span>
+                  <div class="flex gap-3"><button class="text-xs text-stone-500">Edit</button><button class="text-xs text-amber-700">Archive</button></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-3">After — divide-stone-100</p>
+            <div class="bg-stone-50 rounded-2xl p-5 max-w-sm border border-stone-200">
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Moments</p>
+              <div class="divide-y divide-stone-100">
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-700">Good meal</span>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-500 hover:underline">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-700 hover:underline">Archive</button>
+                  </div>
+                </div>
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-700">Interesting conversation</span>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-500 hover:underline">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-700 hover:underline">Archive</button>
+                  </div>
+                </div>
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-700">Inspiring song</span>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-500 hover:underline">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-700 hover:underline">Archive</button>
+                  </div>
+                </div>
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-700">Time in nature</span>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-500 hover:underline">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-700 hover:underline">Archive</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dark -->
+          <div class="col-span-2">
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-3">After — Dark (divide-stone-800)</p>
+            <div class="bg-stone-900 rounded-2xl p-5 max-w-sm border border-stone-700">
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Moments</p>
+              <div class="divide-y divide-stone-800">
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-300">Good meal</span>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-400 hover:underline">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-500 hover:underline">Archive</button>
+                  </div>
+                </div>
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-300">Interesting conversation</span>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-400 hover:underline">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-500 hover:underline">Archive</button>
+                  </div>
+                </div>
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-300">Inspiring song</span>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-400 hover:underline">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-500 hover:underline">Archive</button>
+                  </div>
+                </div>
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-300">Time in nature</span>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-400 hover:underline">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-500 hover:underline">Archive</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════════ -->
+      <!-- P5 — Type selector card                      -->
+      <!-- ══════════════════════════════════════════════ -->
+      <section id="p5-type-selector" class="mb-16">
+        <div class="mb-6">
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-1">Proposal 5</p>
+          <h2 class="text-xl font-light text-stone-800">Type selector — card container</h2>
+          <p class="text-sm text-stone-500 mt-2">Wrapping "What kind of habit?" in the INLINE_FORM card with secondary button choices. Creates visual continuity with the edit and add forms.</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-6">
+          <!-- Light / Before -->
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-3">Before — Light (orphaned text)</p>
+            <div class="bg-stone-50 rounded-2xl p-5 max-w-sm border border-stone-200">
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Habits</p>
+              <div class="divide-y divide-stone-100 mb-3">
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-700">Coffee <span class="text-xs text-stone-500">cups</span></span>
+                  <div class="flex gap-3"><button class="text-xs text-stone-500">Edit</button><button class="text-xs text-amber-700">Archive</button></div>
+                </div>
+              </div>
+              <!-- Orphaned type selector -->
+              <div class="mt-3 space-y-2">
+                <p class="text-xs text-stone-500">What kind of habit?</p>
+                <div class="flex gap-5">
+                  <button class="text-sm text-stone-600 hover:underline underline-offset-4">Yes / No</button>
+                  <button class="text-sm text-stone-600 hover:underline underline-offset-4">Number</button>
+                </div>
+                <button class="text-xs text-stone-500">Cancel</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Light / After -->
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-3">After — Light (card container)</p>
+            <div class="bg-stone-50 rounded-2xl p-5 max-w-sm border border-stone-200">
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Habits</p>
+              <div class="divide-y divide-stone-100 mb-3">
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-700">Coffee <span class="text-xs text-stone-500">cups</span></span>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-500 hover:underline">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-700 hover:underline">Archive</button>
+                  </div>
+                </div>
+              </div>
+              <!-- Card container for type picker -->
+              <div class="mt-3 rounded-2xl border border-stone-200 bg-white px-4 py-4 space-y-3">
+                <p class="text-xs text-stone-500">What kind of habit?</p>
+                <div class="flex gap-3">
+                  <button class="rounded-xl border border-stone-200 bg-white px-4 min-h-[44px] text-sm text-stone-700 hover:bg-stone-50 transition-colors">Yes / No</button>
+                  <button class="rounded-xl border border-stone-200 bg-white px-4 min-h-[44px] text-sm text-stone-700 hover:bg-stone-50 transition-colors">Number</button>
+                </div>
+                <button class="inline-flex items-center min-h-[44px] text-sm text-stone-500 hover:text-stone-700 transition-colors">Cancel</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dark / After -->
+          <div class="col-span-2">
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-3">After — Dark</p>
+            <div class="bg-stone-900 rounded-2xl p-5 max-w-sm border border-stone-700">
+              <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Habits</p>
+              <div class="divide-y divide-stone-800 mb-3">
+                <div class="flex min-h-[44px] items-center justify-between gap-2">
+                  <span class="text-sm text-stone-300">Coffee <span class="text-xs text-stone-500">cups</span></span>
+                  <div class="flex gap-1">
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-400 hover:underline">Edit</button>
+                    <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-500 hover:underline">Archive</button>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3 rounded-2xl border border-stone-700 px-4 py-4 space-y-3" style="background:rgba(41,37,36,0.5);">
+                <p class="text-xs text-stone-400">What kind of habit?</p>
+                <div class="flex gap-3">
+                  <button class="rounded-xl border border-stone-700 bg-stone-900 px-4 min-h-[44px] text-sm text-stone-300 hover:bg-stone-800 transition-colors">Yes / No</button>
+                  <button class="rounded-xl border border-stone-700 bg-stone-900 px-4 min-h-[44px] text-sm text-stone-300 hover:bg-stone-800 transition-colors">Number</button>
+                </div>
+                <button class="inline-flex items-center min-h-[44px] text-sm text-stone-400 hover:text-stone-200 transition-colors">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════════ -->
+      <!-- Combined view                                -->
+      <!-- ══════════════════════════════════════════════ -->
+      <section id="combined" class="mb-16">
+        <div class="mb-6">
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-1">All proposals combined</p>
+          <h2 class="text-xl font-light text-stone-800">Full page — before & after</h2>
+          <p class="text-sm text-stone-500 mt-2">P1 + P2 + P3 + P4 applied together. The page becomes scannable, breathes, and every tap target is reachable.</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-6">
+          <!-- Light combined before -->
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-3">Before — Light</p>
+            <div class="bg-white rounded-2xl p-6 max-w-sm border border-stone-200 shadow-sm">
+              <div class="flex items-center justify-between mb-6">
+                <h1 class="text-xl font-light tracking-widest text-stone-800">Manage</h1>
+                <span class="text-xs uppercase tracking-widest text-stone-600">← Settings</span>
+              </div>
+              <div class="mb-2">
+                <a href="#" class="text-xs text-stone-600 underline-offset-4 hover:underline">Jump to Moments ↓</a>
+              </div>
+              <div class="mb-6">
+                <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Habits</p>
+                <div class="space-y-0.5">
+                  <div class="flex items-center justify-between gap-2 py-2">
+                    <div>
+                      <div class="text-sm text-stone-700">Meditation</div>
+                      <div class="flex items-center gap-1 text-xs text-amber-600 mt-0.5">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.5 2 7 5 7 7c-2.5 0-5 1.5-5 4.5 0 2 1.5 4 4.5 5l5.5 5 5.5-5c3-.5 4.5-3 4.5-5C22 8.5 19.5 7 17 7c0-2-1.5-5-5-5z"/></svg>
+                        Brings joy by default
+                      </div>
+                    </div>
+                    <div class="flex gap-3 shrink-0">
+                      <button class="text-xs text-stone-500">Edit</button>
+                      <button class="text-xs text-amber-700">Archive</button>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between gap-2 py-2">
+                    <div>
+                      <div class="text-sm text-stone-700">Exercise</div>
+                      <div class="flex items-center gap-1 text-xs text-stone-400 mt-0.5">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.5 2 7 5 7 7c-2.5 0-5 1.5-5 4.5 0 2 1.5 4 4.5 5l5.5 5 5.5-5c3-.5 4.5-3 4.5-5C22 8.5 19.5 7 17 7c0-2-1.5-5-5-5z"/></svg>
+                        Tap to mark as joyful by default
+                      </div>
+                    </div>
+                    <div class="flex gap-3 shrink-0">
+                      <button class="text-xs text-stone-500">Edit</button>
+                      <button class="text-xs text-amber-700">Archive</button>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between gap-2 py-2">
+                    <span class="text-sm text-stone-700">Sleep <span class="text-xs text-stone-500">hrs</span></span>
+                    <div class="flex gap-3 shrink-0">
+                      <button class="text-xs text-stone-500">Edit</button>
+                      <button class="text-xs text-amber-700">Archive</button>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between gap-2 py-2">
+                    <span class="text-sm text-stone-700">Water <span class="text-xs text-stone-500">glasses</span></span>
+                    <div class="flex gap-3 shrink-0">
+                      <button class="text-xs text-stone-500">Edit</button>
+                      <button class="text-xs text-amber-700">Archive</button>
+                    </div>
+                  </div>
+                </div>
+                <button class="mt-3 text-sm text-stone-500 hover:underline">+ Add habit</button>
+              </div>
+              <div>
+                <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Moments</p>
+                <div class="space-y-0.5">
+                  <div class="flex items-center justify-between gap-2 py-2">
+                    <span class="text-sm text-stone-700">Good meal</span>
+                    <div class="flex gap-3 shrink-0"><button class="text-xs text-stone-500">Edit</button><button class="text-xs text-amber-700">Archive</button></div>
+                  </div>
+                  <div class="flex items-center justify-between gap-2 py-2">
+                    <span class="text-sm text-stone-700">Interesting conversation</span>
+                    <div class="flex gap-3 shrink-0"><button class="text-xs text-stone-500">Edit</button><button class="text-xs text-amber-700">Archive</button></div>
+                  </div>
+                </div>
+                <button class="mt-3 text-sm text-stone-500 hover:underline">+ Add moment</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Light combined after -->
+          <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-3">After — Light</p>
+            <div class="bg-white rounded-2xl p-6 max-w-sm border border-stone-200 shadow-sm">
+              <div class="flex items-center justify-between mb-6">
+                <h1 class="text-xl font-light tracking-widest text-stone-800">Manage</h1>
+                <span class="text-xs uppercase tracking-widest text-stone-600">← Settings</span>
+              </div>
+              <div class="mb-2">
+                <a href="#" class="text-xs text-stone-600 underline-offset-4 hover:underline">Jump to Moments ↓</a>
+              </div>
+              <div class="mb-6">
+                <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Habits</p>
+                <div class="divide-y divide-stone-100">
+                  <div class="flex min-h-[44px] items-center justify-between gap-2">
+                    <span class="text-sm text-stone-700 flex-1">Meditation</span>
+                    <button class="inline-flex items-center min-h-[44px] px-1.5 text-amber-500 transition-colors">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.5 2 7 5 7 7c-2.5 0-5 1.5-5 4.5 0 2 1.5 4 4.5 5l5.5 5 5.5-5c3-.5 4.5-3 4.5-5C22 8.5 19.5 7 17 7c0-2-1.5-5-5-5z"/></svg>
+                    </button>
+                    <div class="flex gap-1">
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-500 hover:underline">Edit</button>
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-700 hover:underline">Archive</button>
+                    </div>
+                  </div>
+                  <div class="flex min-h-[44px] items-center justify-between gap-2">
+                    <span class="text-sm text-stone-700 flex-1">Exercise</span>
+                    <button class="inline-flex items-center min-h-[44px] px-1.5 text-stone-300 hover:text-amber-400 transition-colors">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.5 2 7 5 7 7c-2.5 0-5 1.5-5 4.5 0 2 1.5 4 4.5 5l5.5 5 5.5-5c3-.5 4.5-3 4.5-5C22 8.5 19.5 7 17 7c0-2-1.5-5-5-5z"/></svg>
+                    </button>
+                    <div class="flex gap-1">
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-500 hover:underline">Edit</button>
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-700 hover:underline">Archive</button>
+                    </div>
+                  </div>
+                  <div class="flex min-h-[44px] items-center justify-between gap-2">
+                    <span class="text-sm text-stone-700">Sleep <span class="text-xs text-stone-500">hrs</span></span>
+                    <div class="flex gap-1">
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-500 hover:underline">Edit</button>
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-700 hover:underline">Archive</button>
+                    </div>
+                  </div>
+                  <div class="flex min-h-[44px] items-center justify-between gap-2">
+                    <span class="text-sm text-stone-700">Water <span class="text-xs text-stone-500">glasses</span></span>
+                    <div class="flex gap-1">
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-500 hover:underline">Edit</button>
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-700 hover:underline">Archive</button>
+                    </div>
+                  </div>
+                </div>
+                <button class="mt-3 text-sm text-stone-500 hover:underline">+ Add habit</button>
+              </div>
+              <div>
+                <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Moments</p>
+                <div class="divide-y divide-stone-100">
+                  <div class="flex min-h-[44px] items-center justify-between gap-2">
+                    <span class="text-sm text-stone-700">Good meal</span>
+                    <div class="flex gap-1">
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-500 hover:underline">Edit</button>
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-700 hover:underline">Archive</button>
+                    </div>
+                  </div>
+                  <div class="flex min-h-[44px] items-center justify-between gap-2">
+                    <span class="text-sm text-stone-700">Interesting conversation</span>
+                    <div class="flex gap-1">
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-500 hover:underline">Edit</button>
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-700 hover:underline">Archive</button>
+                    </div>
+                  </div>
+                </div>
+                <button class="mt-3 text-sm text-stone-500 hover:underline">+ Add moment</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dark combined after -->
+          <div class="col-span-2">
+            <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-3">After — Dark (combined)</p>
+            <div class="bg-stone-900 rounded-2xl p-6 max-w-sm border border-stone-700 shadow-sm">
+              <div class="flex items-center justify-between mb-6">
+                <h1 class="text-xl font-light tracking-widest text-stone-200">Manage</h1>
+                <span class="text-xs uppercase tracking-widest text-stone-500">← Settings</span>
+              </div>
+              <div class="mb-2">
+                <a href="#" class="text-xs text-stone-500 underline-offset-4 hover:underline">Jump to Moments ↓</a>
+              </div>
+              <div class="mb-6">
+                <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Habits</p>
+                <div class="divide-y divide-stone-800">
+                  <div class="flex min-h-[44px] items-center justify-between gap-2">
+                    <span class="text-sm text-stone-300 flex-1">Meditation</span>
+                    <button class="inline-flex items-center min-h-[44px] px-1.5 text-amber-400 transition-colors">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.5 2 7 5 7 7c-2.5 0-5 1.5-5 4.5 0 2 1.5 4 4.5 5l5.5 5 5.5-5c3-.5 4.5-3 4.5-5C22 8.5 19.5 7 17 7c0-2-1.5-5-5-5z"/></svg>
+                    </button>
+                    <div class="flex gap-1">
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-400 hover:underline">Edit</button>
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-500 hover:underline">Archive</button>
+                    </div>
+                  </div>
+                  <div class="flex min-h-[44px] items-center justify-between gap-2">
+                    <span class="text-sm text-stone-300 flex-1">Exercise</span>
+                    <button class="inline-flex items-center min-h-[44px] px-1.5 text-stone-700 hover:text-amber-500 transition-colors">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.5 2 7 5 7 7c-2.5 0-5 1.5-5 4.5 0 2 1.5 4 4.5 5l5.5 5 5.5-5c3-.5 4.5-3 4.5-5C22 8.5 19.5 7 17 7c0-2-1.5-5-5-5z"/></svg>
+                    </button>
+                    <div class="flex gap-1">
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-400 hover:underline">Edit</button>
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-500 hover:underline">Archive</button>
+                    </div>
+                  </div>
+                  <div class="flex min-h-[44px] items-center justify-between gap-2">
+                    <span class="text-sm text-stone-300">Sleep <span class="text-xs text-stone-500">hrs</span></span>
+                    <div class="flex gap-1">
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-400 hover:underline">Edit</button>
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-500 hover:underline">Archive</button>
+                    </div>
+                  </div>
+                  <div class="flex min-h-[44px] items-center justify-between gap-2">
+                    <span class="text-sm text-stone-300">Water <span class="text-xs text-stone-500">glasses</span></span>
+                    <div class="flex gap-1">
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-400 hover:underline">Edit</button>
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-500 hover:underline">Archive</button>
+                    </div>
+                  </div>
+                </div>
+                <button class="mt-3 text-sm text-stone-400 hover:underline">+ Add habit</button>
+              </div>
+              <div>
+                <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">Moments</p>
+                <div class="divide-y divide-stone-800">
+                  <div class="flex min-h-[44px] items-center justify-between gap-2">
+                    <span class="text-sm text-stone-300">Good meal</span>
+                    <div class="flex gap-1">
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-400 hover:underline">Edit</button>
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-500 hover:underline">Archive</button>
+                    </div>
+                  </div>
+                  <div class="flex min-h-[44px] items-center justify-between gap-2">
+                    <span class="text-sm text-stone-300">Interesting conversation</span>
+                    <div class="flex gap-1">
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-stone-400 hover:underline">Edit</button>
+                      <button class="inline-flex items-center min-h-[44px] px-2 text-xs text-amber-500 hover:underline">Archive</button>
+                    </div>
+                  </div>
+                </div>
+                <button class="mt-3 text-sm text-stone-400 hover:underline">+ Add moment</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</body>
+</html>

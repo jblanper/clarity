@@ -1,18 +1,17 @@
 # Design Audit — Overall Coherence
 ## Clarity × Calma
 
-Generated: 2026-03-10 10:35
+Generated: 2026-03-14 09:55
+Archived previous report → docs/audits/archive/audit-design-overall-2026-03-14.md
 Scope: All pages, all components, first-use and experienced-user perspectives.
-Reference: docs/calma-design-language.md, prior audits in docs/.
-Archived previous report → docs/audits/archive/audit-design-overall-2026-03-10.md
-
-Sprint 8 / Sprint 9 context: The prior audit (2026-03-07) identified 16 findings across all severity levels. 15 of the 16 have been resolved in the intervening sprints. This audit reflects the current codebase.
+Reference: docs/calma-design-language.md, prior audits in docs/audits/.
+Sprint context: Post-Sprint 9. Controls redesign (HabitToggle full-row, NumberStepper pill), touch-target sweep, colour clean-up, microcopy polish all landed.
 
 ---
 
 ## Preamble
 
-Clarity is, at this point, a genuinely coherent product. The Calma identity is no longer something being applied to the app — it has been absorbed by it. Reading through the components in sequence, the vocabulary is consistent, the typography hierarchy lands, the motion restraint holds, and the writing register is almost uniformly human. The most jarring violations from prior cycles — the "Boolean"/"Numeric" picker, the Edit-link-as-footnote, the anonymous "← back" button — are gone. What remains is a thin layer of finish work, not a coherence problem. One structural issue stands out from the others: the add-moment flow in CheckInForm still presents three touch targets that fall well below 44px. This is the only remaining action item that carries real risk to mobile users.
+Clarity reads as a single considered thing at the component level — the typography discipline, colour restraint, and animation register are consistent and well-executed. Three sprints of systematic auditing have eliminated the most visible inconsistencies. What remains are structural gaps at the page-composition level: how sections relate to each other when content is absent, whether navigation targets align to the same grid across pages, and whether two date representations in the same flow speak the same language. None of these breaks the experience; some will quietly undermine the "handwritten notebook" identity over time.
 
 ---
 
@@ -20,114 +19,127 @@ Clarity is, at this point, a genuinely coherent product. The Calma identity is n
 
 ### Today (CheckInForm)
 
-The Today page reads as a considered daily ritual. The section arc — Habits, By the numbers, Moments, Joy, Reflection — feels natural in sequence: structural, quantitative, spontaneous, emotional, open. The Joy section still earns its place through its conditional appearance; revealing it only after at least one boolean habit is marked done makes the factual/emotional separation tangible without comment. The reflection textarea is now `text-sm font-light` — it feels like a writing space, not a form field. "Day captured" remains the best two-word sequence in the app.
+The strongest page in the app. The form flows top to bottom without visible seams: Habits → By the numbers → Moments → Highlights → Reflection → Save. Each section breathes independently. The HabitToggle's amber row wash and dot indicator are the most successful Sprint 9 additions — they turn a boolean action into a moment of warmth without any ceremony. The NumberStepper pill is clean and unambiguous; the `startAt` jump behaviour is invisible and correct.
 
-What isn't working:
+The Highlights section (done habits + joy marking) emerging conditionally between Moments and Reflection is an elegant structural choice — it appears only when relevant and disappears without a trace. The label rename from "Joy" to "Highlights" reads as slightly broader; "Joy" was more precise about what the section was doing. Worth watching whether it creates confusion in user testing, but not a violation.
 
-Three touch targets in the add-moment flow remain below 44px. The "＋ New moment" dashed button (`py-2` ≈ 32px, line 361), the inline "Add" confirm button (`py-2` ≈ 32px, line 395), and the dismiss "✕" button (no sizing, line 403) all fail the Calma touch-target floor. The ✕ is the most severe — roughly 20px tall and close to the Add button, creating a real mis-tap risk. This is the only unresolved action item from the prior audit cycle.
+Two small roughnesses: the `＋ New moment` button uses a fullwidth glyph (U+FF0B) while ManageView's add actions use ASCII `+`. And the "Please enter a name." / "A moment with that name already exists." error messages remain low-warmth — tracked in the microcopy audit with suggested rewrites.
 
-The "＋ New moment" dashed button still uses the fullwidth plus sign `＋` (line 361) while ManageView uses the standard `+` for its equivalent "Add habit" and "Add moment" buttons. The difference is imperceptible to most users but is a small inconsistency in the add-item vocabulary.
+The save button's three-state feedback (Save → Saving... → Day captured) is the best confirmation flow in the app.
 
-### History (HistoryView + CalendarHeatmap + FrequencyList)
+### History (HistoryView)
 
-History is the strongest page in the app. The two-axis colour system continues to be the most visually distinctive feature of any habit tracker — personal, legible, emotionally honest. The filter integration between the calendar and the frequency list is sophisticated without being explained; it is discoverable through the one-time hint and then simply works. The scroll-lock-before-collapse behaviour prevents the main interaction jarring point for experienced users.
+The heatmap is visually distinctive and on-brand. The two-axis colour blend (cool for completion, warm for joy and moments) is subtle enough that users do not need to decode it consciously — they just feel the difference between days. The selected-day ring and the DayDetail bottom-sheet pattern work well together.
 
-The empty state was added since the last audit and represents a genuine improvement. A first-time user who opens History now sees "Your days will appear here once you start logging." rather than nothing.
+The Frequency section is a later addition and it shows. The toggle button (correctly styled as a section label) opens a sub-page inside the History page — conceptually useful but structurally awkward when entries are empty. On first use, a new user sees: all-grey calendar → divider → "Frequency" toggle → (below the toggle) "Your days will appear here once you start logging." Two empty-state signals appear in sequence, with the page-level empty state appearing *after* a toggleable section that implies data might exist. **This is the most important structural issue in the current codebase.** (See Section 5.)
 
-What isn't working:
-
-The empty state message appears after the Frequency section divider — below the toggle button, after the calendar grid. On a phone, a first-time user sees the calendar of blank cells, the "Frequency" section label, and must then scroll past all of that to reach the orientation message. The message is reassuring when found, but its placement separates it from the blank calendar it is meant to explain. Moving it to immediately after the calendar (between the heatmap and the section divider) would connect it to the surface it describes.
-
-The CalendarHeatmap month crossfade (line 260, `duration: 0.12`) now meets the 120ms floor. Year-nav buttons now have `min-h-[44px]`. The FrequencyList bar animation now uses `scaleX` correctly. These were all resolved since the prior audit.
-
-The inactive period selector buttons in FrequencyList (lines 129, 134, 139) still use `text-stone-400 dark:text-stone-500`. In light mode, stone-400 at 2.4:1 fails WCAG AA. These are deferred from the prior cycle; they carry slightly elevated risk since they appear on a page that experienced users visit often.
+The period selector (Month · 3 Months · Always) is well-positioned above the FrequencyList. The inactive dot separator in `text-stone-300` is appropriately quiet. The header uses `flex items-center` instead of the documented `flex items-start` — visually harmless on this single-line header but a deviation from the standard. (See Section 2.)
 
 ### Settings (SettingsView)
 
-Settings is now the cleanest utility page in the app. The back button correctly names its destination — "← Today" or "← History" — making it the only page in the app that also resolved the anonymous-back-button problem. All section labels now carry `font-medium`. The export description lost its "JSON" jargon and reads naturally. Import success copy ("X days added. Y days were already in your history and weren't changed.") is specific and human. The export error ("Couldn't download the backup — try again.") is calm and direct.
+Settings is the most functionally dense page and the one with the weakest touch-target compliance — a pre-existing gap tracked in the interaction audit (back button, theme picker, various bare-text controls). These gaps are noted here because they represent the largest discrepancy between the care given to the main form controls (HabitToggle, NumberStepper, MomentChip — all ≥44px) and the utility pages.
 
-No significant concerns.
+The page structure is sound: divider-separated sections, consistent section-label pattern, calm destructive-action flow (Reset uses amber and a confirmation step — correct). The dynamic back button label ("← Today" / "← History") is the best navigation microcopy in the app.
+
+The theme picker — two `text-sm` text buttons with no touch target or visual affordance beyond `font-medium` on the active state — is the most under-designed element on the page. It functions, but it looks like a temporary choice.
 
 ### Manage (ManageView)
 
-ManageView continues to be the most improved page since the first audit. The habit type picker now reads "Yes / No" and "Number" — plain language that belongs in a personal tool, not a spreadsheet field. The joyByDefault toggle uses "Brings joy by default" / "Joy is marked separately" in the add form, and "Brings joy by default" / "Tap to mark as joyful by default" in the edit section. The add-form copy is factual; the edit copy is instructional. Both are appropriate to their context.
+The most complex page and the most internally consistent one. The mutual-exclusion rule on inline editors (only one open at a time) prevents the page from becoming chaotic. The two-step add-habit flow (type picker → form) is acceptably discoverable. Archive confirmation copy ("Archived. Past entries are preserved.") is exactly right — calm, specific, reassuring.
 
-The inline label field is now "Increment" in both the edit and add forms. The Jump to Moments anchor uses `text-stone-600 dark:text-stone-500` with `transition-colors`. No WCAG failures remain on this page.
+The "Jump to Moments" anchor is a useful affordance. The dot-separator pattern in "Start at · km" is a good re-use of the established Calma vocabulary.
 
-One observation: the joyByDefault inline toggle button in the active-habits list (line 278, `className="self-start text-left transition-colors"`) has no `active:opacity-70`. It is the only interactive element in the list section without press-state feedback. The button is in the deferred touch-targets batch — its size is small — but the missing active-state feedback means pressing it provides no physical acknowledgment.
+The header uses `flex items-center` — same deviation as HistoryView. There is also no explicit `border-t` divider between the Habits and Moments sections (unlike SettingsView). When the Habits list is long (many archived items), the visual jump to Moments can feel abrupt.
 
 ### Help (HelpView)
 
-Help remains the best-written page in the app. The writing is accurate, unhurried, and never condescending. "Completion and joy are different things, and keeping them apart lets you see the difference over time" is the sharpest articulation of the app's central design choice, and it belongs here. The Calma section — acknowledging the design system to curious users — is a considered touch. Section labels and body text follow the canonical patterns.
+The strongest writing in the app. "There is no score to beat, no streak to protect, nothing to catch up on" is a design statement as much as copy. The blossom icon pair as a visual example (empty / filled) is elegant. The `border-t` dividers between sections give the page the feel of a printed pamphlet — exactly right for the analog register.
 
-No significant concerns.
+Touch-target gaps on the back link and design-language link are pre-existing mediums from the interaction audit.
 
-### DayDetail (review sheet)
+### Edit (CheckInForm in edit mode)
 
-DayDetail is now well-resolved. The date heading uses `text-base font-light tracking-widest` — correctly framed as a sheet header, not a page title. The Edit link uses `text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300` — it reads as a navigation action, not a footnote. The scroll lock, the sticky close button, the BlossomIcon for joy display, and the "Nothing here yet" empty state are all correctly executed.
+Functionally identical to Today with a different header: weekday name as the `<h1>`, full date as a `<p>` subtitle, `← history` link top-right. The structural pattern is correct. The edit-mode save redirects to `/history?open=[date]` which auto-reopens DayDetail — a smooth round-trip.
 
-One minor observation: the Moments section in DayDetail uses `mb-3` for its section heading while Habits, By the numbers, and Reflection sections all use `mb-2`. The three-pixel difference is imperceptible in practice, but it is inconsistent.
+No new issues beyond those noted for Today.
+
+### DayDetail
+
+The bottom-sheet pattern is well-executed: smooth slide-up, backdrop dismiss, sticky close button, scroll-locked body. The content hierarchy inside the sheet is clear: date heading → checked habits → numbers → moments → reflection → edit link.
+
+Two observations at the component level:
+
+The done-habit indicator is a plain Unicode `✓` at `text-stone-500`. The HabitToggle introduced an amber dot for done state in Sprint 9. These two views — the active form and the read-only review — now use different visual vocabularies for the same concept (a completed boolean habit). A small amber dot (`h-2 w-2 rounded-full bg-amber-500`) instead of the `✓` would connect the two surfaces without adding weight.
+
+The date heading uses a custom European format: "Monday, 25 February 2026" (day before month, year included). The Today page's date subtitle uses `toLocaleDateString("en-US", ...)` producing "Tuesday, February 25" (month before day, no year). The two most visible date displays in the app speak different orderings. Standardising on the European day-first format with year across both surfaces would remove a subtle dissonance.
 
 ---
 
 ## 2. Cross-Page Consistency
 
-- **Header pattern** — `flex items-start justify-between` is correct in CheckInForm (today and edit), SettingsView, and HelpView. HistoryView (line 63) and ManageView (line 239) use `flex items-center justify-between`. Neither has a subtitle below the h1, so the visual difference is negligible at current type sizes. Still inconsistent with the CLAUDE.md specification. **Low.**
-- **Section labels** — canonical pattern (`text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500`) is now correct across all pages. ✅
-- **Empty states** — DayDetail ("Nothing here yet"), FrequencyList ("Nothing logged in this period"), History ("Your days will appear here once you start logging.") — consistent in tone and register. The History empty state is misplaced structurally (see §1). **Medium.**
-- **Joy symbol** — BlossomIcon used consistently in CheckInForm (joy section), DayDetail (habit list), ManageView (joyByDefault toggle), and HelpView (illustration). ✅
-- **Interactive vocabulary** — "Edit", "Archive", "Restore", "Save", "Add", "Cancel" consistent across ManageView, DayDetail, and CheckInForm. ✅
-- **Transition-colors** — universal across primary interactive elements. ManageView joyByDefault button (line 278) has `transition-colors` but no `active:` state. **Low.**
-- **Inactive period selector at stone-400** — FrequencyList lines 129/134/139 still fail WCAG AA in light mode. Deferred from prior cycle. **Low–Medium.**
+- **Header vertical alignment** — `flex items-start` on Today, Settings, Help; `flex items-center` on History, Manage. CLAUDE.md documents `flex items-start justify-between` as the standard. Visually harmless on single-line headers but a documented deviation. **Medium.**
+
+- **Add-action glyph** — `＋ New moment` (fullwidth U+FF0B) on CheckInForm; `+ Add habit` / `+ Add moment` (ASCII U+002B) on ManageView. Minor but inconsistent across the two places users add items. **Low.**
+
+- **Date formats** — Today subtitle uses US locale order ("February 25"); DayDetail heading uses European order ("25 February 2026") with year. **Low.**
+
+- **Section spacing** — `mb-10` between sections on Today; `mb-8` on Settings (with explicit `border-t` dividers compensating); no explicit divider between Habits and Moments on Manage. Internally consistent within each page but varies across pages. **Low** (pre-existing).
+
+- **Section labels** — correct and consistent across all pages. The canonical six-part pattern holds everywhere. ✅
+
+- **Page titles** — `text-xl font-light tracking-widest text-stone-800 dark:text-stone-200` consistent on all pages. ✅
+
+- **Nav link pattern** — `text-xs uppercase tracking-widest text-stone-600` consistent everywhere. ✅
+
+- **Empty states** — "Nothing here yet" (DayDetail), "Nothing logged in this period" (FrequencyList), "Your days will appear here once you start logging." (HistoryView). All are inviting and non-accusatory in tone. Structural placement issue on HistoryView noted in Section 5. ✅ on tone.
 
 ---
 
 ## 3. Emotional Identity
 
-Clarity's emotional identity — calm, factual, non-gamifying — is successfully maintained across the full app.
+Clarity holds its calm identity well. There is no streak counter, no score, no progress bar. Amber signals feeling, not achievement. Red appears only on errors. The app does not reward or punish — it records.
 
-Working well:
-- No streaks, scores, progress bars, or completion percentages anywhere. ✅
-- "Day captured" is the most affirming the app ever gets. ✅
-- The Joy section's conditional appearance makes the factual/emotional separation tangible. ✅
-- Amber for archive, amber for joy, amber for reset — the semantic weight of amber is consistent throughout. ✅
-- The ManageView habit type picker ("Yes / No" / "Number") now matches the human register of the rest of the product. ✅
-- Import copy ("Y days were already in your history and weren't changed.") treats historical data as personal, not transactional. ✅
+Potential friction points:
 
-What contradicts the identity:
-- Nothing significant remains. The corrections in prior sprints removed the most visible identity breaks.
+- The NumberStepper's amber pill when non-zero could read as a gamified score. In context, the amber is consistent with the system-wide active/positive accent, and the pill increments without celebration or fanfare. The emotional framing remains observational. ✅
+
+- The FrequencyList shows counts and relative bar lengths. The bars are relative to each other — not to a target — the section is hidden by default and requires deliberate action to open. The interaction remains exploratory rather than evaluative. ✅
+
+- The "Highlights" section label (renamed from "Joy" in Sprint 9) is broader and less specific. "Joy" was a more precise emotional category; "Highlights" suggests summary or best-of. The rename is unlikely to cause confusion but slightly dilutes the factual/emotional split (Habits = fact, Joy = feeling) that the form intentionally maintains. Low severity — monitor.
+
+- The Manage page is necessarily complex. The complexity is contained well — it does not leak onto the main form. ✅
 
 ---
 
 ## 4. Information Architecture
 
-The two-level navigation (BottomNav for Today/History; text back-links for utility pages) is clear and consistent. All pages name their navigation destinations explicitly.
+**BottomNav** — two tabs (Today, History), always visible on primary pages, hidden on all secondary pages. Clear and correct. The active state (`font-medium text-stone-900`) is distinguishable but subtle — correct for a text-only two-tab system. Inactive tabs have `transition-colors` applied but no hover colour target defined — the transition fires on nothing. Add `hover:text-stone-700 dark:hover:text-stone-300`. **Low** (pre-existing).
 
-Working well:
-- BottomNav correctly absent on Settings, Manage, Help, and Edit. ✅
-- Settings back button now reads "← Today" or "← History" — the app's navigation contract is fully honoured. ✅
-- DayDetail → Edit → `/history?open=[date]` → DayDetail auto-reopens: the redirect chain is smooth. ✅
-- DayDetail Edit link is now styled as navigation, not footnote. ✅
-- Help links back to Settings. Manage links back to Settings. Both correct. ✅
+**Settings back** — the sessionStorage pattern (`"settings-back": "/" | "/history"`) is invisible to users and works correctly. The dynamic label ("← Today" / "← History") is the most user-trusting navigation copy in the app. ✅
 
-Concerns:
-- History empty state placement: the "Your days will appear here" message appears below the Frequency section, disconnected from the calendar that occasioned it. This is a structural issue, not a navigation issue, but it affects the first-time user journey through the History page. A user's natural path is Today → History, and on History they encounter the blank calendar before finding any orientation.
+**Manage and Help back** — both link to `← Settings` as static links. Correct — these pages are always entered from Settings. ✅
+
+**DayDetail → Edit → History** — the round-trip (DayDetail open → tap Edit → save → redirect to `/history?open=date` → DayDetail reopens → URL cleaned) is invisible and correct. The DayDetail "Edit" link is `text-xs uppercase tracking-widest` — consistent with the nav-link pattern but visually the lightest element on the sheet. It sits below all content and could be missed on content-heavy days. The copy "Edit" is correctly specific. **Low.**
+
+**First-use HistoryView** — a new user arriving on History sees an all-grey heatmap, a Frequency toggle, and an empty-state message at the bottom of the page. The empty-state message appears *after* the Frequency section, so users encounter a toggleable UI element before the explanation. Tapping "Frequency" reveals a second empty message ("Nothing logged in this period"). **Medium** — see Section 5.
+
+No dead ends found. Every secondary page has a clear path back. ✅
 
 ---
 
 ## 5. Summary & Most Important Observation
 
-**Most important observation:** The add-moment flow in `CheckInForm.tsx` still presents three touch targets below the 44px minimum: the "＋ New moment" dashed trigger button (line 361, `py-2` ≈ 32px), the inline "Add" confirm button (line 395, `py-2` ≈ 32px), and the dismiss "✕" (line 403, no sizing, ≈ 20px). The ✕ is the most critical — it is 20px tall, positioned immediately adjacent to the Add button, and carries no label. On a real mobile device, dismissing the add-moment flow requires hitting a target roughly the size of a lowercase letter. Adding `min-h-[44px] flex items-center justify-center` to each of the three elements and wrapping the ✕ in a properly sized container — without changing any visual appearance — would close this gap.
+**Most important observation:** HistoryView's empty state is structurally mispositioned. When `entries.length === 0`, the page renders: (1) all-grey calendar, (2) a section divider and "Frequency" toggle button, (3) the empty-state message below the toggle. A first-time user encounters a toggleable UI section — implying data exists — before seeing the explanation that nothing has been logged yet. Expanding "Frequency" produces a second empty message ("Nothing logged in this period") that overlaps with the first. The fix is two-part: conditionally suppress the Frequency section entirely when `entries.length === 0` (a toggle with nothing to toggle is misleading), and move the empty-state message to immediately below the heatmap so it reads as the calendar's own empty state. This is a single-component change (`HistoryView.tsx`) that removes the most structurally confusing moment in the app for new users.
 
-Findings by severity: **0 critical · 0 high · 2 medium · 4 low**
+---
 
-Severity reference: **High** = breaks page coherence or significantly contradicts Calma identity · **Medium** = noticeable inconsistency or user-facing risk · **Low** = minor polish item
+Findings by severity: **0 high · 2 medium · 4 low**
 
-| # | Page | Finding | Severity |
+| ID | Severity | Location | Finding |
 |---|---|---|---|
-| 1 | CheckInForm | Add-moment flow: 3 touch targets below 44px | Medium |
-| 2 | History | Empty state placed after Frequency section, disconnected from calendar | Medium |
-| 3 | CalendarHeatmap / FrequencyList | Inactive period selector `text-stone-400` fails WCAG AA in light mode | Low |
-| 4 | HistoryView / ManageView | Header uses `items-center` instead of spec-required `items-start` | Low |
-| 5 | ManageView | joyByDefault inline button missing `active:opacity-70` | Low |
-| 6 | DayDetail | Moments section heading uses `mb-3`; all other section headings use `mb-2` | Low |
+| M1 | Medium | HistoryView | Empty-state message positioned after Frequency toggle; Frequency toggle visible when entries are empty — creates two competing empty-state signals |
+| M2 | Medium | HistoryView, ManageView | Header uses `flex items-center` instead of documented `flex items-start justify-between` |
+| L1 | Low | DayDetail | Done-habit indicator is Unicode `✓` at stone-500; HabitToggle uses amber dot — different vocabularies for the same concept across form and review |
+| L2 | Low | CheckInForm, ManageView | Add-action glyph inconsistency: `＋` (fullwidth U+FF0B) in CheckInForm vs `+` (ASCII U+002B) in ManageView |
+| L3 | Low | DayDetail, CheckInForm | Date format inconsistency: European day-first with year in DayDetail vs US month-first without year in Today subtitle |
+| L4 | Low | BottomNav | `transition-colors` on inactive tabs with no hover target defined — transition fires on nothing (pre-existing) |

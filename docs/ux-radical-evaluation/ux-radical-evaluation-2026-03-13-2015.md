@@ -194,7 +194,7 @@ All four proposals can be batched into a single sprint. Total implementation est
 
 ## Open questions
 
-- **"Save" as idle label:** The confirmed state "Day captured" is excellent microcopy. The idle "Save" is generic by comparison — "Log day" or "Capture" are alternatives. This is a value judgement, not a defect. Worth a conscious decision rather than leaving it as a default.
+- **"Save" as idle label — resolved:** Change to **"Capture"**. The confirmed state "Day captured" is excellent microcopy, and "Capture" is the only idle label that runs the same root word through all three states: "Capture" → "Capturing…" → "Day captured". "Log day" was considered but introduces a verb mismatch (logging → captured) and carries a technical connotation at odds with Calma's analog sensibility. "Capture" is shorter, more human, and closes the loop the confirmed state already sets up.
 
 - **Reflection textarea warm state:** Unlike HabitToggle and NumberStepper, the Reflection textarea has no visual acknowledgment when it contains text (no amber tint, no color shift). This feels intentional and appropriate — reflection is personal, not a trackable data point. But if the form ever gains a "completeness" indicator (e.g. a visual cue that all sections have been touched), the textarea's absence of state signal would need to be addressed.
 

@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interaction Flows — Manage page bold redesign</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: { fontFamily: { sans: ['system-ui', '-apple-system', 'sans-serif'] } } }
+    }
+  </script>
+  <style>
+    body { background: #fafaf9; }
+    body.dark { background: #1c1917; }
+    .proposal-anchor { scroll-margin-top: 5rem; }
+
+    /* Step connector arrow */
+    .step-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #a8a29e;
+      font-size: 20px;
+      padding: 0 4px;
+      flex-shrink: 0;
+      align-self: center;
+    }
+
+    /* Phone frame */
+    .phone {
+      width: 288px;
+      flex-shrink: 0;
+      background: white;
+      border-radius: 20px;
+      border: 1px solid #e7e5e4;
+      overflow: hidden;
+    }
+    body.dark .phone {
+      background: #1c1917;
+      border-color: #292524;
+    }
+    .phone-inner { padding: 16px; }
+
+    /* Step label */
+    .step-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #a8a29e;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    /* Active row highlight (row being acted on) */
+    .row-active { background: #f5f5f4; border-radius: 10px; margin: 0 -8px; padding: 0 8px; }
+    body.dark .row-active { background: #292524; }
+
+    /* ── Tray card container ─────────────────────── */
+    .tray-card {
+      border-radius: 14px;
+      border: 1px solid #e7e5e4;
+      background: #fafaf9;
+      padding: 10px;
+      margin-top: 2px;
+      margin-bottom: 4px;
+    }
+    body.dark .tray-card {
+      border-color: #44403c;
+      background: rgba(41,37,36,0.6);
+    }
+
+    /* ── Inline form card ────────────────────────── */
+    .inline-form {
+      border-radius: 14px;
+      border: 1px solid #e7e5e4;
+      background: #fafaf9;
+      padding: 12px;
+      margin-bottom: 4px;
+    }
+    body.dark .inline-form {
+      border-color: #44403c;
+      background: rgba(41,37,36,0.6);
+    }
+
+    /* ── Tray pill buttons ───────────────────────── */
+    .tray-btn {
+      display: inline-flex;
+      align-items: center;
+      min-height: 40px;
+      padding: 0 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      border-width: 1px;
+      border-style: solid;
+      transition: background 0.15s;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* Neutral (Edit label) */
+    .tray-btn-neutral {
+      border-color: #e7e5e4;
+      color: #57534e;
+      background: transparent;
+    }
+    body.dark .tray-btn-neutral {
+      border-color: #44403c;
+      color: #d6d3d1;
+      background: transparent;
+    }
+    .tray-btn-neutral:hover { background: #f5f5f4; }
+    body.dark .tray-btn-neutral:hover { background: #292524; }
+
+    /* Amber outline (Archive, joy inactive) */
+    .tray-btn-amber {
+      border-color: #fde68a;
+      color: #92400e;
+      background: transparent;
+    }
+    body.dark .tray-btn-amber {
+      border-color: rgba(180,83,9,0.35);
+      color: #fbbf24;
+      background: transparent;
+    }
+    .tray-btn-amber:hover { background: #fffbeb; }
+    body.dark .tray-btn-amber:hover { background: rgba(120,53,15,0.2); }
+
+    /* Amber filled (joy active) */
+    .tray-btn-amber-filled {
+      border-color: #fde68a;
+      color: #92400e;
+      background: #fffbeb;
+    }
+    body.dark .tray-btn-amber-filled {
+      border-color: rgba(180,83,9,0.35);
+      color: #fbbf24;
+      background: rgba(120,53,15,0.2);
+    }
+
+    /* ── Joy pill (inline label tag) ────────────── */
+    .joy-pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 9999px;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #92400e;
+      font-size: 11px;
+      padding: 2px 7px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    body.dark .joy-pill {
+      background: rgba(120,53,15,0.2);
+      border-color: rgba(180,83,9,0.35);
+      color: #fbbf24;
+    }
+
+    /* ── Section card ────────────────────────────── */
+    .section-card {
+      border-radius: 16px;
+      background: #f5f5f4;
+      border: 1px solid #e7e5e4;
+      padding: 12px 12px 8px;
+    }
+    body.dark .section-card {
+      background: rgba(41,37,36,0.5);
+      border-color: #292524;
+    }
+
+    /* ── Form elements ───────────────────────────── */
+    .form-input {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid #e7e5e4;
+      background: white;
+      padding: 10px 12px;
+      font-size: 13px;
+      color: #1c1917;
+      outline: none;
+      box-sizing: border-box;
+    }
+    body.dark .form-input {
+      border-color: #44403c;
+      background: #1c1917;
+      color: #fafaf9;
+    }
+    .form-input:focus { border-color: #a8a29e; }
+    .form-input-focused { border-color: #a8a29e !important; box-shadow: 0 0 0 2px rgba(168,162,158,0.18); }
+
+    .save-btn {
+      display: inline-flex;
+      align-items: center;
+      min-height: 40px;
+      padding: 0 14px;
+      border-radius: 10px;
+      background: #1c1917;
+      color: white;
+      font-size: 13px;
+      cursor: pointer;
+      border: none;
+    }
+    body.dark .save-btn { background: #e7e5e4; color: #1c1917; }
+    .save-btn.disabled { opacity: 0.4; }
+
+    .cancel-link {
+      font-size: 12px;
+      color: #78716c;
+      cursor: pointer;
+      padding: 0 4px;
+      display: inline-flex;
+      align-items: center;
+      min-height: 40px;
+    }
+    body.dark .cancel-link { color: #a8a29e; }
+
+    .field-label { display: block; font-size: 10px; color: #a8a29e; margin-bottom: 4px; }
+
+    /* Row dividers within section card */
+    .row-div { border-top: 1px solid #eeece9; }
+    body.dark .row-div { border-top-color: #292524; }
+
+    /* Type-choice buttons */
+    .type-btn {
+      display: inline-flex;
+      align-items: center;
+      min-height: 40px;
+      padding: 0 14px;
+      border-radius: 10px;
+      border: 1px solid #e7e5e4;
+      background: white;
+      color: #57534e;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    body.dark .type-btn {
+      border-color: #44403c;
+      background: #1c1917;
+      color: #d6d3d1;
+    }
+
+    /* Chip */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      border-radius: 9999px;
+      padding: 0 14px;
+      font-size: 13px;
+      border: 1px solid #e7e5e4;
+      color: #78716c;
+      background: transparent;
+      cursor: pointer;
+    }
+    body.dark .chip { border-color: #44403c; color: #a8a29e; }
+    .chip.selected { border-color: #a8a29e; outline: 2px solid rgba(168,162,158,0.5); outline-offset: 1px; color: #292524; }
+    body.dark .chip.selected { color: #d6d3d1; }
+    .chip-dashed { border-style: dashed; }
+  </style>
+</head>
+<body id="body" class="transition-colors duration-300">
+
+  <!-- Nav -->
+  <nav class="sticky top-0 z-50 flex items-center justify-between px-6 py-3 bg-stone-100 dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800">
+    <div class="flex gap-1 text-xs font-medium uppercase tracking-widest text-stone-500 overflow-x-auto">
+      <a href="#flow-edit"       class="px-3 py-1.5 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 whitespace-nowrap transition-colors">Edit label</a>
+      <a href="#flow-add"        class="px-3 py-1.5 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 whitespace-nowrap transition-colors">Add habit</a>
+      <a href="#flow-archive"    class="px-3 py-1.5 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 whitespace-nowrap transition-colors">Archive</a>
+      <a href="#flow-joy"        class="px-3 py-1.5 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 whitespace-nowrap transition-colors">Joy default</a>
+      <a href="#flow-moment"     class="px-3 py-1.5 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 whitespace-nowrap transition-colors">Add moment</a>
+    </div>
+    <button onclick="toggleTheme()" class="ml-4 flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium uppercase tracking-widest bg-stone-800 dark:bg-stone-200 text-white dark:text-stone-900 transition-colors">
+      <span id="theme-label">Dark</span>
+    </button>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-6 py-12 space-y-20">
+
+    <!-- ─── EDIT LABEL ───────────────────────────────────────────────── -->
+    <section id="flow-edit" class="proposal-anchor">
+      <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-1">Edit label</h2>
+      <p class="text-sm text-stone-600 dark:text-stone-400 mb-10 max-w-lg">Tap any row → action tray opens in a card → tap "Edit label" → inline form pre-filled → save returns to updated row.</p>
+
+      <div class="flex items-start gap-2 overflow-x-auto pb-4">
+
+        <!-- 1: Resting -->
+        <div>
+          <p class="step-label">1 — Resting</p>
+          <div class="phone"><div class="phone-inner">
+            <div class="section-card">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Habits</span>
+                <span class="text-xs text-stone-400 dark:text-stone-600">+ New</span>
+              </div>
+              <div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <div class="flex items-baseline gap-2"><span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span><span class="joy-pill">✿</span></div>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Exercise</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Reading</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <!-- 2: Tray open on Exercise -->
+        <div>
+          <p class="step-label">2 — Tap "Exercise"</p>
+          <div class="phone"><div class="phone-inner">
+            <div class="section-card">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Habits</span>
+                <span class="text-xs text-stone-400 dark:text-stone-600">+ New</span>
+              </div>
+              <div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <div class="flex items-baseline gap-2"><span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span><span class="joy-pill">✿</span></div>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <!-- Exercise — active + tray card -->
+                <div class="row-div">
+                  <div class="row-active flex items-center justify-between min-h-[44px] gap-2">
+                    <span class="text-sm text-stone-800 dark:text-stone-100 font-medium">Exercise</span>
+                    <span class="text-stone-400 dark:text-stone-500 text-xs">···</span>
+                  </div>
+                  <div class="tray-card">
+                    <div class="flex flex-wrap gap-1.5">
+                      <button class="tray-btn tray-btn-neutral">Edit label</button>
+                      <button class="tray-btn tray-btn-amber">Archive</button>
+                      <button class="tray-btn tray-btn-neutral">✿ Joy by default</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Reading</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <!-- 3: Edit form open -->
+        <div>
+          <p class="step-label">3 — Tap "Edit label"</p>
+          <div class="phone"><div class="phone-inner">
+            <div class="section-card">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Habits</span>
+                <span class="text-xs text-stone-400 dark:text-stone-600">+ New</span>
+              </div>
+              <div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <div class="flex items-baseline gap-2"><span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span><span class="joy-pill">✿</span></div>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <!-- Inline edit form for Exercise -->
+                <div class="row-div pt-1 pb-1">
+                  <div class="inline-form">
+                    <span class="field-label">Label</span>
+                    <input type="text" value="Exercise" class="form-input form-input-focused" />
+                    <div class="flex items-center gap-3 mt-3">
+                      <button class="save-btn">Save</button>
+                      <span class="cancel-link">Cancel</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Reading</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <!-- 4: Saved -->
+        <div>
+          <p class="step-label">4 — Saved</p>
+          <div class="phone"><div class="phone-inner">
+            <div class="section-card">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Habits</span>
+                <span class="text-xs text-stone-400 dark:text-stone-600">+ New</span>
+              </div>
+              <div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <div class="flex items-baseline gap-2"><span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span><span class="joy-pill">✿</span></div>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Daily exercise</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Reading</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ─── ADD HABIT ────────────────────────────────────────────────── -->
+    <section id="flow-add" class="proposal-anchor">
+      <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-1">Add habit</h2>
+      <p class="text-sm text-stone-600 dark:text-stone-400 mb-10 max-w-lg">Tap "+ New" in card header → type picker card appears above the list → choose type → add form appears above the list → habit added. "New" is the trigger; "Add" is the form's confirm action.</p>
+
+      <div class="flex items-start gap-2 overflow-x-auto pb-4">
+
+        <!-- 1: Tap + New -->
+        <div>
+          <p class="step-label">1 — Tap "+ New"</p>
+          <div class="phone"><div class="phone-inner">
+            <div class="section-card">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Habits</span>
+                <!-- highlighted -->
+                <span class="text-xs text-stone-700 dark:text-stone-200 font-medium underline cursor-pointer">+ New</span>
+              </div>
+              <div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <div class="flex items-baseline gap-2"><span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span><span class="joy-pill">✿</span></div>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Exercise</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <!-- 2: Type picker — above list -->
+        <div>
+          <p class="step-label">2 — Choose type</p>
+          <div class="phone"><div class="phone-inner">
+            <div class="section-card">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Habits</span>
+                <span class="text-xs text-stone-400 dark:text-stone-600">+ New</span>
+              </div>
+              <!-- Type picker card — above the list rows -->
+              <div class="inline-form mb-2">
+                <span class="field-label">What kind of habit?</span>
+                <div class="flex gap-2 mt-1">
+                  <button class="type-btn">Yes / No</button>
+                  <button class="type-btn">Number</button>
+                </div>
+                <span class="cancel-link">Cancel</span>
+              </div>
+              <!-- Existing rows below -->
+              <div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <div class="flex items-baseline gap-2"><span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span><span class="joy-pill">✿</span></div>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Exercise</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <!-- 3: Add form (boolean) — above list -->
+        <div>
+          <p class="step-label">3 — Tap "Yes / No"</p>
+          <div class="phone"><div class="phone-inner">
+            <div class="section-card">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Habits</span>
+                <span class="text-xs text-stone-400 dark:text-stone-600">+ New</span>
+              </div>
+              <!-- Add form card — above existing rows -->
+              <div class="inline-form mb-2">
+                <div class="mb-3">
+                  <span class="field-label">Label</span>
+                  <input type="text" placeholder="e.g. Stretching" class="form-input form-input-focused" />
+                </div>
+                <div class="mb-3">
+                  <span class="field-label">Joy by default</span>
+                  <!-- Joy toggle: pill style, inactive -->
+                  <button class="tray-btn tray-btn-neutral" style="font-size:12px; min-height:36px; padding:0 10px;">✿ Joy by default</button>
+                </div>
+                <div class="flex items-center gap-3">
+                  <button class="save-btn disabled">Add</button>
+                  <span class="cancel-link">Cancel</span>
+                </div>
+              </div>
+              <!-- Existing rows below -->
+              <div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <div class="flex items-baseline gap-2"><span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span><span class="joy-pill">✿</span></div>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Exercise</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <!-- 4: Added to list -->
+        <div>
+          <p class="step-label">4 — Added</p>
+          <div class="phone"><div class="phone-inner">
+            <div class="section-card">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Habits</span>
+                <span class="text-xs text-stone-400 dark:text-stone-600">+ New</span>
+              </div>
+              <div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <div class="flex items-baseline gap-2"><span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span><span class="joy-pill">✿</span></div>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Exercise</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <!-- New habit — faint amber tint to signal recency, fades after a moment -->
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div" style="background:rgba(254,243,199,0.35); border-radius:8px; margin:0 -4px; padding:0 4px;">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Stretching</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ─── ARCHIVE ───────────────────────────────────────────────────── -->
+    <section id="flow-archive" class="proposal-anchor">
+      <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-1">Archive</h2>
+      <p class="text-sm text-stone-600 dark:text-stone-400 mb-10 max-w-lg">Tap row → tray → "Archive" (amber border signals reversible) → row becomes muted with strikethrough and Restore. Tap Restore → row returns.</p>
+
+      <div class="flex items-start gap-2 overflow-x-auto pb-4">
+
+        <!-- 1 -->
+        <div>
+          <p class="step-label">1 — Resting</p>
+          <div class="phone"><div class="phone-inner">
+            <div class="section-card">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Habits</span>
+                <span class="text-xs text-stone-400 dark:text-stone-600">+ New</span>
+              </div>
+              <div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <div class="flex items-baseline gap-2"><span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span><span class="joy-pill">✿</span></div>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Exercise</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Reading</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <!-- 2: Tray on Reading with Archive highlighted -->
+        <div>
+          <p class="step-label">2 — Tap "Archive"</p>
+          <div class="phone"><div class="phone-inner">
+            <div class="section-card">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Habits</span>
+                <span class="text-xs text-stone-400 dark:text-stone-600">+ New</span>
+              </div>
+              <div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <div class="flex items-baseline gap-2"><span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span><span class="joy-pill">✿</span></div>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Exercise</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <!-- Reading — tray open, Archive button visually pressed -->
+                <div class="row-div">
+                  <div class="row-active flex items-center justify-between min-h-[44px] gap-2">
+                    <span class="text-sm text-stone-800 dark:text-stone-100 font-medium">Reading</span>
+                    <span class="text-stone-400 dark:text-stone-500 text-xs">···</span>
+                  </div>
+                  <div class="tray-card">
+                    <div class="flex flex-wrap gap-1.5">
+                      <button class="tray-btn tray-btn-neutral">Edit label</button>
+                      <!-- Archive: filled amber to show it's being pressed -->
+                      <button class="tray-btn tray-btn-amber-filled">Archive</button>
+                      <button class="tray-btn tray-btn-amber">✿ Joy by default</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <!-- 3: Archived state -->
+        <div>
+          <p class="step-label">3 — Archived</p>
+          <div class="phone"><div class="phone-inner">
+            <div class="section-card">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Habits</span>
+                <span class="text-xs text-stone-400 dark:text-stone-600">+ New</span>
+              </div>
+              <div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <div class="flex items-baseline gap-2"><span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span><span class="joy-pill">✿</span></div>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Exercise</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <!-- Reading — archived -->
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-400 dark:text-stone-600 line-through">Reading</span>
+                  <button class="text-xs text-stone-500 dark:text-stone-400 underline-offset-2 hover:underline">Restore</button>
+                </div>
+              </div>
+              <p class="mt-2 text-xs text-stone-500 dark:text-stone-500">Archived. Past entries are preserved.</p>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <!-- 4: Restored -->
+        <div>
+          <p class="step-label">4 — Restored</p>
+          <div class="phone"><div class="phone-inner">
+            <div class="section-card">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Habits</span>
+                <span class="text-xs text-stone-400 dark:text-stone-600">+ New</span>
+              </div>
+              <div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <div class="flex items-baseline gap-2"><span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span><span class="joy-pill">✿</span></div>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Exercise</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Reading</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ─── JOY BY DEFAULT ───────────────────────────────────────────── -->
+    <section id="flow-joy" class="proposal-anchor">
+      <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-1">Joy by default</h2>
+      <p class="text-sm text-stone-600 dark:text-stone-400 mb-10 max-w-lg">One label — "✿ Joy by default" — for both states. The button's visual style (neutral outline vs amber fill) carries the toggle state. No copy change needed, no second line.</p>
+
+      <div class="flex items-start gap-2 overflow-x-auto pb-4">
+
+        <!-- 1: Resting, joy off on Journaling -->
+        <div>
+          <p class="step-label">1 — Resting (joy off)</p>
+          <div class="phone"><div class="phone-inner">
+            <div class="section-card">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Habits</span>
+                <span class="text-xs text-stone-400 dark:text-stone-600">+ New</span>
+              </div>
+              <div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <div class="flex items-baseline gap-2"><span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span><span class="joy-pill">✿</span></div>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Exercise</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <!-- Journaling: no joy pill -->
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Journaling</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <!-- 2: Tray open, joy button neutral (off state) -->
+        <div>
+          <p class="step-label">2 — Tap "Journaling"</p>
+          <div class="phone"><div class="phone-inner">
+            <div class="section-card">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Habits</span>
+                <span class="text-xs text-stone-400 dark:text-stone-600">+ New</span>
+              </div>
+              <div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <div class="flex items-baseline gap-2"><span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span><span class="joy-pill">✿</span></div>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Exercise</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <div class="row-div">
+                  <div class="row-active flex items-center justify-between min-h-[44px] gap-2">
+                    <span class="text-sm text-stone-800 dark:text-stone-100 font-medium">Journaling</span>
+                    <span class="text-stone-400 dark:text-stone-500 text-xs">···</span>
+                  </div>
+                  <div class="tray-card">
+                    <div class="flex flex-wrap gap-1.5">
+                      <button class="tray-btn tray-btn-neutral">Edit label</button>
+                      <button class="tray-btn tray-btn-amber">Archive</button>
+                      <!-- Joy: neutral = OFF -->
+                      <button class="tray-btn tray-btn-neutral">✿ Joy by default</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <!-- 3: Joy on — pill appears, tray closed -->
+        <div>
+          <p class="step-label">3 — Joy on</p>
+          <div class="phone"><div class="phone-inner">
+            <div class="section-card">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Habits</span>
+                <span class="text-xs text-stone-400 dark:text-stone-600">+ New</span>
+              </div>
+              <div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <div class="flex items-baseline gap-2"><span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span><span class="joy-pill">✿</span></div>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Exercise</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <!-- Journaling: joy pill now visible -->
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <div class="flex items-baseline gap-2"><span class="text-sm text-stone-700 dark:text-stone-300">Journaling</span><span class="joy-pill">✿</span></div>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <!-- 4: Tray open, joy button amber filled (on state) -->
+        <div>
+          <p class="step-label">4 — Tap row → toggle off</p>
+          <div class="phone"><div class="phone-inner">
+            <div class="section-card">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Habits</span>
+                <span class="text-xs text-stone-400 dark:text-stone-600">+ New</span>
+              </div>
+              <div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <div class="flex items-baseline gap-2"><span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span><span class="joy-pill">✿</span></div>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <div class="flex items-center justify-between min-h-[44px] gap-2 row-div">
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Exercise</span>
+                  <span class="text-stone-300 dark:text-stone-600 text-xs">···</span>
+                </div>
+                <div class="row-div">
+                  <div class="row-active flex items-center justify-between min-h-[44px] gap-2">
+                    <div class="flex items-baseline gap-2"><span class="text-sm text-stone-800 dark:text-stone-100 font-medium">Journaling</span><span class="joy-pill">✿</span></div>
+                    <span class="text-stone-400 dark:text-stone-500 text-xs">···</span>
+                  </div>
+                  <div class="tray-card">
+                    <div class="flex flex-wrap gap-1.5">
+                      <button class="tray-btn tray-btn-neutral">Edit label</button>
+                      <button class="tray-btn tray-btn-amber">Archive</button>
+                      <!-- Joy: amber filled = ON — tap again to turn off -->
+                      <button class="tray-btn tray-btn-amber-filled">✿ Joy by default</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+      </div>
+      <p class="mt-4 text-xs text-stone-400 dark:text-stone-600 max-w-lg">Same label both ways: "✿ Joy by default". Neutral border = off. Amber fill = on. The visual state carries the meaning — no copy change required. One label, zero ambiguity.</p>
+    </section>
+
+    <!-- ─── ADD MOMENT (CHIP GRID) ───────────────────────────────────── -->
+    <section id="flow-moment" class="proposal-anchor">
+      <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-1">Add moment (chip grid)</h2>
+      <p class="text-sm text-stone-600 dark:text-stone-400 mb-10 max-w-lg">Tap a chip to select it → actions appear in a card below the grid → tap "+ New" chip → add form replaces the grid's last chip and appears inline.</p>
+
+      <div class="flex items-start gap-2 overflow-x-auto pb-4">
+
+        <!-- 1: Grid resting -->
+        <div>
+          <p class="step-label">1 — Grid resting</p>
+          <div class="phone"><div class="phone-inner">
+            <div class="section-card">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Moments</span>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <button class="chip">Good meal</button>
+                <button class="chip">Inspiring song</button>
+                <button class="chip">Time in nature</button>
+                <button class="chip chip-dashed">+ New</button>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <!-- 2: Chip selected — tray card below grid -->
+        <div>
+          <p class="step-label">2 — Tap "Inspiring song"</p>
+          <div class="phone"><div class="phone-inner">
+            <div class="section-card">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Moments</span>
+              </div>
+              <div class="flex flex-wrap gap-2 mb-1">
+                <button class="chip">Good meal</button>
+                <button class="chip selected">Inspiring song</button>
+                <button class="chip">Time in nature</button>
+                <button class="chip chip-dashed">+ New</button>
+              </div>
+              <!-- Tray card below grid -->
+              <div class="tray-card">
+                <p class="text-xs text-stone-500 dark:text-stone-400 mb-2">Inspiring song</p>
+                <div class="flex gap-1.5">
+                  <button class="tray-btn tray-btn-neutral">Edit label</button>
+                  <button class="tray-btn tray-btn-amber">Archive</button>
+                </div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <!-- 3: Edit label form below grid -->
+        <div>
+          <p class="step-label">3 — Tap "Edit label"</p>
+          <div class="phone"><div class="phone-inner">
+            <div class="section-card">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Moments</span>
+              </div>
+              <div class="flex flex-wrap gap-2 mb-1">
+                <button class="chip">Good meal</button>
+                <button class="chip selected">Inspiring song</button>
+                <button class="chip">Time in nature</button>
+                <button class="chip chip-dashed">+ New</button>
+              </div>
+              <div class="inline-form">
+                <input type="text" value="Inspiring song" class="form-input form-input-focused" />
+                <div class="flex items-center gap-3 mt-2">
+                  <button class="save-btn">Save</button>
+                  <span class="cancel-link">Cancel</span>
+                </div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <!-- 4: + New → add form -->
+        <div>
+          <p class="step-label">4 — Tap "+ New"</p>
+          <div class="phone"><div class="phone-inner">
+            <div class="section-card">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Moments</span>
+              </div>
+              <div class="flex flex-wrap gap-2 mb-1">
+                <button class="chip">Good meal</button>
+                <button class="chip">Inspiring song</button>
+                <button class="chip">Time in nature</button>
+                <!-- + New hidden while form open -->
+              </div>
+              <div class="inline-form">
+                <input type="text" placeholder="e.g. Long walk" class="form-input form-input-focused" />
+                <div class="flex items-center gap-3 mt-2">
+                  <button class="save-btn disabled">Add</button>
+                  <span class="cancel-link">Cancel</span>
+                </div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    let isDark = false;
+    function toggleTheme() {
+      isDark = !isDark;
+      document.documentElement.classList.toggle('dark', isDark);
+      document.getElementById('body').classList.toggle('dark', isDark);
+      document.getElementById('theme-label').textContent = isDark ? 'Light' : 'Dark';
+    }
+  </script>
+</body>
+</html>

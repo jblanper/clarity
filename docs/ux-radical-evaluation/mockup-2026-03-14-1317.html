@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DayDetail Mockup — UX Radical Evaluation 2026-03-14</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
+    .dark body { background: #1c1917; color: #fafaf9; }
+  </style>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
+</head>
+<body class="bg-stone-50 text-stone-800 min-h-screen">
+
+  <!-- ── Top bar ──────────────────────────────────────────────────── -->
+  <div class="sticky top-0 z-50 bg-white border-b border-stone-200 px-6 py-3 flex items-center justify-between">
+    <span class="text-xs font-medium uppercase tracking-widest text-stone-500">DayDetail — Proposals</span>
+    <button
+      onclick="document.documentElement.classList.toggle('dark'); this.textContent = document.documentElement.classList.contains('dark') ? 'Light mode' : 'Dark mode';"
+      class="text-xs border border-stone-200 dark:border-stone-700 rounded-lg px-3 py-1.5 text-stone-600 dark:text-stone-400 dark:bg-stone-900 hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors"
+    >Dark mode</button>
+  </div>
+
+  <!-- ── Nav ──────────────────────────────────────────────────────── -->
+  <div class="sticky top-[45px] z-40 bg-white dark:bg-stone-900 border-b border-stone-100 dark:border-stone-800 px-6 py-2 flex gap-4 overflow-x-auto">
+    <a href="#p1-moment-chips" class="text-xs text-stone-500 dark:text-stone-400 whitespace-nowrap hover:text-stone-800 dark:hover:text-stone-200">P1 Moment chips</a>
+    <a href="#p2-habit-checkmark" class="text-xs text-stone-500 dark:text-stone-400 whitespace-nowrap hover:text-stone-800 dark:hover:text-stone-200">P2 Habit checkmark</a>
+    <a href="#p3-highlights-section" class="text-xs text-stone-500 dark:text-stone-400 whitespace-nowrap hover:text-stone-800 dark:hover:text-stone-200">P3 Highlights section</a>
+    <a href="#p4-edit-action" class="text-xs text-stone-500 dark:text-stone-400 whitespace-nowrap hover:text-stone-800 dark:hover:text-stone-200">P4 Edit action</a>
+    <a href="#combined" class="text-xs text-stone-500 dark:text-stone-400 whitespace-nowrap hover:text-stone-800 dark:hover:text-stone-200">Combined view</a>
+  </div>
+
+  <div class="max-w-5xl mx-auto px-6 py-12 space-y-20 dark:bg-stone-950 min-h-screen">
+
+    <!-- ══════════════════════════════════════════════════════════════
+         P1 — Moment chips
+    ══════════════════════════════════════════════════════════════ -->
+    <section id="p1-moment-chips">
+      <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-1">P1</h2>
+      <p class="text-base font-light text-stone-800 dark:text-stone-200 mb-1">Amber moment chips in DayDetail</p>
+      <p class="text-sm text-stone-500 dark:text-stone-400 mb-8">Replace stone-500 filled chips with amber read-only display chips, matching the post-P1 MomentChip language.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <!-- Before -->
+        <div>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-400 dark:text-stone-600 mb-4">Before — stone fill (current)</p>
+          <div class="bg-white dark:bg-stone-900 rounded-3xl p-6 border border-stone-100 dark:border-stone-800 max-w-sm">
+            <h3 class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-3">Moments</h3>
+            <div class="flex flex-wrap gap-2">
+              <span class="rounded-full bg-stone-500 dark:bg-stone-300 px-4 py-2 text-sm text-white dark:text-stone-900">Good meal</span>
+              <span class="rounded-full bg-stone-500 dark:bg-stone-300 px-4 py-2 text-sm text-white dark:text-stone-900">Interesting conversation</span>
+              <span class="rounded-full bg-stone-500 dark:bg-stone-300 px-4 py-2 text-sm text-white dark:text-stone-900">Time in nature</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- After -->
+        <div>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-400 dark:text-stone-600 mb-4">After — amber display (proposed)</p>
+          <div class="bg-white dark:bg-stone-900 rounded-3xl p-6 border border-stone-100 dark:border-stone-800 max-w-sm">
+            <h3 class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-3">Moments</h3>
+            <div class="flex flex-wrap gap-2">
+              <span class="rounded-full bg-amber-50 border border-amber-200 px-3 py-1.5 text-sm text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/40 dark:text-amber-300">Good meal</span>
+              <span class="rounded-full bg-amber-50 border border-amber-200 px-3 py-1.5 text-sm text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/40 dark:text-amber-300">Interesting conversation</span>
+              <span class="rounded-full bg-amber-50 border border-amber-200 px-3 py-1.5 text-sm text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/40 dark:text-amber-300">Time in nature</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         P2 — Habit checkmark
+    ══════════════════════════════════════════════════════════════ -->
+    <section id="p2-habit-checkmark">
+      <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-1">P2</h2>
+      <p class="text-base font-light text-stone-800 dark:text-stone-200 mb-1">Amber habit checkmark</p>
+      <p class="text-sm text-stone-500 dark:text-stone-400 mb-8">Change checkmark from stone-500 to amber-500/amber-400, completing the amber-for-completion language in habit rows.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <!-- Before -->
+        <div>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-400 dark:text-stone-600 mb-4">Before — stone-500 checkmark (current)</p>
+          <div class="bg-white dark:bg-stone-900 rounded-3xl p-6 border border-stone-100 dark:border-stone-800 max-w-sm">
+            <h3 class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-2">Habits</h3>
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="text-sm text-stone-500 dark:text-stone-500">✓</span>
+                <span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span>
+                <!-- BlossomIcon placeholder -->
+                <span class="text-amber-500 text-sm">✿</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-sm text-stone-500 dark:text-stone-500">✓</span>
+                <span class="text-sm text-stone-700 dark:text-stone-300">Exercise</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-sm text-stone-500 dark:text-stone-500">✓</span>
+                <span class="text-sm text-stone-700 dark:text-stone-300">Journaling</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- After -->
+        <div>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-400 dark:text-stone-600 mb-4">After — amber-500 checkmark (proposed)</p>
+          <div class="bg-white dark:bg-stone-900 rounded-3xl p-6 border border-stone-100 dark:border-stone-800 max-w-sm">
+            <h3 class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-2">Habits</h3>
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="text-sm text-amber-500 dark:text-amber-400">✓</span>
+                <span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span>
+                <span class="text-amber-500 text-sm">✿</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-sm text-amber-500 dark:text-amber-400">✓</span>
+                <span class="text-sm text-stone-700 dark:text-stone-300">Exercise</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-sm text-amber-500 dark:text-amber-400">✓</span>
+                <span class="text-sm text-stone-700 dark:text-stone-300">Journaling</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         P3 — Highlights section
+    ══════════════════════════════════════════════════════════════ -->
+    <section id="p3-highlights-section">
+      <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-1">P3</h2>
+      <p class="text-base font-light text-stone-800 dark:text-stone-200 mb-1">Highlights section in DayDetail</p>
+      <p class="text-sm text-stone-500 dark:text-stone-400 mb-8">Surface joy-marked habits in a dedicated amber panel, mirroring the CheckInForm Highlights section. Positioned above Habits — emotional summary first.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <!-- Before -->
+        <div>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-400 dark:text-stone-600 mb-4">Before — inline blossom only (current)</p>
+          <div class="bg-white dark:bg-stone-900 rounded-3xl p-6 border border-stone-100 dark:border-stone-800 max-w-sm">
+            <h2 class="mb-6 text-base font-light tracking-widest text-stone-800 dark:text-stone-200">Friday, 13 March 2026</h2>
+
+            <section class="mb-6">
+              <h3 class="mb-2 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Habits</h3>
+              <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm text-stone-500 dark:text-stone-500">✓</span>
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span>
+                  <span class="text-amber-500 text-sm">✿</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-sm text-stone-500 dark:text-stone-500">✓</span>
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Exercise</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-sm text-stone-500 dark:text-stone-500">✓</span>
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Journaling</span>
+                </div>
+              </div>
+            </section>
+
+            <section class="mb-6">
+              <h3 class="mb-2 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Reflection</h3>
+              <p class="text-sm font-light leading-relaxed text-stone-700 dark:text-stone-300">Slower morning than usual but the afternoon picked up.</p>
+            </section>
+          </div>
+        </div>
+
+        <!-- After -->
+        <div>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-400 dark:text-stone-600 mb-4">After — Highlights panel + P1 chips + P2 checkmark (proposed)</p>
+          <div class="bg-white dark:bg-stone-900 rounded-3xl p-6 border border-stone-100 dark:border-stone-800 max-w-sm">
+            <h2 class="mb-6 text-base font-light tracking-widest text-stone-800 dark:text-stone-200">Friday, 13 March 2026</h2>
+
+            <!-- Highlights panel -->
+            <section class="mb-6 rounded-2xl bg-amber-50 dark:bg-amber-900/15 border border-amber-100 dark:border-amber-900/30 px-4 py-3">
+              <h3 class="mb-2 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Highlights</h3>
+              <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-amber-500 text-sm">✿</span>
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span>
+                </div>
+              </div>
+            </section>
+
+            <section class="mb-6">
+              <h3 class="mb-2 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Habits</h3>
+              <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm text-amber-500 dark:text-amber-400">✓</span>
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Meditation</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-sm text-amber-500 dark:text-amber-400">✓</span>
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Exercise</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-sm text-amber-500 dark:text-amber-400">✓</span>
+                  <span class="text-sm text-stone-700 dark:text-stone-300">Journaling</span>
+                </div>
+              </div>
+            </section>
+
+            <section class="mb-6">
+              <h3 class="mb-2 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Reflection</h3>
+              <p class="text-sm font-light leading-relaxed text-stone-700 dark:text-stone-300">Slower morning than usual but the afternoon picked up.</p>
+            </section>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         P4 — Edit action
+    ══════════════════════════════════════════════════════════════ -->
+    <section id="p4-edit-action">
+      <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-1">P4</h2>
+      <p class="text-base font-light text-stone-800 dark:text-stone-200 mb-1">Edit as secondary button</p>
+      <p class="text-sm text-stone-500 dark:text-stone-400 mb-8">Replace the section-label-styled EDIT link with a small secondary button that reads as a navigation action, not another section heading.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <!-- Before -->
+        <div>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-400 dark:text-stone-600 mb-4">Before — section label style (current)</p>
+          <div class="bg-white dark:bg-stone-900 rounded-3xl p-6 border border-stone-100 dark:border-stone-800 max-w-sm">
+            <section class="mb-6">
+              <h3 class="mb-2 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Reflection</h3>
+              <p class="text-sm font-light leading-relaxed text-stone-700 dark:text-stone-300">Good conversation with an old friend — one of those rare ones where time disappears.</p>
+            </section>
+            <!-- Current: looks like another section label -->
+            <div class="mt-4">
+              <a href="#" class="text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 hover:text-stone-800 dark:hover:text-stone-300">
+                Edit
+              </a>
+            </div>
+            <p class="mt-3 text-xs text-stone-500 dark:text-stone-500">Last edited Fri 13 Mar</p>
+          </div>
+        </div>
+
+        <!-- After -->
+        <div>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-400 dark:text-stone-600 mb-4">After — secondary button (proposed)</p>
+          <div class="bg-white dark:bg-stone-900 rounded-3xl p-6 border border-stone-100 dark:border-stone-800 max-w-sm">
+            <section class="mb-6">
+              <h3 class="mb-2 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Reflection</h3>
+              <p class="text-sm font-light leading-relaxed text-stone-700 dark:text-stone-300">Good conversation with an old friend — one of those rare ones where time disappears.</p>
+            </section>
+            <!-- Proposed: secondary button, clearly a navigation action -->
+            <div class="mt-6">
+              <a href="#" class="inline-flex items-center rounded-xl border border-stone-200 dark:border-stone-700 px-4 py-2 text-xs text-stone-600 dark:text-stone-400 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800/50 hover:text-stone-800 dark:hover:text-stone-200">
+                Edit this day
+              </a>
+            </div>
+            <p class="mt-3 text-xs text-stone-500 dark:text-stone-500">Last edited Fri 13 Mar</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         Combined — all proposals applied
+    ══════════════════════════════════════════════════════════════ -->
+    <section id="combined">
+      <h2 class="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500 mb-1">Combined view</h2>
+      <p class="text-base font-light text-stone-800 dark:text-stone-200 mb-1">All proposals applied — P1 + P2 + P3 + P4</p>
+      <p class="text-sm text-stone-500 dark:text-stone-400 mb-8">Full DayDetail dialog as it would appear with all four proposals implemented. Rich day (3 habits done, 1 highlighted, 2 numbers, 3 moments, reflection).</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <!-- Light mode -->
+        <div>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-4">Light mode</p>
+          <!-- Bottom sheet simulation — static card with rounded-top chrome -->
+          <div class="bg-white rounded-t-3xl border border-stone-100 shadow-sm">
+            <!-- Sheet chrome header -->
+            <div class="px-5 pt-5 pb-1 flex justify-end">
+              <button class="flex items-center justify-end text-stone-600 text-lg leading-none">✕</button>
+            </div>
+            <!-- Content -->
+            <div class="px-6 pb-8">
+                <h2 class="mb-6 text-base font-light tracking-widest text-stone-800">Friday, 13 March 2026</h2>
+
+                <!-- Highlights -->
+                <section class="mb-6 rounded-2xl bg-amber-50 border border-amber-100 px-4 py-3">
+                  <h3 class="mb-2 text-xs font-medium uppercase tracking-widest text-stone-500">Highlights</h3>
+                  <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                      <span class="text-amber-500 text-sm">✿</span>
+                      <span class="text-sm text-stone-700">Meditation</span>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- Habits -->
+                <section class="mb-6">
+                  <h3 class="mb-2 text-xs font-medium uppercase tracking-widest text-stone-500">Habits</h3>
+                  <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm text-amber-500">✓</span>
+                      <span class="text-sm text-stone-700">Meditation</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm text-amber-500">✓</span>
+                      <span class="text-sm text-stone-700">Exercise</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm text-amber-500">✓</span>
+                      <span class="text-sm text-stone-700">Journaling</span>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- By the numbers -->
+                <section class="mb-6">
+                  <h3 class="mb-2 text-xs font-medium uppercase tracking-widest text-stone-500">By the numbers</h3>
+                  <div class="space-y-1">
+                    <div class="flex items-baseline gap-2">
+                      <span class="text-sm font-medium text-stone-800">7.5</span>
+                      <span class="text-xs text-stone-500">hrs</span>
+                      <span class="text-sm text-stone-600">Sleep</span>
+                    </div>
+                    <div class="flex items-baseline gap-2">
+                      <span class="text-sm font-medium text-stone-800">8</span>
+                      <span class="text-xs text-stone-500">glasses</span>
+                      <span class="text-sm text-stone-600">Water</span>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- Moments -->
+                <section class="mb-6">
+                  <h3 class="mb-3 text-xs font-medium uppercase tracking-widest text-stone-500">Moments</h3>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="rounded-full bg-amber-50 border border-amber-200 px-3 py-1.5 text-sm text-amber-800">Good meal</span>
+                    <span class="rounded-full bg-amber-50 border border-amber-200 px-3 py-1.5 text-sm text-amber-800">Interesting conversation</span>
+                    <span class="rounded-full bg-amber-50 border border-amber-200 px-3 py-1.5 text-sm text-amber-800">Time in nature</span>
+                  </div>
+                </section>
+
+                <!-- Reflection -->
+                <section class="mb-6">
+                  <h3 class="mb-2 text-xs font-medium uppercase tracking-widest text-stone-500">Reflection</h3>
+                  <p class="text-sm font-light leading-relaxed text-stone-700">Slower morning than usual but the afternoon picked up. Good conversation with an old friend — one of those rare ones where time disappears.</p>
+                </section>
+
+                <!-- Edit -->
+                <div class="mt-6">
+                  <a href="#" class="inline-flex items-center rounded-xl border border-stone-200 px-4 py-2 text-xs text-stone-600 hover:bg-stone-50 hover:text-stone-800 transition-colors">
+                    Edit this day
+                  </a>
+                </div>
+                <p class="mt-3 text-xs text-stone-500">Last edited Fri 13 Mar</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dark mode -->
+        <div>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-4">Dark mode</p>
+          <!-- Bottom sheet simulation — static card with rounded-top chrome -->
+          <div class="rounded-t-3xl border border-stone-800" style="background: #1c1917;">
+            <!-- Sheet chrome header -->
+            <div class="px-5 pt-5 pb-1 flex justify-end">
+              <button class="flex items-center justify-end text-stone-500 text-lg leading-none">✕</button>
+            </div>
+            <!-- Content -->
+            <div class="px-6 pb-8">
+                <h2 class="mb-6 text-base font-light tracking-widest text-stone-200">Friday, 13 March 2026</h2>
+
+                <!-- Highlights -->
+                <section class="mb-6 rounded-2xl border px-4 py-3" style="background: rgba(120,53,15,0.15); border-color: rgba(120,53,15,0.3);">
+                  <h3 class="mb-2 text-xs font-medium uppercase tracking-widest text-stone-500">Highlights</h3>
+                  <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                      <span class="text-amber-400 text-sm">✿</span>
+                      <span class="text-sm text-stone-300">Meditation</span>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- Habits -->
+                <section class="mb-6">
+                  <h3 class="mb-2 text-xs font-medium uppercase tracking-widest text-stone-500">Habits</h3>
+                  <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm text-amber-400">✓</span>
+                      <span class="text-sm text-stone-300">Meditation</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm text-amber-400">✓</span>
+                      <span class="text-sm text-stone-300">Exercise</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm text-amber-400">✓</span>
+                      <span class="text-sm text-stone-300">Journaling</span>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- By the numbers -->
+                <section class="mb-6">
+                  <h3 class="mb-2 text-xs font-medium uppercase tracking-widest text-stone-500">By the numbers</h3>
+                  <div class="space-y-1">
+                    <div class="flex items-baseline gap-2">
+                      <span class="text-sm font-medium text-stone-200">7.5</span>
+                      <span class="text-xs text-stone-500">hrs</span>
+                      <span class="text-sm text-stone-400">Sleep</span>
+                    </div>
+                    <div class="flex items-baseline gap-2">
+                      <span class="text-sm font-medium text-stone-200">8</span>
+                      <span class="text-xs text-stone-500">glasses</span>
+                      <span class="text-sm text-stone-400">Water</span>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- Moments -->
+                <section class="mb-6">
+                  <h3 class="mb-3 text-xs font-medium uppercase tracking-widest text-stone-500">Moments</h3>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="rounded-full px-3 py-1.5 text-sm border" style="background: rgba(120,53,15,0.2); border-color: rgba(180,100,20,0.4); color: #fcd34d;">Good meal</span>
+                    <span class="rounded-full px-3 py-1.5 text-sm border" style="background: rgba(120,53,15,0.2); border-color: rgba(180,100,20,0.4); color: #fcd34d;">Interesting conversation</span>
+                    <span class="rounded-full px-3 py-1.5 text-sm border" style="background: rgba(120,53,15,0.2); border-color: rgba(180,100,20,0.4); color: #fcd34d;">Time in nature</span>
+                  </div>
+                </section>
+
+                <!-- Reflection -->
+                <section class="mb-6">
+                  <h3 class="mb-2 text-xs font-medium uppercase tracking-widest text-stone-500">Reflection</h3>
+                  <p class="text-sm font-light leading-relaxed text-stone-300">Slower morning than usual but the afternoon picked up. Good conversation with an old friend — one of those rare ones where time disappears.</p>
+                </section>
+
+                <!-- Edit -->
+                <div class="mt-6">
+                  <a href="#" class="inline-flex items-center rounded-xl border border-stone-700 px-4 py-2 text-xs text-stone-400 hover:bg-stone-800 hover:text-stone-200 transition-colors">
+                    Edit this day
+                  </a>
+                </div>
+                <p class="mt-3 text-xs text-stone-500">Last edited Fri 13 Mar</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>
