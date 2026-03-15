@@ -145,6 +145,9 @@ save it to `docs/ux-radical-evaluation/ux-radical-evaluation-[YYYY-MM-DD-HHMM].m
 Ensure `docs/ux-radical-evaluation/` exists before writing — create it if needed. Each
 report is a distinct artefact. Never overwrite an existing evaluation file.
 
+Once saved, if a mockup already exists for this session run the **Report–Mockup Sync
+checklist** (see below) to bring the mockup in line with any proposal changes.
+
 The report follows this structure:
 
 ---
@@ -224,6 +227,42 @@ Mockup requirements:
 Once the mockup file is created, go back to the saved report and update the **Mockup** field
 in each proposal to link to the relevant section anchor in the single mockup file, e.g.:
 `[View mockup](./mockup-[YYYY-MM-DD-HHMM].html#proposal-slug)`
+
+After saving the mockup, run the **Report–Mockup Sync checklist** (see below) — the report
+and mockup must be consistent before the session ends.
+
+---
+
+## Report–Mockup Sync
+
+The report and mockup are two views of the same proposals. They must always be consistent.
+Run this checklist after any edit to either file — whether that's a new report, a new mockup,
+a mid-session proposal change, or a user asking to refine something.
+
+### Sync rules
+
+**Report is the canonical proposal list.** The set of proposals in the report's Proposals
+section is authoritative. If you add, rename, or remove a proposal in the report:
+- Add / rename / remove the corresponding `id="proposal-slug"` section in the mockup.
+- Update or remove the `[View mockup]` link in the report accordingly.
+
+**Mockup captures visual decisions.** If during mockup work you discover a new interaction
+state, variant, or direction worth keeping:
+- Update the corresponding proposal's **Direction** field in the report.
+- Refresh the **Mockup** link if the anchor changed.
+
+### Sync checklist (run after every edit to either file)
+
+1. List all proposals in the report's **Proposals** section.
+2. List all `id="..."` section anchors in the mockup.
+3. Verify 1-to-1 correspondence — every proposal has a matching anchor, every anchor has a
+   matching proposal. Fix any gaps.
+4. Verify every `[View mockup](./mockup-...html#anchor)` link in the report resolves to a
+   real anchor in the mockup. Fix any broken or stale links.
+5. Confirm no proposal has a blank or placeholder **Mockup** field — every proposal must
+   link to its section in the current mockup file.
+
+Do not finish a session with a mismatch between the report and the mockup.
 
 ---
 
