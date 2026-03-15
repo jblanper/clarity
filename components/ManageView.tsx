@@ -38,6 +38,15 @@ const ACTION_BTN =
 const ARCHIVE_BTN =
   "text-xs text-amber-700 dark:text-amber-500 underline-offset-2 hover:underline transition-colors";
 
+const TRAY_ARCHIVE_BTN =
+  "inline-flex items-center rounded-full border border-amber-300 dark:border-amber-700/50 px-3 py-1.5 text-xs text-amber-700 dark:text-amber-400 transition-colors hover:bg-amber-50 dark:hover:bg-amber-900/20";
+
+const TRAY_JOY_BTN =
+  "inline-flex items-center gap-1 rounded-full border border-stone-200 dark:border-stone-700 px-3 py-1.5 text-xs text-stone-600 dark:text-stone-400 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800/50";
+
+const TRAY_JOY_ON_BTN =
+  "inline-flex items-center gap-1 rounded-full bg-amber-100 dark:bg-amber-900/30 border border-amber-300 dark:border-amber-700/50 px-3 py-1.5 text-xs text-amber-700 dark:text-amber-400 transition-colors hover:bg-amber-200 dark:hover:bg-amber-900/50";
+
 const TEXT_INPUT =
   "w-full rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 px-3 py-2 text-sm text-stone-800 dark:text-stone-200 placeholder:text-stone-400 dark:placeholder:text-stone-600 focus:outline-none focus:ring-2 focus:ring-stone-300 dark:focus:ring-stone-600";
 
@@ -283,21 +292,21 @@ export default function ManageView() {
                   <m.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0, paddingBottom: 0 }}
+                    exit={{ height: 0, opacity: 0, paddingTop: 0, paddingBottom: 0, marginBottom: 0 }}
                     transition={{ duration: 0.22, ease: "easeOut" }}
                     style={{ overflow: "hidden" }}
-                    className="flex gap-4 pb-3"
+                    className="mb-2 rounded-2xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/50 px-4 py-3 flex gap-3 flex-wrap"
                   >
                     <button type="button" onClick={() => startEditHabit(h)} className={ACTION_BTN}>Edit</button>
-                    <button type="button" onClick={() => archiveHabit(h.id)} className={ARCHIVE_BTN}>Archive</button>
+                    <button type="button" onClick={() => archiveHabit(h.id)} className={TRAY_ARCHIVE_BTN}>Archive</button>
                     {h.type === "boolean" && (
                       <button
                         type="button"
                         onClick={() => toggleJoyByDefault(h.id)}
-                        className={`${ACTION_BTN} flex items-center gap-1`}
+                        className={h.joyByDefault ? TRAY_JOY_ON_BTN : TRAY_JOY_BTN}
                       >
                         <BlossomIcon filled={h.joyByDefault} size={14} />
-                        {h.joyByDefault ? "Unmark joy" : "Mark joy"}
+                        Joy
                       </button>
                     )}
                   </m.div>
