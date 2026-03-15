@@ -252,6 +252,7 @@ export default function ManageView() {
               {/* Resting row — full-width tap target */}
               <button
                 type="button"
+                aria-expanded={actionTrayId === h.id}
                 onClick={() => {
                   if (actionTrayId === h.id) {
                     setActionTrayId(null);
@@ -260,9 +261,11 @@ export default function ManageView() {
                     setActionTrayId(h.id);
                   }
                 }}
-                className="flex w-full min-h-[44px] items-center gap-2 py-3 text-left"
+                className={`flex w-full min-h-[44px] items-center gap-2 py-3 text-left transition-colors hover:bg-stone-50 dark:hover:bg-stone-800/50 rounded-xl -mx-1 px-1 ${
+                  actionTrayId === h.id ? "bg-stone-50 dark:bg-stone-800/50" : ""
+                }`}
               >
-                <span className="text-sm text-stone-700 dark:text-stone-300">{h.label}</span>
+                <span className={`text-sm ${actionTrayId === h.id ? "font-medium text-stone-800 dark:text-stone-100" : "text-stone-700 dark:text-stone-300"}`}>{h.label}</span>
                 {h.type === "numeric" && (
                   <span className="text-xs text-stone-500 dark:text-stone-500">{h.unit}</span>
                 )}
@@ -271,6 +274,7 @@ export default function ManageView() {
                     Joy
                   </span>
                 )}
+                <span className="ml-auto text-stone-400 dark:text-stone-600 text-xs leading-none select-none">···</span>
               </button>
 
               {/* Action tray */}
