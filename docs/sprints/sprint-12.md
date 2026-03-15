@@ -594,11 +594,11 @@ Add a joy toggle button to the action tray (inside the `m.div` flex row, after t
 
 ## Definition of done — Sprint
 
-- [ ] All tasks above are complete and validated
-- [ ] `npm run lint && npm test && npm run build` passes clean
+- [x] All tasks above are complete and validated
+- [x] `npm run lint && npm test && npm run build` passes clean
 - [ ] Tested manually on mobile viewport in both light and dark mode
 - [ ] No regressions on existing features (check Today, History, Settings, Manage, Edit)
-- [ ] CLAUDE.md updated with the action-tray animation pattern (post Task 8)
+- [x] CLAUDE.md updated with the action-tray animation pattern (post Task 8)
 - [ ] Ready for `/deploy`
 
 ---

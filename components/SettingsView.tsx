@@ -171,14 +171,14 @@ export default function SettingsView() {
         <div className="mb-6">
           <p className="mb-1 text-xs font-medium uppercase tracking-widest text-stone-500">BACKUP</p>
           <p className="mb-4 text-sm text-stone-500 dark:text-stone-400">
-            Save a copy of all your entries to a file.
+            Keep a copy of your entries on your device.
           </p>
           <button
             type="button"
             onClick={handleExport}
             className={TERTIARY_BTN}
           >
-            Download backup
+            Save a copy
           </button>
           {exportStatus === "error" && (
             <p className="mt-3 text-center text-sm text-red-700 dark:text-red-400">
@@ -191,7 +191,7 @@ export default function SettingsView() {
         <div>
           <p className="mb-1 text-xs font-medium uppercase tracking-widest text-stone-500">RESTORE</p>
           <p className="mb-4 text-sm text-stone-500 dark:text-stone-400">
-            Load entries from a backup file. Existing days won&apos;t be overwritten.
+            Load a backup file. Days you&apos;ve already logged won&apos;t change.
           </p>
 
           {/* Hidden file input — triggered by the styled button below */}
@@ -210,7 +210,7 @@ export default function SettingsView() {
               onClick={() => fileInputRef.current?.click()}
               className={TERTIARY_BTN}
             >
-              Choose backup file
+              Choose a file
             </button>
           )}
 
@@ -293,12 +293,12 @@ export default function SettingsView() {
             onClick={() => setResetConfirming(true)}
             className="inline-flex min-h-[44px] items-center rounded-xl border border-amber-200 dark:border-amber-800/50 px-4 py-2 text-xs text-amber-700 dark:text-amber-500 transition-colors hover:bg-amber-50 dark:hover:bg-amber-900/20"
           >
-            Reset to factory defaults
+            Start fresh
           </button>
         ) : (
           <div className="space-y-3">
             <p className="text-xs text-stone-500 dark:text-stone-400">
-              This will permanently delete all entries and restore Clarity to its original habits and moments. This cannot be undone.
+              Your entries will be removed and habits reset to defaults.
             </p>
             <div className="flex gap-5">
               <button
@@ -306,14 +306,14 @@ export default function SettingsView() {
                 onClick={handleReset}
                 className="inline-flex min-h-[44px] items-center text-sm text-amber-700 dark:text-amber-500 transition-colors hover:text-amber-900 dark:hover:text-amber-300"
               >
-                Yes, delete everything
+                Yes, start fresh
               </button>
               <button
                 type="button"
                 onClick={() => setResetConfirming(false)}
                 className="inline-flex min-h-[44px] items-center text-sm text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
               >
-                Cancel
+                Keep my data
               </button>
             </div>
           </div>
