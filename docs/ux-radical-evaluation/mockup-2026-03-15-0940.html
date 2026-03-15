@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UX Mockup — History Page · 2026-03-15</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'] },
+          colors: {
+            stone: {
+              50: '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4',
+              300: '#d6d3d1', 400: '#a8a29e', 500: '#78716c',
+              600: '#57534e', 700: '#44403c', 800: '#292524', 900: '#1c1917',
+            },
+            amber: {
+              50: '#fffbeb', 200: '#fde68a', 400: '#fbbf24',
+              500: '#f59e0b', 600: '#d97706', 700: '#b45309', 800: '#92400e',
+            },
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .sidebar-link.active { background: #f5f5f4; color: #1c1917; }
+    .dark .sidebar-link.active { background: #292524; color: #fafaf9; }
+    .section { display: none; }
+    .section.visible { display: block; }
+    .proposal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    @media (max-width: 900px) { .proposal-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body class="bg-stone-50 text-stone-800 min-h-screen" id="root">
+
+<!-- ── Layout ─────────────────────────────────────────────── -->
+<div class="flex min-h-screen">
+
+  <!-- Sidebar -->
+  <nav class="w-56 shrink-0 border-r border-stone-200 bg-white py-8 px-4 flex flex-col gap-1 sticky top-0 h-screen overflow-y-auto" id="sidebar">
+    <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-4 px-2">History · 2026-03-15</p>
+    <a href="#h1-date-weight" class="sidebar-link active rounded-lg px-3 py-2 text-sm text-stone-600 hover:bg-stone-50 transition-colors block" onclick="switchTo('h1-date-weight', this)">H1 — Date-as-weight</a>
+    <a href="#h2-year-row" class="sidebar-link rounded-lg px-3 py-2 text-sm text-stone-600 hover:bg-stone-50 transition-colors block" onclick="switchTo('h2-year-row', this)">H2 — Year row collapse</a>
+    <a href="#h3-bar-refinement" class="sidebar-link rounded-lg px-3 py-2 text-sm text-stone-600 hover:bg-stone-50 transition-colors block" onclick="switchTo('h3-bar-refinement', this)">H3 — Bar refinement</a>
+    <a href="#h4-period-pill" class="sidebar-link rounded-lg px-3 py-2 text-sm text-stone-600 hover:bg-stone-50 transition-colors block" onclick="switchTo('h4-period-pill', this)">H4 — Period pill group</a>
+    <div class="mt-auto pt-8 border-t border-stone-100">
+      <button onclick="toggleDark()" class="w-full text-left rounded-lg px-3 py-2 text-xs text-stone-400 hover:text-stone-600 transition-colors">Toggle dark mode</button>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main class="flex-1 py-10 px-8 max-w-5xl">
+
+    <!-- ── H1: Date-as-weight ─────────────────────────────── -->
+    <section id="h1-date-weight" class="section visible">
+      <h2 class="text-xl font-light tracking-widest text-stone-600 mb-2">H1 — Date-as-weight</h2>
+      <p class="text-sm text-stone-500 mb-8">Remove filled cell boxes. Each day is its date number. Typographic weight and color carry activity level. Amber for joy. Subtle circle for selected day.</p>
+
+      <div class="proposal-grid">
+
+        <!-- Light mode -->
+        <div>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-4">Light mode</p>
+          <div class="bg-white rounded-2xl border border-stone-200 p-6 max-w-sm mx-auto">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-6">
+              <h1 class="text-xl font-light tracking-widest text-stone-800">History</h1>
+              <span class="text-xs uppercase tracking-widest text-stone-600">Settings</span>
+            </div>
+
+            <!-- Month nav (no year row) -->
+            <div class="flex items-center justify-between mb-6">
+              <button class="text-stone-500 hover:text-stone-700 min-h-[44px] flex items-center px-1">‹</button>
+              <span class="text-base font-light tracking-widest text-stone-600">March 2026</span>
+              <button class="text-stone-300 min-h-[44px] flex items-center px-1 opacity-30">›</button>
+            </div>
+
+            <!-- Calendar — date-as-weight -->
+            <div class="flex justify-center mb-2">
+              <div class="flex gap-0">
+                <!-- Day labels -->
+                <div class="flex flex-col mr-2">
+                  <div class="h-11 w-5 flex items-center justify-center text-xs uppercase tracking-widest text-stone-400">M</div>
+                  <div class="h-11 w-5 flex items-center justify-center text-xs uppercase tracking-widest text-stone-400">T</div>
+                  <div class="h-11 w-5 flex items-center justify-center text-xs uppercase tracking-widest text-stone-400">W</div>
+                  <div class="h-11 w-5 flex items-center justify-center text-xs uppercase tracking-widest text-stone-400">T</div>
+                  <div class="h-11 w-5 flex items-center justify-center text-xs uppercase tracking-widest text-stone-400">F</div>
+                  <div class="h-11 w-5 flex items-center justify-center text-xs uppercase tracking-widest text-stone-400">S</div>
+                  <div class="h-11 w-5 flex items-center justify-center text-xs uppercase tracking-widest text-stone-400">S</div>
+                </div>
+
+                <!-- Week 1: starts Sunday (blank M-F for week starting Feb 23) -->
+                <!-- NOTE: March 2026 starts on a Sunday (col 6 = index 6) -->
+                <!-- We'll show a simplified but representative layout -->
+
+                <!-- Week col: 1 -->
+                <div class="flex flex-col">
+                  <div class="h-11 w-11 flex items-center justify-center"></div><!-- M blank -->
+                  <div class="h-11 w-11 flex items-center justify-center"></div><!-- T blank -->
+                  <div class="h-11 w-11 flex items-center justify-center"></div><!-- W blank -->
+                  <div class="h-11 w-11 flex items-center justify-center"></div><!-- T blank -->
+                  <div class="h-11 w-11 flex items-center justify-center"></div><!-- F blank -->
+                  <div class="h-11 w-11 flex items-center justify-center"></div><!-- S blank -->
+                  <!-- Mar 1 = Sunday -->
+                  <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light text-stone-300">1</span>
+                  </div>
+                </div>
+
+                <!-- Week col: 2 (Mar 2–8) — light activity Mon, high activity Tue, joy Fri -->
+                <div class="flex flex-col">
+                  <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal text-stone-500">2</span>
+                  </div>
+                  <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium text-stone-700">3</span>
+                  </div>
+                  <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light text-stone-300">4</span>
+                  </div>
+                  <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal text-stone-500">5</span>
+                  </div>
+                  <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
+                    <!-- Joy: amber -->
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium text-amber-600">6</span>
+                  </div>
+                  <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light text-stone-300">7</span>
+                  </div>
+                  <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium text-stone-700">8</span>
+                  </div>
+                </div>
+
+                <!-- Week col: 3 (Mar 9–15) — selected = Mar 13 with circle -->
+                <div class="flex flex-col">
+                  <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium text-stone-700">9</span>
+                  </div>
+                  <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium text-amber-600">10</span>
+                  </div>
+                  <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal text-stone-500">11</span>
+                  </div>
+                  <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light text-stone-300">12</span>
+                  </div>
+                  <!-- Selected: Mar 13 — bg circle -->
+                  <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium bg-stone-100 text-amber-600">13</span>
+                  </div>
+                  <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal text-stone-500">14</span>
+                  </div>
+                  <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
+                    <!-- today (future in demo = lighter) -->
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light text-stone-300 opacity-40">15</span>
+                  </div>
+                </div>
+
+                <!-- Week col: 4 — future (opaque) -->
+                <div class="flex flex-col opacity-30">
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center text-sm font-light text-stone-300">16</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center text-sm font-light text-stone-300">17</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center text-sm font-light text-stone-300">18</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center text-sm font-light text-stone-300">19</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center text-sm font-light text-stone-300">20</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center text-sm font-light text-stone-300">21</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center text-sm font-light text-stone-300">22</span></div>
+                </div>
+
+                <!-- Week col: 5 — future -->
+                <div class="flex flex-col opacity-30">
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center text-sm font-light text-stone-300">23</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center text-sm font-light text-stone-300">24</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center text-sm font-light text-stone-300">25</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center text-sm font-light text-stone-300">26</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center text-sm font-light text-stone-300">27</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center text-sm font-light text-stone-300">28</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center text-sm font-light text-stone-300">29</span></div>
+                </div>
+
+                <!-- Week col: 6 — future -->
+                <div class="flex flex-col opacity-30">
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center text-sm font-light text-stone-300">30</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center text-sm font-light text-stone-300">31</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"></div>
+                  <div class="h-11 w-11 flex items-center justify-center"></div>
+                  <div class="h-11 w-11 flex items-center justify-center"></div>
+                  <div class="h-11 w-11 flex items-center justify-center"></div>
+                  <div class="h-11 w-11 flex items-center justify-center"></div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Legend note -->
+            <div class="mt-2 flex items-center gap-4 justify-center">
+              <span class="text-xs text-stone-400">light = no activity</span>
+              <span class="text-xs text-stone-600 font-medium">bold = high activity</span>
+              <span class="text-xs text-amber-600 font-medium">amber = joy</span>
+            </div>
+          </div>
+
+          <!-- Annotation -->
+          <div class="mt-4 bg-stone-50 border border-stone-100 rounded-xl p-4 text-xs text-stone-500 max-w-sm mx-auto space-y-1">
+            <p><span class="font-medium text-stone-700">What changed:</span> No filled cell backgrounds. Each day is its number — nothing else.</p>
+            <p>Weight: light (no data) → medium (active). Color: stone (activity) → amber (joy).</p>
+            <p>Selected day: <code class="bg-stone-100 px-1 rounded">rounded-full bg-stone-100</code> circle behind the number, not a box.</p>
+            <p>Day labels unchanged. Grid structure unchanged. Touch targets unchanged (44×44px).</p>
+          </div>
+        </div>
+
+        <!-- Dark mode -->
+        <div>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-4">Dark mode</p>
+          <div class="bg-stone-900 rounded-2xl border border-stone-700 p-6 max-w-sm mx-auto">
+            <div class="flex items-center justify-between mb-6">
+              <h1 class="text-xl font-light tracking-widest text-stone-200">History</h1>
+              <span class="text-xs uppercase tracking-widest text-stone-500">Settings</span>
+            </div>
+            <div class="flex items-center justify-between mb-6">
+              <button class="text-stone-500 min-h-[44px] flex items-center px-1">‹</button>
+              <span class="text-base font-light tracking-widest text-stone-400">March 2026</span>
+              <button class="text-stone-600 min-h-[44px] flex items-center px-1 opacity-30">›</button>
+            </div>
+
+            <div class="flex justify-center mb-2">
+              <div class="flex gap-0">
+                <div class="flex flex-col mr-2">
+                  <div class="h-11 w-5 flex items-center justify-center text-xs uppercase tracking-widest text-stone-600">M</div>
+                  <div class="h-11 w-5 flex items-center justify-center text-xs uppercase tracking-widest text-stone-600">T</div>
+                  <div class="h-11 w-5 flex items-center justify-center text-xs uppercase tracking-widest text-stone-600">W</div>
+                  <div class="h-11 w-5 flex items-center justify-center text-xs uppercase tracking-widest text-stone-600">T</div>
+                  <div class="h-11 w-5 flex items-center justify-center text-xs uppercase tracking-widest text-stone-600">F</div>
+                  <div class="h-11 w-5 flex items-center justify-center text-xs uppercase tracking-widest text-stone-600">S</div>
+                  <div class="h-11 w-5 flex items-center justify-center text-xs uppercase tracking-widest text-stone-600">S</div>
+                </div>
+                <!-- Week 1 -->
+                <div class="flex flex-col">
+                  <div class="h-11 w-11"></div><div class="h-11 w-11"></div><div class="h-11 w-11"></div><div class="h-11 w-11"></div><div class="h-11 w-11"></div><div class="h-11 w-11"></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light text-stone-600">1</span></div>
+                </div>
+                <!-- Week 2 -->
+                <div class="flex flex-col">
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal text-stone-400">2</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium text-stone-200">3</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light text-stone-600">4</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal text-stone-400">5</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium text-amber-500">6</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light text-stone-600">7</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium text-stone-200">8</span></div>
+                </div>
+                <!-- Week 3 — Mar 13 selected -->
+                <div class="flex flex-col">
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium text-stone-200">9</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium text-amber-500">10</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal text-stone-400">11</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light text-stone-600">12</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium bg-stone-800 text-amber-500">13</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal text-stone-400">14</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light text-stone-600 opacity-40">15</span></div>
+                </div>
+                <!-- Future weeks -->
+                <div class="flex flex-col opacity-30">
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="text-sm font-light text-stone-600">16</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="text-sm font-light text-stone-600">17</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="text-sm font-light text-stone-600">18</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="text-sm font-light text-stone-600">19</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="text-sm font-light text-stone-600">20</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="text-sm font-light text-stone-600">21</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="text-sm font-light text-stone-600">22</span></div>
+                </div>
+                <div class="flex flex-col opacity-30">
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="text-sm font-light text-stone-600">23</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="text-sm font-light text-stone-600">24</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="text-sm font-light text-stone-600">25</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="text-sm font-light text-stone-600">26</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="text-sm font-light text-stone-600">27</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="text-sm font-light text-stone-600">28</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="text-sm font-light text-stone-600">29</span></div>
+                </div>
+                <div class="flex flex-col opacity-30">
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="text-sm font-light text-stone-600">30</span></div>
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="text-sm font-light text-stone-600">31</span></div>
+                  <div class="h-11 w-11"></div><div class="h-11 w-11"></div><div class="h-11 w-11"></div><div class="h-11 w-11"></div><div class="h-11 w-11"></div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-2 flex items-center gap-4 justify-center">
+              <span class="text-xs text-stone-600">light = no activity</span>
+              <span class="text-xs text-stone-300 font-medium">bold = active</span>
+              <span class="text-xs text-amber-500 font-medium">amber = joy</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Before/after comparison -->
+      <div class="mt-10 border-t border-stone-100 pt-8">
+        <h3 class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-4">Before vs after — at a glance</h3>
+        <div class="grid grid-cols-2 gap-8 max-w-lg">
+          <div>
+            <p class="text-xs text-stone-400 mb-2">Before (current)</p>
+            <div class="rounded-xl border border-stone-200 p-3 flex flex-wrap gap-1.5">
+              <div class="h-9 w-9 rounded-md bg-stone-200 flex items-end justify-end p-0.5"><span class="text-[9px] text-black/40">1</span></div>
+              <div class="h-9 w-9 rounded-md bg-stone-200 flex items-end justify-end p-0.5"><span class="text-[9px] text-black/40">2</span></div>
+              <div class="h-9 w-9 rounded-md flex items-end justify-end p-0.5" style="background: hsl(210,29%,57%)"><span class="text-[9px] text-black/40">3</span></div>
+              <div class="h-9 w-9 rounded-md bg-stone-200 flex items-end justify-end p-0.5"><span class="text-[9px] text-black/40">4</span></div>
+              <div class="h-9 w-9 rounded-md flex items-end justify-end p-0.5" style="background: hsl(23,51%,53%)"><span class="text-[9px] text-black/40">5</span></div>
+              <div class="h-9 w-9 rounded-md bg-stone-200 flex items-end justify-end p-0.5"><span class="text-[9px] text-black/40">6</span></div>
+              <div class="h-9 w-9 rounded-md flex items-end justify-end p-0.5" style="background: hsl(210,29%,68%)"><span class="text-[9px] text-black/40">7</span></div>
+            </div>
+            <p class="text-xs text-stone-400 mt-2">GitHub vocabulary: filled squares, colored cells.</p>
+          </div>
+          <div>
+            <p class="text-xs text-stone-400 mb-2">After (H1)</p>
+            <div class="rounded-xl border border-stone-200 p-3 flex flex-wrap gap-0">
+              <div class="h-9 w-9 flex items-center justify-center"><span class="text-sm font-light text-stone-300">1</span></div>
+              <div class="h-9 w-9 flex items-center justify-center"><span class="text-sm font-light text-stone-300">2</span></div>
+              <div class="h-9 w-9 flex items-center justify-center"><span class="text-sm font-medium text-stone-700">3</span></div>
+              <div class="h-9 w-9 flex items-center justify-center"><span class="text-sm font-light text-stone-300">4</span></div>
+              <div class="h-9 w-9 flex items-center justify-center"><span class="text-sm font-medium text-amber-600">5</span></div>
+              <div class="h-9 w-9 flex items-center justify-center"><span class="text-sm font-light text-stone-300">6</span></div>
+              <div class="h-9 w-9 flex items-center justify-center"><span class="text-sm font-normal text-stone-500">7</span></div>
+            </div>
+            <p class="text-xs text-stone-400 mt-2">Type vocabulary: weight and amber carry the data.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── H2: Year row collapse ───────────────────────────── -->
+    <section id="h2-year-row" class="section">
+      <h2 class="text-xl font-light tracking-widest text-stone-600 mb-2">H2 — Year row collapse</h2>
+      <p class="text-sm text-stone-500 mb-8">The year navigation row only renders when data spans more than 11 months. Single-year users see a cleaner, uncluttered navigation header.</p>
+
+      <div class="proposal-grid">
+        <!-- Before (with year row) -->
+        <div>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-4">Before — year row always visible</p>
+          <div class="bg-white rounded-2xl border border-stone-200 p-6 max-w-sm mx-auto">
+            <div class="flex items-center justify-between mb-6">
+              <h1 class="text-xl font-light tracking-widest text-stone-800">History</h1>
+              <span class="text-xs uppercase tracking-widest text-stone-600">Settings</span>
+            </div>
+            <!-- Year row (always shown) -->
+            <div class="mb-1 flex items-center justify-center gap-8">
+              <button class="text-stone-500 min-h-[44px] flex items-center justify-center">‹</button>
+              <span class="text-sm uppercase tracking-widest text-stone-500">2026</span>
+              <button class="text-stone-300 opacity-30 min-h-[44px] flex items-center justify-center">›</button>
+            </div>
+            <!-- Month row -->
+            <div class="flex items-center justify-between mb-4">
+              <button class="text-stone-500 min-h-[44px] flex items-center px-1">‹</button>
+              <span class="text-base font-light tracking-widest text-stone-600">March</span>
+              <button class="text-stone-300 opacity-30 min-h-[44px] flex items-center px-1">›</button>
+            </div>
+            <p class="text-xs text-stone-400 text-center">Two navigation rows for a new user who has only 2 months of data.</p>
+          </div>
+        </div>
+
+        <!-- After (year row hidden) -->
+        <div>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-4">After — year row hidden (under 12 months)</p>
+          <div class="bg-white rounded-2xl border border-stone-200 p-6 max-w-sm mx-auto">
+            <div class="flex items-center justify-between mb-6">
+              <h1 class="text-xl font-light tracking-widest text-stone-800">History</h1>
+              <span class="text-xs uppercase tracking-widest text-stone-600">Settings</span>
+            </div>
+            <!-- No year row -->
+            <!-- Month row — now includes year inline -->
+            <div class="flex items-center justify-between mb-4">
+              <button class="text-stone-500 min-h-[44px] flex items-center px-1">‹</button>
+              <span class="text-base font-light tracking-widest text-stone-600">March 2026</span>
+              <button class="text-stone-300 opacity-30 min-h-[44px] flex items-center px-1">›</button>
+            </div>
+            <p class="text-xs text-stone-400 text-center">Year is inline with the month name. One clean navigation row. Less noise for the most common case.</p>
+          </div>
+
+          <!-- Year appears after 12+ months -->
+          <div class="mt-4 bg-white rounded-2xl border border-stone-200 p-6 max-w-sm mx-auto opacity-60">
+            <div class="flex items-center justify-between mb-6">
+              <h1 class="text-xl font-light tracking-widest text-stone-800">History</h1>
+              <span class="text-xs uppercase tracking-widest text-stone-600">Settings</span>
+            </div>
+            <div class="mb-1 flex items-center justify-center gap-8">
+              <button class="text-stone-500 min-h-[44px] flex items-center justify-center">‹</button>
+              <span class="text-sm uppercase tracking-widest text-stone-500">2025</span>
+              <button class="text-stone-500 min-h-[44px] flex items-center justify-center">›</button>
+            </div>
+            <div class="flex items-center justify-between mb-4">
+              <button class="text-stone-500 min-h-[44px] flex items-center px-1">‹</button>
+              <span class="text-base font-light tracking-widest text-stone-600">November</span>
+              <button class="text-stone-500 min-h-[44px] flex items-center px-1">›</button>
+            </div>
+            <p class="text-xs text-stone-400 text-center italic">Year row appears once data spans 12+ months — earned, not assumed.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-8 bg-stone-50 border border-stone-100 rounded-xl p-4 text-xs text-stone-500 max-w-lg space-y-1">
+        <p><span class="font-medium text-stone-700">Implementation note:</span> When year row is hidden, the month <code class="bg-stone-100 px-1 rounded">h2</code> includes the year inline (e.g. "March 2026" not just "March"). One-line change in the month heading render. The year row is a conditional render driven by whether <code class="bg-stone-100 px-1 rounded">entries</code> span more than 11 months.</p>
+      </div>
+    </section>
+
+    <!-- ── H3: Bar refinement ─────────────────────────────── -->
+    <section id="h3-bar-refinement" class="section">
+      <h2 class="text-xl font-light tracking-widest text-stone-600 mb-2">H3 — Frequency bar: taller and full-width</h2>
+      <p class="text-sm text-stone-500 mb-8">Remove the 38% max-width cap. Let bars scale to 100% proportionally. Increase height from 2px to 4px. The encoding stays qualitative — no counts, no targets — but relative differences become legible at a glance.</p>
+
+      <div class="proposal-grid">
+
+        <!-- Before -->
+        <div>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-4">Before — 2px, 38% max</p>
+          <div class="bg-white rounded-2xl border border-stone-200 p-6 max-w-sm mx-auto">
+            <div class="flex items-center gap-1.5 text-xs font-medium uppercase tracking-widest text-stone-500 mb-5">
+              <span>Frequency</span><span class="text-stone-300">▾</span>
+            </div>
+            <ul class="space-y-0">
+              <li>
+                <div class="w-full min-h-[44px] py-2 flex items-center gap-2">
+                  <span class="text-xs text-amber-600">›</span>
+                  <span class="text-sm text-amber-700 flex-1">Meditation</span>
+                </div>
+                <!-- 2px bar, 38% max (top item = 38%) -->
+                <div class="h-0.5 w-full rounded-full mb-1"><div class="h-full rounded-full bg-amber-400" style="width: 38%"></div></div>
+              </li>
+              <li>
+                <div class="w-full min-h-[44px] py-2 flex items-center gap-2">
+                  <span class="invisible text-xs">›</span>
+                  <span class="text-sm text-stone-700 flex-1">Exercise</span>
+                </div>
+                <div class="h-0.5 w-full rounded-full mb-1"><div class="h-full rounded-full bg-stone-300" style="width: 31%"></div></div>
+              </li>
+              <li>
+                <div class="w-full min-h-[44px] py-2 flex items-center gap-2">
+                  <span class="invisible text-xs">›</span>
+                  <span class="text-sm text-stone-700 flex-1">Journaling</span>
+                </div>
+                <div class="h-0.5 w-full rounded-full mb-1"><div class="h-full rounded-full bg-stone-300" style="width: 24%"></div></div>
+              </li>
+              <li>
+                <div class="w-full min-h-[44px] py-2 flex items-center gap-2">
+                  <span class="invisible text-xs">›</span>
+                  <span class="text-sm text-stone-700 flex-1">Sleep</span>
+                </div>
+                <div class="h-0.5 w-full rounded-full mb-1"><div class="h-full rounded-full bg-stone-300" style="width: 16%"></div></div>
+              </li>
+              <li>
+                <div class="w-full min-h-[44px] py-2 flex items-center gap-2">
+                  <span class="invisible text-xs">›</span>
+                  <span class="text-sm text-stone-700 flex-1">Good meal</span>
+                </div>
+                <div class="h-0.5 w-full rounded-full mb-1"><div class="h-full rounded-full bg-stone-300" style="width: 10%"></div></div>
+              </li>
+            </ul>
+            <p class="text-xs text-stone-400 mt-4">All bars clustered in the left third. Hard to read the difference between Meditation (22×) and Exercise (18×).</p>
+          </div>
+        </div>
+
+        <!-- After -->
+        <div>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-4">After — 4px, 100% max (light + dark)</p>
+
+          <!-- Light -->
+          <div class="bg-white rounded-2xl border border-stone-200 p-6 max-w-sm mx-auto mb-4">
+            <div class="flex items-center gap-1.5 text-xs font-medium uppercase tracking-widest text-stone-500 mb-5">
+              <span>Frequency</span><span class="text-stone-300">▾</span>
+            </div>
+            <ul class="space-y-0">
+              <li>
+                <div class="w-full min-h-[44px] py-2 flex items-center gap-2">
+                  <span class="text-xs text-amber-600">›</span>
+                  <span class="text-sm text-amber-700 flex-1">Meditation</span>
+                </div>
+                <!-- 4px bar, 100% top item -->
+                <div class="h-1 w-full rounded-full mb-1"><div class="h-full rounded-full bg-amber-400" style="width: 100%"></div></div>
+              </li>
+              <li>
+                <div class="w-full min-h-[44px] py-2 flex items-center gap-2">
+                  <span class="invisible text-xs">›</span>
+                  <span class="text-sm text-stone-700 flex-1">Exercise</span>
+                </div>
+                <div class="h-1 w-full rounded-full mb-1"><div class="h-full rounded-full bg-stone-300" style="width: 82%"></div></div>
+              </li>
+              <li>
+                <div class="w-full min-h-[44px] py-2 flex items-center gap-2">
+                  <span class="invisible text-xs">›</span>
+                  <span class="text-sm text-stone-700 flex-1">Journaling</span>
+                </div>
+                <div class="h-1 w-full rounded-full mb-1"><div class="h-full rounded-full bg-stone-300" style="width: 64%"></div></div>
+              </li>
+              <li>
+                <div class="w-full min-h-[44px] py-2 flex items-center gap-2">
+                  <span class="invisible text-xs">›</span>
+                  <span class="text-sm text-stone-700 flex-1">Sleep</span>
+                </div>
+                <div class="h-1 w-full rounded-full mb-1"><div class="h-full rounded-full bg-stone-300" style="width: 41%"></div></div>
+              </li>
+              <li>
+                <div class="w-full min-h-[44px] py-2 flex items-center gap-2">
+                  <span class="invisible text-xs">›</span>
+                  <span class="text-sm text-stone-700 flex-1">Good meal</span>
+                </div>
+                <div class="h-1 w-full rounded-full mb-1"><div class="h-full rounded-full bg-stone-300" style="width: 27%"></div></div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Dark -->
+          <div class="bg-stone-900 rounded-2xl border border-stone-700 p-6 max-w-sm mx-auto">
+            <div class="flex items-center gap-1.5 text-xs font-medium uppercase tracking-widest text-stone-500 mb-5">
+              <span>Frequency</span><span class="text-stone-600">▾</span>
+            </div>
+            <ul class="space-y-0">
+              <li>
+                <div class="w-full min-h-[44px] py-2 flex items-center gap-2">
+                  <span class="text-xs text-amber-500">›</span>
+                  <span class="text-sm text-amber-500 flex-1">Meditation</span>
+                </div>
+                <div class="h-1 w-full rounded-full mb-1"><div class="h-full rounded-full bg-amber-500" style="width: 100%"></div></div>
+              </li>
+              <li>
+                <div class="w-full min-h-[44px] py-2 flex items-center gap-2">
+                  <span class="invisible text-xs">›</span>
+                  <span class="text-sm text-stone-300 flex-1">Exercise</span>
+                </div>
+                <div class="h-1 w-full rounded-full mb-1"><div class="h-full rounded-full bg-stone-600" style="width: 82%"></div></div>
+              </li>
+              <li>
+                <div class="w-full min-h-[44px] py-2 flex items-center gap-2">
+                  <span class="invisible text-xs">›</span>
+                  <span class="text-sm text-stone-300 flex-1">Journaling</span>
+                </div>
+                <div class="h-1 w-full rounded-full mb-1"><div class="h-full rounded-full bg-stone-600" style="width: 64%"></div></div>
+              </li>
+              <li>
+                <div class="w-full min-h-[44px] py-2 flex items-center gap-2">
+                  <span class="invisible text-xs">›</span>
+                  <span class="text-sm text-stone-300 flex-1">Sleep</span>
+                </div>
+                <div class="h-1 w-full rounded-full mb-1"><div class="h-full rounded-full bg-stone-600" style="width: 41%"></div></div>
+              </li>
+              <li>
+                <div class="w-full min-h-[44px] py-2 flex items-center gap-2">
+                  <span class="invisible text-xs">›</span>
+                  <span class="text-sm text-stone-300 flex-1">Good meal</span>
+                </div>
+                <div class="h-1 w-full rounded-full mb-1"><div class="h-full rounded-full bg-stone-600" style="width: 27%"></div></div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="mt-6 bg-stone-50 border border-stone-100 rounded-xl p-4 text-xs text-stone-500 max-w-lg space-y-2">
+        <p><span class="font-medium text-stone-700">Two changes only:</span></p>
+        <p><code class="bg-stone-100 px-1 rounded">barWidth</code>: <code class="bg-stone-100 px-1 rounded">* 38</code> → <code class="bg-stone-100 px-1 rounded">* 100</code></p>
+        <p>Bar height: <code class="bg-stone-100 px-1 rounded">h-0.5</code> → <code class="bg-stone-100 px-1 rounded">h-1</code></p>
+        <p>No count numbers added — the bar remains a qualitative signal. Showing a precise count would create an implicit target, which contradicts Clarity's philosophy. The bar communicates rhythm; the user feels the pattern, not measures it.</p>
+      </div>
+    </section>
+
+    <!-- ── H4: Period pill group ────────────────────────────── -->
+    <section id="h4-period-pill" class="section">
+      <h2 class="text-xl font-light tracking-widest text-stone-600 mb-2">H4 — Period selector: enclosed pill group</h2>
+      <p class="text-sm text-stone-500 mb-8">Replace the floating dot-separated text buttons with an enclosed segmented pill. Same pattern as the Settings S1 Theme toggle — visual consistency, clear selection state.</p>
+
+      <div class="proposal-grid">
+
+        <!-- Before -->
+        <div>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-4">Before — floating text buttons</p>
+          <div class="bg-white rounded-2xl border border-stone-200 p-6 max-w-sm mx-auto">
+            <div class="flex items-center gap-1.5 text-xs font-medium uppercase tracking-widest text-stone-500 mb-5">
+              <span>Frequency</span><span class="text-stone-300">▾</span>
+            </div>
+            <!-- Current period selector -->
+            <div class="flex items-center justify-center gap-3 mb-6">
+              <button class="text-xs uppercase tracking-widest font-medium text-stone-900">Month</button>
+              <span class="text-stone-300">·</span>
+              <button class="text-xs uppercase tracking-widest text-stone-500">3 Months</button>
+              <span class="text-stone-300">·</span>
+              <button class="text-xs uppercase tracking-widest text-stone-500">Always</button>
+            </div>
+            <p class="text-xs text-stone-400 text-center">Active = font-medium. Hard to scan. No affordance signal beyond weight.</p>
+          </div>
+        </div>
+
+        <!-- After (light) -->
+        <div>
+          <p class="text-xs font-medium uppercase tracking-widest text-stone-400 mb-4">After — enclosed pill group (light)</p>
+          <div class="bg-white rounded-2xl border border-stone-200 p-6 max-w-sm mx-auto">
+            <div class="flex items-center gap-1.5 text-xs font-medium uppercase tracking-widest text-stone-500 mb-5">
+              <span>Frequency</span><span class="text-stone-300">▾</span>
+            </div>
+            <!-- H4 period pills -->
+            <div class="flex justify-center mb-6">
+              <div class="inline-flex rounded-full border border-stone-200 p-0.5 gap-0.5">
+                <button class="rounded-full px-3 py-1.5 text-xs uppercase tracking-widest bg-stone-800 text-white">Month</button>
+                <button class="rounded-full px-3 py-1.5 text-xs uppercase tracking-widest text-stone-500 hover:text-stone-700">3 Months</button>
+                <button class="rounded-full px-3 py-1.5 text-xs uppercase tracking-widest text-stone-500 hover:text-stone-700">Always</button>
+              </div>
+            </div>
+            <p class="text-xs text-stone-400 text-center">Active period unmistakable. Consistent with the Settings Theme toggle (S1). Dots removed — enclosure makes them redundant.</p>
+          </div>
+
+          <!-- Dark version -->
+          <div class="mt-4 bg-stone-900 rounded-2xl border border-stone-700 p-6 max-w-sm mx-auto">
+            <div class="flex items-center gap-1.5 text-xs font-medium uppercase tracking-widest text-stone-500 mb-5">
+              <span>Frequency</span><span class="text-stone-600">▾</span>
+            </div>
+            <div class="flex justify-center mb-6">
+              <div class="inline-flex rounded-full border border-stone-700 p-0.5 gap-0.5">
+                <button class="rounded-full px-3 py-1.5 text-xs uppercase tracking-widest text-stone-500">Month</button>
+                <!-- 3 Months active in dark -->
+                <button class="rounded-full px-3 py-1.5 text-xs uppercase tracking-widest bg-stone-200 text-stone-900">3 Months</button>
+                <button class="rounded-full px-3 py-1.5 text-xs uppercase tracking-widest text-stone-400">Always</button>
+              </div>
+            </div>
+            <p class="text-xs text-stone-500 text-center">Dark: <code class="bg-stone-800 px-1 rounded text-stone-300">bg-stone-200 text-stone-900</code> — same primary button token used throughout the app.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="mt-6 bg-stone-50 border border-stone-100 rounded-xl p-4 text-xs text-stone-500 max-w-lg space-y-1">
+        <p><span class="font-medium text-stone-700">Consistency note:</span> This is the same pattern as the Settings S1 Theme toggle recommendation. Both can use a shared component — or at minimum the same exact Tailwind classes — so the pattern is visually identical across the app. The active fill uses <code class="bg-stone-100 px-1 rounded">bg-stone-800 text-white</code> light / <code class="bg-stone-100 px-1 rounded">bg-stone-200 text-stone-900</code> dark — the primary button token, which means "selected / confirmed" throughout Clarity.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  function switchTo(id, el) {
+    // Hide all sections
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
+    // Remove active from all nav links
+    document.querySelectorAll('.sidebar-link').forEach(a => a.classList.remove('active'));
+    // Show target
+    const target = document.getElementById(id);
+    if (target) target.classList.add('visible');
+    if (el) el.classList.add('active');
+  }
+
+  function toggleDark() {
+    document.documentElement.classList.toggle('dark');
+    document.body.classList.toggle('bg-stone-900');
+    document.body.classList.toggle('text-stone-100');
+    document.getElementById('sidebar').classList.toggle('bg-stone-900');
+    document.getElementById('sidebar').classList.toggle('bg-white');
+    document.getElementById('sidebar').classList.toggle('border-stone-700');
+    document.getElementById('sidebar').classList.toggle('border-stone-200');
+  }
+
+  // Handle hash navigation
+  window.addEventListener('hashchange', () => {
+    const id = window.location.hash.slice(1);
+    const el = document.querySelector(`[onclick*="${id}"]`);
+    if (id) switchTo(id, el);
+  });
+  // On load
+  if (window.location.hash) {
+    const id = window.location.hash.slice(1);
+    const el = document.querySelector(`[onclick*="${id}"]`);
+    if (id) switchTo(id, el);
+  }
+</script>
+
+</body>
+</html>
