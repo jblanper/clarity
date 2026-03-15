@@ -1,4 +1,4 @@
-<!-- Last reviewed: 2026-03-14 (update-claude-md, sprint-11-retro) -->
+<!-- Last reviewed: 2026-03-15 (update-claude-md, sprint-12-retro) -->
 # Clarity — Project Guide
 
 ## What is Clarity?
@@ -26,7 +26,7 @@ Before touching >4 unplanned files, the data model, localStorage keys, navigatio
 - Keep solutions simple; don't add complexity (e.g., 'lightweight modes') unless explicitly requested
 - **Never run `/skill-creator` for prose-format or workflow skills** — its eval harness is designed for measurable output and produces low-signal boilerplate for narrative skills.
 - **After completing each task during the development phase, update its validation checklist (`[x]`) in the sprint doc before moving on** — keeps the doc as a live record and reduces QA guesswork.
-- **Each workflow step must update the sprint Status field** — QA, validation, calma-sync, and deploy each set `**Status:**` on completion so sprint-pipeline can skip already-done phases.
+- **Each workflow step must update the sprint Status field** — QA, validation, calma-sync, and deploy each set `**Status:**` on completion so the sprint doc stays as a live record.
 
 ## Project Structure (Claude-specific)
 - Skills are located in `.claude/skills/` — each skill is a markdown file

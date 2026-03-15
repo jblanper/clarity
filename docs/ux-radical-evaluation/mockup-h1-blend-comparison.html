@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>H1 Calendar — Comparison</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root { --bg: #fafaf9; --fg: #1c1917; --muted: #78716c; --border: #e7e5e4; }
+    .dark-panel { --bg: #1c1917; --fg: #fafaf9; --muted: #a8a29e; --border: #292524; }
+
+    body { font-family: ui-sans-serif, system-ui, sans-serif; margin: 0; background: #ebe9e6; }
+    .panel { background: var(--bg); color: var(--fg); }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: 22px repeat(5, 40px);
+      gap: 4px;
+    }
+    .cal-dow {
+      width: 22px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted);
+    }
+    .cal-cell { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+    .cal-blank { width: 40px; height: 40px; }
+
+    /* A — squares */
+    .sq { border-radius: 6px; font-size: 10px; align-items: flex-start; justify-content: flex-end;
+          padding: 3px; color: rgba(0,0,0,0.45); }
+    .dark-panel .sq { color: rgba(255,255,255,0.3); }
+    .sq.empty { background: #e7e5e4; }
+    .dark-panel .sq.empty { background: #292524; }
+    .sq.future { background: #e7e5e4; opacity: 0.25; }
+    .dark-panel .sq.future { background: #292524; }
+
+    /* B — circles + blend */
+    .circ .dot {
+      width: 30px; height: 30px; border-radius: 9999px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: rgba(0,0,0,0.45);
+    }
+    .dark-panel .circ .dot { color: rgba(255,255,255,0.3); }
+    .circ.future { opacity: 0.25; }
+
+    /* C — type */
+    .type .inner {
+      width: 30px; height: 30px; border-radius: 9999px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+    }
+    .type.future .inner { opacity: 0.35; }
+  </style>
+</head>
+<body class="p-6 md:p-10">
+
+<div class="mx-auto">
+  <h1 class="text-lg font-light tracking-widest text-stone-600 uppercase mb-1">H1 — Calendar redesign</h1>
+  <p class="text-xs text-stone-400 mb-8">Four approaches, same data. February 2026.</p>
+
+  <!-- Data key -->
+  <div class="mb-8 text-xs text-stone-400 leading-6 border-l-2 border-stone-200 pl-4">
+    <span class="uppercase tracking-widest text-stone-500 block mb-1">February 2026 — data key</span>
+    3 T — 2 habits, no joy &nbsp;·&nbsp;
+    4 W — 2 habits + joy + moment &nbsp;·&nbsp;
+    5 T — moments only &nbsp;·&nbsp;
+    6 F — 4 habits, no joy (structural max)<br>
+    10 T — 1 habit &nbsp;·&nbsp;
+    11 W — 3 habits + 2 joy + moment &nbsp;·&nbsp;
+    12 T — moments only &nbsp;·&nbsp;
+    14 S — 4 habits all joy + 2 moments (everything max)<br>
+    17 T — 2 habits &nbsp;·&nbsp;
+    18 W — 3 habits + joy + moment &nbsp;·&nbsp;
+    19 T — 1 habit &nbsp;·&nbsp;
+    21 S — moment only &nbsp;·&nbsp;
+    24 T — 1 habit &nbsp;·&nbsp;
+    25 W — 3 habits
+  </div>
+
+  <!-- LIGHT ROW -->
+  <div class="grid grid-cols-4 gap-4 mb-4">
+
+    <div class="panel rounded-2xl p-5">
+      <p class="text-xs uppercase tracking-widest mb-0.5" style="color:var(--muted)">A — Squares</p>
+      <p class="text-xs mb-5" style="color:var(--muted)">Current · light</p>
+      <p class="text-xs uppercase tracking-widest text-center mb-3" style="color:var(--muted)">February</p>
+      <div id="a-light"></div>
+    </div>
+
+    <div class="panel rounded-2xl p-5">
+      <p class="text-xs uppercase tracking-widest mb-0.5" style="color:var(--muted)">B — Circles</p>
+      <p class="text-xs mb-5" style="color:var(--muted)">Proposed · light</p>
+      <p class="text-xs uppercase tracking-widest text-center mb-3" style="color:var(--muted)">February</p>
+      <div id="b-light"></div>
+    </div>
+
+    <div class="panel rounded-2xl p-5">
+      <p class="text-xs uppercase tracking-widest mb-0.5" style="color:var(--muted)">C — Type v1</p>
+      <p class="text-xs mb-5" style="color:var(--muted)">4 weight levels · light</p>
+      <p class="text-xs uppercase tracking-widest text-center mb-3" style="color:var(--muted)">February</p>
+      <div id="c1-light"></div>
+    </div>
+
+    <div class="panel rounded-2xl p-5">
+      <p class="text-xs uppercase tracking-widest mb-0.5" style="color:var(--muted)">C — Type v2</p>
+      <p class="text-xs mb-5" style="color:var(--muted)">Ghost + 3 tiers · light</p>
+      <p class="text-xs uppercase tracking-widest text-center mb-3" style="color:var(--muted)">February</p>
+      <div id="c2-light"></div>
+    </div>
+
+  </div>
+
+  <!-- DARK ROW -->
+  <div class="grid grid-cols-4 gap-4 mb-12">
+
+    <div class="panel dark-panel rounded-2xl p-5">
+      <p class="text-xs uppercase tracking-widest mb-0.5" style="color:var(--muted)">A — Squares</p>
+      <p class="text-xs mb-5" style="color:var(--muted)">Current · dark</p>
+      <p class="text-xs uppercase tracking-widest text-center mb-3" style="color:var(--muted)">February</p>
+      <div id="a-dark"></div>
+    </div>
+
+    <div class="panel dark-panel rounded-2xl p-5">
+      <p class="text-xs uppercase tracking-widest mb-0.5" style="color:var(--muted)">B — Circles</p>
+      <p class="text-xs mb-5" style="color:var(--muted)">Proposed · dark</p>
+      <p class="text-xs uppercase tracking-widest text-center mb-3" style="color:var(--muted)">February</p>
+      <div id="b-dark"></div>
+    </div>
+
+    <div class="panel dark-panel rounded-2xl p-5">
+      <p class="text-xs uppercase tracking-widest mb-0.5" style="color:var(--muted)">C — Type v1</p>
+      <p class="text-xs mb-5" style="color:var(--muted)">4 weight levels · dark</p>
+      <p class="text-xs uppercase tracking-widest text-center mb-3" style="color:var(--muted)">February</p>
+      <div id="c1-dark"></div>
+    </div>
+
+    <div class="panel dark-panel rounded-2xl p-5">
+      <p class="text-xs uppercase tracking-widest mb-0.5" style="color:var(--muted)">C — Type v2</p>
+      <p class="text-xs mb-5" style="color:var(--muted)">Ghost + 3 tiers · dark</p>
+      <p class="text-xs uppercase tracking-widest text-center mb-3" style="color:var(--muted)">February</p>
+      <div id="c2-dark"></div>
+    </div>
+
+  </div>
+
+  <!-- Notes -->
+  <div class="text-sm text-stone-500 leading-7 max-w-3xl border-t border-stone-200 pt-8">
+    <p class="text-xs uppercase tracking-widest text-stone-400 mb-4">Notes on C v1 vs C v2</p>
+    <p><strong class="text-stone-600 font-medium">C v1 — 4 weight levels (300/400/500/600):</strong> Empty days use the same grey family as low-activity habit days. Hard to distinguish at small sizes — four weight grades is too many.</p>
+    <p class="mt-3"><strong class="text-stone-600 font-medium">C v2 — Ghost + 3 tiers:</strong> Empty days are ghosted (very light, receding). Active days use 3 tiers only: low (400, stone), medium (600, stone), bold (700, stone or amber). The calendar breathes — empty days disappear, logged days speak clearly.</p>
+  </div>
+</div>
+
+<script>
+const DAYS = ["M","T","W","T","F","S","S"];
+
+const weeks = [
+  [null, null, null, null, null, null, [1, 0, 0, false]],
+  [[2,0,0,false],[3,0.5,0,false],[4,0.5,0.33,false],[5,0,0.33,false],[6,1.0,0,false],[7,0,0,false],[8,0,0,false]],
+  [[9,0,0,false],[10,0.25,0,false],[11,0.75,0.5,false],[12,0,0.33,false],[13,0,0,false],[14,1.0,1.0,false],[15,0,0,false]],
+  [[16,0,0,false],[17,0.5,0,false],[18,0.75,0.33,false],[19,0.25,0,false],[20,0,0,false],[21,0,0.17,false],[22,0,0,false]],
+  [[23,0,0,false],[24,0.25,0,false],[25,0.75,0,false],[26,0,0,false],[27,0,0,false],[28,0,0,false]],
+];
+
+function blendColor(b, y, isDark) {
+  if (b === 0 && y === 0) return null;
+  const HABIT_H = 210, MOMENT_H = 23;
+  const habitS  = isDark ? 23 : 29;
+  const momentS = isDark ? 48 : 51;
+  const habitL  = isDark ? 19 + 22 * b : 80 - 23 * b;
+  const momentL = isDark ? 23 + 19 * y : 81 - 28 * y;
+  if (y === 0) return `hsl(${HABIT_H},${habitS}%,${Math.round(habitL)}%)`;
+  if (b === 0) return `hsl(${MOMENT_H},${momentS}%,${Math.round(momentL)}%)`;
+  const total = b + y;
+  const h = Math.round((HABIT_H * b + MOMENT_H * y) / total);
+  const s = Math.round((habitS * b + momentS * y) / total);
+  const l = Math.round((habitL * b + momentL * y) / total);
+  return `hsl(${h},${s}%,${l}%)`;
+}
+
+// C v1 — original 4-level version
+function typeStyleV1(b, y, isDark) {
+  const empty = isDark ? "hsl(25,6%,45%)" : "hsl(25,6%,68%)";
+  if (b === 0 && y === 0) return { weight: 300, color: empty };
+  const hasJoy = y > 0;
+  const color = hasJoy
+    ? (isDark ? "hsl(38,85%,60%)" : "hsl(30,75%,40%)")
+    : (isDark ? "hsl(25,6%,72%)"  : "hsl(25,6%,38%)");
+  const weight = b < 0.3 ? 300 : b < 0.6 ? 400 : b < 0.85 ? 500 : 600;
+  const finalWeight = b === 0 ? (y < 0.4 ? 300 : 400) : weight;
+  return { weight: finalWeight, color };
+}
+
+// C v2 — ghost empty + 3 clear tiers
+function typeStyleV2(b, y, isDark) {
+  // Empty: ghosted — barely visible watermark
+  const ghost = isDark ? "hsl(25,5%,32%)" : "hsl(25,5%,84%)";
+  if (b === 0 && y === 0) return { weight: 300, color: ghost };
+
+  const hasJoy = y > 0;
+  const amber  = isDark ? "hsl(35,88%,62%)" : "hsl(28,72%,38%)";
+  // Stone for habit-only: darker/lighter than ghost so it clearly registers
+  const stone  = isDark ? "hsl(25,6%,76%)"  : "hsl(25,6%,30%)";
+
+  const color = hasJoy ? amber : stone;
+
+  // 3 tiers only: low / medium / bold
+  // Habit fraction drives weight; joy-only days are always "present" tier
+  const weight = b === 0
+    ? 400                          // joy/moment only → present
+    : b < 0.55 ? 400               // low habit completion → present
+    : b < 0.85 ? 600               // medium → bold
+    : 700;                         // full completion → bolder
+
+  return { weight, color };
+}
+
+function render(targetId, approach, isDark) {
+  const container = document.getElementById(targetId);
+  const grid = document.createElement("div");
+  grid.className = "cal-grid";
+
+  for (let row = 0; row < 7; row++) {
+    const dow = document.createElement("div");
+    dow.className = "cal-dow";
+    dow.textContent = DAYS[row];
+    grid.appendChild(dow);
+
+    for (let col = 0; col < weeks.length; col++) {
+      const cell = weeks[col][row];
+
+      if (!cell) {
+        const blank = document.createElement("div");
+        blank.className = "cal-blank";
+        grid.appendChild(blank);
+        continue;
+      }
+
+      const [num, b, y, isFuture] = cell;
+      const blended = blendColor(b, y, isDark);
+
+      if (approach === "sq") {
+        const el = document.createElement("div");
+        el.className = "cal-cell sq" + (isFuture ? " future" : (!blended ? " empty" : ""));
+        if (blended) el.style.backgroundColor = blended;
+        el.textContent = num;
+        grid.appendChild(el);
+
+      } else if (approach === "circ") {
+        const outer = document.createElement("div");
+        outer.className = "cal-cell circ" + (isFuture ? " future" : "");
+        const dot = document.createElement("div");
+        dot.className = "dot";
+        dot.style.backgroundColor = blended || (isDark ? "#292524" : "#e7e5e4");
+        dot.textContent = num;
+        outer.appendChild(dot);
+        grid.appendChild(outer);
+
+      } else {
+        const outer = document.createElement("div");
+        outer.className = "cal-cell type" + (isFuture ? " future" : "");
+        const inner = document.createElement("div");
+        inner.className = "inner";
+        const s = approach === "c1" ? typeStyleV1(b, y, isDark) : typeStyleV2(b, y, isDark);
+        inner.style.fontWeight = s.weight;
+        inner.style.color = s.color;
+        inner.textContent = num;
+        outer.appendChild(inner);
+        grid.appendChild(outer);
+      }
+    }
+  }
+  container.appendChild(grid);
+}
+
+render("a-light",  "sq",   false);
+render("b-light",  "circ", false);
+render("c1-light", "c1",   false);
+render("c2-light", "c2",   false);
+render("a-dark",   "sq",   true);
+render("b-dark",   "circ", true);
+render("c1-dark",  "c1",   true);
+render("c2-dark",  "c2",   true);
+</script>
+</body>
+</html>

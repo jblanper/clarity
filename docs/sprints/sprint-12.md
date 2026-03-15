@@ -1,7 +1,7 @@
 # Sprint 12 — Settings & Manage Redesign
 
 **Dates:** 2026-03-15 – (TBD)
-**Status:** validated
+**Status:** completed
 **Release:** v2.5.0 (minor — visible redesign across Settings and Manage surfaces)
 
 ---
@@ -759,4 +759,21 @@ None
 
 ## Retrospective
 
-<!-- To be filled in after the sprint using /sprint-retro -->
+**Date:** 2026-03-15
+
+### What went well
+- The parallel UX/Arch review with mediation worked cleanly — all three open questions (S3 colour, B2 animation, B3 editing pattern) resolved before implementation began
+- Architecture review caught real issues early (moment archiving silently removed by chip-grid change; `actionTrayId` left dirty on archive) that would have been messier to find in QA
+- Scope, effort estimates, and task ordering were accurate; B2+B3 grouping paid off given shared state
+
+### What was harder than expected
+- Copy drift between the ux-radical-evaluation mockup and the sprint doc — Settings copy had to be corrected during implementation from the mockup (not the brief)
+- The ux-radical-evaluation report omitted some changes visible in the mockup, causing them to be missed in the sprint; identified post-sprint and addressed with a new report for Sprint 13
+
+### Process improvements for next sprint
+- Removed `/sprint-pipeline` skill — was adding friction without value. Done: skill deleted.
+- `/ux-radical-evaluation` skill updated to ensure mockup changes are explicitly enumerated in the report. Done: skill updated.
+- Consider pulling UX into the brief review as a lightweight sign-off step (confirm brief matches mockup) rather than only as a parallel reviewer
+
+### Planning accuracy
+Scope, ordering, and estimates were accurate. The brief correctly identified B2 as the highest-risk task. Implementation order matched the recommended sequence with no surprises.

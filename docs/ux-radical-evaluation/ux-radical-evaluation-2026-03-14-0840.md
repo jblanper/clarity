@@ -261,9 +261,88 @@ All four proposals touch `ManageView.tsx` only. None affect the data model, rout
 
 ---
 
+## Interaction flows
+
+The mockup (`mockup-2026-03-14-0840.html`) contains five interaction flows — Edit label, Add habit, Archive, Joyful, Add moment — that specify how each proposal behaves step-by-step. These were not included in the proposal sections above. They are documented here as spec.
+
+---
+
+### Flow: Edit label
+
+**Steps:** Resting → tap row → action tray opens → tap "Edit label" → inline form pre-filled → save → updated row.
+
+**Step-by-step:**
+1. **Resting** — every row shows label (+ joy pill if applicable) + `···` right-side affordance in `text-stone-300 dark:text-stone-600`.
+2. **Tap row** — tapped row gets an active highlight: `font-medium text-stone-800 dark:text-stone-100` on the label, `row-active` background wash. Action tray opens in a `tray-card` container (bordered, rounded, muted background) below the row with three bordered pill buttons: **Edit label** (neutral), **Archive** (amber border), **✿ Joyful** (neutral if off, amber fill if on).
+3. **Tap "Edit label"** — tray closes; inline form card opens below the row, pre-filled with the current label. Form: label input (focused state), Save button, Cancel link.
+4. **Saved** — form collapses; row returns to resting with updated label. `···` affordance visible again.
+
+**Key styling details:**
+- Active row: `font-medium` label weight + light background wash (`bg-stone-100 dark:bg-stone-800/60`, inset `rounded-xl -mx-2 px-2`).
+- Tray card: `rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/50 p-2.5 mt-0.5 mb-1`.
+- Tray buttons: `inline-flex items-center min-h-[40px] rounded-xl border px-3 text-xs` — neutral stone border for Edit/Joyful-off, amber border for Archive, amber fill for Joyful-on.
+
+---
+
+### Flow: Add habit
+
+**Steps:** Tap "+ New" in header → type picker form appears inside card above list → choose type → add form with ✿ Joyful toggle → confirm → new row added with amber flash.
+
+**Step-by-step:**
+1. **Tap "+ New"** — "+ New" label becomes darker (`text-stone-700 font-medium`) to signal it was pressed.
+2. **Type picker** — an `inline-form` card appears above the habit list (inside the section card). Contains: "What kind of habit?" label, "Yes / No" button, "Number" button, Cancel link. Existing rows visible below.
+3. **Choose type** — type picker collapses; add form expands. Contains: Label input (auto-focused), **✿ Joyful** bordered pill toggle button (inline in the form, not a separate section), Add button (disabled until label entered), Cancel.
+4. **Added** — form collapses; new habit row appears at bottom of list with a brief amber background wash (`rgba(254,243,199,0.35)`) to signal what just changed.
+
+**Key detail:** The **✿ Joyful** toggle lives inside the add form as a `tray-btn-neutral` pill button. Tapping it switches to `tray-btn-amber-filled`. This is a single-tap toggle, no label change — the visual state carries the meaning.
+
+---
+
+### Flow: Archive
+
+**Steps:** Resting → tap row → tray with Archive pressed (amber fills) → row becomes strikethrough + Restore link → tap Restore → row returns.
+
+**Step-by-step:**
+1. **Resting** — normal rows with `···`.
+2. **Tap row → tap Archive** — Archive button in the tray shows `tray-btn-amber-filled` (pressed state, amber fill) at the moment of confirmation.
+3. **Archived state** — row remains visible in the list at its original position with `line-through text-stone-400 dark:text-stone-600` label. Right side shows a `Restore` text link. The section card shows a note below the list: `"Archived. Past entries are preserved."` in `text-xs text-stone-500`.
+4. **Restored** — row returns to normal resting state; strikethrough and note disappear.
+
+**Key detail:** Archived items stay in the card, in position, with visual degradation (strikethrough + muted color). They do not move to a separate section. Restore is inline.
+
+---
+
+### Flow: Joyful
+
+**Steps:** Resting (joy off) → tap row → tray shows ✿ Joyful with neutral border (= off) → tap → joy pill appears in resting row → tray re-opened shows ✿ Joyful with amber fill (= on).
+
+**Step-by-step:**
+1. **Resting (joy off)** — row shows label only, `···`. No pill.
+2. **Tap row** — tray opens. "✿ Joyful" button has `tray-btn-neutral` style (stone border = off).
+3. **Tap ✿ Joyful** — tray closes. Row immediately shows amber `✿ Joyful` pill tag beside the label.
+4. **Re-open (joy on)** — tap same row again. Tray shows "✿ Joyful" with `tray-btn-amber-filled` (amber fill = on). Tapping again removes the pill.
+
+**Key design principle:** One label — `✿ Joyful` — for both toggle states. The button's border/fill style communicates the current state; no copy change is needed. This was an explicit design decision: "Neutral border = off. Amber fill = on. The visual state carries the meaning — no copy change, no second line."
+
+---
+
+### Flow: Add moment (chip grid)
+
+**Steps:** Grid resting with `+ New` dashed chip → tap chip → selected state + tray below grid → tap "Edit label" → form below grid → add via `+ New` chip.
+
+**Step-by-step:**
+1. **Grid resting** — chips in `flex flex-wrap gap-2`. A `+ New` dashed ghost chip (`border-dashed border-stone-300`) sits at the end of the grid.
+2. **Tap chip** — tapped chip gets a selected-state outline ring (`outline: 2px solid stone-400, outline-offset: 1px`). A `tray-card` appears **below the entire chip grid** (not replacing the chip). The tray shows the moment name as a `text-xs` label, then two tray buttons: **Edit label** (neutral) and **Archive** (amber border).
+3. **Tap "Edit label"** — tray collapses; an `inline-form` card appears below the grid with a pre-filled text input, Save and Cancel. The chip grid remains intact above.
+4. **Tap `+ New` dashed chip** — add form appears below the grid: label input, Add button, Cancel.
+
+**Key detail:** The chip grid always stays visually intact. Editing and adding happen in a zone *below* the grid, not within it. The grid is never interrupted.
+
+---
+
 ## Design decisions
 
-Resolved after review of the interaction flows mockup (`mockup-2026-03-14-0840-flows.html`):
+Resolved after review of the interaction flows mockup (`mockup-2026-03-14-0840.html`):
 
 **Trigger label — `+ New` (confirmed).** The alternative `+ Add` was considered and rejected. "New" is an invitation; "Add" implies administrative work. In the header of a section card, `+ New` avoids redundancy (the section already names what's being created) and fits Calma's understated register. All code direction in this report uses `+ New`.
 

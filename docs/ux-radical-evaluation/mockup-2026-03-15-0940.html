@@ -59,7 +59,7 @@
     <!-- ── H1: Date-as-weight ─────────────────────────────── -->
     <section id="h1-date-weight" class="section visible">
       <h2 class="text-xl font-light tracking-widest text-stone-600 mb-2">H1 — Date-as-weight</h2>
-      <p class="text-sm text-stone-500 mb-8">Remove filled cell boxes. Each day is its date number. Typographic weight and color carry activity level. Amber for joy. Subtle circle for selected day.</p>
+      <p class="text-sm text-stone-500 mb-8">Remove filled cell boxes. Each day is its date number. Two independent channels: weight carries habit completion (ghost → present → bold → bolder); amber fires for any joy or moment logged. Empty days are ghosted — barely visible watermarks. No blending, no teal.</p>
 
       <div class="proposal-grid">
 
@@ -112,56 +112,67 @@
                   </div>
                 </div>
 
-                <!-- Week col: 2 (Mar 2–8) — light activity Mon, high activity Tue, joy Fri -->
+                <!-- Week col: 2 (Mar 2–8) — 2=no entry, 3=2 habits, 4=no entry, 5=1 habit, 6=joy+habits, 7=no entry, 8=full habits -->
                 <div class="flex flex-col">
                   <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
-                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal text-stone-500">2</span>
+                    <!-- no entry: ghost -->
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light" style="color:hsl(25,5%,84%)">2</span>
                   </div>
                   <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
-                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium text-stone-700">3</span>
+                    <!-- 2 habits (medium): bold stone -->
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-semibold" style="color:hsl(25,6%,30%)">3</span>
                   </div>
                   <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
-                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light text-stone-300">4</span>
+                    <!-- no entry: ghost -->
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light" style="color:hsl(25,5%,84%)">4</span>
                   </div>
                   <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
-                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal text-stone-500">5</span>
+                    <!-- 1 habit (low): present stone -->
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal" style="color:hsl(25,6%,30%)">5</span>
                   </div>
                   <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
-                    <!-- Joy: amber -->
-                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium text-amber-600">6</span>
+                    <!-- joy + habits: bold amber -->
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-semibold" style="color:hsl(28,72%,38%)">6</span>
                   </div>
                   <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
-                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light text-stone-300">7</span>
+                    <!-- no entry: ghost -->
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light" style="color:hsl(25,5%,84%)">7</span>
                   </div>
                   <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
-                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium text-stone-700">8</span>
+                    <!-- full habits: bolder stone -->
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-bold" style="color:hsl(25,6%,30%)">8</span>
                   </div>
                 </div>
 
-                <!-- Week col: 3 (Mar 9–15) — selected = Mar 13 with circle -->
+                <!-- Week col: 3 (Mar 9–15) — selected = Mar 13 -->
                 <div class="flex flex-col">
                   <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
-                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium text-stone-700">9</span>
+                    <!-- full habits: bolder stone -->
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-bold" style="color:hsl(25,6%,30%)">9</span>
                   </div>
                   <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
-                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium text-amber-600">10</span>
+                    <!-- joy: bold amber -->
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-semibold" style="color:hsl(28,72%,38%)">10</span>
                   </div>
                   <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
-                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal text-stone-500">11</span>
+                    <!-- 1 habit (low): present stone -->
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal" style="color:hsl(25,6%,30%)">11</span>
                   </div>
                   <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
-                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light text-stone-300">12</span>
+                    <!-- no entry: ghost -->
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light" style="color:hsl(25,5%,84%)">12</span>
                   </div>
-                  <!-- Selected: Mar 13 — bg circle -->
+                  <!-- Selected: Mar 13 — bg circle, joy day -->
                   <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
-                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium bg-stone-100 text-amber-600">13</span>
-                  </div>
-                  <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
-                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal text-stone-500">14</span>
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-semibold bg-stone-100" style="color:hsl(28,72%,38%)">13</span>
                   </div>
                   <div class="h-11 w-11 flex items-center justify-center cursor-pointer">
-                    <!-- today (future in demo = lighter) -->
-                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light text-stone-300 opacity-40">15</span>
+                    <!-- 1 habit: present stone -->
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal" style="color:hsl(25,6%,30%)">14</span>
+                  </div>
+                  <div class="h-11 w-11 flex items-center justify-center" style="opacity:0.35">
+                    <!-- future -->
+                    <span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light" style="color:hsl(25,5%,84%)">15</span>
                   </div>
                 </div>
 
@@ -246,27 +257,42 @@
                 <!-- Week 1 -->
                 <div class="flex flex-col">
                   <div class="h-11 w-11"></div><div class="h-11 w-11"></div><div class="h-11 w-11"></div><div class="h-11 w-11"></div><div class="h-11 w-11"></div><div class="h-11 w-11"></div>
-                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light text-stone-600">1</span></div>
+                  <!-- Mar 1 = no entry: ghost -->
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light" style="color:hsl(25,5%,32%)">1</span></div>
                 </div>
                 <!-- Week 2 -->
                 <div class="flex flex-col">
-                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal text-stone-400">2</span></div>
-                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium text-stone-200">3</span></div>
-                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light text-stone-600">4</span></div>
-                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal text-stone-400">5</span></div>
-                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium text-amber-500">6</span></div>
-                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light text-stone-600">7</span></div>
-                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium text-stone-200">8</span></div>
+                  <!-- 2: no entry → ghost -->
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light" style="color:hsl(25,5%,32%)">2</span></div>
+                  <!-- 3: 2 habits (medium) → stone semibold -->
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-semibold" style="color:hsl(25,6%,76%)">3</span></div>
+                  <!-- 4: no entry → ghost -->
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light" style="color:hsl(25,5%,32%)">4</span></div>
+                  <!-- 5: 1 habit (low) → stone present -->
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal" style="color:hsl(25,6%,76%)">5</span></div>
+                  <!-- 6: joy + habits → amber semibold -->
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-semibold" style="color:hsl(35,88%,62%)">6</span></div>
+                  <!-- 7: no entry → ghost -->
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light" style="color:hsl(25,5%,32%)">7</span></div>
+                  <!-- 8: full habits → stone bold -->
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-bold" style="color:hsl(25,6%,76%)">8</span></div>
                 </div>
                 <!-- Week 3 — Mar 13 selected -->
                 <div class="flex flex-col">
-                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium text-stone-200">9</span></div>
-                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium text-amber-500">10</span></div>
-                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal text-stone-400">11</span></div>
-                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light text-stone-600">12</span></div>
-                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-medium bg-stone-800 text-amber-500">13</span></div>
-                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal text-stone-400">14</span></div>
-                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light text-stone-600 opacity-40">15</span></div>
+                  <!-- 9: full habits → stone bold -->
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-bold" style="color:hsl(25,6%,76%)">9</span></div>
+                  <!-- 10: joy → amber semibold -->
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-semibold" style="color:hsl(35,88%,62%)">10</span></div>
+                  <!-- 11: 1 habit (low) → stone present -->
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal" style="color:hsl(25,6%,76%)">11</span></div>
+                  <!-- 12: no entry → ghost -->
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light" style="color:hsl(25,5%,32%)">12</span></div>
+                  <!-- 13: selected, joy+habits → amber semibold, bg-stone-800 circle -->
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-semibold bg-stone-800" style="color:hsl(35,88%,62%)">13</span></div>
+                  <!-- 14: 1 habit (low) → stone present -->
+                  <div class="h-11 w-11 flex items-center justify-center"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-normal" style="color:hsl(25,6%,76%)">14</span></div>
+                  <!-- 15: future → ghost dimmed -->
+                  <div class="h-11 w-11 flex items-center justify-center" style="opacity:0.35"><span class="h-8 w-8 flex items-center justify-center rounded-full text-sm font-light" style="color:hsl(25,5%,32%)">15</span></div>
                 </div>
                 <!-- Future weeks -->
                 <div class="flex flex-col opacity-30">
@@ -295,9 +321,9 @@
               </div>
             </div>
             <div class="mt-2 flex items-center gap-4 justify-center">
-              <span class="text-xs text-stone-600">light = no activity</span>
-              <span class="text-xs text-stone-300 font-medium">bold = active</span>
-              <span class="text-xs text-amber-500 font-medium">amber = joy</span>
+              <span class="text-xs font-light" style="color:hsl(25,5%,32%)">ghost = no activity</span>
+              <span class="text-xs font-bold" style="color:hsl(25,6%,76%)">bold = active</span>
+              <span class="text-xs font-semibold" style="color:hsl(35,88%,62%)">amber = joy</span>
             </div>
           </div>
         </div>
@@ -324,15 +350,22 @@
           <div>
             <p class="text-xs text-stone-400 mb-2">After (H1)</p>
             <div class="rounded-xl border border-stone-200 p-3 flex flex-wrap gap-0">
-              <div class="h-9 w-9 flex items-center justify-center"><span class="text-sm font-light text-stone-300">1</span></div>
-              <div class="h-9 w-9 flex items-center justify-center"><span class="text-sm font-light text-stone-300">2</span></div>
-              <div class="h-9 w-9 flex items-center justify-center"><span class="text-sm font-medium text-stone-700">3</span></div>
-              <div class="h-9 w-9 flex items-center justify-center"><span class="text-sm font-light text-stone-300">4</span></div>
-              <div class="h-9 w-9 flex items-center justify-center"><span class="text-sm font-medium text-amber-600">5</span></div>
-              <div class="h-9 w-9 flex items-center justify-center"><span class="text-sm font-light text-stone-300">6</span></div>
-              <div class="h-9 w-9 flex items-center justify-center"><span class="text-sm font-normal text-stone-500">7</span></div>
+              <!-- 1: no entry → ghost -->
+              <div class="h-9 w-9 flex items-center justify-center"><span class="text-sm font-light" style="color:hsl(25,5%,84%)">1</span></div>
+              <!-- 2: no entry → ghost -->
+              <div class="h-9 w-9 flex items-center justify-center"><span class="text-sm font-light" style="color:hsl(25,5%,84%)">2</span></div>
+              <!-- 3: 2 habits (medium) → stone semibold -->
+              <div class="h-9 w-9 flex items-center justify-center"><span class="text-sm font-semibold" style="color:hsl(25,6%,30%)">3</span></div>
+              <!-- 4: no entry → ghost -->
+              <div class="h-9 w-9 flex items-center justify-center"><span class="text-sm font-light" style="color:hsl(25,5%,84%)">4</span></div>
+              <!-- 5: joy + habits → amber semibold -->
+              <div class="h-9 w-9 flex items-center justify-center"><span class="text-sm font-semibold" style="color:hsl(28,72%,38%)">5</span></div>
+              <!-- 6: no entry → ghost -->
+              <div class="h-9 w-9 flex items-center justify-center"><span class="text-sm font-light" style="color:hsl(25,5%,84%)">6</span></div>
+              <!-- 7: 1 habit (low) → stone present -->
+              <div class="h-9 w-9 flex items-center justify-center"><span class="text-sm font-normal" style="color:hsl(25,6%,30%)">7</span></div>
             </div>
-            <p class="text-xs text-stone-400 mt-2">Type vocabulary: weight and amber carry the data.</p>
+            <p class="text-xs text-stone-400 mt-2">Type vocabulary: weight and amber carry the data. Empty days disappear.</p>
           </div>
         </div>
       </div>

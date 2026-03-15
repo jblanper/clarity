@@ -85,19 +85,28 @@ Also: the cells use `rounded-md` — Calma's `rounded-xl` is the minimum for inl
 
 ### H1 — Date-as-weight: remove cell boxes, let typography carry the data
 
-**What to change:** Remove the filled cell backgrounds entirely. Each day is its date number — nothing else. The number's weight, opacity, and color carry the activity signal. The selected day gets a subtle `rounded-full` circle behind it, not a filled square. Tappable area stays 44×44px — the hit target doesn't change.
+**What to change:** Remove the filled cell backgrounds entirely. Each day is its date number — nothing else. Two independent channels carry the signal: **weight** communicates how much structural habit work was done; **color** communicates whether any emotional signal was present (joy marked or moment logged). The selected day gets a subtle `rounded-full` circle behind it, not a filled square. Tappable area stays 44×44px — the hit target doesn't change.
 
-**Activity encoding:**
+**Activity encoding — two channels:**
+
+| Channel | Signal | Values |
+|---|---|---|
+| Weight | Habit completion | Ghost (300) → Present (400) → Bold (600) → Bolder (700) |
+| Color | Joy / moments | Stone if none; amber if any |
 
 | State | Weight | Color (light) | Color (dark) |
 |---|---|---|---|
-| No entry | light | stone-300 | stone-600 |
-| Low activity (< 50%) | normal | stone-500 | stone-400 |
-| High activity (≥ 50%) | medium | stone-700 | stone-300 |
-| Joy present (any) | medium | amber-600 | amber-500 |
-| Future | — | stone-300, opacity-40 | stone-600, opacity-40 |
+| No entry | 300 | ghost — hsl(25,5%,84%) | ghost — hsl(25,5%,32%) |
+| Habit-only, low (< 55%) | 400 | hsl(25,6%,30%) | hsl(25,6%,76%) |
+| Habit-only, medium (55–85%) | 600 | hsl(25,6%,30%) | hsl(25,6%,76%) |
+| Habit-only, full (≥ 85%) | 700 | hsl(25,6%,30%) | hsl(25,6%,76%) |
+| Joy present, low habits | 400 | amber — hsl(28,72%,38%) | amber — hsl(35,88%,62%) |
+| Joy present, high habits | 600–700 | amber — hsl(28,72%,38%) | amber — hsl(35,88%,62%) |
+| Future | 300 | opacity-35 | opacity-35 |
 
-When both high activity and joy are present, amber wins — joy is the emotional peak, it should be visible. The dusk blue / warm ember two-axis blend is retired from the calendar cells. It served a thoughtful purpose but the cell box format makes it look like GitHub regardless of the hue. Amber for joy is more legible, more specific, and more aligned with how Clarity uses amber throughout.
+Empty days are ghosted — barely visible, watermark-level. They preserve the calendar structure without competing with logged days. Active days use only three legible tiers (present / bold / bolder); four gradations at small size are indistinguishable. Amber fires as soon as any joy or moment is logged, regardless of habit completion — the two signals run on orthogonal channels and never need to be blended.
+
+The dusk blue / warm ember two-axis blend is retired. It communicated the same two-axis idea but through color mixing, which produced teal at intermediate values — a hue with no semantic home in Calma's palette. Weight + amber achieves the same reading more legibly: weight tells you how much you showed up; amber tells you whether you felt something.
 
 **Selected state:** A small `rounded-full bg-stone-100 dark:bg-stone-800` circle (same size as the touch target, slightly inset via padding) replaces the current `ring-2 ring-stone-500` selected indicator.
 
@@ -118,19 +127,43 @@ When both high activity and joy are present, amber wins — joy is the emotional
     className={[
       "flex h-8 w-8 items-center justify-center rounded-full text-sm transition-colors",
       isSelected ? "bg-stone-100 dark:bg-stone-800" : "",
-      isFuture ? "opacity-30" : "",
-      /* weight + color from activity level — see mapping table above */
     ].filter(Boolean).join(" ")}
-    style={{ fontWeight: cellWeight, color: cellColor }}
+    style={{
+      fontWeight: cellStyle.fontWeight,
+      color: cellStyle.color,
+      ...(isFuture ? { opacity: 0.35 } : {}),
+    }}
   >
     {dayNum}
   </span>
 </button>
 ```
 
-The activity level (and therefore `cellWeight` and `cellColor`) is computed from the same `computeCellColor` logic, but instead of producing an HSL background, it maps to a weight/color pair.
+`computeCellStyle` replaces `computeCellColor`, returning `{ fontWeight, color }`:
 
-**Calma note:** This is Calma's typographic primacy principle applied to a data visualization — type as the primary material, no decorative surface. The amber accent for joy follows Calma's semantic color rule: amber signals emotional weight. `rounded-full` for the selected state matches Calma's pill/chip shape vocabulary. The cell `h-8 w-8 rounded-full` inner circle is Calma `rounded-full` (pill/tag scale) rather than `rounded-md`.
+```tsx
+function computeCellStyle(
+  entry: HabitEntry,
+  isDark: boolean,
+  totalBooleanHabits: number,
+): { fontWeight: number; color: string } {
+  const ghost = isDark ? "hsl(25, 5%, 32%)" : "hsl(25, 5%, 84%)";
+  const habitCount = Object.values(entry.habits).filter((s) => s.done).length;
+  const hasJoy = Object.values(entry.habits).some((s) => s.joy)
+    || entry.moments.length > 0;
+  const b = habitCount / (totalBooleanHabits || 1);
+
+  if (!hasJoy && b === 0) return { fontWeight: 300, color: ghost };
+
+  const amber = isDark ? "hsl(35, 88%, 62%)" : "hsl(28, 72%, 38%)";
+  const stone = isDark ? "hsl(25, 6%, 76%)"  : "hsl(25, 6%, 30%)";
+  const color = hasJoy ? amber : stone;
+  const fontWeight = b === 0 ? 400 : b < 0.55 ? 400 : b < 0.85 ? 600 : 700;
+  return { fontWeight, color };
+}
+```
+
+**Calma note:** Two independent channels — weight for structure, amber for feeling — is more orthogonal than a blend. Neither signal overwrites the other; both are readable simultaneously. This follows Calma's semantic color rule (amber signals emotional weight) and its typographic primacy principle (type is the primary material, no decorative surface). The ghost empty-day treatment is Calma's principle of contextual omission: a day with nothing logged has nothing to say; it steps back.
 
 **On the Ma Tapestry proposal:** This proposal implements the philosophical core of the Tapestry's "Typographic Rhythm" direction — type carries data, no colored boxes, amber for joy — in the simplest possible form. It does NOT implement the 5-style system (Typographic Rhythm / Weave / Petals / Mist / Field). That system is over-engineered for what is, at root, a binary problem: "does this look like GitHub?" and "does it feel considered?" H1 answers both without requiring the user to choose from five visualization modes. The Weave, Petals, Mist, and Field directions are interesting design provocations that belong in the feature explorer backlog, not a sprint.
 
@@ -161,9 +194,14 @@ const hasMultiYearData = (() => {
     {/* year row */}
   </div>
 )}
+
+// When year row is hidden, include the year inline in the month heading:
+<span className="text-base font-light tracking-widest text-stone-600">
+  {hasMultiYearData ? monthName : `${monthName} ${currentYear}`}
+</span>
 ```
 
-When the year row is absent, the month navigation moves up slightly. The layout gains breathing room above the month heading. When the year row appears (after ~12 months of data), it slides in without surprise — the user has been using the app long enough to expect it.
+When the year row is absent, the month heading includes the year inline — "March 2026" rather than "March". This is a one-line change in the month heading render. The user always knows what year they're in without needing a separate row. When the year row appears (after multi-year data is earned), the month heading reverts to the month name alone since the year row carries that context. The layout gains breathing room above the month heading. When the year row appears (after ~12 months of data), it slides in without surprise — the user has been using the app long enough to expect it.
 
 **Calma note:** This is Calma's "controls that only become relevant at a specific state may appear contextually" principle. The year selector is only relevant when data spans multiple years. Its absence when irrelevant is not confusing — it's calm.
 
@@ -271,7 +309,7 @@ The Weave, Petals, Mist, and Field directions are genuinely interesting. They be
 
 ## Open questions
 
-- **H1 and the sunset blend:** The two-axis blend (dusk blue / warm ember) was a considered decision in the current implementation. H1 retires it from the calendar cells in favor of stone-weight + amber-for-joy. The philosophical trade-off is: the blend communicates "structural habits vs. emotional moments" as a split signal; H1 collapses that to "anything active vs. joy." This is a simplification. If the distinction between habit completion and joy/moments matters to the user's reading of their history, H1 loses information. Worth discussing before implementing.
+- **H1 and the sunset blend — resolved:** Three alternatives were explored and compared in `mockup-h1-blend-comparison.html`: (A) filled squares + blend (current), (B) circles + blend, (C) weight + amber. Circles break the GitHub square-grid association but the blend still produces teal at intermediate hue values — a color with no semantic home in Calma. Blend-as-typography was also explored (moving the blend from background fill to date number ink color) but the teal intermediate persists regardless of medium. The final direction — weight + amber with ghosted empty days — separates the two-axis reading onto orthogonal channels: weight carries habit completion, amber carries emotional presence. No blending, no teal, no information loss that matters for reflection.
 
 - **H4 and HistoryView's `handlePeriodChange` debounce:** The 120ms `setTimeout` in `handlePeriodChange` (`HistoryView.tsx:53–57`) creates a brief `isUpdating` state that fades the frequency list. This pattern should survive the H4 change unchanged — the pill group calls the same handler.
 
