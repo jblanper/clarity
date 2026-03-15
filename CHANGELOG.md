@@ -1,5 +1,19 @@
 # Changelog
 
+## [v2.5.0] — 2026-03-15
+
+### Features
+- **ManageView section cards** — habits and moments now live inside rounded card containers (B1) for clearer visual grouping.
+- **Full-row tap + action tray** — active habit rows are fully tappable, revealing an inline action tray with Edit and Archive actions (B2); moments use a chip grid with in-place label editing (B3).
+- **Joy-by-default toggle** — per-habit pill tag in ManageView lets users enable `joyByDefault`, pre-filling joy when the habit is first toggled on each day (B4).
+- **SettingsView redesign** — Settings page restructured into thematic sections (Account, Appearance, Data) with clearer hierarchy, updated copy for backup/restore/reset actions (S1–S4).
+
+### Fixes
+- **Settings copy** — backup, restore, and reset labels updated to match UX evaluation mockup language.
+
+### Docs / Chore
+- Sprint-12 brief, audit updates (arch, colour, interaction, microcopy, typography), Calma design language sync, e2e specs for sprint-12, and audit archive entry.
+
 ## [v2.4.0] — 2026-03-14
 
 ### Features
