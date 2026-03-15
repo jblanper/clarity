@@ -581,12 +581,12 @@ Add a joy toggle button to the action tray (inside the `m.div` flex row, after t
 ```
 
 **Validation steps:**
-- [ ] Boolean habit with `joyByDefault: true` shows amber "Joy" pill in resting row
-- [ ] Boolean habit with `joyByDefault: false` shows no pill
-- [ ] Numeric habits show no pill at all
-- [ ] Action tray includes Joy toggle button for boolean habits only
-- [ ] Toggling joy updates the pill in the resting row immediately
-- [ ] `npm run lint && npm test` passes
+- [x] Boolean habit with `joyByDefault: true` shows amber "Joy" pill in resting row
+- [x] Boolean habit with `joyByDefault: false` shows no pill
+- [x] Numeric habits show no pill at all
+- [x] Action tray includes Joy toggle button for boolean habits only
+- [x] Toggling joy updates the pill in the resting row immediately
+- [x] `npm run lint && npm test` passes
 
 **Definition of done:** Joy-by-default status visible in the resting row and togglable from the action tray without opening the full edit form.
 

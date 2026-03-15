@@ -275,6 +275,16 @@ export default function ManageView() {
                   >
                     <button type="button" onClick={() => startEditHabit(h)} className={ACTION_BTN}>Edit</button>
                     <button type="button" onClick={() => archiveHabit(h.id)} className={ARCHIVE_BTN}>Archive</button>
+                    {h.type === "boolean" && (
+                      <button
+                        type="button"
+                        onClick={() => toggleJoyByDefault(h.id)}
+                        className={`${ACTION_BTN} flex items-center gap-1`}
+                      >
+                        <BlossomIcon filled={h.joyByDefault} size={14} />
+                        {h.joyByDefault ? "Unmark joy" : "Mark joy"}
+                      </button>
+                    )}
                   </m.div>
                 )}
               </AnimatePresence>
