@@ -58,9 +58,6 @@ const INLINE_FORM =
 
 const FIELD_LABEL = "mb-1 block text-xs text-stone-500 dark:text-stone-400";
 
-const SECTION_LABEL =
-  "mb-3 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500";
-
 // ── ManageView ─────────────────────────────────────────────────────────────
 
 export default function ManageView() {
@@ -251,21 +248,23 @@ export default function ManageView() {
         </Link>
       </header>
 
-      {/* ── Jump link ───────────────────────────────────────────────── */}
-      <div className="mb-10">
-        <a
-          href="#moments"
-          className="text-xs text-stone-600 dark:text-stone-500 underline-offset-4 transition-colors hover:underline"
-        >
-          Jump to Moments <Chevron direction="down" size={13} />
-        </a>
-      </div>
-
       {/* ── Habits ──────────────────────────────────────────────────── */}
-      <section className="mb-10">
-        <h2 className={SECTION_LABEL}>Habits</h2>
+      <section className="mb-6">
+        <div className="rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-4">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
+              Habits
+            </h2>
+            <button
+              type="button"
+              onClick={() => { closeAllEditors(); setAddHabit({ stage: "type" }); }}
+              className="flex min-h-[44px] items-center text-xs text-stone-500 dark:text-stone-400 transition-colors hover:text-stone-700 dark:hover:text-stone-200"
+            >
+              + New
+            </button>
+          </div>
 
-        <div className="space-y-0.5">
+          <div className="space-y-0.5">
           {/* Active habits */}
           {activeHabits.map((h) => (
             <div key={h.id}>
@@ -407,21 +406,7 @@ export default function ManageView() {
           ))}
         </div>
 
-        {/* Add habit flow */}
-        {addHabit === null && (
-          <button
-            type="button"
-            onClick={() => {
-              closeAllEditors();
-              setAddHabit({ stage: "type" });
-            }}
-            className="mt-3 text-sm text-stone-500 dark:text-stone-400 underline-offset-4 hover:underline transition-colors"
-          >
-            + Add habit
-          </button>
-        )}
-
-        <AnimatePresence initial={false}>
+          <AnimatePresence initial={false}>
           {addHabit?.stage === "type" && (
             <m.div
               className="mt-3 space-y-2"
@@ -557,13 +542,26 @@ export default function ManageView() {
           </m.div>
         )}
         </AnimatePresence>
+        </div>
       </section>
 
       {/* ── Moments ─────────────────────────────────────────────────── */}
-      <section id="moments">
-        <h2 className={SECTION_LABEL}>Moments</h2>
+      <section className="mb-6">
+        <div className="rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-4">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
+              Moments
+            </h2>
+            <button
+              type="button"
+              onClick={() => { closeAllEditors(); setAddingTag(true); }}
+              className="flex min-h-[44px] items-center text-xs text-stone-500 dark:text-stone-400 transition-colors hover:text-stone-700 dark:hover:text-stone-200"
+            >
+              + New
+            </button>
+          </div>
 
-        <div className="space-y-0.5">
+          <div className="space-y-0.5">
           {/* Active tags */}
           {activeTags.map((t) => (
             <div key={t.id}>
@@ -634,22 +632,9 @@ export default function ManageView() {
               )}
             </div>
           ))}
-        </div>
+          </div>
 
-        {/* Add tag flow */}
-        {!addingTag && (
-          <button
-            type="button"
-            onClick={() => {
-              closeAllEditors();
-              setAddingTag(true);
-            }}
-            className="mt-3 text-sm text-stone-500 dark:text-stone-400 underline-offset-4 hover:underline transition-colors"
-          >
-            + Add moment
-          </button>
-        )}
-        <AnimatePresence initial={false}>
+          <AnimatePresence initial={false}>
           {addingTag && (
             <m.div
               className={`mt-3 ${INLINE_FORM}`}
@@ -691,7 +676,8 @@ export default function ManageView() {
               </div>
             </m.div>
           )}
-        </AnimatePresence>
+          </AnimatePresence>
+        </div>
       </section>
     </div>
   );
