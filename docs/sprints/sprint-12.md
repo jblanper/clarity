@@ -529,21 +529,21 @@ After confirming `editingTag` is unused, remove:
 **Post-sprint CLAUDE.md update:** Once the action tray animation is proven, document the pattern in CLAUDE.md under Component-specific notes.
 
 **Validation steps:**
-- [ ] Habits: resting row shows label only (+ joy pill if joyByDefault); Edit/Archive not visible
-- [ ] Habits: tapping a row reveals action tray (Edit, Archive)
-- [ ] Habits: tapping the same row again collapses the tray
-- [ ] Habits: tapping a different row closes the previous tray and opens the new one
-- [ ] Habits: tapping Edit opens the inline edit form; action tray hidden while form is open
-- [ ] Habits: tapping Archive archives the habit; tray closes
-- [ ] Moments: active moments shown as chips in a wrapping flex grid
-- [ ] Moments: tapping a chip enters inline edit mode (input + Save/Cancel)
-- [ ] Moments: saving a chip updates the label and returns to chip display
-- [ ] Moments: opening a chip edit closes any open habit tray
-- [ ] Archived moments still show flat list with Restore button
-- [ ] All touch targets ≥ 44px
-- [ ] Exit animation does not snap (padding animated to 0 in exit)
-- [ ] `editingTag` state removed if unused (grep confirms)
-- [ ] `npm run lint && npm test` passes
+- [x] Habits: resting row shows label only (+ joy pill if joyByDefault); Edit/Archive not visible
+- [x] Habits: tapping a row reveals action tray (Edit, Archive)
+- [x] Habits: tapping the same row again collapses the tray
+- [x] Habits: tapping a different row closes the previous tray and opens the new one
+- [x] Habits: tapping Edit opens the inline edit form; action tray hidden while form is open
+- [x] Habits: tapping Archive archives the habit; tray closes
+- [x] Moments: active moments shown as chips in a wrapping flex grid
+- [x] Moments: tapping a chip enters inline edit mode (input + Save/Cancel)
+- [x] Moments: saving a chip updates the label and returns to chip display
+- [x] Moments: opening a chip edit closes any open habit tray
+- [x] Archived moments still show flat list with Restore button
+- [x] All touch targets ≥ 44px
+- [x] Exit animation does not snap (padding animated to 0 in exit)
+- [x] `editingTag` state removed if unused (grep confirms)
+- [x] `npm run lint && npm test` passes
 
 **Definition of done:** Habits use full-row tap + action tray; Moments use chip grid with in-place editing; no dead state.
 

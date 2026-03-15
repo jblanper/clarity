@@ -12,7 +12,6 @@ import {
   DEFAULT_MOMENT_CONFIGS,
   type AppConfigs,
   type HabitConfig,
-  type MomentConfig,
 } from "@/lib/habitConfig";
 
 // ── Local state types ──────────────────────────────────────────────────────
@@ -24,11 +23,6 @@ interface EditingHabit {
   unit: string;
   step: number;
   startAt?: number;
-}
-
-interface EditingTag {
-  id: string;
-  label: string;
 }
 
 type AddHabitStep =
@@ -69,12 +63,14 @@ export default function ManageView() {
   });
 
   const [editingHabit, setEditingHabit] = useState<EditingHabit | null>(null);
-  const [editingTag, setEditingTag] = useState<EditingTag | null>(null);
   const [addHabit, setAddHabit] = useState<AddHabitStep | null>(null);
   const [addingTag, setAddingTag] = useState(false);
   const [newTagLabel, setNewTagLabel] = useState("");
   // Holds the ID of the most recently archived item to show the confirmation note
   const [justArchivedId, setJustArchivedId] = useState<string | null>(null);
+  const [actionTrayId, setActionTrayId] = useState<string | null>(null);
+  const [editingMomentId, setEditingMomentId] = useState<string | null>(null);
+  const [editingMomentLabel, setEditingMomentLabel] = useState("");
 
   useEffect(() => {
     startTransition(() => setConfigs(getConfigs()));
@@ -94,10 +90,12 @@ export default function ManageView() {
 
   function closeAllEditors() {
     setEditingHabit(null);
-    setEditingTag(null);
     setAddHabit(null);
     setAddingTag(false);
     setNewTagLabel("");
+    setActionTrayId(null);
+    setEditingMomentId(null);
+    setEditingMomentLabel("");
   }
 
   // ── Habit actions ──────────────────────────────────────────────────────
@@ -181,34 +179,6 @@ export default function ManageView() {
 
   // ── Tag actions ────────────────────────────────────────────────────────
 
-  function startEditTag(t: MomentConfig) {
-    closeAllEditors();
-    setJustArchivedId(null);
-    setEditingTag({ id: t.id, label: t.label });
-  }
-
-  function saveEditTag() {
-    if (!editingTag) return;
-    applyConfigs({
-      ...configs,
-      moments: configs.moments.map((m) =>
-        m.id === editingTag.id ? { ...m, label: editingTag.label } : m
-      ),
-    });
-    setEditingTag(null);
-  }
-
-  function archiveTag(id: string) {
-    setEditingTag(null);
-    applyConfigs({
-      ...configs,
-      moments: configs.moments.map((m) =>
-        m.id === id ? { ...m, archived: true } : m
-      ),
-    });
-    setJustArchivedId(id);
-  }
-
   function restoreTag(id: string) {
     setJustArchivedId(null);
     applyConfigs({
@@ -268,36 +238,46 @@ export default function ManageView() {
           {/* Active habits */}
           {activeHabits.map((h) => (
             <div key={h.id}>
-              <div className="flex items-center justify-between gap-2 py-2">
-                <div className="flex min-w-0 flex-col gap-0.5">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-sm text-stone-700 dark:text-stone-300">{h.label}</span>
-                    {h.type === "numeric" && (
-                      <span className="text-xs text-stone-500 dark:text-stone-500">{h.unit}</span>
-                    )}
-                  </div>
-                  {h.type === "boolean" && (
-                    <button
-                      type="button"
-                      onClick={() => toggleJoyByDefault(h.id)}
-                      className="self-start text-left transition-colors"
-                    >
-                      <span className={`flex items-center gap-1 text-xs ${h.joyByDefault ? "text-amber-600 dark:text-amber-500" : "text-stone-500"}`}>
-                        <BlossomIcon filled={h.joyByDefault} size={16} />
-                        {h.joyByDefault ? "Brings joy by default" : "Tap to mark as joyful by default"}
-                      </span>
-                    </button>
-                  )}
-                </div>
-                <div className="flex shrink-0 gap-3">
-                  <button type="button" onClick={() => startEditHabit(h)} className={ACTION_BTN}>
-                    Edit
-                  </button>
-                  <button type="button" onClick={() => archiveHabit(h.id)} className={ARCHIVE_BTN}>
-                    Archive
-                  </button>
-                </div>
-              </div>
+              {/* Resting row — full-width tap target */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (actionTrayId === h.id) {
+                    setActionTrayId(null);
+                  } else {
+                    closeAllEditors();
+                    setActionTrayId(h.id);
+                  }
+                }}
+                className="flex w-full min-h-[44px] items-center gap-2 py-3 text-left"
+              >
+                <span className="text-sm text-stone-700 dark:text-stone-300">{h.label}</span>
+                {h.type === "numeric" && (
+                  <span className="text-xs text-stone-500 dark:text-stone-500">{h.unit}</span>
+                )}
+                {h.type === "boolean" && h.joyByDefault && (
+                  <span className="inline-flex items-center rounded-full bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700/40 px-2 py-0.5 text-xs text-amber-700 dark:text-amber-400">
+                    Joy
+                  </span>
+                )}
+              </button>
+
+              {/* Action tray */}
+              <AnimatePresence initial={false}>
+                {actionTrayId === h.id && !editingHabit && (
+                  <m.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0, paddingBottom: 0 }}
+                    transition={{ duration: 0.22, ease: "easeOut" }}
+                    style={{ overflow: "hidden" }}
+                    className="flex gap-4 pb-3"
+                  >
+                    <button type="button" onClick={() => startEditHabit(h)} className={ACTION_BTN}>Edit</button>
+                    <button type="button" onClick={() => archiveHabit(h.id)} className={ARCHIVE_BTN}>Archive</button>
+                  </m.div>
+                )}
+              </AnimatePresence>
 
               {/* Inline edit form */}
               <AnimatePresence initial={false}>
@@ -561,60 +541,63 @@ export default function ManageView() {
             </button>
           </div>
 
-          <div className="space-y-0.5">
-          {/* Active tags */}
-          {activeTags.map((t) => (
-            <div key={t.id}>
-              <div className="flex items-center justify-between gap-2 py-2">
-                <span className="text-sm text-stone-700 dark:text-stone-300">{t.label}</span>
-                <div className="flex shrink-0 gap-3">
-                  <button type="button" onClick={() => startEditTag(t)} className={ACTION_BTN}>
-                    Edit
+          {/* Active tags — chip grid */}
+          <div className="flex flex-wrap gap-2 py-2">
+            {activeTags.map((t) =>
+              editingMomentId === t.id ? (
+                <div key={t.id} className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={editingMomentLabel}
+                    onChange={(e) => setEditingMomentLabel(e.target.value)}
+                    className={`${TEXT_INPUT} w-32`}
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (editingMomentLabel.trim()) {
+                        applyConfigs({
+                          ...configs,
+                          moments: configs.moments.map((m) =>
+                            m.id === editingMomentId ? { ...m, label: editingMomentLabel.trim() } : m
+                          ),
+                        });
+                      }
+                      setEditingMomentId(null);
+                      setEditingMomentLabel("");
+                    }}
+                    disabled={!editingMomentLabel.trim()}
+                    className={SAVE_BTN}
+                  >
+                    Save
                   </button>
-                  <button type="button" onClick={() => archiveTag(t.id)} className={ARCHIVE_BTN}>
-                    Archive
+                  <button
+                    type="button"
+                    onClick={() => { setEditingMomentId(null); setEditingMomentLabel(""); }}
+                    className={CANCEL_BTN}
+                  >
+                    Cancel
                   </button>
                 </div>
-              </div>
+              ) : (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => {
+                    closeAllEditors();
+                    setEditingMomentId(t.id);
+                    setEditingMomentLabel(t.label);
+                  }}
+                  className="min-h-[44px] flex items-center rounded-full border border-stone-200 dark:border-stone-700 px-4 py-2 text-sm text-stone-700 dark:text-stone-300 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800"
+                >
+                  {t.label}
+                </button>
+              )
+            )}
+          </div>
 
-              {/* Inline edit form */}
-              <AnimatePresence initial={false}>
-                {editingTag?.id === t.id && (
-                  <m.div
-                    className={INLINE_FORM}
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0 }}
-                    transition={{ duration: 0.22, ease: "easeOut" }}
-                    style={{ overflow: "hidden" }}
-                  >
-                    <div>
-                      <label className={FIELD_LABEL}>Label</label>
-                      <input
-                        type="text"
-                        value={editingTag.label}
-                        onChange={(e) => setEditingTag({ ...editingTag, label: e.target.value })}
-                        className={TEXT_INPUT}
-                      />
-                    </div>
-                    <div className="flex gap-3 pt-1">
-                      <button
-                        type="button"
-                        onClick={saveEditTag}
-                        disabled={!editingTag.label.trim()}
-                        className={SAVE_BTN}
-                      >
-                        Save
-                      </button>
-                      <button type="button" onClick={() => setEditingTag(null)} className={CANCEL_BTN}>
-                        Cancel
-                      </button>
-                    </div>
-                  </m.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
+          <div className="space-y-0.5">
 
           {/* Archived tags */}
           {archivedTags.map((t) => (
