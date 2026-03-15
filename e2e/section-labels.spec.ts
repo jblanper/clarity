@@ -43,10 +43,12 @@ test("CheckInForm — Habits and By the numbers have correct margin below label"
 
 // ── Settings ────────────────────────────────────────────────────────────────
 
-test("SettingsView — Manage, Help, Reset section labels are font-medium", async ({ page }) => {
+// Sprint 12: Manage and Help sections merged into "App" navigation card.
+// Updated to check "App" and "Reset"; "Manage" and "Help" are now links inside the card.
+test("SettingsView — App and Reset section labels are font-medium", async ({ page }) => {
   await page.goto("/clarity/settings");
 
-  const labelTexts = ["Manage", "Help", "Reset"];
+  const labelTexts = ["App", "Reset"];
   for (const name of labelTexts) {
     const heading = page.getByRole("heading", { name });
     const weight = await heading.evaluate((node) => getComputedStyle(node).fontWeight);

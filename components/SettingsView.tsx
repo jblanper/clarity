@@ -147,14 +147,14 @@ export default function SettingsView() {
             className="flex min-h-[44px] items-center justify-between px-4 py-3 text-sm text-stone-700 dark:text-stone-300 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800"
           >
             <span>Habits and moments</span>
-            <span className="text-stone-400 dark:text-stone-600"><Chevron direction="right" /></span>
+            <span className="text-stone-500 dark:text-stone-500"><Chevron direction="right" /></span>
           </Link>
           <Link
             href="/help"
             className="flex min-h-[44px] items-center justify-between px-4 py-3 text-sm text-stone-700 dark:text-stone-300 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800"
           >
             <span>How Clarity works</span>
-            <span className="text-stone-400 dark:text-stone-600"><Chevron direction="right" /></span>
+            <span className="text-stone-500 dark:text-stone-500"><Chevron direction="right" /></span>
           </Link>
         </div>
       </section>
@@ -169,7 +169,7 @@ export default function SettingsView() {
 
         {/* Backup */}
         <div className="mb-6">
-          <p className="mb-1 text-xs font-medium uppercase tracking-widest text-stone-500">BACKUP</p>
+          <p className="mb-1 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">BACKUP</p>
           <p className="mb-4 text-sm text-stone-500 dark:text-stone-400">
             Keep a copy of your entries on your device.
           </p>
@@ -189,7 +189,7 @@ export default function SettingsView() {
 
         {/* Restore */}
         <div>
-          <p className="mb-1 text-xs font-medium uppercase tracking-widest text-stone-500">RESTORE</p>
+          <p className="mb-1 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">RESTORE</p>
           <p className="mb-4 text-sm text-stone-500 dark:text-stone-400">
             Load a backup file. Days you&apos;ve already logged won&apos;t change.
           </p>

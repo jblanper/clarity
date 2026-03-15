@@ -136,8 +136,19 @@ export default function ManageView() {
     setEditingHabit(null);
   }
 
+  function archiveMoment(id: string) {
+    closeAllEditors();
+    applyConfigs({
+      ...configs,
+      moments: configs.moments.map((m) =>
+        m.id === id ? { ...m, archived: true } : m
+      ),
+    });
+    setJustArchivedId(id);
+  }
+
   function archiveHabit(id: string) {
-    setEditingHabit(null);
+    closeAllEditors();
     applyConfigs({
       ...configs,
       habits: configs.habits.map((h) =>
@@ -212,7 +223,7 @@ export default function ManageView() {
         </h1>
         <Link
           href="/settings"
-          className="text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
+          className="flex min-h-[44px] items-center text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
         >
           <Chevron direction="left" /> Settings
         </Link>
@@ -588,6 +599,13 @@ export default function ManageView() {
                     className={CANCEL_BTN}
                   >
                     Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => archiveMoment(t.id)}
+                    className={ARCHIVE_BTN}
+                  >
+                    Archive
                   </button>
                 </div>
               ) : (

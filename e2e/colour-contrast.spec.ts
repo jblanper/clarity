@@ -30,16 +30,12 @@ test.beforeEach(async ({ page }) => {
 
 // ── SettingsView section labels ─────────────────────────────────────────────
 
-test("SettingsView — Manage label is not stone-400", async ({ page }) => {
+// Sprint 12: Manage and Help sections merged into "App" navigation card.
+// The section heading is now "App" — verify it is not stone-400.
+test("SettingsView — App section label is not stone-400", async ({ page }) => {
   await page.goto("/clarity/settings");
-  const color = await getComputedColor(page, "heading", "Manage");
-  expect(color, "Manage label must not be stone-400").not.toBe(STONE_400_RGB);
-});
-
-test("SettingsView — Help label is not stone-400", async ({ page }) => {
-  await page.goto("/clarity/settings");
-  const color = await getComputedColor(page, "heading", "Help");
-  expect(color, "Help label must not be stone-400").not.toBe(STONE_400_RGB);
+  const color = await getComputedColor(page, "heading", "App");
+  expect(color, "App label must not be stone-400").not.toBe(STONE_400_RGB);
 });
 
 test("SettingsView — Reset label is not stone-400", async ({ page }) => {

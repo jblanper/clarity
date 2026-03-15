@@ -250,19 +250,29 @@ test("NumberStepper — pill has amber background when value > 0", async ({ page
 test("ManageView — editing a numeric habit reveals a Start at field after Increment", async ({ page }) => {
   await page.goto("/clarity/manage");
 
-  // Find a numeric habit — default configs include numeric habits (step > 0)
-  // Click "Edit" on each habit until we find one that shows "Increment"
-  const editBtns = page.getByRole("button", { name: /^edit$/i });
-  const count = await editBtns.count();
+  // Sprint 12: Edit buttons are now hidden in action trays — tap a habit row first to reveal tray.
+  // Find a numeric habit by tapping rows until we find one with "Edit" in the tray, then click it.
+  const habitsSection = page.locator("section").filter({ has: page.getByText("Habits") });
+  const habitRows = habitsSection.locator("button").filter({ hasNotText: "+ New" });
+  const count = await habitRows.count();
 
   let foundStartAt = false;
   for (let i = 0; i < count && !foundStartAt; i++) {
-    await editBtns.nth(i).click();
-    await page.waitForTimeout(300); // wait for animation
+    // Close any open editor first
+    await page.keyboard.press("Escape").catch(() => {});
+    await page.goto("/clarity/manage");
+
+    const rows = habitsSection.locator("button").filter({ hasNotText: "+ New" });
+    await rows.nth(i).click();
+    await page.waitForTimeout(200);
+
+    const editBtn = page.getByRole("button", { name: "Edit", exact: true });
+    if (!await editBtn.isVisible({ timeout: 400 })) continue;
+    await editBtn.click();
+    await page.waitForTimeout(300);
 
     const incrementLabel = page.getByText("Increment");
     if (await incrementLabel.isVisible({ timeout: 500 })) {
-      // "Start at" label should appear after "Increment" in the same form
       const startAtLabel = page.getByText(/start at/i).first();
       await expect(
         startAtLabel,
@@ -270,7 +280,6 @@ test("ManageView — editing a numeric habit reveals a Start at field after Incr
       ).toBeVisible();
       foundStartAt = true;
     } else {
-      // Cancel and try next
       const cancelBtn = page.getByRole("button", { name: /cancel/i }).first();
       if (await cancelBtn.isVisible()) await cancelBtn.click();
     }
@@ -282,17 +291,27 @@ test("ManageView — editing a numeric habit reveals a Start at field after Incr
 test("ManageView — Start at field in edit form accepts numeric input", async ({ page }) => {
   await page.goto("/clarity/manage");
 
-  const editBtns = page.getByRole("button", { name: /^edit$/i });
-  const count = await editBtns.count();
+  // Sprint 12: Edit buttons are in action trays — tap a habit row first to open the tray.
+  // Sprint 12: placeholder on Start at changed from "0" to "Optional".
+  const habitsSection = page.locator("section").filter({ has: page.getByText("Habits") });
+  const habitRows = habitsSection.locator("button").filter({ hasNotText: "+ New" });
+  const count = await habitRows.count();
 
   for (let i = 0; i < count; i++) {
-    await editBtns.nth(i).click();
+    await page.goto("/clarity/manage");
+    const rows = habitsSection.locator("button").filter({ hasNotText: "+ New" });
+    await rows.nth(i).click();
+    await page.waitForTimeout(200);
+
+    const editBtn = page.getByRole("button", { name: "Edit", exact: true });
+    if (!await editBtn.isVisible({ timeout: 400 })) continue;
+    await editBtn.click();
     await page.waitForTimeout(300);
 
     const incrementLabel = page.getByText("Increment");
     if (await incrementLabel.isVisible({ timeout: 500 })) {
-      // Found numeric habit edit form — interact with Start at input
-      const startAtInput = page.locator("input[placeholder='0']").first();
+      // Sprint 12: placeholder is now "Optional" (was "0")
+      const startAtInput = page.locator("input[placeholder='Optional']").first();
       if (await startAtInput.isVisible()) {
         await startAtInput.fill("5");
         const val = await startAtInput.inputValue();
@@ -309,8 +328,9 @@ test("ManageView — Start at field in edit form accepts numeric input", async (
 test("ManageView — add-habit Number form reveals a Start at field", async ({ page }) => {
   await page.goto("/clarity/manage");
 
-  // Open add habit flow
-  const addHabitBtn = page.getByRole("button", { name: /add habit/i });
+  // Sprint 12: "+ Add habit" button replaced by "+ New" in the Habits section card header.
+  const habitsSection = page.locator("section").filter({ has: page.getByText("Habits") });
+  const addHabitBtn = habitsSection.getByRole("button", { name: "+ New", exact: true });
   await expect(addHabitBtn).toBeVisible();
   await addHabitBtn.click();
 

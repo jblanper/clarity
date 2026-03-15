@@ -1065,6 +1065,13 @@
       <li><strong>Secondary</strong> — outlined, white or card-surface background, medium weight. For alternative actions alongside the primary.</li>
       <li><strong>Tertiary</strong> — transparent at rest, border, small text, subtle hover wash. For low-hierarchy contextual actions within a detail view. Never competes with primary or secondary.</li>
     </ul>
+    <p>A tertiary button may use amber border and text when the action is significant but recoverable — one that merits the user's attention without implying irreversibility. Use this amber tertiary sparingly; it should remain the exception on any screen.</p>
+
+    <h3>Segmented control</h3>
+    <p>For mutually exclusive choices presented inline (e.g. theme, period), use a segmented pill track: a rounded-full container with a subtle filled background and border, with each segment as a rounded-full button. The active segment lifts to the page-surface background with a shadow and medium-weight text. Inactive segments use muted stone text with a one-step hover shift. All segments must meet the 44 × 44 px touch target.</p>
+
+    <h3>Navigation card</h3>
+    <p>When a settings or overview surface exposes two or more navigation destinations, group them in a rounded card with a card-surface background and card border, divided by hairline separators between rows. Each row is a full-width link meeting the 44 px touch target, with the destination label on the left and a right-pointing chevron on the right. Rows respond to hover with a subtle surface wash.</p>
 
     <h3>States</h3>
     <div class="example">
@@ -1141,6 +1148,8 @@
     <p><strong>Status dot variant:</strong> When the indicator is small (≤12 px) or where an outlined form would be too delicate to read, use a filled dot that shifts color: stone-300/600 at rest, amber-500/400 when active. The dot is always filled — the color alone carries the state change. Place it at the label's leading edge so it reads as an attribute of the row, not a standalone icon.</p>
 
     <p><strong>Chip / tag variant:</strong> A pill-shaped chip communicates selection state through amber fill when selected; transparent background with stone border at rest. In interactive contexts chips carry standard touch-target height and a color transition. In read-only review contexts — no press handler, no hover — reduce padding by one step to signal static display. Never use a disabled treatment for read-only chips; reduced padding is the signal.</p>
+
+    <p><strong>Attribute badge variant:</strong> When a list row carries a persistent configuration attribute (e.g. "Joy" for joy-by-default), surface it as a small amber pill placed inline after the item label. The badge is non-interactive — it communicates a state, not an action. Do not apply hover or press styles; the action that changes the state lives elsewhere (e.g. in an action tray).</p>
 
     <h3>Touch targets</h3>
     <p>Minimum 44×44px on all tappable elements. Disabled elements are dimmed, never hidden — absence without explanation is confusing. This rule applies to controls that exist but are temporarily unavailable. Controls that only become relevant at a specific state — where their absence is itself informative — may appear contextually. An affordance that disappears when its action is meaningless is clearer than one that persists in a dimmed, unclearable state.</p>

@@ -25,8 +25,8 @@ test.beforeEach(async ({ page }) => {
 test("ManageView — type selector shows Yes/No and Number (not Boolean/Numeric)", async ({ page }) => {
   await page.goto("/clarity/manage");
 
-  // Click "Add habit" button to reveal the type selector
-  const addHabitBtn = page.getByRole("button", { name: /add habit/i });
+  // Sprint 12: "Add habit" button moved to the Habits card header as "+ New"
+  const addHabitBtn = page.getByRole("button", { name: "+ New" }).first();
   await expect(addHabitBtn).toBeVisible();
   await addHabitBtn.click();
 
@@ -43,8 +43,8 @@ test("ManageView — type selector shows Yes/No and Number (not Boolean/Numeric)
 
 test("SettingsView — export description does not mention JSON", async ({ page }) => {
   await page.goto("/clarity/settings");
-  // Should say "Download a backup of all your entries." — not "JSON"
-  await expect(page.getByText("Download a backup of all your entries.")).toBeVisible();
+  // Sprint 12 mockup copy: "Keep a copy of your entries on your device."
+  await expect(page.getByText("Keep a copy of your entries on your device.")).toBeVisible();
   // Old copy should be gone
   const bodyText = await page.locator("body").textContent();
   expect(bodyText).not.toContain("JSON backup file");
@@ -75,7 +75,8 @@ test("CheckInForm — add-moment input has correct placeholder", async ({ page }
 test("ManageView — add-habit form shows Increment not Step", async ({ page }) => {
   await page.goto("/clarity/manage");
 
-  const addBtn = page.getByRole("button", { name: /add habit/i });
+  // Sprint 12: "+ New" button in Habits card header
+  const addBtn = page.getByRole("button", { name: "+ New" }).first();
   await addBtn.click();
 
   // Choose "Number" type
@@ -237,7 +238,8 @@ test("SettingsView — back button reads History when opened from History", asyn
 test("ManageView — no developer vocabulary in type selector", async ({ page }) => {
   await page.goto("/clarity/manage");
 
-  const addBtn = page.getByRole("button", { name: /add habit/i });
+  // Sprint 12: "+ New" button in Habits card header
+  const addBtn = page.getByRole("button", { name: "+ New" }).first();
   await addBtn.click();
 
   // Check the type selector panel text
