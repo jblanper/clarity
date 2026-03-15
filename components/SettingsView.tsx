@@ -113,7 +113,7 @@ export default function SettingsView() {
           type="button"
           onClick={() => router.push(backDest)}
           aria-label="Go back"
-          className="mt-2 text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
+          className="flex min-h-[44px] items-center text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
         >
           <Chevron direction="left" /> {backDest === "/" ? "Today" : "History"}
         </button>
@@ -224,7 +224,7 @@ export default function SettingsView() {
                   type="button"
                   onClick={resetImport}
                   aria-label="Remove selected file"
-                  className="ml-3 flex-shrink-0 text-stone-500 dark:text-stone-500 hover:text-stone-700 dark:hover:text-stone-300"
+                  className="ml-3 flex-shrink-0 min-h-[44px] flex items-center text-stone-500 dark:text-stone-500 hover:text-stone-700 dark:hover:text-stone-300"
                 >
                   ✕
                 </button>
@@ -234,7 +234,7 @@ export default function SettingsView() {
                 onClick={handleImport}
                 className="w-full rounded-2xl bg-stone-800 dark:bg-stone-200 py-4 text-sm tracking-widest text-white dark:text-stone-900 transition-colors hover:bg-stone-700 dark:hover:bg-stone-300 active:bg-stone-900 dark:active:bg-stone-100"
               >
-                Import
+                Restore
               </button>
             </div>
           )}
@@ -258,7 +258,7 @@ export default function SettingsView() {
                 onClick={resetImport}
                 className={TERTIARY_BTN}
               >
-                Import another file
+                Restore another file
               </button>
             </div>
           )}
@@ -304,7 +304,7 @@ export default function SettingsView() {
               <button
                 type="button"
                 onClick={handleReset}
-                className="inline-flex min-h-[44px] items-center text-sm text-amber-700 dark:text-amber-500 transition-colors hover:text-amber-900 dark:hover:text-amber-300"
+                className="inline-flex min-h-[44px] items-center text-sm text-red-700 dark:text-red-400 transition-colors hover:text-red-900 dark:hover:text-red-300"
               >
                 Yes, start fresh
               </button>
