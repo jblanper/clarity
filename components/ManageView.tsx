@@ -80,6 +80,8 @@ export default function ManageView() {
   const [actionTrayId, setActionTrayId] = useState<string | null>(null);
   const [editingMomentId, setEditingMomentId] = useState<string | null>(null);
   const [editingMomentLabel, setEditingMomentLabel] = useState("");
+  const [archivedHabitsOpen, setArchivedHabitsOpen] = useState(false);
+  const [archivedMomentsOpen, setArchivedMomentsOpen] = useState(false);
 
   useEffect(() => {
     startTransition(() => setConfigs(getConfigs()));
@@ -154,6 +156,7 @@ export default function ManageView() {
       ),
     });
     setJustArchivedId(id);
+    setArchivedMomentsOpen(true);
   }
 
   function archiveHabit(id: string) {
@@ -165,6 +168,7 @@ export default function ManageView() {
       ),
     });
     setJustArchivedId(id);
+    setArchivedHabitsOpen(true);
   }
 
   function restoreHabit(id: string) {
@@ -397,27 +401,54 @@ export default function ManageView() {
             </div>
           ))}
 
-          {/* Archived habits */}
-          {archivedHabits.map((h) => (
-            <div key={h.id}>
-              <div className="flex items-center justify-between gap-2 py-2">
-                <div className="flex min-w-0 items-baseline gap-2">
-                  <span className="text-sm text-stone-500 dark:text-stone-500">{h.label}</span>
-                  {h.type === "numeric" && (
-                    <span className="text-xs text-stone-500 dark:text-stone-500">{h.unit}</span>
-                  )}
-                </div>
-                <button type="button" onClick={() => restoreHabit(h.id)} className={ACTION_BTN}>
-                  Restore
-                </button>
-              </div>
-              {justArchivedId === h.id && (
-                <p className="pb-1 text-xs text-stone-500 dark:text-stone-500">
-                  Archived. Past entries are preserved.
-                </p>
-              )}
+          {archivedHabits.length > 0 && (
+            <div className="mt-2 border-t border-stone-100 dark:border-stone-800 pt-2">
+              <button
+                type="button"
+                onClick={() => setArchivedHabitsOpen((v) => !v)}
+                className="flex w-full items-center justify-between text-xs text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors py-1"
+              >
+                <span>Archived ({archivedHabits.length})</span>
+                <span className={`transition-transform duration-200 ${archivedHabitsOpen ? "rotate-180" : ""}`}>
+                  <Chevron direction="down" />
+                </span>
+              </button>
+              <AnimatePresence initial={false}>
+                {archivedHabitsOpen && (
+                  <m.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.22, ease: "easeOut" }}
+                    style={{ overflow: "hidden" }}
+                  >
+                    <div className="space-y-0.5 pt-1">
+                      {archivedHabits.map((h) => (
+                        <div key={h.id}>
+                          <div className="flex items-center justify-between gap-2 py-2">
+                            <div className="flex min-w-0 items-baseline gap-2">
+                              <span className="text-sm text-stone-500 dark:text-stone-500">{h.label}</span>
+                              {h.type === "numeric" && (
+                                <span className="text-xs text-stone-500 dark:text-stone-500">{h.unit}</span>
+                              )}
+                            </div>
+                            <button type="button" onClick={() => restoreHabit(h.id)} className={ACTION_BTN}>
+                              Restore
+                            </button>
+                          </div>
+                          {justArchivedId === h.id && (
+                            <p className="pb-1 text-xs text-stone-500 dark:text-stone-500">
+                              Archived. Past entries are preserved.
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </m.div>
+                )}
+              </AnimatePresence>
             </div>
-          ))}
+          )}
         </div>
 
           <AnimatePresence initial={false}>
@@ -562,17 +593,10 @@ export default function ManageView() {
       {/* ── Moments ─────────────────────────────────────────────────── */}
       <section className="mb-6">
         <div className="rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-4">
-          <div className="mb-4 flex items-center justify-between">
+          <div className="mb-4">
             <h2 className="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
               Moments
             </h2>
-            <button
-              type="button"
-              onClick={() => { closeAllEditors(); setAddingTag(true); }}
-              className="flex min-h-[44px] items-center text-xs text-stone-500 dark:text-stone-400 transition-colors hover:text-stone-700 dark:hover:text-stone-200"
-            >
-              + New
-            </button>
           </div>
 
           {/* Active tags — chip grid */}
@@ -636,27 +660,60 @@ export default function ManageView() {
                 </button>
               )
             )}
+            {editingMomentId === null && (
+              <button
+                type="button"
+                onClick={() => { closeAllEditors(); setAddingTag(true); }}
+                className="min-h-[44px] flex items-center rounded-full border border-stone-200 dark:border-stone-700 px-4 py-2 text-xs text-stone-500 dark:text-stone-500 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800"
+              >
+                + New
+              </button>
+            )}
           </div>
 
-          <div className="space-y-0.5">
-
-          {/* Archived tags */}
-          {archivedTags.map((t) => (
-            <div key={t.id}>
-              <div className="flex items-center justify-between gap-2 py-2">
-                <span className="text-sm text-stone-500 dark:text-stone-500">{t.label}</span>
-                <button type="button" onClick={() => restoreTag(t.id)} className={ACTION_BTN}>
-                  Restore
-                </button>
-              </div>
-              {justArchivedId === t.id && (
-                <p className="pb-1 text-xs text-stone-500 dark:text-stone-500">
-                  Archived. Past entries are preserved.
-                </p>
-              )}
+          {archivedTags.length > 0 && (
+            <div className="mt-2 border-t border-stone-100 dark:border-stone-800 pt-2">
+              <button
+                type="button"
+                onClick={() => setArchivedMomentsOpen((v) => !v)}
+                className="flex w-full items-center justify-between text-xs text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors py-1"
+              >
+                <span>Archived ({archivedTags.length})</span>
+                <span className={`transition-transform duration-200 ${archivedMomentsOpen ? "rotate-180" : ""}`}>
+                  <Chevron direction="down" />
+                </span>
+              </button>
+              <AnimatePresence initial={false}>
+                {archivedMomentsOpen && (
+                  <m.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.22, ease: "easeOut" }}
+                    style={{ overflow: "hidden" }}
+                  >
+                    <div className="space-y-0.5 pt-1">
+                      {archivedTags.map((t) => (
+                        <div key={t.id}>
+                          <div className="flex items-center justify-between gap-2 py-2">
+                            <span className="text-sm text-stone-500 dark:text-stone-500">{t.label}</span>
+                            <button type="button" onClick={() => restoreTag(t.id)} className={ACTION_BTN}>
+                              Restore
+                            </button>
+                          </div>
+                          {justArchivedId === t.id && (
+                            <p className="pb-1 text-xs text-stone-500 dark:text-stone-500">
+                              Archived. Past entries are preserved.
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </m.div>
+                )}
+              </AnimatePresence>
             </div>
-          ))}
-          </div>
+          )}
 
           <AnimatePresence initial={false}>
           {addingTag && (
