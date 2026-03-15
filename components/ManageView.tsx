@@ -352,7 +352,7 @@ export default function ManageView() {
                             type="number"
                             min={0}
                             step={editingHabit.step}
-                            placeholder="0"
+                            placeholder="Optional"
                             value={editingHabit.startAt ?? ""}
                             onChange={(e) =>
                               setEditingHabit({
@@ -399,7 +399,7 @@ export default function ManageView() {
                 </button>
               </div>
               {justArchivedId === h.id && (
-                <p className="pb-1 text-xs text-stone-400 dark:text-stone-500">
+                <p className="pb-1 text-xs text-stone-500 dark:text-stone-500">
                   Archived. Past entries are preserved.
                 </p>
               )}
@@ -525,7 +525,7 @@ export default function ManageView() {
                     type="number"
                     min={0}
                     step={addHabit.step}
-                    placeholder="0"
+                    placeholder="Optional"
                     value={addHabit.startAt ?? ""}
                     onChange={(e) =>
                       setAddHabit({
@@ -628,7 +628,7 @@ export default function ManageView() {
                 </button>
               </div>
               {justArchivedId === t.id && (
-                <p className="pb-1 text-xs text-stone-400 dark:text-stone-500">
+                <p className="pb-1 text-xs text-stone-500 dark:text-stone-500">
                   Archived. Past entries are preserved.
                 </p>
               )}

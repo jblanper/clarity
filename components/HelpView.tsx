@@ -20,7 +20,7 @@ export default function HelpView() {
         </h1>
         <Link
           href="/settings"
-          className="mt-2 text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
+          className="mt-2 flex min-h-[44px] items-center text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
         >
           <Chevron direction="left" /> Settings
         </Link>
@@ -102,7 +102,7 @@ export default function HelpView() {
           href="/clarity/calma-design-language.html"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500 hover:text-stone-800 dark:hover:text-stone-300 transition-colors"
+          className="inline-flex min-h-[44px] items-center text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500 hover:text-stone-800 dark:hover:text-stone-300 transition-colors"
         >
           Design language <Chevron direction="right" />
         </a>

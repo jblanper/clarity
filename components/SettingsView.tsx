@@ -12,6 +12,7 @@ import {
   DEFAULT_MOMENT_CONFIGS,
 } from "@/lib/habitConfig";
 import { getTheme, setTheme, type Theme } from "@/lib/theme";
+import SegmentedPill from "@/components/SegmentedPill";
 
 type ImportStatus =
   | { kind: "idle" }
@@ -20,6 +21,9 @@ type ImportStatus =
   | { kind: "error"; message: string };
 
 type ExportStatus = "idle" | "error";
+
+const TERTIARY_BTN =
+  "inline-flex min-h-[44px] items-center rounded-xl border border-stone-200 dark:border-stone-700 px-4 py-2 text-xs text-stone-600 dark:text-stone-400 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800/50";
 
 export default function SettingsView() {
   const router = useRouter();
@@ -115,50 +119,43 @@ export default function SettingsView() {
         </button>
       </header>
 
-      {/* ── Manage ────────────────────────────────────────────────── */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
-          Manage
-        </h2>
-        <Link
-          href="/manage"
-          className="inline-flex items-center gap-2 py-2 text-sm text-stone-700 dark:text-stone-300 transition-colors hover:text-stone-900 dark:hover:text-stone-100"
-        >
-          <span>Habits and moments</span>
-          <span className="text-stone-500 dark:text-stone-400"><Chevron direction="right" /></span>
-        </Link>
-      </section>
-
-      <div className="mb-8 border-t border-stone-100 dark:border-stone-800" />
-
       {/* ── Theme ─────────────────────────────────────────────────── */}
       <section className="mb-8">
         <h2 className="mb-4 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Theme
         </h2>
-        <div className="flex gap-6">
-          <button
-            type="button"
-            onClick={() => handleThemeChange("light")}
-            className={`text-sm transition-colors ${
-              currentTheme === "light"
-                ? "font-medium text-stone-900 dark:text-stone-100"
-                : "text-stone-500 dark:text-stone-400"
-            }`}
+        <SegmentedPill
+          options={[
+            { value: "light", label: "Light" },
+            { value: "dark", label: "Dark" },
+          ]}
+          value={currentTheme}
+          onChange={handleThemeChange}
+        />
+      </section>
+
+      <div className="mb-8 border-t border-stone-100 dark:border-stone-800" />
+
+      {/* ── App ───────────────────────────────────────────────────── */}
+      <section className="mb-8">
+        <h2 className="mb-4 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
+          App
+        </h2>
+        <div className="rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 divide-y divide-stone-100 dark:divide-stone-800 overflow-hidden">
+          <Link
+            href="/manage"
+            className="flex min-h-[44px] items-center justify-between px-4 py-3 text-sm text-stone-700 dark:text-stone-300 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800"
           >
-            Light
-          </button>
-          <button
-            type="button"
-            onClick={() => handleThemeChange("dark")}
-            className={`text-sm transition-colors ${
-              currentTheme === "dark"
-                ? "font-medium text-stone-900 dark:text-stone-100"
-                : "text-stone-500 dark:text-stone-400"
-            }`}
+            <span>Habits and moments</span>
+            <span className="text-stone-400 dark:text-stone-600"><Chevron direction="right" /></span>
+          </Link>
+          <Link
+            href="/help"
+            className="flex min-h-[44px] items-center justify-between px-4 py-3 text-sm text-stone-700 dark:text-stone-300 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800"
           >
-            Dark
-          </button>
+            <span>How Clarity works</span>
+            <span className="text-stone-400 dark:text-stone-600"><Chevron direction="right" /></span>
+          </Link>
         </div>
       </section>
 
@@ -170,17 +167,18 @@ export default function SettingsView() {
           Your data
         </h2>
 
-        {/* Export */}
+        {/* Backup */}
         <div className="mb-6">
+          <p className="mb-1 text-xs font-medium uppercase tracking-widest text-stone-500">BACKUP</p>
           <p className="mb-4 text-sm text-stone-500 dark:text-stone-400">
-            Download a backup of all your entries.
+            Save a copy of all your entries to a file.
           </p>
           <button
             type="button"
             onClick={handleExport}
-            className="w-full rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 py-4 text-sm tracking-widest text-stone-700 dark:text-stone-300 transition-colors hover:border-stone-300 dark:hover:border-stone-600 hover:bg-stone-50 dark:hover:bg-stone-800 active:bg-stone-100 dark:active:bg-stone-800"
+            className={TERTIARY_BTN}
           >
-            Export backup
+            Download backup
           </button>
           {exportStatus === "error" && (
             <p className="mt-3 text-center text-sm text-red-700 dark:text-red-400">
@@ -189,11 +187,11 @@ export default function SettingsView() {
           )}
         </div>
 
-        {/* Import */}
+        {/* Restore */}
         <div>
+          <p className="mb-1 text-xs font-medium uppercase tracking-widest text-stone-500">RESTORE</p>
           <p className="mb-4 text-sm text-stone-500 dark:text-stone-400">
-            Restore entries from a backup file. Dates that already have an entry
-            will not be overwritten.
+            Load entries from a backup file. Existing days won&apos;t be overwritten.
           </p>
 
           {/* Hidden file input — triggered by the styled button below */}
@@ -210,9 +208,9 @@ export default function SettingsView() {
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="w-full rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 py-4 text-sm tracking-widest text-stone-700 dark:text-stone-300 transition-colors hover:border-stone-300 dark:hover:border-stone-600 hover:bg-stone-50 dark:hover:bg-stone-800 active:bg-stone-100 dark:active:bg-stone-800"
+              className={TERTIARY_BTN}
             >
-              Choose file
+              Choose backup file
             </button>
           )}
 
@@ -258,7 +256,7 @@ export default function SettingsView() {
               <button
                 type="button"
                 onClick={resetImport}
-                className="w-full rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 py-4 text-sm tracking-widest text-stone-700 dark:text-stone-300 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800"
+                className={TERTIARY_BTN}
               >
                 Import another file
               </button>
@@ -273,29 +271,13 @@ export default function SettingsView() {
               <button
                 type="button"
                 onClick={resetImport}
-                className="w-full rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 py-4 text-sm tracking-widest text-stone-700 dark:text-stone-300 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800"
+                className={TERTIARY_BTN}
               >
                 Try again
               </button>
             </div>
           )}
         </div>
-      </section>
-
-      <div className="mb-8 border-t border-stone-100 dark:border-stone-800" />
-
-      {/* ── Help ──────────────────────────────────────────────────── */}
-      <section className="mb-8">
-        <h2 className="mb-4 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
-          Help
-        </h2>
-        <Link
-          href="/help"
-          className="inline-flex items-center gap-2 py-2 text-sm text-stone-700 dark:text-stone-300 transition-colors hover:text-stone-900 dark:hover:text-stone-100"
-        >
-          <span>How Clarity works</span>
-          <span className="text-stone-500 dark:text-stone-400"><Chevron direction="right" /></span>
-        </Link>
       </section>
 
       <div className="mb-8 border-t border-stone-100 dark:border-stone-800" />
@@ -309,27 +291,27 @@ export default function SettingsView() {
           <button
             type="button"
             onClick={() => setResetConfirming(true)}
-            className="text-sm text-amber-700 dark:text-amber-500 transition-colors hover:text-amber-900 dark:hover:text-amber-300"
+            className="inline-flex min-h-[44px] items-center rounded-xl border border-amber-200 dark:border-amber-800/50 px-4 py-2 text-xs text-amber-700 dark:text-amber-500 transition-colors hover:bg-amber-50 dark:hover:bg-amber-900/20"
           >
             Reset to factory defaults
           </button>
         ) : (
           <div className="space-y-3">
             <p className="text-xs text-stone-500 dark:text-stone-400">
-              This will delete all entries and restore default habits and moments.
+              This will permanently delete all entries and restore Clarity to its original habits and moments. This cannot be undone.
             </p>
             <div className="flex gap-5">
               <button
                 type="button"
                 onClick={handleReset}
-                className="text-sm text-amber-700 dark:text-amber-500 transition-colors hover:text-amber-900 dark:hover:text-amber-300"
+                className="inline-flex min-h-[44px] items-center text-sm text-amber-700 dark:text-amber-500 transition-colors hover:text-amber-900 dark:hover:text-amber-300"
               >
-                Yes, reset everything
+                Yes, delete everything
               </button>
               <button
                 type="button"
                 onClick={() => setResetConfirming(false)}
-                className="text-sm text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
+                className="inline-flex min-h-[44px] items-center text-sm text-stone-500 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
               >
                 Cancel
               </button>
