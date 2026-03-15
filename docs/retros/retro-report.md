@@ -1,124 +1,151 @@
 # Retrospective Report
 
-**Generated:** 2026-03-14 22:39
-**Sprints analysed:** Sprint 1 – Sprint 11
+**Generated:** 2026-03-15 21:08
+**Sprints analysed:** Sprint 1 – Sprint 12
 
 ---
 
 ## Recurring problems (address these)
 
-### 1. Design constraints encoded reactively, not proactively — Sprints 1, 2, 3, 4, 5, 6
-The `stone-400` WCAG AA failure, `type="button"` requirement, `router.back()` anti-pattern, and `toISOString()` UTC bug all entered CLAUDE.md *after* a violation was caught in production or review. Each constraint was violated at least once before being written down, and several (stone-400) were violated multiple times across four components because the rule wasn't codified after the first occurrence.
+### 1. WCAG contrast violations recur across the codebase
+**Sprints:** 2, 5, 7, 9, 11 (five of twelve)
 
-**Suggested fix:** At the start of any sprint touching UI or data, do a 5-minute scan of recent CLAUDE.md additions and confirm they're reflected in the components about to be edited. When a violation is caught in arch review or QA, write the CLAUDE.md rule *in the same session*, not deferred.
+`text-stone-400` as foreground in light mode has been caught and re-caught in every major audit cycle. Sprint 2 introduced the pattern; Sprint 5's style guide propagated it; Sprint 7's audit cleared several instances but not all; Sprint 9 found it again in the HistoryView period selector; Sprint 11 flagged the checkmark glyph. The rule has been in CLAUDE.md for years yet violations keep appearing in new components.
 
-### 2. `replace_all` silent misses on ManageView dual-subtree — Sprints 8, 9
-The same pattern appeared twice: an edit targeting a string that appears in two parallel JSX subtrees (inline edit form + add-habit form) at different indentation levels caused a partial replacement. Caught by arch review both times but required a second pass.
+**Suggested fix:** The rule is documented but not enforced. Add a `grep` in a `PostToolUse` hook (or pre-commit hook) that fails if `text-stone-400` appears outside a `dark:` prefix in any `.tsx` file. Zero-tolerance enforcement, not documentation.
 
-**Suggested fix:** After any `replace_all` edit, immediately grep the file for the old string to confirm zero remaining instances. This rule is now in CLAUDE.md but has still been triggered — elevate it to a PostToolUse hook check, or make it a standing first step after every `replace_all`.
+---
 
-### 3. Carry-forward debt accumulating without a clear burn-down plan — Sprints 7, 8, 9, 10, 11
-Each sprint's retrospective notes deferred items (touch targets in Settings/Manage/Help, ManageView stone-400 lines 402/631, CalendarHeatmap dark labels, undocumented nav-link hover, microcopy). The same items recur in subsequent retrospectives without being resolved. Sprint 11 named 7 carry-forward items; Sprint 10 named similar ones.
+### 2. `replace_all` indent mismatches in ManageView cause silent partial edits
+**Sprints:** 8, 11 (carry-forward)
 
-**Suggested fix:** Maintain a single `docs/audits/carry-forward.md` (or a section in the active audit doc) where deferred items are tracked by severity. Sprint 12 brief must explicitly clear or defer each item by name, not leave them as ambient context.
+Two parallel JSX subtrees (inline edit form + add-habit form) at different indentation depths cause `replace_all` to silently miss one subtree. Noted in Sprint 8 arch review, documented in CLAUDE.md, but the ManageView stone-400 violation was still listed as carry-forward debt in Sprint 11 — meaning the CLAUDE.md note alone wasn't sufficient.
 
-### 4. Token cost / context bloat in the pipeline — Sprints 9, 10
-Sprint docs grow large (Sprint 9 reached 618 lines); skills re-read entire files even when only a section is relevant. Sprint 10's scoped-reads task helped, but the retrospective still flagged token burn as high. Several skills (arch, UX) still pull in CLAUDE.md and the Calma doc in full even for tooling or copy sprints.
+**Suggested fix:** When editing ManageView, always grep for the old string immediately after any `replace_all` to verify zero remaining instances. This is already in CLAUDE.md ("Verify `replace_all` completeness") but hasn't been applied consistently. Reinforce by making it an explicit step in the `sprint-kickoff` task spec template for ManageView tasks.
 
-**Suggested fix:** Audit which phases of which skills are still reading full documents. Apply the scoped-read pattern (grep for the relevant section, not `Read` of the full file) to arch and UX skills on their next revision. Pre-flight report already seeds relevance; skills should honour it.
+---
 
-### 5. Sprint scope over-runs causing fatigue — Sprint 5, Sprint 8 (minor)
-Sprint 5 ran across two days with three releases. Sprint 8's retrospective noted high verbosity and cognitive load from long skill output. The root cause in both cases was a combination of scope that could have been split and skill output that was designed for agent context rather than human reading.
+### 3. UX report / mockup drift causes copy corrections during implementation
+**Sprints:** 7, 12
 
-**Suggested fix:** Apply the review-intensity decision tree introduced in Sprint 7 consistently. Full pipeline (UX + arch + mediation + plan) is warranted for new features and data model changes. Audit-driven or tooling sprints need arch review only. Enforce this decision at the brief stage, not mid-sprint.
+Sprint 7 found that "already correct" claims in implementation notes were false (SettingsView Theme and "Your data" labels). Sprint 12 found that the `ux-radical-evaluation` report omitted changes visible in the mockup, leading to copy corrections during implementation. In both cases, the sprint plan was accurate — but the inputs to the plan were not.
+
+**Suggested fix:** Add a UX sign-off step in the brief phase: before finalising the sprint doc, confirm that every copy change visible in the mockup is explicitly enumerated in the report. The `ux-radical-evaluation` skill was updated in Sprint 12; reinforce by making mockup-brief reconciliation a named step in `sprint-brief`.
+
+---
+
+### 4. Token cost remains high despite scoped-reads work
+**Sprints:** 8, 9, 10 (three consecutive)
+
+Sprint 8 raised the issue. Sprint 9 flagged sprint docs growing to 600+ lines and skills re-reading the full document each phase. Sprint 10 delivered scoped reads for several skills but still felt token-heavy. Sprint 10 identified arch and UX skills as the next targets; no evidence this was done before Sprint 11.
+
+**Suggested fix:** Audit the arch and UX skills specifically — they still likely read CLAUDE.md + calma-design-language.md in full even for tooling-only sprints. Add conditional context loading based on the sprint tier (tooling vs. UI vs. data model).
+
+---
+
+### 5. Animation bugs surface only at runtime, after code is written
+**Sprints:** 6, 7
+
+Sprint 6: exit animation snap (border-box + padding) and calendar direction bug both shipped to production and required a follow-up release. Sprint 7: FrequencyList scroll-jump and layout-shift required several iterations. These are interaction-layer bugs that linters, type-checks, and static analysis cannot catch.
+
+**Suggested fix:** This is a structural constraint — the mitigation (manual animation review in the `/deploy` checklist) is already in place. No new action needed; preserve the existing checklist step.
 
 ---
 
 ## Recurring wins (protect these)
 
-### 1. Sprint pipeline produces precise, codeable task specs — Sprints 7–11
-The planning pipeline (brief → UX eval → arch review → mediation → sprint plan) consistently delivers implementation notes specific enough to code from directly. Sprint 7 introduced the format; Sprints 9, 10, and 11 all cited "precise task specs" as the reason execution was smooth. This is the most valuable process investment to date.
+### 1. Arch review as a pre-commit gate
+Arch review has caught real blockers in every sprint it has run: Sprint 7 (archived-label contrast), Sprint 8 (replace_all indent mismatch, scaleX percentage bug), Sprint 9 (startAt edge cases), Sprint 12 (moment archiving silently removed by chip-grid change, actionTrayId dirty state). In all cases the catch happened before implementation shipped — exactly the right moment. Keep this gate mandatory for all feature and UI sprints.
 
-**Protect by:** Not shortcutting the mediation step even when UX and arch seem to agree. Several key decisions (Highlights position, tertiary button token, `startAt` feature) emerged from mediation that neither review produced independently.
+---
 
-### 2. Data model solidity — Sprints 3, 4, 5, 9
-Getting the data model right (UUID keying, done/joy split, `startAt` as optional, sparse records) has paid dividends in every subsequent sprint. Components slot into the model without refactoring. Sprint 9 noted that both redesigned components were *simpler* than their predecessors because the model had room for them.
+### 2. Mediation resolving UX–Arch conflicts before coding begins
+Sprint 9 (startAt creative resolution), Sprint 11 (Highlights position, tertiary button token), Sprint 12 (S3 colour, B2 animation, B3 editing pattern). In every case, questions that could have caused mid-sprint rework were resolved before a line was written. Preserve the parallel review + mediation pattern for all sprints with open design questions.
 
-**Protect by:** Honouring the "never partial-helper, always read-modify-write" rule and not adding convenience fields to `AppConfigs` without going through the full arch review.
+---
 
-### 3. Arch review catches real bugs before production — Sprints 7, 8, 9, 10, 11
-The arch review has caught a production bug in every sprint since Sprint 7: archived-label contrast (Sprint 7), `replace_all` indent mismatch (Sprint 8), `scaleX` percentage string (Sprint 8), `placeholder` discrepancy (Sprint 9), WCAG checkmark colour (Sprint 11). These are not hypothetical issues — they would have shipped.
+### 3. Sprint docs as complete, durable records
+From Sprint 7 onward, sprint docs have served as self-contained records — any future sprint can read them and reconstruct what happened and why. Implementation notes in briefs have been specific enough to code from directly with minimal ambiguity. Maintain the habit of closing the loop in the sprint doc (status fields, retrospective, arch review).
 
-**Protect by:** Never skipping arch review for sprints that touch UI components, data model, or animations, even if the scope seems narrow.
+---
 
-### 4. Calma design language as single source of truth — Sprints 6–11
-Naming and formalising the design system (Sprint 6) gave design decisions a stable home. The Calma spec has been referenced in every sprint since and has prevented design drift. The spec vs. CLAUDE.md boundary (principles vs. implementation) has held cleanly.
+### 4. Refactors simplify the codebase
+Sprint 9: HabitToggle lost its thumb animation entirely; NumberStepper dropped its input state and `useEffect`. Both redesigned components ended up simpler than what they replaced. Sprint 6: Motion library adoption replaced ad-hoc CSS/setTimeout orchestration with a declarative API. The Calma design constraint (no gamification, minimal interaction) naturally produces simpler implementations. Keep this bias active.
 
-**Protect by:** Keeping CLAUDE.md implementation tokens in sync with the Calma spec after every sprint that changes visual patterns. Audit the two documents together at the start of each brief.
+---
 
-### 5. Background skill execution reducing main-context noise — Sprints 8–11
-Running `sprint-validate` and `sprint-qa` in the background (Sprint 8 onwards) kept the execution context clean. Sprint 9's daily skill was specifically noted as well-received.
-
-**Protect by:** Making background execution the default for all validation and QA phases in the pipeline, not optional.
+### 5. Zero regressions from Sprint 8 onward
+Sprint 8 cleared 9 HIGH audit findings with zero regressions. Sprints 9–12 all shipped with zero regressions. The Playwright regression baseline (54 tests, Sprint 7) has been maintained and extended each sprint. Sprints 8 and 11 show 100% task/validation checkbox completion. Preserve the validation + QA phase and the arch review gate.
 
 ---
 
 ## Planning accuracy
 
-**Trend: steadily improving, with scope conservatism as the main remaining gap.**
+**Trend: strongly improving from Sprint 6 onward.**
 
-- **Sprints 1–4:** Scope was underdefined. Sprint 1 shipped a complete but limited set; Sprint 3 had to do significant rework (UUID migration) because Sprint 1's data model was wrong. No formal planning process.
-- **Sprints 5–6:** Scope was too large (Sprint 5 ran two days, three releases). Planning was ad hoc; no brief/UX/arch separation.
-- **Sprints 7–8:** Planning pipeline introduced. Sprint 7 retrospective noted scope was *too conservative* — the audit had done the triage work but only a subset of findings were pulled in. Sprint 8 was right-sized.
-- **Sprints 9–11:** Brief-to-execution match rated "accurate" or "tight" in all three retrospectives. Sprint 9 noted one edge-case gap in task specs (placeholder discrepancy, `startAt: 0` guard) — addressed by a CLAUDE.md note and a recommendation to add "edge cases / gotchas" subsections to data-model tasks.
-- **Sprint 11:** Scope, effort, and ordering were all accurate. The mediation step resolved all decisions that could have caused mid-sprint rework.
+- **Sprints 1–5** — no formal planning process. Sprint 1 scoped too narrowly (no History page). Sprint 5 was too large (ran across two days, three releases, should have been split).
+- **Sprint 7** — scope too conservative. All six tasks completed cleanly but the sprint could have absorbed 8 medium-severity + 3 HIGH findings without risk. Audit-driven sprints should aim to clear full severity tiers.
+- **Sprint 8** — accurate. Two minor scope adjustments from arch (H8 already implemented, M15 in two locations), both non-blocking.
+- **Sprint 9** — accurate. "Start at" feature emerged from mediation and slotted in without disrupting the plan.
+- **Sprint 10** — mostly accurate; `sprint-pipeline` grew slightly beyond spec during implementation (tier-aware phases, extra skill references) — a minor scope creep worth monitoring.
+- **Sprint 11** — accurate. Brief's mediation step resolved all open questions upfront; no mid-sprint rework.
+- **Sprint 12** — accurate. Scope, ordering, and estimates were right; B2 correctly identified as highest-risk. The copy drift was a planning-input problem, not a planning-accuracy problem.
 
-**Remaining gap:** The decision-tree for review intensity (introduced Sprint 7 as a recommendation) has not been applied consistently — all sprints since have run the full pipeline regardless of complexity. Sprint 10 (tooling) and Sprint 8 (audit pass) are candidates where arch-only would have been sufficient.
+**Overall:** The brief + arch gate + mediation pattern has been reliable for five consecutive sprints (8–12). Planning accuracy is no longer the limiting factor; planning input quality (report/mockup reconciliation, edge case coverage) is the current frontier.
 
 ---
 
 ## Promised improvements not yet acted on
 
-| Retrospective | Promised improvement | Status |
+| Sprint | Promise | Status |
 |---|---|---|
-| Sprint 7 | Introduce review intensity decision tree (full / arch-only / none) | **Not applied** — all subsequent sprints ran full pipeline |
-| Sprint 7 | Verify "already correct" claims manually before writing sprint doc | **Partially applied** — no recurrence found but not a formal step |
-| Sprint 7 | Evaluate agents to de-duplicate skill role definitions | **Not started** |
-| Sprint 8 | Lightweight human-readable summary at end of `sprint-validate` / `sprint-qa` | **Not implemented** |
-| Sprint 9 | Add "edge cases / gotchas" subsection to data-model task specs | **Partially applied** — noted in CLAUDE.md but not a standing template field |
-| Sprint 9 | Consider `/sprint-pipeline` orchestrator | **Implemented** in Sprint 10 |
-| Sprint 10 | Continue reducing token consumption in arch/UX skills | **Not started** |
-| Sprint 11 | Each workflow step must update sprint `**Status:**` field | **Added to CLAUDE.md**, not yet validated in practice |
-| Sprint 11 | Address carry-forward debt (ManageView stone-400, touch targets, microcopy) | **Pending Sprint 12** |
+| 7 | Formal review intensity decision tree (tier 1/2/3 by sprint type) | Not formalised into a skill or checklist |
+| 7 | Evaluate agents to de-duplicate UX/Arch role definitions across 6+ skills | Not done |
+| 8 | Lightweight human-readable terminal summary from `sprint-validate` / `sprint-qa` | Not implemented |
+| 9 | "Edge cases / gotchas" subsection in task specs for data-model tasks | Not adopted systematically |
+| 10 | Reduce token cost in arch and UX skills (scoped reads for tooling sprints) | No evidence of action |
+| 12 | Pull UX into brief review as a lightweight sign-off step (confirm brief matches mockup) | Not yet formalised in `sprint-brief` skill |
+
+Note: the `/sprint-pipeline` skill was built (Sprint 10), evaluated, and deliberately removed (Sprint 12) — this is resolution, not neglect.
 
 ---
 
 ## Codebase health trend
 
-**Trend: net improving, with a growing tail of low-priority deferred items.**
+**Verdict: improving, with one persistent pocket of debt.**
 
-- **Technical debt:** The major structural issues (UUID keying, `router.back()`, `toISOString()`, `useLayoutEffect`) are resolved and codified. No repeated CLAUDE.md violations in Sprints 9–11.
-- **Accessibility:** High-severity WCAG failures (stone-400 in CheckInForm, HistoryView, ManageView, SettingsView; touch targets in interactive components) were cleared in Sprints 7–8. Remaining known failures are lower-severity: ManageView archive button lines 402/631 (stone-400), CalendarHeatmap dark-mode labels, touch targets in Settings/Manage/Help links.
-- **Animation:** Exit animation snap and calendar direction bugs (Sprint 6) resolved and generalised. `scaleX` pattern codified. No animation regressions since Sprint 7.
-- **Test coverage:** Playwright suite introduced Sprint 7 (54 tests). Three tests required updating in Sprint 11 due to intentional control shape changes — handled cleanly. No test rot observed.
-- **Carry-forward debt growing:** 7 named items entering Sprint 12 without a resolution plan. None are high-severity, but the list is long enough that items from Sprint 7 are still appearing in Sprint 11 retrospectives. This is the primary codebase health risk.
+**Debt cleared (highlights):**
+- All 9 HIGH audit findings from the colour/typography/interaction audit cleared in Sprint 8.
+- HabitToggle and NumberStepper redesigned to simpler, more maintainable implementations (Sprint 9).
+- DayDetail scroll lock corrected from `useEffect` → `useLayoutEffect` (Sprint 5).
+- FrequencyList scroll-jump and layout-shift fixed (Sprint 7).
+
+**Remaining open debt:**
+- CalendarHeatmap dark-mode label colours, touch targets in Settings/Manage/Help, undocumented nav-link hover state — listed as carry-forward in Sprint 11; status after Sprint 12 unclear.
+- `role="spinbutton"` on NumberStepper has no keyboard arrow-key support (M3, accepted in Sprint 9).
+
+**Most persistent violation:** `text-stone-400` as foreground in light mode — found in 5 of 12 sprints. Every other recurring violation has been tamed by a CLAUDE.md rule. This one needs enforcement, not just documentation.
+
+**Pattern:** Rules added reactively after a violation (type="button", toISOString, router.back) have generally held once encoded. Rules that rely on memory without tooling enforcement continue to be violated periodically.
 
 ---
 
 ## Recommended actions
 
-**Ordered by impact / urgency:**
+Prioritised from highest signal to lowest.
 
-1. **[Sprint 12 scope] Clear the carry-forward debt list.** The ManageView stone-400 two-liner (lines 402/631) is already scoped from Sprint 11. Pull in the touch-target fixes for Settings/Manage/Help and at least one microcopy item. Create `docs/audits/carry-forward.md` as the single tracking location so items don't get lost between sprint docs.
+### P0 — Enforce, don't document
+1. **Add a lint/hook check for `text-stone-400` outside `dark:` context.** This has been documented for years and keeps recurring. A pre-commit grep will end the cycle. Example check: `grep -rn 'text-stone-400' components/ | grep -v 'dark:text-stone-400'` — fails if non-empty.
 
-2. **[Process] Apply the review intensity decision tree.** Audit-driven and tooling sprints should run arch review only, not the full UX + arch + mediation pipeline. Code the decision at brief time: if the sprint touches new UI patterns or the data model, run full pipeline; otherwise arch-only. Estimate: saves 30–40% of planning tokens on lighter sprints.
+### P1 — Brief process fixes (high leverage, low effort)
+2. **Add UX mockup reconciliation as a named step in `sprint-brief`.** Before finalising the sprint doc, explicitly confirm all copy and layout changes visible in the mockup are listed in the report. Sprint 12 identified this; Sprint 13 should codify it in the skill.
+3. **Add an "edge cases / gotchas" subsection to task spec templates for data-model tasks.** The `startAt: 0` no-op and `placeholder="0"` vs `"Optional"` discrepancy (Sprint 9) both stemmed from specs that described intent but not edge cases. A named section surfaces these at brief time.
+4. **Formalise the review intensity decision tree in `sprint-brief`.** Sprint 7 proposed three tiers (full pipeline / arch-only / no review). Without a formal decision point, every sprint defaults to full pipeline regardless of scope. Codifying the criteria saves significant time on tooling, docs, and copy sprints.
 
-3. **[Process] Add a standing "edge cases / gotchas" subsection to data-model task specs in the brief template.** Sprint 9 surfaced this gap (`startAt: 0`, placeholder string). A two-sentence prompt in the task spec template would catch most of these at brief time.
+### P2 — Token cost (medium effort, medium payoff)
+5. **Audit arch and UX skills for scoped context loading.** Sprint 10 fixed several skills but deferred arch and UX as "next targets." For tooling-only sprints, neither skill needs the full Calma spec or the full CLAUDE.md.
+6. **Implement lightweight terminal summary for `sprint-validate` / `sprint-qa`.** Promised Sprint 8; still not done. One line per audit with a pass/fail count reduces cognitive load without changing file output.
 
-4. **[Tooling] Reduce token cost in arch and UX skills.** Both skills still read CLAUDE.md and the Calma doc in full even for narrow sprints. Apply the scoped-read pattern: grep for the relevant sections (e.g. animation rules for animation tasks, colour tokens for UI tasks) rather than reading the full files. The pre-flight report already identifies relevant areas — honour it in the skill logic.
-
-5. **[Tooling] Validate the `**Status:**` field update requirement.** Added to CLAUDE.md in Sprint 11. Run a mock sprint-pipeline pass to confirm the skill reads and skips already-done phases correctly before relying on it in production.
-
-6. **[Process] Evaluate de-duplicating agent role definitions.** The UX designer and architect roles are embedded in 6+ and 3+ skills respectively. Extracting them to `.claude/agents/` with references to CLAUDE.md and the Calma spec would reduce drift when either document is updated. Low urgency but will pay off in maintenance as the skill set grows.
-
-7. **[Hygiene] After every `replace_all` edit, grep for the old string before moving on.** This is in CLAUDE.md but has been triggered twice. Consider a PostToolUse hook that automatically runs the grep and surfaces any remaining matches as a warning — removes the reliance on discipline alone.
+### P3 — Tooling / maintenance
+7. **Evaluate de-duplicating UX/Arch role definitions into `.claude/agents/`.** Sprint 7 proposed this; still open. UX designer and architect personas are re-embedded across 6+ and 3+ skills respectively — a maintenance tax that grows with each new skill.
+8. **Confirm Sprint 11 carry-forward findings before Sprint 13 scope is set.** Verify whether CalendarHeatmap dark-mode labels and Settings/Manage/Help touch targets were resolved in Sprint 12. If not, include them explicitly.
