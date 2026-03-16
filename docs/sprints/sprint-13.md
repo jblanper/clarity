@@ -1,7 +1,7 @@
 # Sprint 13 — ManageView & Settings Polish
 
 **Dates:** 2026-03-15 – (TBD)
-**Status:** active
+**Status:** calma-sync complete
 **Release:** v2.5.1 (patch — accessibility fixes, interaction polish, no new features)
 
 ---
@@ -31,9 +31,9 @@ Sprint 12 established the structure of both surfaces; Sprint 13 closes the remai
 - Single-character change; no logic changes.
 
 **Validation steps:**
-- [ ] Inactive segment text is `text-stone-600` (grep `SegmentedPill.tsx` for `stone-500` — must return no results)
-- [ ] Active segment styling unchanged
-- [ ] `npm run lint && npm test` passes
+- [x] Inactive segment text is `text-stone-600` (grep `SegmentedPill.tsx` for `stone-500` — must return no results)
+- [x] Active segment styling unchanged
+- [x] `npm run lint && npm test` passes
 
 **Definition of done:** SegmentedPill inactive text passes WCAG AA in light mode.
 
@@ -65,12 +65,12 @@ Sprint 12 established the structure of both surfaces; Sprint 13 closes the remai
 - CLAUDE.md: `text-red-700 dark:text-red-400` is the designated error/destructive colour.
 
 **Validation steps:**
-- [ ] Confirm/import button reads "Restore" (not "Import") in the file-ready state
-- [ ] Success-state retry button reads "Restore another file"
-- [ ] "Yes, start fresh" button has `text-red-700 dark:text-red-400`; resting "Start fresh" button still has amber classes
-- [ ] Back button has `min-h-[44px]` and `flex items-center`
-- [ ] ✕ remove-file button has `min-h-[44px]` and `flex items-center`
-- [ ] `npm run lint && npm test` passes
+- [x] Confirm/import button reads "Restore" (not "Import") in the file-ready state
+- [x] Success-state retry button reads "Restore another file"
+- [x] "Yes, start fresh" button has `text-red-700 dark:text-red-400`; resting "Start fresh" button still has amber classes
+- [x] Back button has `min-h-[44px]` and `flex items-center`
+- [x] ✕ remove-file button has `min-h-[44px]` and `flex items-center`
+- [x] `npm run lint && npm test` passes
 
 **Definition of done:** All four Settings fixes applied; no amber on the destructive confirm; all touch targets meet 44 px minimum.
 
@@ -118,12 +118,12 @@ Sprint 12 established the structure of both surfaces; Sprint 13 closes the remai
   The `···` uses `text-stone-400 dark:text-stone-600` (not foreground text — purely decorative chrome, not conveying state). In dark mode the stone-600 value is appropriate as a purely visual chrome element (not failing WCAG because it is a non-text decorative affordance).
 
 **Validation steps:**
-- [ ] Each active habit row has a `···` at the trailing edge, including rows without Joy pill
-- [ ] Tapping a row: label becomes `font-medium text-stone-800 dark:text-stone-100`; bg wash appears
-- [ ] Hovering a row (desktop): subtle stone wash; visually lighter than active state
-- [ ] `aria-expanded="true"` when tray is open; `"false"` when closed
-- [ ] Archived rows are unchanged
-- [ ] `npm run lint && npm test` passes
+- [x] Each active habit row has a `···` at the trailing edge, including rows without Joy pill
+- [x] Tapping a row: label becomes `font-medium text-stone-800 dark:text-stone-100`; bg wash appears
+- [x] Hovering a row (desktop): subtle stone wash; visually lighter than active state
+- [x] `aria-expanded="true"` when tray is open; `"false"` when closed
+- [x] Archived rows are unchanged
+- [x] `npm run lint && npm test` passes
 
 **Definition of done:** Resting rows show `···` affordance; active row is visually distinguished by font weight + bg wash; `aria-expanded` is correct.
 
@@ -185,13 +185,13 @@ Sprint 12 established the structure of both surfaces; Sprint 13 closes the remai
 - `ACTION_BTN` is retained for the Edit button in the tray (it is an active-habit action and is not shared with archived-row Restore buttons). This is intentional.
 
 **Validation steps:**
-- [ ] Open a tray: action tray appears as a rounded bordered card, not bare links
-- [ ] Archive button is amber-bordered pill
-- [ ] Joy button at rest: neutral bordered; when `joyByDefault: true`: amber-filled pill
-- [ ] Joy button always reads "Joy" (single label + icon) regardless of state
-- [ ] Close the tray: no snap — element collapses smoothly to zero height (test a row with `py-3` padding)
-- [ ] `ACTION_BTN`/`ARCHIVE_BTN` constants still used on archived-row Restore buttons — not changed
-- [ ] `npm run lint && npm test` passes
+- [x] Open a tray: action tray appears as a rounded bordered card, not bare links
+- [x] Archive button is amber-bordered pill
+- [x] Joy button at rest: neutral bordered; when `joyByDefault: true`: amber-filled pill
+- [x] Joy button always reads "Joy" (single label + icon) regardless of state
+- [x] Close the tray: no snap — element collapses smoothly to zero height (test a row with `py-3` padding)
+- [x] `ACTION_BTN`/`ARCHIVE_BTN` constants still used on archived-row Restore buttons — not changed
+- [x] `npm run lint && npm test` passes
 
 **Definition of done:** Action tray is a bordered card with pill buttons; exit animation is snap-free; Joy is a single-label pill with amber fill when active.
 
@@ -273,15 +273,15 @@ Sprint 12 established the structure of both surfaces; Sprint 13 closes the remai
 - `Chevron` component must support a `"down"` direction — check `components/Chevron.tsx`; if only `"left"/"right"` exist, use CSS rotation: `<span style={{ display: "inline-block", transform: archivedHabitsOpen ? "rotate(-90deg)" : "rotate(90deg)" }}>` using the right-pointing chevron, or use `direction="right"` with a wrapping `rotate-90` span.
 
 **Validation steps:**
-- [ ] Moments section: no `+ New` button in header row; chip grid has a `+ New` chip at the end; chip grid `+ New` triggers the add-moment form
-- [ ] Habits header `+ New` is unchanged
-- [ ] Archived habits and moments are hidden behind the disclosure by default
-- [ ] "Archived (n)" count is accurate
-- [ ] Chevron rotates 180° when open
-- [ ] Tapping Archive on an active item: disclosure auto-opens; the archived confirmation note is visible
-- [ ] Height reveal animates smoothly open and closed
-- [ ] `closeAllEditors()` does not affect disclosure open/close state
-- [ ] `npm run lint && npm test` passes
+- [x] Moments section: no `+ New` button in header row; chip grid has a `+ New` chip at the end; chip grid `+ New` triggers the add-moment form
+- [x] Habits header `+ New` is unchanged
+- [x] Archived habits and moments are hidden behind the disclosure by default
+- [x] "Archived (n)" count is accurate
+- [x] Chevron rotates 180° when open
+- [x] Tapping Archive on an active item: disclosure auto-opens; the archived confirmation note is visible
+- [x] Height reveal animates smoothly open and closed
+- [x] `closeAllEditors()` does not affect disclosure open/close state
+- [x] `npm run lint && npm test` passes
 
 **Definition of done:** `+ New` chip lives in the moments chip grid; archived items are collapsed by default and auto-expand on archive.
 
@@ -294,6 +294,157 @@ Sprint 12 established the structure of both surfaces; Sprint 13 closes the remai
 - [ ] Tested manually on mobile viewport in both light and dark mode
 - [ ] No regressions on existing features (check Today, History, Settings, Manage, Edit)
 - [ ] Ready for `/deploy`
+
+---
+
+## Validation
+
+**Date:** 2026-03-15
+
+### Audit results
+
+| Audit | Before (Sprint 12) | After (Sprint 13) | Fixed | Regressions |
+|---|---|---|---|---|
+| colour | 0C · 0H · 2M · 2L | 0C · 0H · 0M · 1L | 2M + 1L | 0 |
+| typography | 0C · 0H · 2M · 5L | 0C · 0H · 0M · 5L | 2M | 0 (1 new L offset by pre-existing) |
+| interaction | 0H · 1M · 10L | 0H · 0M · 9L | 1M + 2L | 0 (1 new L) |
+| microcopy | 0H · 0M · 2L | 0H · 0M · 2L | 0 | 0 |
+
+### Remaining findings
+- **typography L1** — Archived disclosure toggles (`ManageView.tsx:406, 677`) have `py-1` but no `min-h-[44px]`. Low-priority secondary control; deferred.
+- **interaction L2–L8** — Pre-existing low-severity polish items (NumberStepper keyboard, CalendarHeatmap opacity, etc.). Unchanged.
+- **microcopy L1–L2** — CheckInForm inline validation copy (`"Please enter a name."`, `"A moment with that name already exists."`). Pre-existing; deferred.
+
+### Regressions
+None.
+
+---
+
+## Architecture Review
+
+**Date:** 2026-03-15
+**Diff base:** ad4f51c (sprint-13 kickoff commit)
+**Lint/tests:** pass
+
+### Findings
+
+| Severity | File | Issue |
+|---|---|---|
+| Low (fixed) | `ManageView.tsx:452` | `</div>` closing `space-y-0.5` had 8-space indent instead of 10. Structurally valid JSX — fixed in arch-review before recording. |
+
+### Must fix before deploy
+None.
+
+### Recommendations for next sprint
+- `createEmptyEntry` in `lib/habits.ts` still has no unit test (Low carry-over since Sprint 11). Low risk but worth a ticket.
+
+### Plan fidelity
+All 5 tasks implemented per spec. One indentation cosmetic caught and fixed in arch-review. No scope creep.
+
+### Architecture audit comparison
+
+| Before | After | Fixed | Regressions |
+|---|---|---|---|
+| 1 finding (Low) | 1 finding (Low) | 0 | 0 |
+
+No regressions. Same carry-over Low (`createEmptyEntry` test) as Sprint 12 baseline.
+
+---
+
+## QA Results
+
+**Date:** 2026-03-15
+
+### Regression suite
+292 tests passed · 0 failed · 3 stale tests updated
+
+### New tests written
+- `e2e/sprint-13-manage-polish.spec.ts` — 36 tests across desktop + mobile viewports covering all 5 Sprint 13 tasks
+
+### Failures found
+None.
+
+### Stale tests updated
+`e2e/sprint-12.spec.ts` — 3 tests updated:
+- "Settings — Reset confirmation has no red colour" → renamed and inverted to verify amber is NOT used at rest (Sprint 13 S4 intentionally changed confirm button to red; test now validates amber is absent rather than red being absent)
+- "ManageView — action tray includes Joy toggle for boolean habits" → selector updated from `/mark joy|unmark joy/i` to `"Joy"` (Sprint 13 M5: single-label button, label no longer changes)
+- "ManageView — joy toggle button label flips after clicking" → rewritten to verify label stays "Joy" regardless of state (Sprint 13 M5: state communicated via fill/border, not text)
+
+### Manual checklist
+- [ ] Animations feel smooth on enter and exit
+- [ ] Dark mode: no invisible text, no layout shifts
+- [ ] Mobile (390px): no horizontal overflow, touch targets feel reachable
+- [ ] Reduced motion: enable in OS settings, verify animations are suppressed
+- [ ] Nav — open Settings from Today → back → lands on Today; open Settings from History → back → lands on History
+- [ ] SegmentedPill inactive segment text is visually distinct (darker than before) in light mode
+- [ ] ManageView: tapping a habit row shows `···` then opens action tray; active row shows font-weight change + bg wash
+- [ ] ManageView: action tray is a bordered card (not bare links); Archive is amber pill; Joy toggles fill on tap
+- [ ] ManageView: closing tray collapses smoothly with no height snap
+- [ ] ManageView: archiving a habit auto-expands the "Archived (n)" disclosure
+- [ ] ManageView: `+ New` chip appears in moments chip grid; clicking opens add form
+- [ ] Settings: confirm button reads "Restore"; "Yes, start fresh" is red (not amber)
+- [ ] Settings: back button and ✕ button are easily tappable (44px+)
+
+---
+
+## Post-Code Summary
+
+**Date:** 2026-03-15
+
+### Architecture gate
+PASS — no must-fix issues. One Low finding (indentation cosmetic in ManageView) caught and fixed in-session.
+
+### Validation
+| Audit | Before | After | Fixed | Regressions |
+|---|---|---|---|---|
+| colour | 0H · 2M · 2L | 0H · 0M · 1L | 2M + 1L | 0 |
+| typography | 0H · 2M · 5L | 0H · 0M · 5L | 2M | 0 |
+| interaction | 0H · 1M · 10L | 0H · 0M · 9L | 1M + 2L | 0 |
+| microcopy | 0H · 0M · 2L | 0H · 0M · 2L | 0 | 0 |
+
+Regressions: None.
+
+### QA
+Regression suite: 292 tests · Smoke: 12/12 · 3 stale tests updated · 36 new tests written.
+
+Failures: None.
+
+### Recommended next action
+Proceed to `/calma-sync` → `/deploy`
+
+---
+
+## Calma Sync
+
+**Date:** 2026-03-16
+
+### Spec changes made
+- **Palette — Accessibility rule:** Extended to cover elevated component backgrounds. Added: on `bg-stone-100` tracks, `text-stone-500` fails AA; use `text-stone-600` minimum.
+- **Interaction — Contextual action tray:** New subsection documenting the bordered card pattern that appears below a tapped list row, containing pill-shaped action buttons, with height-reveal animation and single-tray exclusivity.
+- **Interaction — Chip / tag variant:** Added paragraph documenting that fill-vs-border state signaling also applies to verb-labeled toggle buttons (constant label; visual treatment communicates state).
+- **Interaction — Symbols and two-state icons:** Added "Tap affordance indicator" entry documenting the `···` decorative marker pattern for fully-tappable rows with no other affordance.
+
+All four changes synced to `public/calma-design-language.html`.
+
+### CLAUDE.md token updates
+- **Critical WCAG constraint** extended: on elevated component backgrounds (`bg-stone-100`, `bg-stone-50`), `text-stone-500` also fails AA — use `text-stone-600` minimum (e.g. SegmentedPill inactive segments).
+
+### Open design decisions identified
+None.
+
+---
+
+## Post-QA Polish
+
+**Date:** 2026-03-16
+
+Issues found during manual QA and fixed in `components/ManageView.tsx`:
+
+- **Edit button in action tray** — was plain `ACTION_BTN` text while Archive and Joy were pill buttons. Changed to `TRAY_JOY_BTN` (neutral bordered pill) for visual consistency within the tray.
+- **Action tray open animation jank** — `height: 0 → auto` with opacity animating simultaneously caused a visible snap on enter (closing was fine). Fixed by staggering the transition: height expands over 220ms, opacity fades in over 150ms with a 70ms delay, hiding the measurement snap behind the fade.
+- **`+ New` habit form positioning** — the two `AnimatePresence` form blocks (type selection and detail form) were rendering after the archived disclosure at the bottom of the card. Moved to between the section header and the habits list so the form opens directly below `+ New`. Margin adjusted (`mt-3` → `mb-3`) and exit animations updated accordingly. Type selection buttons (`Yes / No`, `Number`) changed from underline text to bordered pill buttons (`TYPE_BTN`) matching the tray style.
+- **`+ New` moments form positioning** — same issue; add-moment form moved to above the archived disclosure. `+ New` chip now also hidden while the form is open (`!addingTag` condition added).
+- **Moment chip inline edit** — replaced the in-grid inline edit (input replacing the chip, causing grid reflow) with the same `INLINE_FORM` card pattern used for habit editing. Tapped chip shows a stone-wash selected state. Edit form appears below the chip grid via height-reveal animation with: Label field, Save, Cancel, and an amber tertiary Archive button (`TERTIARY_AMBER_BTN`, `rounded-xl`) trailing right via `ml-auto`. Added `TERTIARY_AMBER_BTN` constant; removed now-unused `ARCHIVE_BTN` constant.
 
 ---
 

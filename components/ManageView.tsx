@@ -35,8 +35,6 @@ type AddHabitStep =
 const ACTION_BTN =
   "text-xs text-stone-500 dark:text-stone-400 underline-offset-2 hover:underline transition-colors";
 
-const ARCHIVE_BTN =
-  "text-xs text-amber-700 dark:text-amber-500 underline-offset-2 hover:underline transition-colors";
 
 const TRAY_ARCHIVE_BTN =
   "inline-flex items-center rounded-full border border-amber-300 dark:border-amber-700/50 px-3 py-1.5 text-xs text-amber-700 dark:text-amber-400 transition-colors hover:bg-amber-50 dark:hover:bg-amber-900/20";
@@ -46,6 +44,12 @@ const TRAY_JOY_BTN =
 
 const TRAY_JOY_ON_BTN =
   "inline-flex items-center gap-1 rounded-full bg-amber-100 dark:bg-amber-900/30 border border-amber-300 dark:border-amber-700/50 px-3 py-1.5 text-xs text-amber-700 dark:text-amber-400 transition-colors hover:bg-amber-200 dark:hover:bg-amber-900/50";
+
+const TYPE_BTN =
+  "inline-flex items-center rounded-full border border-stone-200 dark:border-stone-700 px-4 py-2 text-sm text-stone-600 dark:text-stone-400 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800/50";
+
+const TERTIARY_AMBER_BTN =
+  "inline-flex items-center rounded-xl border border-amber-300 dark:border-amber-700/50 px-4 py-2 text-xs text-amber-700 dark:text-amber-400 transition-colors hover:bg-amber-50 dark:hover:bg-amber-900/20";
 
 const TEXT_INPUT =
   "w-full rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 px-3 py-2 text-sm text-stone-800 dark:text-stone-200 placeholder:text-stone-400 dark:placeholder:text-stone-600 focus:outline-none focus:ring-2 focus:ring-stone-300 dark:focus:ring-stone-600";
@@ -57,7 +61,7 @@ const CANCEL_BTN =
   "text-xs text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors";
 
 const INLINE_FORM =
-  "mb-2 rounded-2xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/50 px-4 py-4 space-y-3";
+  "rounded-2xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/50 px-4 py-4 space-y-3";
 
 const FIELD_LABEL = "mb-1 block text-xs text-stone-500 dark:text-stone-400";
 
@@ -258,6 +262,144 @@ export default function ManageView() {
             </button>
           </div>
 
+          {/* Add habit form — rendered above the list */}
+          <AnimatePresence initial={false}>
+            {addHabit?.stage === "type" && (
+              <m.div
+                className="mb-3 space-y-2"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0, marginBottom: 0 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+                style={{ overflow: "hidden" }}
+              >
+                <p className="text-xs text-stone-500 dark:text-stone-400">What kind of habit?</p>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setAddHabit({ stage: "form-boolean", label: "", joyByDefault: false })}
+                    className={TYPE_BTN}
+                  >
+                    Yes / No
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAddHabit({ stage: "form-numeric", label: "", unit: "", step: 1 })}
+                    className={TYPE_BTN}
+                  >
+                    Number
+                  </button>
+                </div>
+                <button type="button" onClick={() => setAddHabit(null)} className={CANCEL_BTN}>
+                  Cancel
+                </button>
+              </m.div>
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence initial={false}>
+          {(addHabit?.stage === "form-boolean" || addHabit?.stage === "form-numeric") && (
+            <m.div
+              className={`mb-3 ${INLINE_FORM}`}
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0 }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
+              style={{ overflow: "hidden" }}
+            >
+              <div>
+                <label className={FIELD_LABEL}>Label</label>
+                <input
+                  type="text"
+                  placeholder={addHabit.stage === "form-boolean" ? "e.g. Stretching" : "e.g. Running"}
+                  value={addHabit.label}
+                  onChange={(e) => setAddHabit({ ...addHabit, label: e.target.value })}
+                  className={TEXT_INPUT}
+                />
+              </div>
+              {addHabit.stage === "form-boolean" && (
+                <div>
+                  <label className={FIELD_LABEL}>Joy by default</label>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setAddHabit({ ...addHabit, joyByDefault: !addHabit.joyByDefault })
+                    }
+                    className="self-start text-left transition-colors"
+                  >
+                    <span className={`flex items-center gap-1 text-xs ${addHabit.joyByDefault ? "text-amber-600 dark:text-amber-500" : "text-stone-500"}`}>
+                      <BlossomIcon filled={addHabit.joyByDefault} size={16} />
+                      {addHabit.joyByDefault ? "Brings joy by default" : "Joy is marked separately"}
+                    </span>
+                  </button>
+                </div>
+              )}
+              {addHabit.stage === "form-numeric" && (
+                <>
+                  <div>
+                    <label className={FIELD_LABEL}>Unit</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. km, pages, cups"
+                      value={addHabit.unit}
+                      onChange={(e) => setAddHabit({ ...addHabit, unit: e.target.value })}
+                      className={TEXT_INPUT}
+                    />
+                  </div>
+                  <div>
+                    <label className={FIELD_LABEL}>Increment</label>
+                    <input
+                      type="number"
+                      min={0.01}
+                      step={0.01}
+                      value={addHabit.step}
+                      onChange={(e) =>
+                        setAddHabit({ ...addHabit, step: parseFloat(e.target.value) || 1 })
+                      }
+                      className={TEXT_INPUT}
+                    />
+                  </div>
+                  <div>
+                    <label className={FIELD_LABEL}>
+                      Start at{addHabit.unit ? ` · ${addHabit.unit}` : ""}
+                    </label>
+                    <input
+                      type="number"
+                      min={0}
+                      step={addHabit.step}
+                      placeholder="Optional"
+                      value={addHabit.startAt ?? ""}
+                      onChange={(e) =>
+                        setAddHabit({
+                          ...addHabit,
+                          startAt: e.target.value === "" ? undefined : parseFloat(e.target.value),
+                        })
+                      }
+                      className={TEXT_INPUT}
+                    />
+                  </div>
+                </>
+              )}
+              <div className="flex gap-3 pt-1">
+                <button
+                  type="button"
+                  onClick={saveNewHabit}
+                  disabled={
+                    !addHabit.label.trim() ||
+                    (addHabit.stage === "form-numeric" && !addHabit.unit.trim())
+                  }
+                  className={SAVE_BTN}
+                >
+                  Add
+                </button>
+                <button type="button" onClick={() => setAddHabit(null)} className={CANCEL_BTN}>
+                  Cancel
+                </button>
+              </div>
+            </m.div>
+          )}
+          </AnimatePresence>
+
           <div className="space-y-0.5">
           {/* Active habits */}
           {activeHabits.map((h) => (
@@ -297,11 +439,14 @@ export default function ManageView() {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0, paddingTop: 0, paddingBottom: 0, marginBottom: 0 }}
-                    transition={{ duration: 0.22, ease: "easeOut" }}
+                    transition={{
+                      height: { duration: 0.22, ease: "easeOut" },
+                      opacity: { duration: 0.15, ease: "easeOut", delay: 0.07 },
+                    }}
                     style={{ overflow: "hidden" }}
                     className="mb-2 rounded-2xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/50 px-4 py-3 flex gap-3 flex-wrap"
                   >
-                    <button type="button" onClick={() => startEditHabit(h)} className={ACTION_BTN}>Edit</button>
+                    <button type="button" onClick={() => startEditHabit(h)} className={TRAY_JOY_BTN}>Edit</button>
                     <button type="button" onClick={() => archiveHabit(h.id)} className={TRAY_ARCHIVE_BTN}>Archive</button>
                     {h.type === "boolean" && (
                       <button
@@ -449,144 +594,7 @@ export default function ManageView() {
               </AnimatePresence>
             </div>
           )}
-        </div>
-
-          <AnimatePresence initial={false}>
-          {addHabit?.stage === "type" && (
-            <m.div
-              className="mt-3 space-y-2"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0, marginTop: 0 }}
-              transition={{ duration: 0.22, ease: "easeOut" }}
-              style={{ overflow: "hidden" }}
-            >
-              <p className="text-xs text-stone-500 dark:text-stone-400">What kind of habit?</p>
-              <div className="flex gap-5">
-                <button
-                  type="button"
-                  onClick={() => setAddHabit({ stage: "form-boolean", label: "", joyByDefault: false })}
-                  className="text-sm text-stone-600 dark:text-stone-300 underline-offset-4 hover:underline"
-                >
-                  Yes / No
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setAddHabit({ stage: "form-numeric", label: "", unit: "", step: 1 })}
-                  className="text-sm text-stone-600 dark:text-stone-300 underline-offset-4 hover:underline"
-                >
-                  Number
-                </button>
-              </div>
-              <button type="button" onClick={() => setAddHabit(null)} className={CANCEL_BTN}>
-                Cancel
-              </button>
-            </m.div>
-          )}
-        </AnimatePresence>
-
-        <AnimatePresence initial={false}>
-        {(addHabit?.stage === "form-boolean" || addHabit?.stage === "form-numeric") && (
-          <m.div
-            className={`mt-3 ${INLINE_FORM}`}
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0, marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
-            style={{ overflow: "hidden" }}
-          >
-            <div>
-              <label className={FIELD_LABEL}>Label</label>
-              <input
-                type="text"
-                placeholder={addHabit.stage === "form-boolean" ? "e.g. Stretching" : "e.g. Running"}
-                value={addHabit.label}
-                onChange={(e) => setAddHabit({ ...addHabit, label: e.target.value })}
-                className={TEXT_INPUT}
-              />
-            </div>
-            {addHabit.stage === "form-boolean" && (
-              <div>
-                <label className={FIELD_LABEL}>Joy by default</label>
-                <button
-                  type="button"
-                  onClick={() =>
-                    setAddHabit({ ...addHabit, joyByDefault: !addHabit.joyByDefault })
-                  }
-                  className="self-start text-left transition-colors"
-                >
-                  <span className={`flex items-center gap-1 text-xs ${addHabit.joyByDefault ? "text-amber-600 dark:text-amber-500" : "text-stone-500"}`}>
-                    <BlossomIcon filled={addHabit.joyByDefault} size={16} />
-                    {addHabit.joyByDefault ? "Brings joy by default" : "Joy is marked separately"}
-                  </span>
-                </button>
-              </div>
-            )}
-            {addHabit.stage === "form-numeric" && (
-              <>
-                <div>
-                  <label className={FIELD_LABEL}>Unit</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. km, pages, cups"
-                    value={addHabit.unit}
-                    onChange={(e) => setAddHabit({ ...addHabit, unit: e.target.value })}
-                    className={TEXT_INPUT}
-                  />
-                </div>
-                <div>
-                  <label className={FIELD_LABEL}>Increment</label>
-                  <input
-                    type="number"
-                    min={0.01}
-                    step={0.01}
-                    value={addHabit.step}
-                    onChange={(e) =>
-                      setAddHabit({ ...addHabit, step: parseFloat(e.target.value) || 1 })
-                    }
-                    className={TEXT_INPUT}
-                  />
-                </div>
-                <div>
-                  <label className={FIELD_LABEL}>
-                    Start at{addHabit.unit ? ` · ${addHabit.unit}` : ""}
-                  </label>
-                  <input
-                    type="number"
-                    min={0}
-                    step={addHabit.step}
-                    placeholder="Optional"
-                    value={addHabit.startAt ?? ""}
-                    onChange={(e) =>
-                      setAddHabit({
-                        ...addHabit,
-                        startAt: e.target.value === "" ? undefined : parseFloat(e.target.value),
-                      })
-                    }
-                    className={TEXT_INPUT}
-                  />
-                </div>
-              </>
-            )}
-            <div className="flex gap-3 pt-1">
-              <button
-                type="button"
-                onClick={saveNewHabit}
-                disabled={
-                  !addHabit.label.trim() ||
-                  (addHabit.stage === "form-numeric" && !addHabit.unit.trim())
-                }
-                className={SAVE_BTN}
-              >
-                Add
-              </button>
-              <button type="button" onClick={() => setAddHabit(null)} className={CANCEL_BTN}>
-                Cancel
-              </button>
-            </div>
-          </m.div>
-        )}
-        </AnimatePresence>
+          </div>
         </div>
       </section>
 
@@ -601,66 +609,30 @@ export default function ManageView() {
 
           {/* Active tags — chip grid */}
           <div className="flex flex-wrap gap-2 py-2">
-            {activeTags.map((t) =>
-              editingMomentId === t.id ? (
-                <div key={t.id} className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    value={editingMomentLabel}
-                    onChange={(e) => setEditingMomentLabel(e.target.value)}
-                    className={`${TEXT_INPUT} w-32`}
-                    autoFocus
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (editingMomentLabel.trim()) {
-                        applyConfigs({
-                          ...configs,
-                          moments: configs.moments.map((m) =>
-                            m.id === editingMomentId ? { ...m, label: editingMomentLabel.trim() } : m
-                          ),
-                        });
-                      }
-                      setEditingMomentId(null);
-                      setEditingMomentLabel("");
-                    }}
-                    disabled={!editingMomentLabel.trim()}
-                    className={SAVE_BTN}
-                  >
-                    Save
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => { setEditingMomentId(null); setEditingMomentLabel(""); }}
-                    className={CANCEL_BTN}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => archiveMoment(t.id)}
-                    className={ARCHIVE_BTN}
-                  >
-                    Archive
-                  </button>
-                </div>
-              ) : (
-                <button
-                  key={t.id}
-                  type="button"
-                  onClick={() => {
+            {activeTags.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => {
+                  if (editingMomentId === t.id) {
+                    setEditingMomentId(null);
+                    setEditingMomentLabel("");
+                  } else {
                     closeAllEditors();
                     setEditingMomentId(t.id);
                     setEditingMomentLabel(t.label);
-                  }}
-                  className="min-h-[44px] flex items-center rounded-full border border-stone-200 dark:border-stone-700 px-4 py-2 text-sm text-stone-700 dark:text-stone-300 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800"
-                >
-                  {t.label}
-                </button>
-              )
-            )}
-            {editingMomentId === null && (
+                  }
+                }}
+                className={`min-h-[44px] flex items-center rounded-full border px-4 py-2 text-sm transition-colors ${
+                  editingMomentId === t.id
+                    ? "border-stone-300 dark:border-stone-600 bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-100"
+                    : "border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800"
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+            {editingMomentId === null && !addingTag && (
               <button
                 type="button"
                 onClick={() => { closeAllEditors(); setAddingTag(true); }}
@@ -670,6 +642,111 @@ export default function ManageView() {
               </button>
             )}
           </div>
+
+          {/* Inline moment edit form */}
+          <AnimatePresence initial={false}>
+          {editingMomentId !== null && (
+            <m.div
+              className={`mt-3 ${INLINE_FORM}`}
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0, marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0 }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
+              style={{ overflow: "hidden" }}
+            >
+              <div>
+                <label className={FIELD_LABEL}>Label</label>
+                <input
+                  type="text"
+                  value={editingMomentLabel}
+                  onChange={(e) => setEditingMomentLabel(e.target.value)}
+                  className={TEXT_INPUT}
+                  autoFocus
+                />
+              </div>
+              <div className="flex items-center gap-3 pt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (editingMomentLabel.trim()) {
+                      applyConfigs({
+                        ...configs,
+                        moments: configs.moments.map((m) =>
+                          m.id === editingMomentId ? { ...m, label: editingMomentLabel.trim() } : m
+                        ),
+                      });
+                    }
+                    setEditingMomentId(null);
+                    setEditingMomentLabel("");
+                  }}
+                  disabled={!editingMomentLabel.trim()}
+                  className={SAVE_BTN}
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setEditingMomentId(null); setEditingMomentLabel(""); }}
+                  className={CANCEL_BTN}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => editingMomentId && archiveMoment(editingMomentId)}
+                  className={`ml-auto ${TERTIARY_AMBER_BTN}`}
+                >
+                  Archive
+                </button>
+              </div>
+            </m.div>
+          )}
+          </AnimatePresence>
+
+          {/* Add moment form — rendered above the archived section */}
+          <AnimatePresence initial={false}>
+          {addingTag && (
+            <m.div
+              className={`mt-3 ${INLINE_FORM}`}
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0, marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0 }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
+              style={{ overflow: "hidden" }}
+            >
+              <div>
+                <label className={FIELD_LABEL}>Label</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Long walk"
+                  value={newTagLabel}
+                  onChange={(e) => setNewTagLabel(e.target.value)}
+                  className={TEXT_INPUT}
+                />
+              </div>
+              <div className="flex gap-3 pt-1">
+                <button
+                  type="button"
+                  onClick={saveNewTag}
+                  disabled={!newTagLabel.trim()}
+                  className={SAVE_BTN}
+                >
+                  Add
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAddingTag(false);
+                    setNewTagLabel("");
+                  }}
+                  className={CANCEL_BTN}
+                >
+                  Cancel
+                </button>
+              </div>
+            </m.div>
+          )}
+          </AnimatePresence>
 
           {archivedTags.length > 0 && (
             <div className="mt-2 border-t border-stone-100 dark:border-stone-800 pt-2">
@@ -714,50 +791,6 @@ export default function ManageView() {
               </AnimatePresence>
             </div>
           )}
-
-          <AnimatePresence initial={false}>
-          {addingTag && (
-            <m.div
-              className={`mt-3 ${INLINE_FORM}`}
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0, marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0 }}
-              transition={{ duration: 0.22, ease: "easeOut" }}
-              style={{ overflow: "hidden" }}
-            >
-              <div>
-                <label className={FIELD_LABEL}>Label</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Long walk"
-                  value={newTagLabel}
-                  onChange={(e) => setNewTagLabel(e.target.value)}
-                  className={TEXT_INPUT}
-                />
-              </div>
-              <div className="flex gap-3 pt-1">
-                <button
-                  type="button"
-                  onClick={saveNewTag}
-                  disabled={!newTagLabel.trim()}
-                  className={SAVE_BTN}
-                >
-                  Add
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAddingTag(false);
-                    setNewTagLabel("");
-                  }}
-                  className={CANCEL_BTN}
-                >
-                  Cancel
-                </button>
-              </div>
-            </m.div>
-          )}
-          </AnimatePresence>
         </div>
       </section>
     </div>
