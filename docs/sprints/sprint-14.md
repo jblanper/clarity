@@ -295,6 +295,49 @@ An initial attempt with `min-h-[294px]` (wrong value — should have been 344px)
 
 ---
 
+### Task 6 — Help page update _(added mid-sprint; not in brief)_
+
+**What:** Re-evaluate `HelpView.tsx` to reflect Sprint 14 changes and surface previously undocumented features.
+
+**Files:** `components/HelpView.tsx`
+
+**Changes made:**
+- **"The daily form"** — added a sentence covering numeric habits ("Some are yes-or-no; others count a number, whatever that measure means to you.")
+- **"Looking back"** — rewrote the calendar paragraph to describe the typographic encoding: font weight for completion, amber for joy/moments, legend beneath the grid. Removed the old cool/warm colour-blend description.
+- **"Your data"** — expanded to cover import behaviour (entries preserved, configs replaced) and the reset option ("Start fresh").
+
+**Validation steps:**
+- [x] "Looking back" no longer references "cool tones" or "warm tones"
+- [x] Numeric habits are mentioned in "The daily form"
+- [x] Import and reset are described in "Your data"
+- [x] `npm run lint && npm run build` passes clean
+
+**Definition of done:** Help page accurately reflects the typographic calendar and all major features of the current app.
+
+---
+
+### Task 7 — Help discoverability: quiet link on Today _(added mid-sprint; not in brief)_
+
+**What:** Add a muted "How Clarity works" link below the Capture button on the Today page so first-time users can find Help without navigating through Settings.
+
+**Files:** `components/CheckInForm.tsx`
+
+**Implementation notes:**
+- Link is rendered only when `!isEditMode` — not needed in the edit flow.
+- Sits in a centred `div` with `mt-6` below the save button.
+- Typography: `text-xs uppercase tracking-widest text-stone-500 dark:text-stone-600`, hover shifts to `text-stone-700 dark:text-stone-400`.
+- Touch target: `inline-flex min-h-[44px] items-center`.
+- Does not alter the header or BottomNav — keeps the layout as minimal as possible.
+
+**Validation steps:**
+- [x] Link appears below the Capture button on Today (non-edit mode)
+- [x] Link is absent in edit mode
+- [x] `npm run lint && npm run build` passes clean
+
+**Definition of done:** A first-time user can reach the Help page directly from the Today form without going through Settings.
+
+---
+
 ## Definition of done — Sprint
 
 - [ ] All tasks above are complete and validated
