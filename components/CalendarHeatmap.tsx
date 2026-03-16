@@ -244,6 +244,10 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
       {/* custom + variants: Motion calls the variant function with the    */}
       {/* current custom value at animation time, so reversing direction   */}
       {/* always uses the latest dir even for the exiting element.         */}
+      {/* min-h-[294px] = 6 weeks × 44px + 5 gaps × 6px — prevents layout */}
+      {/* shift when AnimatePresence briefly has no children between        */}
+      {/* exit completing and enter starting (mode="wait").                 */}
+      <div className="min-h-[294px]">
       <AnimatePresence mode="wait" initial={false} custom={dir}>
         <m.div
           key={`${year}-${month}`}
@@ -317,6 +321,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
           </div>
         </m.div>
       </AnimatePresence>
+      </div>
 
       {/* ── Legend ─────────────────────────────────────────────── */}
       <div className="mt-4 flex items-center justify-center gap-5">
