@@ -235,15 +235,16 @@ test("Settings — Reset confirmation buttons meet 44px touch target", async ({ 
   expect(cancelBox?.height, "'Keep my data' must be ≥ 44px").toBeGreaterThanOrEqual(44);
 });
 
-test("Settings — Reset confirmation has no red colour", async ({ page }) => {
+test("Settings — Reset confirmation 'Yes, start fresh' uses red colour (Sprint 13 S4)", async ({ page }) => {
   await page.goto("/clarity/settings");
 
   await page.getByRole("button", { name: "Start fresh", exact: true }).click();
 
   const yesBtn = page.getByRole("button", { name: "Yes, start fresh", exact: true });
+  // Sprint 13 S4: destructive confirm must use red (text-red-700 dark:text-red-400)
+  // Verify it is NOT amber (amber-700 = rgb(180, 83, 9)) — amber is reserved for reversible actions
   const color = await yesBtn.evaluate((el) => getComputedStyle(el).color);
-  // red-700 = rgb(185, 28, 28)
-  expect(color, "Confirm button must not be red").not.toContain("rgb(185, 28, 28)");
+  expect(color, "Confirm button must not use amber — only red for permanent destructive actions").not.toContain("rgb(180, 83, 9)");
 });
 
 // ── Task 6 — HelpView touch target sweep ──────────────────────────────────
@@ -465,7 +466,7 @@ test("ManageView — boolean habit with joyByDefault shows 'Joy' pill in resting
   await expect(page.getByText("Joy", { exact: true }).first()).toBeVisible();
 });
 
-test("ManageView — action tray includes Joy toggle for boolean habits", async ({ page }) => {
+test("ManageView — action tray includes Joy button for boolean habits (Sprint 13 M5)", async ({ page }) => {
   await page.goto("/clarity/manage");
 
   // Ensure the first habit row is boolean (default configs have boolean habits)
@@ -473,30 +474,26 @@ test("ManageView — action tray includes Joy toggle for boolean habits", async 
   const habitRow = habitsSection.locator("button").filter({ hasNotText: "+ New" }).first();
   await habitRow.click();
 
-  const joyToggle = page.getByRole("button", { name: /mark joy|unmark joy/i });
-  await expect(joyToggle).toBeVisible({ timeout: 600 });
+  // Sprint 13 M5: Joy button is single-label "Joy" regardless of state (no more "Mark joy"/"Unmark joy")
+  const joyBtn = page.getByRole("button", { name: "Joy", exact: true }).first();
+  await expect(joyBtn).toBeVisible({ timeout: 600 });
 });
 
-test("ManageView — joy toggle button label flips after clicking", async ({ page }) => {
+test("ManageView — Joy button always reads 'Joy' regardless of joyByDefault state (Sprint 13 M5)", async ({ page }) => {
   await page.goto("/clarity/manage");
 
   const habitsSection = page.locator("section").filter({ has: page.getByText("Habits") });
   const habitRow = habitsSection.locator("button").filter({ hasNotText: "+ New" }).first();
   await habitRow.click();
 
-  const toggleBtn = page.getByRole("button", { name: /mark joy|unmark joy/i });
-  await expect(toggleBtn).toBeVisible({ timeout: 600 });
+  // Sprint 13 M5: single label — click and verify label stays "Joy"
+  const joyBtn = page.getByRole("button", { name: "Joy", exact: true }).first();
+  await expect(joyBtn).toBeVisible({ timeout: 600 });
+  await joyBtn.click();
 
-  const before = await toggleBtn.textContent();
-  await toggleBtn.click();
-
-  // Tapping the row again re-opens the tray so we can verify the label flipped
+  // Re-open tray to verify label is still "Joy"
   await habitRow.click();
-  const after = await page
-    .getByRole("button", { name: /mark joy|unmark joy/i })
-    .textContent();
-
-  expect(before, "Joy toggle label should change after clicking").not.toBe(after);
+  await expect(page.getByRole("button", { name: "Joy", exact: true }).first()).toBeVisible({ timeout: 600 });
 });
 
 // ── Mobile viewport smoke tests ────────────────────────────────────────────

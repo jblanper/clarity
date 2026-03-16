@@ -1,8 +1,8 @@
 # Microcopy & Tone Audit
 
-Generated: 2026-03-15 00:00
+Generated: 2026-03-15 (Sprint 13 validation)
 
-Archive note: Bash permission was unavailable; pre-sprint snapshot preserved in memory (Sprint 11 report: 0 high · 0 medium · 3 low).
+Archive note: Pre-sprint baseline (Sprint 12): 0 high · 0 medium · 2 low. Sprint 13 resolved 0 lows and introduced 0 new findings. Net unchanged at 0 medium · 2 low.
 
 Audited files: `CheckInForm.tsx`, `SettingsView.tsx`, `ManageView.tsx`, `HelpView.tsx`, `DayDetail.tsx`, `HistoryView.tsx`, `FrequencyList.tsx`, `BottomNav.tsx`, `CalendarHeatmap.tsx`, `lib/transferData.ts`, `app/layout.tsx`.
 
@@ -50,7 +50,7 @@ No exclamation marks found anywhere. ✅
 | RESTORE sub-label | `"RESTORE"` | Sub-section header ✅ |
 | Restore description | `"Load a backup file. Days you've already logged won't change."` | Excellent — plain language, reassuring note about existing data. ✅ |
 | Idle import button | `"Choose a file"` | Clear and simple ✅ |
-| Import another file button | `"Import another file"` | Clear ✅ |
+| Import another file button | `"Restore another file"` | ✅ Sprint 13 S3: renamed for consistency with the confirm button |
 | Try again button | `"Try again"` | Clear ✅ |
 
 ### SettingsView Reset section
@@ -71,16 +71,13 @@ No exclamation marks found anywhere. ✅
 | `+ New` button (Habits) | `"+ New"` | ✅ Concise, action-oriented. |
 | `+ New` button (Moments) | `"+ New"` | ✅ |
 
-### ManageView action tray (B2)
+### ManageView action tray (B2 → Sprint 13 M4/M5)
 
 | Element | Copy | Assessment |
 |---|---|---|
 | Edit action | `"Edit"` | ✅ Direct |
-| Archive action | `"Archive"` | ✅ Direct; amber colour signals reversibility |
-| Joy toggle (joy off) | `"Mark joy"` | ✅ Plain, specific |
-| Joy toggle (joy on) | `"Unmark joy"` | ✅ Consistent pairing |
-
-Note: "Unmark joy" is a slightly unusual phrase but clearly communicates the reverse action. "Remove joy" could also work. Low — acceptable.
+| Archive action | `"Archive"` | ✅ Direct; amber pill border signals reversibility |
+| Joy button | `"Joy"` | ✅ Single label; state communicated by fill/border, not text. Sprint 13 M5 intentionally simplified from "Mark joy"/"Unmark joy". |
 
 ### ManageView B3 Moments chip editing
 
@@ -191,4 +188,4 @@ All terminology consistent. "Habits", "Moments", "Archive", "Restore", "Reflecti
 
 **0 high · 0 medium · 2 low**
 
-Sprint 12 resolved 1 pre-existing low (both Start at placeholder "0" → "Optional"). New copy introduced in SettingsView (Backup/Restore, Reset, App card) and ManageView (section headers, action tray, joy pill) is calm, specific, and consistent with Calma's tone. No new high or medium findings. Two pre-existing low copy issues carry forward (CheckInForm inline validation copy). Net: 1 low resolved, carry-forward count 2 (down from 3).
+Sprint 13 new copy: Joy button simplified to single "Joy" label (M5) — state via visual affordance, no two-label variant. "Restore another file" replaces "Import another file" (S3) — consistent with confirm button copy. Archived disclosure "Archived (n)" toggle, archived confirmation note "Archived. Past entries are preserved." — calm, factual, consistent with existing tone. `+ New` chip in moments grid — consistent with Habits header. All new copy passes Calma tone review. No new findings. Two pre-existing lows carry forward (CheckInForm inline validation copy).

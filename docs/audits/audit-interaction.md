@@ -1,11 +1,13 @@
 # Interaction & Motion Audit
 
-Generated: 2026-03-15 00:00
+Generated: 2026-03-15 (Sprint 13 validation)
 
-Archive note: Bash permission was unavailable; pre-sprint snapshot preserved in memory (Sprint 11 report: 0 high · 1 medium · 9 low).
+Archive note: Pre-sprint baseline (Sprint 12): 0 high · 1 medium · 10 low. Sprint 13 resolved the one Medium finding (ManageView habit row `aria-expanded`) and one Low finding (habit row `transition-colors`). Net: 0 medium, 9 low.
 
 Calma principles reviewed against every interactive element and animation.
 Severity: High (breaks experience or accessibility) · Medium (noticeable deviation) · Low (polish/consistency)
+
+Sprint 13 context: Task 3 (M6) added `aria-expanded` to ManageView habit row tap button — resolving the Sprint 12 Medium finding. Task 3 (L4) added `transition-colors hover:bg-stone-50 dark:hover:bg-stone-800/50` to the habit row button — resolving Sprint 12 Low finding #10. Task 4 (M3) updated action tray exit to `paddingTop: 0, paddingBottom: 0, marginBottom: 0`. Task 5 (L1) moved `+ New` to chip grid; Task 5 (L2) added archived disclosure with height-reveal animation.
 
 Sprint 12 context: Task 1 carry-forward (ManageView token fixes). Task 2 added SegmentedPill (new interactive component). Tasks 3–5 SettingsView restructure (App card, Your Data, Reset). Task 6 HelpView touch targets. Tasks 7–9 ManageView B1–B4 — section cards, full-row tap + action tray (AnimatePresence pattern), Moments chip grid, joy pill.
 
@@ -42,15 +44,15 @@ Sprint 12 context: Task 1 carry-forward (ManageView token fixes). Task 2 added S
 | ManageView `+ New` buttons | ManageView.tsx:242,559 | `transition-colors` |
 | ManageView habit row tap button | ManageView.tsx:263 | (no explicit transition-colors — see note) |
 | ManageView action tray Edit button | ManageView.tsx:287 | `transition-colors` (via ACTION_BTN) |
-| ManageView action tray Archive button | ManageView.tsx:288 | `transition-colors` (via ARCHIVE_BTN) |
-| ManageView action tray Joy toggle | ManageView.tsx:293 | `transition-colors` (via ACTION_BTN) |
+| ManageView action tray Archive button | ManageView.tsx:305 | `transition-colors` (via TRAY_ARCHIVE_BTN) |
+| ManageView action tray Joy button | ManageView.tsx:307 | `transition-colors` (via TRAY_JOY_BTN / TRAY_JOY_ON_BTN) |
 | ManageView moment chip buttons | ManageView.tsx:620 | `transition-colors` |
 | ManageView SAVE_BTN buttons | ManageView.tsx (various) | `transition-colors` |
 | FrequencyList rows | FrequencyList.tsx:142 | `transition-colors` |
 | SettingsView all interactive buttons | SettingsView.tsx | `transition-colors` |
 | HelpView back + design-language link | HelpView.tsx:23,105 | `transition-colors` |
 
-Note: ManageView habit row tap button (ManageView.tsx:263) does not have `transition-colors` in its className. The button is a full-row tap target with no explicit colour change on hover/active beyond the `active:opacity-70` pattern. However, no hover colour is defined, so `transition-colors` would be a no-op. **Low** — minor consistency gap.
+Sprint 13 (L4): ManageView habit row tap button (ManageView.tsx:263) now has `transition-colors hover:bg-stone-50 dark:hover:bg-stone-800/50` — **Sprint 12 Low finding resolved.** ✅
 
 ### Failing
 
@@ -100,7 +102,7 @@ All pre-existing animations unchanged and within limits. ✅
 
 ### Exit snap violations
 
-The action tray uses `exit={{ height: 0, opacity: 0, paddingBottom: 0 }}` with `className="flex gap-4 pb-3"`. The `paddingBottom: 0` in exit correctly handles the `pb-3` padding class. ✅
+The action tray uses `exit={{ height: 0, opacity: 0, paddingTop: 0, paddingBottom: 0, marginBottom: 0 }}` with `className="mb-2 … py-3"`. All three padding/margin values are animated to 0 — snap-free. ✅ (Sprint 13 M3 updated from `paddingBottom: 0` only.)
 
 The inline edit form uses `exit={{ height: 0, opacity: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0 }}` with className `INLINE_FORM` which includes `px-4 py-4` — both `paddingTop: 0` and `paddingBottom: 0` are animated, correctly collapsing vertical padding. ✅
 
@@ -161,7 +163,7 @@ See Typography audit §3 for full table. Key Sprint 12 results:
 | SettingsView back button | SettingsView.tsx:115 | `aria-label="Go back"` | ✅ New in Sprint 12 |
 | SettingsView file input | SettingsView.tsx:204 | `aria-label="Choose a backup file"` | ✅ |
 
-ManageView habit row tap button (ManageView.tsx:263): no ARIA role or expanded state. A screen reader user tapping this full-row button has no indication that it reveals an action tray. **Medium** (new).
+ManageView habit row tap button (ManageView.tsx:268): now has `aria-expanded={actionTrayId === h.id}` — **Sprint 13 M6 resolved.** ✅
 
 ---
 
@@ -169,23 +171,23 @@ ManageView habit row tap button (ManageView.tsx:263): no ARIA role or expanded s
 
 ### Medium
 1. **Two-step hover jumps** (pre-existing): Codify `stone-600 → stone-800` nav-link exception in Calma doc.
-2. **SettingsView back button touch target** (pre-existing): Add `flex min-h-[44px] items-center`.
-3. **ManageView habit row ARIA**: No `aria-expanded` state on the full-row tap button — screen readers have no affordance for the action tray.
+
+Sprint 13 resolved: SettingsView back button touch target (S5) ✅; ManageView habit row `aria-expanded` (M6) ✅.
 
 ### Low (polish pass)
-4. **NumberStepper spinbutton keyboard**: Add `onKeyDown` arrow-key increment/decrement (pre-existing).
-5. **NumberStepper `aria-valuemax`**: Add when `max !== Infinity` (pre-existing).
-6. **CalendarHeatmap opacity-25**: Raise to `opacity-30` for future/filter-dimmed cells (pre-existing).
-7. **FrequencyList invisible chevron**: Replace `invisible` with `opacity-0` (pre-existing).
-8. **BottomNav inactive tabs**: Add `hover:text-stone-700 dark:hover:text-stone-300` (pre-existing).
-9. **Missing `transition-colors`**: SettingsView:227, ManageView:425, ManageView:430 (pre-existing).
-10. **ManageView habit row**: Add `transition-colors` and/or `hover:bg-stone-50` for visual feedback on hover (new, low priority).
-11. **Exit easing**: ManageView exit animations inherit default easing rather than ease-in (low, consistent with pre-existing pattern).
+2. **NumberStepper spinbutton keyboard**: Add `onKeyDown` arrow-key increment/decrement (pre-existing).
+3. **NumberStepper `aria-valuemax`**: Add when `max !== Infinity` (pre-existing).
+4. **CalendarHeatmap opacity-25**: Raise to `opacity-30` for future/filter-dimmed cells (pre-existing).
+5. **FrequencyList invisible chevron**: Replace `invisible` with `opacity-0` (pre-existing).
+6. **BottomNav inactive tabs**: Add `hover:text-stone-700 dark:hover:text-stone-300` (pre-existing).
+7. **Missing `transition-colors`**: SettingsView:227, ManageView:425, ManageView:430 (pre-existing).
+8. **Exit easing**: ManageView exit animations inherit default easing rather than ease-in (low, consistent with pre-existing pattern).
+9. **Archived disclosure touch targets**: ManageView:406, 677 — `py-1` only, no `min-h-[44px]` (new Sprint 13 — low-priority secondary control).
 
 ---
 
 ## Summary
 
-**0 high · 1 medium · 10 low**
+**0 high · 1 medium · 9 low**
 
-Sprint 12 resolved 1 pre-existing medium finding ("Edit this day" link touch target — now properly sized via TERTIARY_BTN with `min-h-[44px]`). One new medium introduced: ManageView habit row tap button has no `aria-expanded` state. Pre-existing medium (two-step nav hover) carries forward. Net: same medium count (1) from Sprint 11 baseline (which had 1 medium), +1 low (habit row no transition).
+Sprint 13 resolved: ManageView `aria-expanded` Medium (M6) ✅; ManageView habit row `transition-colors` Low (L4) ✅; SettingsView back button touch target Medium (S5) ✅. One new Low introduced (archived disclosure toggles). Net: 1 medium → 0 medium from Sprint 12; low count 10 → 9 (1 new, 2 resolved).

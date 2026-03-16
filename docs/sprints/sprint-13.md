@@ -1,7 +1,7 @@
 # Sprint 13 — ManageView & Settings Polish
 
 **Dates:** 2026-03-15 – (TBD)
-**Status:** calma-sync complete
+**Status:** calma-sync complete (re-run 2026-03-16)
 **Release:** v2.5.1 (patch — accessibility fixes, interaction polish, no new features)
 
 ---
@@ -449,6 +449,28 @@ Issues found during manual QA and fixed in `components/ManageView.tsx`:
 - **Moment edit card close animation** — the edit card was previously inside the chip map with no `AnimatePresence`, so closing was instant. Refactored: chips always render in the grid (the active chip is shown with a dimmed/disabled style: `bg-stone-100 text-stone-400 cursor-default`); the edit card is rendered separately below the grid, wrapped in `AnimatePresence` with `exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0, marginBottom: 0 }}` at 200ms ease-out. `editingMomentLabel` is no longer cleared on close so the card content stays readable during the exit animation.
 - **Action tray animation overhaul** — merged the action tray and inline edit form into a single `AnimatePresence mode="wait"` block with `key="tray"` / `key="edit-form"`, preventing simultaneous counter-animations that caused jank when tapping "Edit". The `+ New` habit type-selection step now uses the same card shell as the form steps.
 - **Height animation jump fix** — all animated `m.div` elements in ManageView were experiencing a jump at the end of `height: 0 → auto` animations. Root cause: Framer Motion measures the natural height while `paddingTop/paddingBottom` inline styles from `initial` are still set to 0, so the measured height excludes padding. When `height: auto` is restored at animation end, the element snaps to its true height (content + padding). Fix: replaced `INLINE_FORM` (which includes `px-4 py-4`) on animated wrappers with a new `INLINE_FORM_SHELL` constant (border + background only); padding lives on an inner `div` that Framer Motion never touches. Margin animation (`marginBottom`, `marginTop`) is unaffected and retained.
+
+---
+
+## Calma Sync (Post-QA Polish re-run)
+
+**Date:** 2026-03-16
+
+### Spec changes made
+- **Motion — Height-reveal wrappers:** New subsection documenting the `INLINE_FORM_SHELL` pattern: animated `height: 0 → auto` wrappers must carry only border/background; padding lives on a non-animated inner element so Framer Motion measures height correctly.
+- **Motion — Mutually exclusive state transitions:** New subsection documenting `AnimatePresence mode="wait"` for UI slots that alternate between two distinct animated components, preventing overlapping entry/exit animations.
+- **Interaction — Chip active-edit state:** New variant paragraph documenting the muted chip appearance (stone-100 bg, stone-400 text) when the chip is the active target of an adjacent inline edit form.
+- **Interaction — Inline edit card (chip context):** New variant paragraph documenting the chip-edit spatial pattern: edit form appears below the chip grid as a bordered card; chip stays in grid with muted treatment.
+
+All four changes synced to `public/calma-design-language.html`.
+
+### CLAUDE.md token updates
+- **Height animation jump (enter):** New bullet documenting the `INLINE_FORM_SHELL` approach as the preferred fix over animating padding to 0 in `exit`.
+- **Mutually exclusive animated states:** New bullet documenting `AnimatePresence mode="wait"` pattern.
+- **ManageView component note:** Updated to reflect `mode="wait"` tray/edit-form block, `INLINE_FORM_SHELL`, chip dimmed state, edit card below grid, and `+ New` chip visibility rules.
+
+### Open design decisions identified
+None.
 
 ---
 

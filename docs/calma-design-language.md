@@ -43,6 +43,8 @@ Dark mode is always user-selected, never system-inferred. Respect the user's del
 
 **Accessibility rule:** stone-400 (#a8a29e) fails WCAG AA on the light background — 2.4:1 ratio, well below the 4.5:1 minimum. Never use it as text in light mode. stone-500 (#78716c) is the minimum safe value at ~4.6:1. stone-400 is safe only in dark mode, where it reaches ~7:1 on the charcoal background.
 
+When text appears on an elevated component background (e.g. `bg-stone-100` control tracks, `bg-stone-50` panels), re-check contrast independently — the page-background ratio does not transfer. On `bg-stone-100`, `text-stone-500` fails AA; use `text-stone-600` as the minimum.
+
 ### Color roles — surface
 
 | Role            | Light      | Dark         |
@@ -150,6 +152,10 @@ For mutually exclusive choices presented inline (e.g. theme, period), use a segm
 
 When a settings or overview surface exposes two or more navigation destinations, group them in a rounded card with a card-surface background and card border, divided by hairline separators between rows. Each row is a full-width link meeting the 44 px touch target, with the destination label on the left and a right-pointing chevron on the right. Rows respond to hover with a subtle surface wash.
 
+### Contextual action tray
+
+When a list row exposes secondary actions (edit, archive, configure), group them in a contextual bordered card that appears below the row on tap. The card uses `rounded-2xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/50` and contains pill-shaped action buttons in a wrapping flex row. The tray enters and exits with a height reveal (220 ms ease-out), with padding animated to zero on exit to prevent snap. The parent row receives a stone wash and label font-weight boost while the tray is open, distinguishing it from the hover state. Only one tray may be open at a time.
+
 ### States
 
 | State    | Principle                                                                |
@@ -177,7 +183,15 @@ In read-only review contexts, the filled state may be used as a static display i
 
 **Chip / tag variant:** A pill-shaped chip communicates selection state through amber fill when selected; transparent background with stone border at rest. In interactive contexts chips carry standard touch-target height and a color transition. In read-only review contexts — no press handler, no hover — reduce padding by one step to signal static display. Never use a disabled treatment for read-only chips; reduced padding is the signal.
 
+This fill-vs-border state signaling also applies to verb-labeled toggle buttons, where the label remains constant and only the visual treatment changes. When the active state is amber-filled, the button reads immediately without relying on text change — the filled form replaces a "selected / not selected" textual label.
+
+**Chip active-edit state:** When a chip in a grid is the target of an adjacent inline edit form, the chip remains visible at its original grid position with a muted appearance (stone-100 background, stone-400 text) — not hidden, not interactive. This treatment distinguishes the active target from both the resting chip and a disabled chip. The muted chip creates a spatial anchor between the chip's position and the edit form below it.
+
+**Inline edit card (chip context):** When editing an item from a chip grid, the edit form appears as a bordered card below the grid — not as an in-grid replacement that disrupts the layout. The chip being edited remains in the grid in its muted "active target" state, establishing a visible spatial link between the chip and the form. The form enters and exits via height-reveal animation. This pattern preserves the chip grid's shape during editing and avoids reflow.
+
 **Attribute badge variant:** When a list row carries a persistent configuration attribute (e.g. "Joy" for joy-by-default), surface it as a small amber pill placed inline after the item label. The badge is non-interactive — it communicates a state, not an action. Do not apply hover or press styles; the action that changes the state lives elsewhere (e.g. in an action tray).
+
+**Tap affordance indicator:** When a list row is entirely tappable but has no obvious interactive affordance (no chevron, no toggle), a small decorative `···` marker at the trailing edge signals interactivity. It uses `text-stone-400 dark:text-stone-600` — below foreground contrast — because it is a non-text decorative element, not a content label. It is positioned with `ml-auto` to always trail any inline badges. It should not appear on rows that are not interactive.
 
 ---
 
@@ -203,6 +217,14 @@ Active press states use opacity dimming, not scale transforms. Scale creates a s
 ### Collapsible sections
 
 When a section's collapse would cause a scroll-position jump (because the page shrinks above the viewport), use a two-phase exit: fade opacity to zero first, then collapse height after a short delay. The layout shift happens while content is already invisible, so no jump is perceived. The total exit duration should remain well under 320 ms.
+
+### Height-reveal wrappers
+
+The element being animated from `height: 0 → auto` must not carry vertical padding that is part of its content height. Padding belongs on a non-animated inner wrapper. When Framer Motion measures the target height, any inline `paddingTop/paddingBottom` set to `0` in the `initial` state are included in the measurement; if the wrapper also has class-based `py-*` padding, those conflict and cause a snap at animation end. The solution is to separate concerns: the animated element carries only border and background; all spacing lives inside it on a plain wrapper element.
+
+### Mutually exclusive state transitions
+
+When a single UI slot alternates between two distinct animated components (e.g. an action tray and an inline edit form), use a single `AnimatePresence` with `mode="wait"` so the exiting element completes its exit before the entering element begins. Overlapping entry/exit animations in the same spatial slot create competing visual movement that reads as jank.
 
 ---
 
