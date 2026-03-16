@@ -129,6 +129,23 @@ kill $(lsof -ti:3000) 2>/dev/null || true
 
 ---
 
+## Console summary
+
+Before appending results to the sprint doc, print this block directly to the
+console (do not write it to any file):
+
+```
+── QA summary — Sprint N ───────────────────────────────────────
+Regression suite:  N/N passed  (N failed)
+Smoke:             N/N passed
+New tests written: N
+Stale tests fixed: N
+
+Failures to fix:   [list each by test name, or "None"]
+Manual checklist:  N items (see above)
+────────────────────────────────────────────────────────────────
+```
+
 ## Recording results
 
 Append the section defined in `fragment.md` in this skill's directory

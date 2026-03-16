@@ -110,6 +110,29 @@ Ask the user what they want evaluated. It could be:
 
 Don't assume. Ask. One focused question at a time.
 
+### Step 1b — Sprint context check (when a sprint brief exists)
+
+After understanding the scope, silently check for an active sprint brief:
+- List `docs/sprints/sprint-[0-9][0-9]-brief.md`, sort, take the latest
+- If found and its status is not `completed` or `finalized`, read the
+  `Proposed scope` section
+
+Scan the scope for any task that introduces a **new interactive state** —
+an inline edit form, a reveal card, a tray, a chip toggle, a disclosure
+section, or any slot where two components animate in and out.
+
+For each new interactive state found:
+1. Add it explicitly to your evaluation scope — tell the user:
+   > "The brief includes [X], which introduces a new interactive state.
+   > I'll cover all states in my evaluation."
+2. In the report, include a dedicated **Interaction design** note for each one
+   covering: open state, closed state, mutual exclusion (what else closes when
+   this opens), and animation strategy.
+3. If the current app has an analogous pattern, screenshot it — this gives the
+   implementer a reference for what exists before proposing what's new.
+
+If no active brief exists, skip this step silently.
+
 ### Step 2 — Take screenshots with Playwright
 
 Once you know the scope, use the Playwright MCP to navigate to the live Clarity app and

@@ -80,6 +80,24 @@ Produce a summary table:
 Append the section defined in `fragment.md` in this skill's directory
 to the sprint doc.
 
+## Console summary
+
+Before the closing message, print this block directly to the console
+(do not write it to any file — it is a human-readable at-a-glance digest):
+
+```
+── Validation summary — Sprint N ──────────────────────────────
+Audit results:
+  colour      [N findings → N findings]  fixed: N  regressions: N
+  typography  [N findings → N findings]  fixed: N  regressions: N
+  interaction [N findings → N findings]  fixed: N  regressions: N
+  microcopy   [N findings → N findings]  fixed: N  regressions: N
+
+Regressions to fix: [list each, or "None"]
+Open questions:     [list each, or "None"]
+────────────────────────────────────────────────────────────────
+```
+
 ## Close
 
 Tell the user:
