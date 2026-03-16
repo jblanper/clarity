@@ -1,6 +1,6 @@
 # Sprint 14 Brief
 
-**Status:** reviewed
+**Status:** finalized
 **Created:** 2026-03-16
 
 ---
