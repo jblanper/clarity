@@ -1,7 +1,7 @@
 # Sprint 13 — ManageView & Settings Polish
 
 **Dates:** 2026-03-15 – (TBD)
-**Status:** calma-sync complete (re-run 2026-03-16)
+**Status:** completed
 **Release:** v2.5.1 (patch — accessibility fixes, interaction polish, no new features)
 
 ---
@@ -476,4 +476,22 @@ None.
 
 ## Retrospective
 
-<!-- To be filled in after the sprint using /sprint-retro -->
+**Date:** 2026-03-16
+
+### What went well
+- Pre-brief parallel review (arch + UX + UX-radical-evaluation) was the key win: S1 closed as no-op, S4 amber mediation correctly overturned, L3 dropped before it created timer complexity, and M4 token spec locked before coding — all potential mid-sprint reversals avoided
+- Post-QA polish caught and fixed animation issues (height jump, tray jank, enter snap) before deploy; the `INLINE_FORM_SHELL` pattern that emerged is now codified in both Calma spec and CLAUDE.md
+
+### What was harder than expected
+- Post-QA polish was more substantial than expected — moment chip inline edit was redesigned twice (in-grid → below-grid card → chip stays + form below) and `+ New` form positioning was wrong in both habits and moments sections; these were core interactions, not edge cases
+- The height-jump animation bug took longer than expected despite being documented in CLAUDE.md; it was rediscovered during post-QA rather than applied proactively during implementation
+
+### Process improvements for next sprint
+- **`/sprint-post-code` QA agent bash access** — investigate why the QA agent cannot execute bash commands; unblock before Sprint 14 post-code phase
+- **Console summary in post-code/audit reports** — reports are too verbose for human review; keep full written reports as-is but add a concise summary section at the end (and echo it to the console) with open questions, conflicts, and recommended decisions clearly surfaced
+- **Pre-implementation animation checklist** — when a task introduces `height: 0 → auto` animations, reference `INLINE_FORM_SHELL` explicitly in the task spec; don't rely on the implementer discovering the documented fix during QA
+- **UX evaluation coverage for new interactive states** — the `/ux-radical-evaluation` skill should explicitly prompt coverage of all _new_ interactive states introduced in a sprint (not just surfaces under audit); chip-edit and form-placement interactions were spec-silent and got improvised
+- **`createEmptyEntry` unit test** — deferred twice (Sprint 12 and Sprint 13 arch reviews); add as a named task in Sprint 14 backlog, not a recommendation
+
+### Planning accuracy
+Scope was right — S/M/L priority tiers worked cleanly and the recommended implementation ordering was accurate with no mid-stream blockers. The only gap was task _depth_ rather than scope: chip-edit and form-placement interaction specs were underspecified, which showed up as post-QA rework.
