@@ -44,9 +44,10 @@ export default function HelpView() {
         <h2 className={SECTION_LABEL}>The daily form</h2>
         <p className={BODY}>
           Habits are deliberate — things you chose to do and track over time.
-          Moments are unplanned — things that arrived and were worth noting.
-          Reflection is yours to use however it fits: a sentence, a name,
-          a passing thought.
+          Some are yes-or-no; others count a number, whatever that measure
+          means to you. Moments are unplanned — things that arrived and were
+          worth noting. Reflection is yours to use however it fits: a sentence,
+          a name, a passing thought.
         </p>
         <p className={`${BODY} mt-3`}>
           When a habit was done and it also felt good, the blossom marks that
@@ -65,10 +66,10 @@ export default function HelpView() {
       <section className="mb-8">
         <h2 className={SECTION_LABEL}>Looking back</h2>
         <p className={BODY}>
-          Each day on the calendar carries two signals: how much was completed,
-          and how much felt good. Cool tones show completion; warm tones show
-          joy and moments. Days where both are strong find a color somewhere
-          between.
+          Each day on the calendar appears as its date. The weight of the
+          number tells how much was done — lighter when little was completed,
+          bolder when more was. Amber marks any day that held joy or a moment
+          worth noting. A small legend beneath the grid reads the scale.
         </p>
         <p className={`${BODY} mt-3`}>
           The list below the calendar shows how often each habit and moment
@@ -84,8 +85,12 @@ export default function HelpView() {
         <h2 className={SECTION_LABEL}>Your data</h2>
         <p className={BODY}>
           Everything stays on your device. Export a backup from Settings before
-          making large changes. Archive a habit or moment to remove it from the
-          daily form without erasing its history.
+          making large changes — when a backup is restored, your entries are
+          preserved but habits and moments are replaced with those from the
+          file. Archive a habit or moment to remove it from the daily form
+          without erasing its history. To begin completely fresh, Settings
+          offers a reset that clears all entries and returns habits to their
+          defaults.
         </p>
       </section>
 
