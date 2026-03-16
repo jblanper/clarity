@@ -281,6 +281,20 @@ After the refactor, `useIsDark()` is no longer called in cell rendering. If the 
 
 ---
 
+### Bug fix — BottomNav jump on month change
+
+**What:** After implementing the typographic calendar (Task 5), changing the calendar month caused the fixed BottomNav to visually jump down for a fraction of a second on iOS Safari.
+
+**Root cause:** The grid `AnimatePresence` was using `mode="wait"` (sequential exit → enter). Between the exit completing and the enter starting, there is a brief gap where `AnimatePresence` has no children in the DOM. Even though the grid's actual content height is constant at 344px (7 rows × 44px + 6 gaps × 6px), this gap caused the wrapper to briefly collapse, triggering a layout reflow. iOS Safari re-paints `position: fixed` elements during layout reflows, making the BottomNav visually snap.
+
+An initial attempt with `min-h-[294px]` (wrong value — should have been 344px) didn't fix it.
+
+**Fix:** Switched the grid `AnimatePresence` to `mode="popLayout"`. The exiting element is immediately removed from document flow (made `position: absolute`) the moment its exit animation begins, so the new element enters straight away and layout height never changes. A `relative overflow-hidden` wrapper contains the absolutely-positioned exiting element so it doesn't overflow the calendar area during the slide-out.
+
+**Files:** `components/CalendarHeatmap.tsx`
+
+---
+
 ## Definition of done — Sprint
 
 - [ ] All tasks above are complete and validated
