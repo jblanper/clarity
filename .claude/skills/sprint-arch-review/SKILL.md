@@ -62,6 +62,27 @@ These are not covered by audit-arch and are unique to the diff context:
   specified? Any tasks skipped, partially done, or implemented differently than
   planned? Any scope creep not in the sprint doc?
 
+### 3. Animation review (run only if motion code changed)
+
+Check whether the diff touches animation code:
+```bash
+git diff [base-commit]..HEAD -- '*.tsx' '*.ts' | grep -E "(animate=|AnimatePresence|<m\.|LazyMotion)"
+```
+
+If matches are found, review each `m.*` element and `AnimatePresence` block in
+the changed files against these rules from `CLAUDE.md`:
+
+- [ ] `height: 0 → auto` elements use `INLINE_FORM_SHELL` pattern — border/bg on the `m.div` wrapper, all `px-*`/`py-*` on a plain inner `div`
+- [ ] Exit animations include `paddingTop: 0, paddingBottom: 0, marginBottom: 0` when the element carries `py-*` padding
+- [ ] Directional slides use named `variants` + `custom` prop — not inline function syntax on `initial`/`exit`
+- [ ] Mutually exclusive animated states use `AnimatePresence mode="wait"` with distinct `key` props
+- [ ] Duration ≤ 320 ms; ease-out for enters, ease-in for exits
+- [ ] `width` and `height` are not animated directly (use `scaleX`/`scaleY` or `height: 0 → auto`)
+- [ ] `scaleX` values are 0–1 decimals, never percentage strings
+
+Report each violation as a finding. If no animation code is in the diff, note
+"No animation code changed — animation review skipped."
+
 ## Phase 3 — Discussion
 
 After presenting your findings, invite the user to respond:

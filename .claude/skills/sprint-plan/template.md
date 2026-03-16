@@ -54,6 +54,12 @@ behave differently when `startAt` is set".]
 could follow correctly. Reference existing patterns to reuse. Flag any CLAUDE.md
 rules that are especially relevant.]
 
+**Interaction contract:** *(include when the task introduces any new interactive state — reveal, tray, chip toggle, inline form, disclosure)*
+- Open state: [what is visible, what is hidden, layout impact]
+- Closed state: [what is visible, what is hidden]
+- Mutual exclusion: [which other open states this closes, and how]
+- Animation: [enter/exit strategy; if height reveal, note shell/padding split]
+
 **Validation steps:**
 - [ ] [Specific thing to verify — be concrete, not "test it works"]
 - [ ] [Another check]

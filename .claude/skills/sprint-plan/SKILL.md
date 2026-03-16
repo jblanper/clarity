@@ -53,6 +53,45 @@ Order tasks by risk and dependency:
 
 If any task depends on another, state this explicitly at the top of the dependent task.
 
+## Task spec enrichment
+
+Apply these two enrichments automatically when the conditions are met. Do not
+wait for QA to surface these issues.
+
+### Interaction contract (when a task introduces a new interactive state)
+
+If a task introduces any new interactive state — an inline edit form, a reveal
+card, a tray, a chip toggle, a disclosure section, or any `AnimatePresence`-
+governed slot — add an **Interaction contract** block immediately after
+`Implementation notes`:
+
+```
+**Interaction contract**
+- Open state: [what is visible, what is hidden, layout impact]
+- Closed state: [what is visible, what is hidden]
+- Mutual exclusion: [which other open states this closes, and how — via `closeAllEditors()` or equivalent]
+- Animation: [enter/exit strategy; if height reveal, note shell/padding split]
+```
+
+This makes all state transitions explicit before implementation begins. It is
+the primary guard against post-QA rework on underspecified interactions
+(Sprint 12, Sprint 13 pattern).
+
+### Animation checklist (when a task involves height reveals)
+
+If a task involves a `height: 0 → auto` animation — any reveal, collapse,
+or animated height change — add the following to the task's `Validation steps`:
+
+```
+- [ ] Animated wrapper (`m.div`) carries border/bg only — no `px-*`/`py-*` padding (INLINE_FORM_SHELL pattern)
+- [ ] All padding lives on a plain inner `div` that Framer Motion never measures
+- [ ] Exit animation includes `paddingTop: 0, paddingBottom: 0, marginBottom: 0` alongside `height: 0`
+- [ ] If two states share a single UI slot, `AnimatePresence` uses `mode="wait"` with distinct `key` props
+```
+
+Also add to `Implementation notes`: "Height reveal — use the `INLINE_FORM_SHELL`
+pattern (see `CLAUDE.md` → Animations → 'Height animation jump (enter)')."
+
 ## After writing
 
 Update the brief file's **Status** to `finalized`.
