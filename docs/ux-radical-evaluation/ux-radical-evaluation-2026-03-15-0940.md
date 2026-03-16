@@ -87,33 +87,83 @@ Also: the cells use `rounded-md` — Calma's `rounded-xl` is the minimum for inl
 
 **What to change:** Remove the filled cell backgrounds entirely. Each day is its date number — nothing else. Two independent channels carry the signal: **weight** communicates how much structural habit work was done; **color** communicates whether any emotional signal was present (joy marked or moment logged). The selected day gets a subtle `rounded-full` circle behind it, not a filled square. Tappable area stays 44×44px — the hit target doesn't change.
 
-**Activity encoding — two channels:**
+---
+
+#### Activity encoding — two independent channels
 
 | Channel | Signal | Values |
 |---|---|---|
-| Weight | Habit completion | Ghost (300) → Present (400) → Bold (600) → Bolder (700) |
-| Color | Joy / moments | Stone if none; amber if any |
+| Font weight | Habit completion ratio | Ghost (300) → Present (400) → Bold (600) → Bolder (700) |
+| Color | Joy / moments present | Stone (neutral) if none; amber if any |
 
-| State | Weight | Color (light) | Color (dark) |
+The two channels are orthogonal — amber fires regardless of weight, weight changes regardless of amber. This means a day with no habits but a moment logged renders at weight 400 in amber. A day with full habits but no joy renders at weight 700 in stone. There is no blending or mixing of the two signals.
+
+| State | Font weight | Color — light | Color — dark |
 |---|---|---|---|
-| No entry | 300 | ghost — hsl(25,5%,84%) | ghost — hsl(25,5%,32%) |
-| Habit-only, low (< 55%) | 400 | hsl(25,6%,30%) | hsl(25,6%,76%) |
-| Habit-only, medium (55–85%) | 600 | hsl(25,6%,30%) | hsl(25,6%,76%) |
-| Habit-only, full (≥ 85%) | 700 | hsl(25,6%,30%) | hsl(25,6%,76%) |
-| Joy present, low habits | 400 | amber — hsl(28,72%,38%) | amber — hsl(35,88%,62%) |
-| Joy present, high habits | 600–700 | amber — hsl(28,72%,38%) | amber — hsl(35,88%,62%) |
-| Future | 300 | opacity-35 | opacity-35 |
+| No entry (ghost) | 300 | `hsl(25, 5%, 84%)` | `hsl(25, 5%, 32%)` |
+| Habit-only, low (< 55%) | 400 | `hsl(25, 6%, 30%)` | `hsl(25, 6%, 76%)` |
+| Habit-only, medium (55–85%) | 600 | `hsl(25, 6%, 30%)` | `hsl(25, 6%, 76%)` |
+| Habit-only, full (≥ 85%) | 700 | `hsl(25, 6%, 30%)` | `hsl(25, 6%, 76%)` |
+| Joy only, no habits | 400 | `hsl(28, 72%, 38%)` | `hsl(35, 88%, 62%)` |
+| Joy present, low habits (< 55%) | 400 | `hsl(28, 72%, 38%)` | `hsl(35, 88%, 62%)` |
+| Joy present, medium habits (55–85%) | 600 | `hsl(28, 72%, 38%)` | `hsl(35, 88%, 62%)` |
+| Joy present, full habits (≥ 85%) | 700 | `hsl(28, 72%, 38%)` | `hsl(35, 88%, 62%)` |
+| Future day | 300 | `hsl(25, 5%, 84%)` at opacity 0.35 | `hsl(25, 5%, 32%)` at opacity 0.35 |
 
-Empty days are ghosted — barely visible, watermark-level. They preserve the calendar structure without competing with logged days. Active days use only three legible tiers (present / bold / bolder); four gradations at small size are indistinguishable. Amber fires as soon as any joy or moment is logged, regardless of habit completion — the two signals run on orthogonal channels and never need to be blended.
+**Joy detection:** `hasJoy` is true when `Object.values(entry.habits).some(s => s.joy)` OR `entry.moments.length > 0`. Either signal — a joy-marked habit or any logged moment — switches the color channel to amber.
 
-The dusk blue / warm ember two-axis blend is retired. It communicated the same two-axis idea but through color mixing, which produced teal at intermediate values — a hue with no semantic home in Calma's palette. Weight + amber achieves the same reading more legibly: weight tells you how much you showed up; amber tells you whether you felt something.
+**Habit completion ratio `b`:** `habitCount / (totalBooleanHabits || 1)` where `habitCount = Object.values(entry.habits).filter(s => s.done).length`. `totalBooleanHabits` is a prop already passed to the component — no new data required.
 
-**Selected state:** A small `rounded-full bg-stone-100 dark:bg-stone-800` circle (same size as the touch target, slightly inset via padding) replaces the current `ring-2 ring-stone-500` selected indicator.
+**Ghost treatment:** Empty days (no entry or no activity at all) use font weight 300 and the ghost color. At small screen sizes they are barely legible — intentionally watermark-level. They preserve the structural calendar grid without competing with logged days.
 
-**Cell render direction:**
+---
+
+#### What is removed from the existing cell render
+
+The following must be removed from the current `<button>` className:
+
+- `rounded-md` — the GitHub-square-grid shape is gone entirely
+- `bg-stone-200` / `dark:bg-stone-800` — no filled background on any cell state
+- `ring-2 ring-stone-500` (or equivalent) — the selected-day ring indicator is replaced
+
+The `computeCellColor` function is deleted in its entirety. It is replaced by `computeCellStyle`.
+
+---
+
+#### `computeCellStyle` — full implementation
+
+```tsx
+function computeCellStyle(
+  entry: HabitEntry,
+  isDark: boolean,
+  totalBooleanHabits: number,
+): { fontWeight: number; color: string } {
+  const ghost = isDark ? "hsl(25, 5%, 32%)" : "hsl(25, 5%, 84%)";
+  const habitCount = Object.values(entry.habits).filter((s) => s.done).length;
+  const hasJoy =
+    Object.values(entry.habits).some((s) => s.joy) ||
+    entry.moments.length > 0;
+  const b = habitCount / (totalBooleanHabits || 1);
+
+  if (!hasJoy && b === 0) return { fontWeight: 300, color: ghost };
+
+  const amber = isDark ? "hsl(35, 88%, 62%)" : "hsl(28, 72%, 38%)";
+  const stone = isDark ? "hsl(25, 6%, 76%)" : "hsl(25, 6%, 30%)";
+  const color = hasJoy ? amber : stone;
+  const fontWeight = b === 0 ? 400 : b < 0.55 ? 400 : b < 0.85 ? 600 : 700;
+  return { fontWeight, color };
+}
+```
+
+Call site: `const cellStyle = entry ? computeCellStyle(entry, isDark, totalBooleanHabits) : { fontWeight: 300, color: ghost };` — where `ghost` is derived from the same `isDark` value, consistent with the function internals.
+
+---
+
+#### Cell render — complete JSX
 
 ```tsx
 <button
+  type="button"
   onClick={() => !isFuture && onDayClick(dateStr)}
   disabled={isFuture}
   aria-label={dateStr}
@@ -121,13 +171,18 @@ The dusk blue / warm ember two-axis blend is retired. It communicated the same t
   className={[
     "flex h-11 w-11 items-center justify-center transition-colors",
     isFuture ? "cursor-default" : "cursor-pointer",
-  ].filter(Boolean).join(" ")}
+    isFilteredOut ? "opacity-25" : "",
+  ]
+    .filter(Boolean)
+    .join(" ")}
 >
   <span
     className={[
       "flex h-8 w-8 items-center justify-center rounded-full text-sm transition-colors",
       isSelected ? "bg-stone-100 dark:bg-stone-800" : "",
-    ].filter(Boolean).join(" ")}
+    ]
+      .filter(Boolean)
+      .join(" ")}
     style={{
       fontWeight: cellStyle.fontWeight,
       color: cellStyle.color,
@@ -139,29 +194,76 @@ The dusk blue / warm ember two-axis blend is retired. It communicated the same t
 </button>
 ```
 
-`computeCellStyle` replaces `computeCellColor`, returning `{ fontWeight, color }`:
+Key notes on the render:
+
+- **Outer `<button>`** — carries the 44×44px touch target (`h-11 w-11`), cursor state, and the HeatmapFilter opacity (`opacity-25` when `isFilteredOut`). Has no background, no border, no rounded shape of its own. `transition-colors` is present for filter opacity transitions.
+- **Inner `<span>`** — carries the 32×32px visual circle (`h-8 w-8`), always `rounded-full` so the selected-state background appears as a circle. `bg-stone-100 dark:bg-stone-800` is applied only when `isSelected`. `transition-colors` for color/background transitions.
+- **`fontWeight` and `color`** go on the inner span via `style={}` — not via Tailwind classes, because the values are computed at runtime and Tailwind's purger does not generate all 4 weight × 6 color combinations at build time.
+- **Future day opacity (`0.35`)** is applied on the inner span via `style={}`, not on the outer button — this preserves the full touch area while making the number appear dimmed. Future days have `disabled={true}` on the button, which also prevents click.
+- **HeatmapFilter opacity (`opacity-25`)** is applied on the outer button via `className` — this is the existing filter-dimming behavior, unchanged. It sits on the outer element so both the number and any selected-state circle dim together.
+- **`isFilteredOut`** — this variable's logic is unchanged from the existing implementation: it is true when a `HeatmapFilter` is active and the day's entries do not include a match for the active filter.
+- **`type="button"`** is required on all non-submit buttons per CLAUDE.md.
+
+---
+
+#### Selected state
+
+The selected day gets a `bg-stone-100 dark:bg-stone-800` circle (32×32px, `rounded-full`) rendered by the inner span's conditional `className`. The date number sits centered inside this circle, in its usual weight and color. The circle is subtle — just enough contrast to indicate focus without being distracting.
+
+Removed: the existing `ring-2 ring-stone-500` ring that currently marks the selected day. Do not keep the ring — it conflicts with the no-border-on-cells intent.
+
+---
+
+#### Legend row (new element, below the grid)
+
+A new legend row renders immediately below the calendar grid, inside `CalendarHeatmap`. This is a new element not present in the current code.
 
 ```tsx
-function computeCellStyle(
-  entry: HabitEntry,
-  isDark: boolean,
-  totalBooleanHabits: number,
-): { fontWeight: number; color: string } {
-  const ghost = isDark ? "hsl(25, 5%, 32%)" : "hsl(25, 5%, 84%)";
-  const habitCount = Object.values(entry.habits).filter((s) => s.done).length;
-  const hasJoy = Object.values(entry.habits).some((s) => s.joy)
-    || entry.moments.length > 0;
-  const b = habitCount / (totalBooleanHabits || 1);
-
-  if (!hasJoy && b === 0) return { fontWeight: 300, color: ghost };
-
-  const amber = isDark ? "hsl(35, 88%, 62%)" : "hsl(28, 72%, 38%)";
-  const stone = isDark ? "hsl(25, 6%, 76%)"  : "hsl(25, 6%, 30%)";
-  const color = hasJoy ? amber : stone;
-  const fontWeight = b === 0 ? 400 : b < 0.55 ? 400 : b < 0.85 ? 600 : 700;
-  return { fontWeight, color };
-}
+{/* Legend — placed after the calendar grid div, before any bottom margin */}
+<div className="mt-2 flex items-center justify-center gap-4">
+  <span
+    className="text-xs font-light"
+    style={{ color: isDark ? "hsl(25, 5%, 32%)" : "hsl(25, 5%, 84%)" }}
+  >
+    ghost = no activity
+  </span>
+  <span
+    className="text-xs font-bold"
+    style={{ color: isDark ? "hsl(25, 6%, 76%)" : "hsl(25, 6%, 30%)" }}
+  >
+    bold = active
+  </span>
+  <span
+    className="text-xs font-semibold"
+    style={{ color: isDark ? "hsl(35, 88%, 62%)" : "hsl(28, 72%, 38%)" }}
+  >
+    amber = joy
+  </span>
+</div>
 ```
+
+The legend uses the same color constants as the cells — ghost, stone, and amber — derived from `isDark`. This keeps the legend perfectly in sync with the encoding: each legend label is literally displayed in the color it describes. Font weight also mirrors the encoding: `font-light` for ghost, `font-bold` for active, `font-semibold` for amber (matching the weight used for a day with joy and some habits).
+
+Position: `mt-2` below the calendar grid, centered horizontally with `gap-4` between items.
+
+---
+
+#### What does NOT change
+
+The following are explicitly unchanged by H1:
+
+- Grid structure (columns = weeks, rows = days of week, day-label column on the left)
+- Day label column: `h-11 w-5 flex items-center justify-center text-xs uppercase tracking-widest text-stone-400 dark:text-stone-600`, letters M T W T F S S arranged vertically
+- Cell dimensions: `h-11 w-11` outer button, `h-8 w-8` inner span — unchanged
+- Month/year navigation rows and their behavior
+- `AnimatePresence` directional slide animation for month transitions
+- `onDayClick` click handler and all selection state logic
+- HeatmapFilter filter/highlight logic and the `isFilteredOut` opacity treatment
+- `totalBooleanHabits` prop — already available
+- `isDark` hook (`useIsDark()`) — already in use
+- All aria attributes on the cell button
+
+---
 
 **Calma note:** Two independent channels — weight for structure, amber for feeling — is more orthogonal than a blend. Neither signal overwrites the other; both are readable simultaneously. This follows Calma's semantic color rule (amber signals emotional weight) and its typographic primacy principle (type is the primary material, no decorative surface). The ghost empty-day treatment is Calma's principle of contextual omission: a day with nothing logged has nothing to say; it steps back.
 
@@ -169,45 +271,83 @@ function computeCellStyle(
 
 **Mockup:** [View mockup](./mockup-2026-03-15-0940.html#h1-date-weight)
 
-**Effort estimate:** Medium. Changes the cell render in `CalendarHeatmap.tsx` — replaces `bg-stone-200 dark:bg-stone-800 rounded-md` logic with a weight/color mapping. No changes to grid structure, navigation, filter logic, or parent components. The `computeCellColor` function can be replaced with a `computeCellStyle` function that returns `{ weight, color }` instead of an HSL string.
+**Effort estimate:** Medium. Changes the cell render in `CalendarHeatmap.tsx` — removes `bg-stone-200 dark:bg-stone-800 rounded-md` logic, replaces `computeCellColor` with `computeCellStyle`, adds the legend row. No changes to grid structure, navigation, filter logic, or parent components.
 
 ---
 
 ### H2 — Collapse the year row until it's earned
 
-**What to change:** Only render the year navigation row when the user's earliest entry is more than 11 months ago. Derive this from `entries` — sort and take the first date. If `entries.length === 0` or the earliest entry is within 11 months, hide the year row entirely.
+**What to change:** Only render the year navigation row when the user's earliest entry is more than 11 months ago. Derive this from `entries` — sort and take the first date. If `entries.length === 0` or the earliest entry is within 11 months of today, hide the year row entirely. When hidden, include the year inline in the month heading so the user always knows what year they're in.
 
-**Direction:**
+---
+
+#### `hasMultiYearData` derivation
+
+This boolean is computed once inside `CalendarHeatmap`, from the `entries` prop that is already available:
 
 ```tsx
-// In CalendarHeatmap, derive from props:
 const hasMultiYearData = (() => {
   if (!entries.length) return false;
-  const earliest = entries.map(e => e.date).sort()[0];
+  const earliest = entries.map((e) => e.date).sort()[0];
   const earliestYear = parseInt(earliest.split("-")[0], 10);
   return currentYear - earliestYear >= 1;
 })();
+```
 
-// Conditionally render:
+`currentYear` is the currently viewed year (already a prop or derived state in the component — the same one used to render the year label in the year row). `earliest.split("-")[0]` is safe because dates are always `YYYY-MM-DD` strings per CLAUDE.md data model.
+
+---
+
+#### Year row — conditional render
+
+Wrap the existing year row JSX in a conditional. The year row itself is unchanged in structure and styling:
+
+```tsx
 {hasMultiYearData && (
   <div className="mb-1 flex items-center justify-center gap-8">
-    {/* year row */}
+    {/* existing year row content — buttons and year label — unchanged */}
   </div>
 )}
+```
 
-// When year row is hidden, include the year inline in the month heading:
-<span className="text-base font-light tracking-widest text-stone-600">
+The existing year row contains: a back-chevron `<button>` (`text-stone-500 dark:text-stone-400 min-h-[44px] flex items-center justify-center`, chevron character `‹`), the year label (`text-sm uppercase tracking-widest text-stone-500 dark:text-stone-500`), and a forward-chevron `<button>` (same classes as back, but `opacity-30 cursor-default` when `currentYear >= thisYear`). None of these classes change.
+
+---
+
+#### Month heading — inline year when row is hidden
+
+The month heading text is already rendered as `{monthName}` (e.g. "March"). When `hasMultiYearData` is false (year row hidden), it becomes `{monthName} ${currentYear}` (e.g. "March 2026"). When `hasMultiYearData` is true (year row visible), it reverts to `{monthName}` alone, since the year row above carries year context.
+
+```tsx
+<span className="text-base font-light tracking-widest text-stone-600 dark:text-stone-400">
   {hasMultiYearData ? monthName : `${monthName} ${currentYear}`}
 </span>
 ```
 
-When the year row is absent, the month heading includes the year inline — "March 2026" rather than "March". This is a one-line change in the month heading render. The user always knows what year they're in without needing a separate row. When the year row appears (after multi-year data is earned), the month heading reverts to the month name alone since the year row carries that context. The layout gains breathing room above the month heading. When the year row appears (after ~12 months of data), it slides in without surprise — the user has been using the app long enough to expect it.
+This is a one-character change in the JSX text expression. All other classes on the month heading span are unchanged.
+
+---
+
+#### Month nav row spacing
+
+The month nav row (`flex items-center justify-between`) currently sits below the year row with some margin. When the year row is hidden, the month nav row gains visual breathing room above it automatically — no spacing changes needed. The existing `mb-6` (or equivalent) below the month nav row is unchanged.
+
+---
+
+#### What does NOT change
+
+- Year row internal structure, chevron buttons, and their onClick handlers — unchanged
+- Year row appearing/disappearing has no entrance/exit animation — it is a conditional render based on data state, which changes at most once in a user's lifetime of app usage
+- Month nav row structure and spacing — unchanged
+- `currentYear` and `thisYear` (or equivalent "actual current year") are already available in the component
+
+---
 
 **Calma note:** This is Calma's "controls that only become relevant at a specific state may appear contextually" principle. The year selector is only relevant when data spans multiple years. Its absence when irrelevant is not confusing — it's calm.
 
 **Mockup:** [View mockup](./mockup-2026-03-15-0940.html#h2-year-row)
 
-**Effort estimate:** Low. One conditional render wrapping the existing year row JSX. The `entries` prop is already available in `CalendarHeatmap`.
+**Effort estimate:** Low. One conditional render wrapping the existing year row JSX, one ternary in the month heading text. The `entries` prop is already available in `CalendarHeatmap`.
 
 ---
 
@@ -215,17 +355,49 @@ When the year row is absent, the month heading includes the year inline — "Mar
 
 **What to change:** Remove the 38% max-width cap and increase the bar height from `h-0.5` (2px) to `h-1` (4px). Let the top item's bar run to the full row width (100%), with all other bars proportional to it. This makes relative differences between habits legible at a glance without adding any numeric data.
 
-**Direction — two changes in `FrequencyList.tsx`:**
+---
+
+#### Exact changes in `FrequencyList.tsx`
+
+**Change 1 — `barWidth` calculation (line 133):**
 
 ```tsx
-// Line 133 — remove the *38 cap:
-const barWidth = `${Math.round((item.count / maxCount) * 100)}%`;
+// Before:
+const barWidth = `${Math.round((item.count / maxCount) * 38)}%`;
 
-// Line 153 — increase bar height:
+// After:
+const barWidth = `${Math.round((item.count / maxCount) * 100)}%`;
+```
+
+Only the multiplier changes: `38` → `100`. The rest of the expression — `item.count`, `maxCount`, `Math.round` — is unchanged.
+
+**Change 2 — bar container height (line 153):**
+
+```tsx
+// Before:
+<div className="mt-1.5 h-0.5 w-full rounded-full">
+
+// After:
 <div className="mt-1.5 h-1 w-full rounded-full">
 ```
 
-That's it. No other changes. The `scaleX` animation, `transformOrigin`, and color treatment all stay identical.
+Only the height class changes: `h-0.5` → `h-1`. All other classes on this element — `mt-1.5`, `w-full`, `rounded-full` — are unchanged.
+
+---
+
+#### What does NOT change
+
+The following are explicitly unchanged by H3:
+
+- Bar fill div inside the container: `<div className="h-full rounded-full" style={{ width: barWidth }} />` structure unchanged
+- Bar fill color classes: joy habits use `bg-amber-400 dark:bg-amber-500`, regular habits use `bg-stone-300 dark:bg-stone-600` — unchanged
+- `scaleX` animation from 0 to 1 with `transformOrigin: "left"` — unchanged
+- `style={{ width: barWidth }}` as a static style (not animated) — unchanged
+- The bar container has no background color (no visible track) — the bar is a thin colored line, not a bar-with-track. This is unchanged.
+- `maxCount` derivation — unchanged
+- `mb-1` or any other surrounding margin — only the `h-` class on the container changes
+
+---
 
 **Why not add the count number:** A precise count creates an implicit target. A user who sees "22" inevitably thinks about "25 next month." The bar communicates rhythm and relative proportion — the right framing for a reflection tool — without anchoring to a goal. Approximate comparison is a feature, not a limitation. This aligns with the explicit rejection of BJ Fogg's extrinsic motivation loops documented in `docs/calm-research.md`.
 
@@ -239,23 +411,28 @@ That's it. No other changes. The `scaleX` animation, `transformOrigin`, and colo
 
 ### H4 — Period selector: enclosed pill group
 
-**What to change:** Replace the floating text buttons with an enclosed segmented pill control — the same pattern recommended in `ux-radical-evaluation-2026-03-14-2130.md` (S1) for the Settings Theme toggle. The active period gets a filled stone indicator; inactive periods use transparent background with muted text.
+**What to change:** Replace the floating dot-separated text buttons with an enclosed segmented pill control — the same pattern recommended in `ux-radical-evaluation-2026-03-14-2130.md` (S1) for the Settings Theme toggle. The active period gets a filled stone indicator; inactive periods use transparent background with muted text.
 
-**Direction:**
+---
+
+#### Complete replacement JSX
+
+The entire period selector block in `HistoryView.tsx` (currently lines 135–150, containing the three floating text buttons and the `·` separators) is replaced with:
 
 ```tsx
 <div className="mt-5 mb-6 flex justify-center">
-  <div className="inline-flex rounded-full border border-stone-200 dark:border-stone-700 p-0.5">
-    {(["month", "3m", "always"] as Period[]).map((p, i) => (
+  <div className="inline-flex gap-0.5 rounded-full border border-stone-200 p-0.5 dark:border-stone-700">
+    {(["month", "3m", "always"] as Period[]).map((p) => (
       <button
         key={p}
         type="button"
         onClick={() => handlePeriodChange(p)}
-        className={`rounded-full px-3 py-1 text-xs uppercase tracking-widest transition-colors ${
+        className={[
+          "rounded-full px-3 py-1.5 text-xs uppercase tracking-widest transition-colors",
           period === p
-            ? "bg-stone-800 dark:bg-stone-200 text-white dark:text-stone-900"
-            : "text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200"
-        }`}
+            ? "bg-stone-800 text-white dark:bg-stone-200 dark:text-stone-900"
+            : "text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200",
+        ].join(" ")}
       >
         {p === "month" ? "Month" : p === "3m" ? "3 Months" : "Always"}
       </button>
@@ -264,7 +441,53 @@ That's it. No other changes. The `scaleX` animation, `transformOrigin`, and colo
 </div>
 ```
 
-The `·` separators between options are removed — the enclosure makes them unnecessary. The `handlePeriodChange` logic in `HistoryView.tsx` is unchanged.
+---
+
+#### Class-by-class breakdown
+
+**Outer wrapper:** `mt-5 mb-6 flex justify-center`
+- `mt-5` — spacing above the pill group, below the Frequency section label
+- `mb-6` — spacing below the pill group, before the frequency list
+- `flex justify-center` — centers the pill group horizontally in the column
+
+**Pill group container:** `inline-flex gap-0.5 rounded-full border border-stone-200 p-0.5 dark:border-stone-700`
+- `inline-flex` — shrinks to content width (does not stretch full row)
+- `gap-0.5` — 2px gap between pill buttons inside the container
+- `rounded-full` — fully rounded ends, matching the pill-button roundness inside
+- `border border-stone-200 dark:border-stone-700` — the enclosure ring (1px, stone-200 light / stone-700 dark)
+- `p-0.5` — 2px inner padding so buttons sit slightly inset from the border
+
+**Active pill button:** `rounded-full px-3 py-1.5 text-xs uppercase tracking-widest transition-colors bg-stone-800 text-white dark:bg-stone-200 dark:text-stone-900`
+- `rounded-full` — fully rounded, matches container shape
+- `px-3 py-1.5` — horizontal and vertical padding; `py-1.5` is required (not `py-1`) for adequate touch height
+- `text-xs uppercase tracking-widest` — section label typography, consistent with surrounding UI
+- `transition-colors` — smooth switch when period changes
+- `bg-stone-800 text-white` — primary button token in light mode
+- `dark:bg-stone-200 dark:text-stone-900` — primary button token in dark mode
+
+**Inactive pill button:** `rounded-full px-3 py-1.5 text-xs uppercase tracking-widest transition-colors text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200`
+- Same structure and padding as active
+- `text-stone-500` light — passes WCAG AA on white background (per CLAUDE.md, `text-stone-400` is forbidden as foreground in light mode)
+- `hover:text-stone-700` light — hover darkens text for feedback
+- `dark:text-stone-400` dark — muted but readable on stone-900 background
+- `dark:hover:text-stone-200` dark — hover brightens for feedback
+- No background on inactive — transparent
+
+---
+
+#### What is removed
+
+- The three floating text buttons (`<button className="text-xs uppercase tracking-widest font-medium text-stone-900">`) and their `text-stone-500` inactive counterparts
+- The `·` dot separators (`<span className="text-stone-300">·</span>`) between options — the enclosure makes them redundant
+- Any `font-medium` active-state-only class — the filled background replaces weight as the selection signal
+
+#### What does NOT change
+
+- `handlePeriodChange` function and its 120ms `setTimeout` / `isUpdating` debounce — unchanged, the pill buttons call the same handler
+- `Period` type and `period` state — unchanged
+- The Frequency section label above the pill group — unchanged
+
+---
 
 **Calma note:** Direct application of the Calma "chip / tag variant" at the selection control level — an enclosed pill group where the active option uses the primary button token. This makes the selected period unmistakable. The dots-as-separators pattern (a design quirk from an earlier sprint) disappears — its purpose was to suggest separation between choices that now have an explicit container.
 
@@ -272,7 +495,7 @@ Note: this matches the S1 proposal for the Settings Theme toggle. If both ship i
 
 **Mockup:** [View mockup](./mockup-2026-03-15-0940.html#h4-period-pill)
 
-**Effort estimate:** Low. Changes the period selector div in `HistoryView.tsx:135–150`. No logic changes.
+**Effort estimate:** Low. Replaces the period selector block in `HistoryView.tsx:135–150`. No logic changes.
 
 ---
 
