@@ -111,7 +111,6 @@ export default function ManageView() {
     setNewTagLabel("");
     setActionTrayId(null);
     setEditingMomentId(null);
-    setEditingMomentLabel("");
   }
 
   // ── Habit actions ──────────────────────────────────────────────────────
@@ -610,81 +609,30 @@ export default function ManageView() {
             </h2>
           </div>
 
-          {/* Active tags — chip grid; editing chip is replaced inline by the edit card */}
+          {/* Active tags — chip grid; editing chip hidden while edit card is open */}
           <div className="flex flex-wrap gap-2 py-2">
-            {activeTags.map((t) =>
-              editingMomentId === t.id ? (
-                <m.div
-                  key={t.id}
-                  className={`w-full ${INLINE_FORM_SHELL}`}
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                  style={{ overflow: "hidden" }}
-                >
-                  <div className="px-4 py-4 space-y-3">
-                  <div>
-                    <label className={FIELD_LABEL}>Label</label>
-                    <input
-                      type="text"
-                      value={editingMomentLabel}
-                      onChange={(e) => setEditingMomentLabel(e.target.value)}
-                      className={TEXT_INPUT}
-                      autoFocus
-                    />
-                  </div>
-                  <div className="flex items-center gap-3 pt-1">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (editingMomentLabel.trim()) {
-                          applyConfigs({
-                            ...configs,
-                            moments: configs.moments.map((m) =>
-                              m.id === editingMomentId ? { ...m, label: editingMomentLabel.trim() } : m
-                            ),
-                          });
-                        }
-                        setEditingMomentId(null);
-                        setEditingMomentLabel("");
-                      }}
-                      disabled={!editingMomentLabel.trim()}
-                      className={SAVE_BTN}
-                    >
-                      Save
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => { setEditingMomentId(null); setEditingMomentLabel(""); }}
-                      className={CANCEL_BTN}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => editingMomentId && archiveMoment(editingMomentId)}
-                      className={`ml-auto ${TERTIARY_AMBER_BTN}`}
-                    >
-                      Archive
-                    </button>
-                  </div>
-                  </div>
-                </m.div>
-              ) : (
+            {activeTags.map((t) => {
+              const isEditing = editingMomentId === t.id;
+              return (
                 <button
                   key={t.id}
                   type="button"
+                  disabled={isEditing}
                   onClick={() => {
                     closeAllEditors();
                     setEditingMomentId(t.id);
                     setEditingMomentLabel(t.label);
                   }}
-                  className="min-h-[44px] flex items-center rounded-full border border-stone-200 dark:border-stone-700 px-4 py-2 text-sm text-stone-700 dark:text-stone-300 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800"
+                  className={`min-h-[44px] flex items-center rounded-full border px-4 py-2 text-sm transition-colors ${
+                    isEditing
+                      ? "border-stone-200 dark:border-stone-700 bg-stone-100 dark:bg-stone-800 text-stone-400 dark:text-stone-600 cursor-default"
+                      : "border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800"
+                  }`}
                 >
                   {t.label}
                 </button>
-              )
-            )}
+              );
+            })}
             {!addingTag && (
               <button
                 type="button"
@@ -695,6 +643,68 @@ export default function ManageView() {
               </button>
             )}
           </div>
+
+          {/* Moment edit card — AnimatePresence gives it a proper close animation */}
+          <AnimatePresence initial={false}>
+            {editingMomentId !== null && (
+              <m.div
+                key="moment-edit-card"
+                className={INLINE_FORM_SHELL}
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0, marginBottom: 0 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                style={{ overflow: "hidden" }}
+              >
+                <div className="px-4 py-4 space-y-3">
+                <div>
+                  <label className={FIELD_LABEL}>Label</label>
+                  <input
+                    type="text"
+                    value={editingMomentLabel}
+                    onChange={(e) => setEditingMomentLabel(e.target.value)}
+                    className={TEXT_INPUT}
+                    autoFocus
+                  />
+                </div>
+                <div className="flex items-center gap-3 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (editingMomentLabel.trim()) {
+                        applyConfigs({
+                          ...configs,
+                          moments: configs.moments.map((m) =>
+                            m.id === editingMomentId ? { ...m, label: editingMomentLabel.trim() } : m
+                          ),
+                        });
+                      }
+                      setEditingMomentId(null);
+                    }}
+                    disabled={!editingMomentLabel.trim()}
+                    className={SAVE_BTN}
+                  >
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEditingMomentId(null)}
+                    className={CANCEL_BTN}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => editingMomentId && archiveMoment(editingMomentId)}
+                    className={`ml-auto ${TERTIARY_AMBER_BTN}`}
+                  >
+                    Archive
+                  </button>
+                </div>
+                </div>
+              </m.div>
+            )}
+          </AnimatePresence>
 
           {/* Add moment form — rendered above the archived section */}
           <AnimatePresence initial={false}>
