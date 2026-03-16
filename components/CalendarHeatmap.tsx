@@ -62,79 +62,40 @@ function buildMonthWeeks(year: number, month: number): (string | null)[][] {
   return weeks;
 }
 
-// Sunset palette — exact target colors at full intensity
-const HABIT_LIGHT  = "#7090b0"; // dusk blue  — hsl(210, 29%, 57%)
-const HABIT_DARK   = "#506880"; //              hsl(210, 23%, 41%)
-const MOMENT_LIGHT = "#c4784a"; // warm ember  — hsl(23, 51%, 53%)
-const MOMENT_DARK  = "#a05f38"; //              hsl(23, 48%, 42%)
-
-// HSL components for blended overview cells
-const HABIT_H        = 210;
-const HABIT_S_LIGHT  = 29;
-const HABIT_S_DARK   = 23;
-const MOMENT_H       = 23;
-const MOMENT_S_LIGHT = 51;
-const MOMENT_S_DARK  = 48;
-
-function computeCellColor(
-  entry: HabitEntry,
-  isDark: boolean,
-  totalBooleanHabits: number,
-): string {
-  const muted = isDark ? "hsl(25, 6%, 35%)" : "hsl(25, 6%, 80%)";
-
-  const habitCount = Object.values(entry.habits).filter((s) => s.done).length;
-  const joyCount =
-    Object.values(entry.habits).filter((s) => s.joy).length +
-    entry.moments.length;
-  const b = habitCount / (totalBooleanHabits || 1);
-  const y = Math.min(joyCount / 6, 1);
-
-  if (b === 0 && y === 0) return muted;
-
-  const habitS  = isDark ? HABIT_S_DARK   : HABIT_S_LIGHT;
-  const momentS = isDark ? MOMENT_S_DARK  : MOMENT_S_LIGHT;
-  const habitL  = isDark ? 19 + 22 * b   : 80 - 23 * b;  // dark 19→41=HABIT_DARK,  light 80→57=HABIT_LIGHT
-  const momentL = isDark ? 23 + 19 * y   : 81 - 28 * y;  // dark 23→42=MOMENT_DARK, light 81→53=MOMENT_LIGHT
-
-  if (y === 0) return `hsl(${HABIT_H}, ${habitS}%, ${Math.round(habitL)}%)`;
-  if (b === 0) return `hsl(${MOMENT_H}, ${momentS}%, ${Math.round(momentL)}%)`;
-
-  const total = b + y;
-  const h = Math.round((HABIT_H * b + MOMENT_H * y) / total);
-  const s = Math.round((habitS * b + momentS * y) / total);
-  const l = Math.round((habitL * b + momentL * y) / total);
-  return `hsl(${h}, ${s}%, ${l}%)`;
-}
-
 function doesEntryMatchFilter(entry: HabitEntry, filter: HeatmapFilter): boolean {
   if (filter.type === "boolean-habit") return entry.habits[filter.id]?.done ?? false;
   if (filter.type === "numeric-habit") return (entry.numeric[filter.id] ?? 0) > 0;
   return entry.moments.includes(filter.id);
 }
 
-/** Returns the exact palette color for a filter-match highlight. */
-function getFilterHighlightColor(filter: HeatmapFilter, isDark: boolean): string {
-  return filter.type === "moment"
-    ? (isDark ? MOMENT_DARK : MOMENT_LIGHT)
-    : (isDark ? HABIT_DARK  : HABIT_LIGHT);
+interface CellStyle {
+  weightClass: string;
+  colorClass: string;
 }
 
-/** Subscribes to changes on the <html> class list to detect active theme. */
-function useIsDark(): boolean {
-  const [isDark, setIsDark] = useState(false);
+function computeCellStyle(
+  entry: HabitEntry | null,
+  activeHabitCount: number,
+): CellStyle {
+  if (!entry) {
+    return { weightClass: "font-light", colorClass: "text-stone-300 dark:text-stone-700" };
+  }
+  const done = Object.values(entry.habits).filter((s) => s.done).length;
+  const b = activeHabitCount > 0 ? done / activeHabitCount : 0;
+  const hasJoyOrMoment =
+    Object.values(entry.habits).some((s) => s.joy) || entry.moments.length > 0;
 
-  useEffect(() => {
-    const html = document.documentElement;
-    const update = () => setIsDark(html.classList.contains("dark"));
+  const weightClass =
+    b === 0 ? "font-light"
+    : b <= 0.33 ? "font-normal"
+    : b <= 0.67 ? "font-semibold"
+    : "font-bold";
 
-    startTransition(update);
-    const observer = new MutationObserver(update);
-    observer.observe(html, { attributes: true, attributeFilter: ["class"] });
-    return () => observer.disconnect();
-  }, []);
+  const colorClass = hasJoyOrMoment
+    ? "text-amber-600 dark:text-amber-400"
+    : "text-stone-700 dark:text-stone-300";
 
-  return isDark;
+  return { weightClass, colorClass };
 }
 
 /** Variants that receive the slide direction (1=forward, -1=back) via custom. */
@@ -153,7 +114,6 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
 
   const [year, setYear] = useState(currentYear);
   const [month, setMonth] = useState(currentMonth);
-  const isDark = useIsDark();
 
   // +1 = forward (slide left), -1 = back (slide right).
   // Stored as state (not a ref) so it can be safely read during render.
@@ -177,6 +137,10 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
   const entryMap = new Map(entries.map((e) => [e.date, e]));
   const weeks = buildMonthWeeks(year, month);
   const isAtCurrentMonth = year === currentYear && month === currentMonth;
+
+  const sortedDates = entries.map((e) => e.date).sort();
+  const earliestYear = sortedDates[0] ? parseInt(sortedDates[0].substring(0, 4), 10) : currentYear;
+  const showYearRow = currentYear - earliestYear >= 1 && entries.length >= 7;
 
   const prevMonth = () => {
     if (year <= minYear && month === 0) return;
@@ -218,27 +182,29 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
   return (
     <div>
       {/* ── Year selector ─────────────────────────────────────── */}
-      <div className="mb-1 flex items-center justify-center gap-8">
-        <button
-          onClick={prevYear}
-          disabled={year <= minYear}
-          aria-label="Previous year"
-          className="min-h-[44px] flex items-center justify-center text-xl text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300 disabled:opacity-30"
-        >
-          <Chevron direction="left" />
-        </button>
-        <span className="min-w-[4rem] text-center text-sm uppercase tracking-widest text-stone-500 dark:text-stone-500">
-          {year}
-        </span>
-        <button
-          onClick={nextYear}
-          disabled={year >= currentYear}
-          aria-label="Next year"
-          className="min-h-[44px] flex items-center justify-center text-xl text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300 disabled:opacity-30"
-        >
-          <Chevron direction="right" />
-        </button>
-      </div>
+      {showYearRow && (
+        <div className="mb-1 flex items-center justify-center gap-8">
+          <button
+            onClick={prevYear}
+            disabled={year <= minYear}
+            aria-label="Previous year"
+            className="min-h-[44px] flex items-center justify-center text-xl text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300 disabled:opacity-30"
+          >
+            <Chevron direction="left" />
+          </button>
+          <span className="min-w-[4rem] text-center text-sm uppercase tracking-widest text-stone-500 dark:text-stone-500">
+            {year}
+          </span>
+          <button
+            onClick={nextYear}
+            disabled={year >= currentYear}
+            aria-label="Next year"
+            className="min-h-[44px] flex items-center justify-center text-xl text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300 disabled:opacity-30"
+          >
+            <Chevron direction="right" />
+          </button>
+        </div>
+      )}
 
       {/* ── Month navigation ──────────────────────────────────── */}
       <div className="mb-6 flex items-center justify-between">
@@ -260,7 +226,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
             transition={{ duration: 0.12 }}
             className="text-base font-light tracking-widest text-stone-600 dark:text-stone-400"
           >
-            {MONTH_NAMES[month]}
+            {MONTH_NAMES[month]}{!showYearRow ? ` ${year}` : ""}
           </m.h2>
         </AnimatePresence>
 
@@ -317,37 +283,28 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
                     const entry = entryMap.get(dateStr) ?? null;
                     const isFuture = dateStr > today;
                     const isSelected = dateStr === selectedDate;
-                    const matchesFilter = !!filter && !!entry && !isFuture && doesEntryMatchFilter(entry, filter);
-                    const cellBg = entry && !isFuture
-                      ? (matchesFilter
-                          ? getFilterHighlightColor(filter, isDark)
-                          : computeCellColor(entry, isDark, activeHabitCount))
-                      : undefined;
-                    const dimmed = !!filter && !!entry && !isFuture && !matchesFilter;
+                    const isFilteredOut = !!filter && !!entry && !isFuture && !doesEntryMatchFilter(entry, filter);
+                    const { weightClass, colorClass } = computeCellStyle(entry, activeHabitCount);
                     const dayNum = parseInt(dateStr.split("-")[2], 10);
 
                     return (
                       <button
                         key={d}
+                        type="button"
                         onClick={() => !isFuture && onDayClick(dateStr)}
                         disabled={isFuture}
                         aria-label={dateStr}
                         aria-pressed={isSelected}
                         className={[
-                          "flex h-11 w-11 items-start justify-end rounded-md p-1 transition-colors",
-                          !cellBg ? "bg-stone-200 dark:bg-stone-800" : "",
-                          isSelected ? "ring-2 ring-stone-500 dark:ring-stone-500" : "",
-                          isFuture ? "cursor-default opacity-25" : "cursor-pointer",
+                          "flex h-11 w-11 items-center justify-center rounded-full transition-colors",
+                          isSelected ? "bg-stone-100 dark:bg-stone-800" : "",
+                          isFuture ? "cursor-default opacity-30" : "cursor-pointer",
+                          isFilteredOut ? "opacity-25" : "",
                         ]
                           .filter(Boolean)
                           .join(" ")}
-                        style={{
-                          ...(cellBg ? { backgroundColor: cellBg } : {}),
-                          ...(dimmed ? { opacity: 0.25 } : {}),
-                        }}
                       >
-                        {/* Date number in the corner */}
-                        <span className="text-[11px] leading-none text-black/50 dark:text-white/35">
+                        <span className={`text-sm leading-none ${weightClass} ${colorClass}`}>
                           {dayNum}
                         </span>
                       </button>
@@ -360,6 +317,22 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
           </div>
         </m.div>
       </AnimatePresence>
+
+      {/* ── Legend ─────────────────────────────────────────────── */}
+      <div className="mt-4 flex items-center justify-center gap-5">
+        <span className="flex items-center gap-1.5 text-xs text-stone-500 dark:text-stone-500">
+          <span className="text-sm font-light text-stone-300 dark:text-stone-700">7</span>
+          no activity
+        </span>
+        <span className="flex items-center gap-1.5 text-xs text-stone-500 dark:text-stone-500">
+          <span className="text-sm font-bold text-stone-700 dark:text-stone-300">7</span>
+          active
+        </span>
+        <span className="flex items-center gap-1.5 text-xs text-stone-500 dark:text-stone-500">
+          <span className="text-sm font-bold text-amber-600 dark:text-amber-400">7</span>
+          joy
+        </span>
+      </div>
     </div>
   );
 }

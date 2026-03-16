@@ -10,6 +10,13 @@ import type { HeatmapFilter } from "@/components/CalendarHeatmap";
 import DayDetail from "@/components/DayDetail";
 import FrequencyList, { type Period } from "@/components/FrequencyList";
 import Chevron from "@/components/Chevron";
+import SegmentedPill from "@/components/SegmentedPill";
+
+const PERIOD_OPTIONS = [
+  { value: "month" as const, label: "Month" },
+  { value: "3m" as const, label: "3 Months" },
+  { value: "always" as const, label: "Always" },
+] satisfies { value: Period; label: string }[];
 
 export default function HistoryView() {
   const [entries, setEntries] = useState<HabitEntry[]>([]);
@@ -132,21 +139,12 @@ export default function HistoryView() {
                 <div className={`frequency-list${isUpdating ? " is-updating" : ""}`}>
 
                   {/* Period selector */}
-                  <div className="mt-5 mb-6 flex items-center justify-center gap-3">
-                    <button type="button" onClick={() => handlePeriodChange("month")}
-                      className={`text-xs uppercase tracking-widest transition-colors ${period === "month" ? "text-stone-900 dark:text-stone-100 font-medium" : "text-stone-500 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300"}`}>
-                      Month
-                    </button>
-                    <span className="text-stone-300 dark:text-stone-600">·</span>
-                    <button type="button" onClick={() => handlePeriodChange("3m")}
-                      className={`text-xs uppercase tracking-widest transition-colors ${period === "3m" ? "text-stone-900 dark:text-stone-100 font-medium" : "text-stone-500 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300"}`}>
-                      3 Months
-                    </button>
-                    <span className="text-stone-300 dark:text-stone-600">·</span>
-                    <button type="button" onClick={() => handlePeriodChange("always")}
-                      className={`text-xs uppercase tracking-widest transition-colors ${period === "always" ? "text-stone-900 dark:text-stone-100 font-medium" : "text-stone-500 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300"}`}>
-                      Always
-                    </button>
+                  <div className="mt-5 mb-6 flex items-center justify-center">
+                    <SegmentedPill<Period>
+                      options={PERIOD_OPTIONS}
+                      value={period}
+                      onChange={handlePeriodChange}
+                    />
                   </div>
 
                   {/* Frequency list */}

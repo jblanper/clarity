@@ -33,8 +33,8 @@ The filled GitHub-green squares introduce gamification signals that contradict C
 - Follow the Jest pattern used in `lib/storage.test.ts` (no describe wrapper needed for a single function).
 
 **Validation steps:**
-- [ ] `lib/habits.test.ts` exists and contains at least one `it()` or `test()` block named for `createEmptyEntry`
-- [ ] `npm test` passes with the new file included
+- [x] `lib/habits.test.ts` exists and contains at least one `it()` or `test()` block named for `createEmptyEntry`
+- [x] `npm test` passes with the new file included
 
 **Definition of done:** `createEmptyEntry` has a passing unit test in `lib/habits.test.ts`.
 
@@ -56,9 +56,9 @@ The filled GitHub-green squares introduce gamification signals that contradict C
 - No other changes.
 
 **Validation steps:**
-- [ ] Grep `FrequencyList.tsx` for `* 38` — must return no results
-- [ ] Grep `FrequencyList.tsx` for `h-0.5` — must return no results
-- [ ] `npm run lint` passes
+- [x] Grep `FrequencyList.tsx` for `* 38` — must return no results
+- [x] Grep `FrequencyList.tsx` for `h-0.5` — must return no results
+- [x] `npm run lint` passes
 
 **Definition of done:** Frequency bars fill proportional width and render at 4px height.
 
@@ -97,10 +97,10 @@ The filled GitHub-green squares introduce gamification signals that contradict C
 - Remove the three `<button>` elements and two `<span>` dot separators entirely.
 
 **Validation steps:**
-- [ ] No `Month · 3 Months · Always` dot-button pattern remains in `HistoryView.tsx` (grep for `· 3 Months`)
-- [ ] SegmentedPill renders in the frequency section; all three options selectable
-- [ ] `handlePeriodChange` is still called on selection (not inlined into `onChange`)
-- [ ] `npm run lint && npm test` passes
+- [x] No `Month · 3 Months · Always` dot-button pattern remains in `HistoryView.tsx` (grep for `· 3 Months`)
+- [x] SegmentedPill renders in the frequency section; all three options selectable
+- [x] `handlePeriodChange` is still called on selection (not inlined into `onChange`)
+- [x] `npm run lint && npm test` passes
 
 **Definition of done:** Period selector is a SegmentedPill that calls `handlePeriodChange`, matching the SettingsView pill pattern.
 
@@ -126,9 +126,9 @@ This task is therefore a **verification task**: confirm the current implementati
 - If both conditions are met, no code change needed — the finding is already resolved.
 
 **Validation steps:**
-- [ ] When `entries` is empty (clear localStorage and reload), no Frequency toggle appears
-- [ ] When `entries` is empty, the "Your days will appear here once you start logging." message appears directly below the heatmap
-- [ ] When `entries` is non-empty, Frequency section renders normally
+- [x] When `entries` is empty (clear localStorage and reload), no Frequency toggle appears
+- [x] When `entries` is empty, the "Your days will appear here once you start logging." message appears directly below the heatmap
+- [x] When `entries` is non-empty, Frequency section renders normally
 
 **Definition of done:** Empty state shows only the heatmap + message; Frequency section is invisible with zero entries.
 
@@ -262,10 +262,10 @@ Add immediately after the closing `</AnimatePresence>` of the grid (before the f
 After the refactor, `useIsDark()` is no longer called in cell rendering. If the legend row uses static Tailwind classes only, remove `const isDark = useIsDark()` and the `useIsDark` function entirely to avoid unused-variable lint errors. Keep `useIsDark` only if used elsewhere in the component.
 
 **Validation steps:**
-- [ ] Grep `CalendarHeatmap.tsx` for `HABIT_LIGHT` — must return no results
-- [ ] Grep `CalendarHeatmap.tsx` for `computeCellColor` — must return no results
-- [ ] Grep `CalendarHeatmap.tsx` for `backgroundColor` — must return no results
-- [ ] Grep `CalendarHeatmap.tsx` for `bg-stone-200` in cell — must return no results
+- [x] Grep `CalendarHeatmap.tsx` for `HABIT_LIGHT` — must return no results
+- [x] Grep `CalendarHeatmap.tsx` for `computeCellColor` — must return no results
+- [x] Grep `CalendarHeatmap.tsx` for `backgroundColor` — must return no results
+- [x] Grep `CalendarHeatmap.tsx` for `bg-stone-200` in cell — must return no results
 - [ ] Cells render as date numbers only; no filled square backgrounds
 - [ ] A day with all habits done shows `font-bold` number; a day with no habits shows `font-light`
 - [ ] A day with joy or moments shows amber text
@@ -275,7 +275,7 @@ After the refactor, `useIsDark()` is no longer called in cell rendering. If the 
 - [ ] Month heading shows year when year row is hidden: e.g. "March 2026"
 - [ ] Year row appears once threshold is met: `entries.length >= 7 && spans more than one calendar year`
 - [ ] Legend row renders below the grid with three labelled sample numbers
-- [ ] `npm run lint && npm test && npm run build` passes clean
+- [x] `npm run lint && npm test && npm run build` passes clean
 
 **Definition of done:** CalendarHeatmap renders a typographic date-as-weight calendar with amber joy signal, inline year when appropriate, and a legend row. No filled cell backgrounds remain.
 

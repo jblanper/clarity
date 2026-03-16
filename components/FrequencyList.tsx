@@ -130,7 +130,7 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
           <ul>
           {items.map((item) => {
             const isActive = !!activeFilter && activeFilter.id === item.id;
-            const barWidth = `${Math.round((item.count / maxCount) * 38)}%`;
+            const barWidth = `${Math.round((item.count / maxCount) * 100)}%`;
             return (
               <li key={item.id}>
                 <button
@@ -150,7 +150,7 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
                   </span>
                   <div className="flex-1 flex flex-col justify-center">
                     <span>{item.label}</span>
-                    <div className="mt-1.5 h-0.5 w-full rounded-full">
+                    <div className="mt-1.5 h-1 w-full rounded-full">
                       {/* Bar grows from 0 on first render; animates to new width on period change */}
                       <m.div
                         className={`h-full rounded-full ${
