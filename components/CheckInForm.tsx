@@ -504,6 +504,17 @@ export default function CheckInForm({ date }: Props) {
             : (isEditMode ? "Save" : "Capture")}
       </button>
 
+      {!isEditMode && (
+        <div className="mt-6 flex justify-center">
+          <Link
+            href="/help"
+            className="inline-flex min-h-[44px] items-center text-xs uppercase tracking-widest text-stone-500 dark:text-stone-600 transition-colors hover:text-stone-700 dark:hover:text-stone-400"
+          >
+            How Clarity works
+          </Link>
+        </div>
+      )}
+
     </form>
   );
 }
