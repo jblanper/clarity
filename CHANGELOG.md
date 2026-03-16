@@ -1,5 +1,27 @@
 # Changelog
 
+## [v2.5.1] — 2026-03-16
+
+### Features
+- ManageView: action tray card with pill buttons (Edit / Archive) per habit row
+- ManageView: `+ New` chip and archived disclosure toggles (habits & moments)
+- ManageView: resting habit row redesign with full-row tap target
+
+### Fixes
+- ManageView: SegmentedPill WCAG AA contrast on stone-100 background
+- ManageView: height animation jump on inline form enter (INLINE_FORM_SHELL pattern)
+- ManageView: animate moment edit card close and disabled chip state
+- ManageView: tray/edit AnimatePresence `mode="wait"` to prevent counter-animations
+- Settings: copy polish and touch target improvements
+
+### Docs
+- Calma spec: INLINE_FORM_SHELL pattern and `AnimatePresence mode="wait"` documented
+- CLAUDE.md: height-jump fix token and mutually exclusive animated states token
+- Audit docs refreshed; public calma-design-language.html synced
+- Sprint-13 e2e spec added
+
+---
+
 ## [v2.5.0] — 2026-03-15
 
 ### Features
