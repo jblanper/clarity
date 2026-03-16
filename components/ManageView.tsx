@@ -60,8 +60,9 @@ const SAVE_BTN =
 const CANCEL_BTN =
   "text-xs text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors";
 
-const INLINE_FORM =
-  "rounded-2xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/50 px-4 py-4 space-y-3";
+// Padding lives on an inner div, not the animated m.div, so Framer Motion measures height correctly.
+const INLINE_FORM_SHELL =
+  "rounded-2xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/50";
 
 const FIELD_LABEL = "mb-1 block text-xs text-stone-500 dark:text-stone-400";
 
@@ -266,33 +267,35 @@ export default function ManageView() {
           <AnimatePresence initial={false}>
             {addHabit?.stage === "type" && (
               <m.div
-                className="mb-3 space-y-2"
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
+                className={`mb-3 ${INLINE_FORM_SHELL}`}
+                initial={{ height: 0, opacity: 0, marginBottom: 0 }}
+                animate={{ height: "auto", opacity: 1, marginBottom: 12 }}
                 exit={{ height: 0, opacity: 0, marginBottom: 0 }}
                 transition={{ duration: 0.22, ease: "easeOut" }}
                 style={{ overflow: "hidden" }}
               >
-                <p className="text-xs text-stone-500 dark:text-stone-400">What kind of habit?</p>
-                <div className="flex gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setAddHabit({ stage: "form-boolean", label: "", joyByDefault: false })}
-                    className={TYPE_BTN}
-                  >
-                    Yes / No
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setAddHabit({ stage: "form-numeric", label: "", unit: "", step: 1 })}
-                    className={TYPE_BTN}
-                  >
-                    Number
+                <div className="px-4 py-4 space-y-3">
+                  <p className="text-xs text-stone-500 dark:text-stone-400">What kind of habit?</p>
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setAddHabit({ stage: "form-boolean", label: "", joyByDefault: false })}
+                      className={TYPE_BTN}
+                    >
+                      Yes / No
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAddHabit({ stage: "form-numeric", label: "", unit: "", step: 1 })}
+                      className={TYPE_BTN}
+                    >
+                      Number
+                    </button>
+                  </div>
+                  <button type="button" onClick={() => setAddHabit(null)} className={CANCEL_BTN}>
+                    Cancel
                   </button>
                 </div>
-                <button type="button" onClick={() => setAddHabit(null)} className={CANCEL_BTN}>
-                  Cancel
-                </button>
               </m.div>
             )}
           </AnimatePresence>
@@ -300,13 +303,14 @@ export default function ManageView() {
           <AnimatePresence initial={false}>
           {(addHabit?.stage === "form-boolean" || addHabit?.stage === "form-numeric") && (
             <m.div
-              className={`mb-3 ${INLINE_FORM}`}
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0 }}
+              className={`mb-3 ${INLINE_FORM_SHELL}`}
+              initial={{ height: 0, opacity: 0, marginBottom: 0 }}
+              animate={{ height: "auto", opacity: 1, marginBottom: 12 }}
+              exit={{ height: 0, opacity: 0, marginBottom: 0 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
               style={{ overflow: "hidden" }}
             >
+            <div className="px-4 py-4 space-y-3">
               <div>
                 <label className={FIELD_LABEL}>Label</label>
                 <input
@@ -396,6 +400,7 @@ export default function ManageView() {
                   Cancel
                 </button>
               </div>
+            </div>
             </m.div>
           )}
           </AnimatePresence>
@@ -432,47 +437,44 @@ export default function ManageView() {
                 <span className="ml-auto text-stone-400 dark:text-stone-600 text-xs leading-none select-none">···</span>
               </button>
 
-              {/* Action tray */}
-              <AnimatePresence initial={false}>
-                {actionTrayId === h.id && !editingHabit && (
+              {/* Action tray / Inline edit form — single AnimatePresence prevents simultaneous counter-animations */}
+              <AnimatePresence initial={false} mode="wait">
+                {actionTrayId === h.id && !editingHabit ? (
                   <m.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0, paddingTop: 0, paddingBottom: 0, marginBottom: 0 }}
-                    transition={{
-                      height: { duration: 0.22, ease: "easeOut" },
-                      opacity: { duration: 0.15, ease: "easeOut", delay: 0.07 },
-                    }}
+                    key="tray"
+                    initial={{ height: 0, opacity: 0, marginBottom: 0 }}
+                    animate={{ height: "auto", opacity: 1, marginBottom: 8 }}
+                    exit={{ height: 0, opacity: 0, marginBottom: 0 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
                     style={{ overflow: "hidden" }}
-                    className="mb-2 rounded-2xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/50 px-4 py-3 flex gap-3 flex-wrap"
+                    className="mb-2 rounded-2xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/50"
                   >
-                    <button type="button" onClick={() => startEditHabit(h)} className={TRAY_JOY_BTN}>Edit</button>
-                    <button type="button" onClick={() => archiveHabit(h.id)} className={TRAY_ARCHIVE_BTN}>Archive</button>
-                    {h.type === "boolean" && (
-                      <button
-                        type="button"
-                        onClick={() => toggleJoyByDefault(h.id)}
-                        className={h.joyByDefault ? TRAY_JOY_ON_BTN : TRAY_JOY_BTN}
-                      >
-                        <BlossomIcon filled={h.joyByDefault} size={14} />
-                        Joy
-                      </button>
-                    )}
+                    <div className="px-4 py-3 flex gap-3 flex-wrap">
+                      <button type="button" onClick={() => startEditHabit(h)} className={TRAY_JOY_BTN}>Edit</button>
+                      <button type="button" onClick={() => archiveHabit(h.id)} className={TRAY_ARCHIVE_BTN}>Archive</button>
+                      {h.type === "boolean" && (
+                        <button
+                          type="button"
+                          onClick={() => toggleJoyByDefault(h.id)}
+                          className={h.joyByDefault ? TRAY_JOY_ON_BTN : TRAY_JOY_BTN}
+                        >
+                          <BlossomIcon filled={h.joyByDefault} size={14} />
+                          Joy
+                        </button>
+                      )}
+                    </div>
                   </m.div>
-                )}
-              </AnimatePresence>
-
-              {/* Inline edit form */}
-              <AnimatePresence initial={false}>
-                {editingHabit?.id === h.id && (
+                ) : editingHabit?.id === h.id ? (
                   <m.div
-                    className={INLINE_FORM}
+                    key="edit-form"
+                    className={INLINE_FORM_SHELL}
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0 }}
+                    exit={{ height: 0, opacity: 0, marginBottom: 0 }}
                     transition={{ duration: 0.22, ease: "easeOut" }}
                     style={{ overflow: "hidden" }}
                   >
+                    <div className="px-4 py-4 space-y-3">
                     <div>
                       <label className={FIELD_LABEL}>Label</label>
                       <input
@@ -540,8 +542,9 @@ export default function ManageView() {
                         Cancel
                       </button>
                     </div>
+                    </div>
                   </m.div>
-                )}
+                ) : null}
               </AnimatePresence>
             </div>
           ))}
@@ -607,32 +610,82 @@ export default function ManageView() {
             </h2>
           </div>
 
-          {/* Active tags — chip grid */}
+          {/* Active tags — chip grid; editing chip is replaced inline by the edit card */}
           <div className="flex flex-wrap gap-2 py-2">
-            {activeTags.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                onClick={() => {
-                  if (editingMomentId === t.id) {
-                    setEditingMomentId(null);
-                    setEditingMomentLabel("");
-                  } else {
+            {activeTags.map((t) =>
+              editingMomentId === t.id ? (
+                <m.div
+                  key={t.id}
+                  className={`w-full ${INLINE_FORM_SHELL}`}
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  style={{ overflow: "hidden" }}
+                >
+                  <div className="px-4 py-4 space-y-3">
+                  <div>
+                    <label className={FIELD_LABEL}>Label</label>
+                    <input
+                      type="text"
+                      value={editingMomentLabel}
+                      onChange={(e) => setEditingMomentLabel(e.target.value)}
+                      className={TEXT_INPUT}
+                      autoFocus
+                    />
+                  </div>
+                  <div className="flex items-center gap-3 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (editingMomentLabel.trim()) {
+                          applyConfigs({
+                            ...configs,
+                            moments: configs.moments.map((m) =>
+                              m.id === editingMomentId ? { ...m, label: editingMomentLabel.trim() } : m
+                            ),
+                          });
+                        }
+                        setEditingMomentId(null);
+                        setEditingMomentLabel("");
+                      }}
+                      disabled={!editingMomentLabel.trim()}
+                      className={SAVE_BTN}
+                    >
+                      Save
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setEditingMomentId(null); setEditingMomentLabel(""); }}
+                      className={CANCEL_BTN}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => editingMomentId && archiveMoment(editingMomentId)}
+                      className={`ml-auto ${TERTIARY_AMBER_BTN}`}
+                    >
+                      Archive
+                    </button>
+                  </div>
+                  </div>
+                </m.div>
+              ) : (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => {
                     closeAllEditors();
                     setEditingMomentId(t.id);
                     setEditingMomentLabel(t.label);
-                  }
-                }}
-                className={`min-h-[44px] flex items-center rounded-full border px-4 py-2 text-sm transition-colors ${
-                  editingMomentId === t.id
-                    ? "border-stone-300 dark:border-stone-600 bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-100"
-                    : "border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800"
-                }`}
-              >
-                {t.label}
-              </button>
-            ))}
-            {editingMomentId === null && !addingTag && (
+                  }}
+                  className="min-h-[44px] flex items-center rounded-full border border-stone-200 dark:border-stone-700 px-4 py-2 text-sm text-stone-700 dark:text-stone-300 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800"
+                >
+                  {t.label}
+                </button>
+              )
+            )}
+            {!addingTag && (
               <button
                 type="button"
                 onClick={() => { closeAllEditors(); setAddingTag(true); }}
@@ -643,106 +696,48 @@ export default function ManageView() {
             )}
           </div>
 
-          {/* Inline moment edit form */}
-          <AnimatePresence initial={false}>
-          {editingMomentId !== null && (
-            <m.div
-              className={`mt-3 ${INLINE_FORM}`}
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0, marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0 }}
-              transition={{ duration: 0.22, ease: "easeOut" }}
-              style={{ overflow: "hidden" }}
-            >
-              <div>
-                <label className={FIELD_LABEL}>Label</label>
-                <input
-                  type="text"
-                  value={editingMomentLabel}
-                  onChange={(e) => setEditingMomentLabel(e.target.value)}
-                  className={TEXT_INPUT}
-                  autoFocus
-                />
-              </div>
-              <div className="flex items-center gap-3 pt-1">
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (editingMomentLabel.trim()) {
-                      applyConfigs({
-                        ...configs,
-                        moments: configs.moments.map((m) =>
-                          m.id === editingMomentId ? { ...m, label: editingMomentLabel.trim() } : m
-                        ),
-                      });
-                    }
-                    setEditingMomentId(null);
-                    setEditingMomentLabel("");
-                  }}
-                  disabled={!editingMomentLabel.trim()}
-                  className={SAVE_BTN}
-                >
-                  Save
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setEditingMomentId(null); setEditingMomentLabel(""); }}
-                  className={CANCEL_BTN}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={() => editingMomentId && archiveMoment(editingMomentId)}
-                  className={`ml-auto ${TERTIARY_AMBER_BTN}`}
-                >
-                  Archive
-                </button>
-              </div>
-            </m.div>
-          )}
-          </AnimatePresence>
-
           {/* Add moment form — rendered above the archived section */}
           <AnimatePresence initial={false}>
           {addingTag && (
             <m.div
-              className={`mt-3 ${INLINE_FORM}`}
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0, marginTop: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0 }}
+              className={`mt-3 ${INLINE_FORM_SHELL}`}
+              initial={{ height: 0, opacity: 0, marginTop: 0 }}
+              animate={{ height: "auto", opacity: 1, marginTop: 12 }}
+              exit={{ height: 0, opacity: 0, marginTop: 0, marginBottom: 0 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
               style={{ overflow: "hidden" }}
             >
-              <div>
-                <label className={FIELD_LABEL}>Label</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Long walk"
-                  value={newTagLabel}
-                  onChange={(e) => setNewTagLabel(e.target.value)}
-                  className={TEXT_INPUT}
-                />
-              </div>
-              <div className="flex gap-3 pt-1">
-                <button
-                  type="button"
-                  onClick={saveNewTag}
-                  disabled={!newTagLabel.trim()}
-                  className={SAVE_BTN}
-                >
-                  Add
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAddingTag(false);
-                    setNewTagLabel("");
-                  }}
-                  className={CANCEL_BTN}
-                >
-                  Cancel
-                </button>
+              <div className="px-4 py-4 space-y-3">
+                <div>
+                  <label className={FIELD_LABEL}>Label</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Long walk"
+                    value={newTagLabel}
+                    onChange={(e) => setNewTagLabel(e.target.value)}
+                    className={TEXT_INPUT}
+                  />
+                </div>
+                <div className="flex gap-3 pt-1">
+                  <button
+                    type="button"
+                    onClick={saveNewTag}
+                    disabled={!newTagLabel.trim()}
+                    className={SAVE_BTN}
+                  >
+                    Add
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAddingTag(false);
+                      setNewTagLabel("");
+                    }}
+                    className={CANCEL_BTN}
+                  >
+                    Cancel
+                  </button>
+                </div>
               </div>
             </m.div>
           )}
