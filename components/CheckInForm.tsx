@@ -111,7 +111,6 @@ export default function CheckInForm({ date }: Props) {
   // Initialise with DEFAULT_CONFIGS (stable reference) so configs === DEFAULT_CONFIGS
   // on first render; after setConfigs(getConfigs()) the reference changes.
   const [configs, setConfigs] = useState<AppConfigs>(DEFAULT_CONFIGS);
-
   useEffect(() => {
     startTransition(() => setConfigs(getConfigs()));
   }, []);
@@ -148,6 +147,8 @@ export default function CheckInForm({ date }: Props) {
   const archivedMomentsWithData = isEditMode
     ? configs.moments.filter((m) => m.archived && fields.moments.includes(m.id))
     : [];
+
+  const doneHabits = activeBoolean.filter((h) => fields.habits[h.id]?.done);
 
   const setHabit = (id: string, state: HabitState) => {
     setFields((prev) => ({
@@ -419,19 +420,16 @@ export default function CheckInForm({ date }: Props) {
       </section>
 
       {/* ── Joy ───────────────────────────────────────────────────── */}
-      {(() => {
-        const doneHabits = activeBoolean.filter((h) => fields.habits[h.id]?.done);
-        return (
-          <AnimatePresence initial={false}>
-            {doneHabits.length > 0 && (
-              <m.section
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0, marginBottom: 0 }}
-                transition={{ duration: 0.28, ease: "easeOut" }}
-                style={{ overflow: "hidden" }}
-                className="mb-10"
-              >
+      <AnimatePresence initial={false}>
+        {doneHabits.length > 0 && (
+          <m.section
+            initial={false}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0, marginBottom: 0 }}
+            transition={{ duration: 0.28, ease: "easeOut" }}
+            style={{ overflow: "hidden" }}
+            className="mb-10"
+          >
                 <h2 className="mb-3 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
                   Highlights
                 </h2>
@@ -465,11 +463,9 @@ export default function CheckInForm({ date }: Props) {
                     })}
                   </AnimatePresence>
                 </div>
-              </m.section>
-            )}
-          </AnimatePresence>
-        );
-      })()}
+          </m.section>
+        )}
+      </AnimatePresence>
 
       {/* ── Reflection ─────────────────────────────────────────────── */}
       <section className="mb-10">

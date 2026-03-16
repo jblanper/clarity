@@ -26,7 +26,7 @@ export default function HabitToggle({ label, value, joyByDefault, onChange }: Pr
       aria-checked={value.done}
       aria-label={label}
       onClick={handleToggle}
-      className={`w-full flex items-center gap-3 min-h-[44px] py-3 rounded-xl px-2 -mx-2 transition-colors active:opacity-70 ${
+      className={`w-full flex items-center gap-3 min-h-[44px] py-3 rounded-xl px-2 -mx-2 transition-[background-color] duration-150 active:opacity-70 ${
         value.done ? "bg-amber-50 dark:bg-amber-900/15" : ""
       }`}
     >
