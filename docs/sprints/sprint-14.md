@@ -1,7 +1,7 @@
 # Sprint 14 — Typographic Calendar & History Polish
 
 **Dates:** 2026-03-16 – (TBD)
-**Status:** active
+**Status:** completed
 **Release:** v2.6.0 (minor — visual overhaul of core calendar feature, new SegmentedPill in history, legend row)
 
 ---
@@ -461,4 +461,24 @@ None — sprint-09 period selector WCAG test passes trivially (buttons now insid
 
 ## Retrospective
 
-<!-- To be filled in after the sprint using /sprint-retro -->
+**Date:** 2026-03-17
+
+### What went well
+
+- Pre-brief open questions resolved upfront (H2 year-row threshold, filter opacity behaviour) — implementation proceeded without ambiguity
+- Mid-sprint arch audit caught the Joy section enter animation regression before deploy
+- Two unplanned tasks (Help page update, "How Clarity works" link) absorbed cleanly — sprint scope was light enough to handle them
+- Validation phase caught the `text-stone-400` ManageView chip contrast regression — a pre-existing issue that would have shipped otherwise
+- 62 e2e tests, zero failures on first run
+
+### What was harder than expected
+
+- BottomNav jump on iOS Safari: root cause (`mode="wait"` AnimatePresence gap → DOM collapse → fixed-element repaint) was non-obvious; first fix attempt (wrong `min-h` value) was a reasonable intuition that failed; `mode="popLayout"` was the non-obvious solution. The bug was a runtime consequence of H1, not in scope at brief time.
+
+### Process improvements for next sprint
+
+- **Create a `/debug` skill** — structures a debug session into: reproduce → isolate → fix → document (root cause, what was tried, what worked, lessons learnt / post-mortem). Would have saved time on the BottomNav bug and preserved the institutional knowledge more explicitly.
+
+### Planning accuracy
+
+Scope and task ordering were accurate; the brief's H6 → H3 → H4 → H2 → H1 sequence was well-judged, and batching H1+H2 in a single CalendarHeatmap pass was efficient. Slack in the sprint allowed two quick-win mid-sprint additions without pressure.
