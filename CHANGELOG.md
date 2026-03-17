@@ -1,5 +1,30 @@
 # Changelog
 
+## [v2.6.0] — 2026-03-17
+
+### Features
+- **Typographic calendar** — filled-cell heatmap replaced with date-as-weight encoding; font weight encodes habit completion (ghost → light → normal → semibold → bold); amber text signals any joy or moment logged that day
+- **Calendar legend row** — three labelled sample numbers ("no activity / active / joy") render below the grid, teaching the encoding inline
+- **Conditional year row** — year navigation hidden for fresh accounts (fewer than 7 entries or single calendar year); year inlined into the month heading ("March 2026") when row is absent
+- **SegmentedPill period selector** — Month · 3 Months · Always dot-button pattern replaced with the enclosed SegmentedPill component, matching the Settings pill pattern
+- **Help discoverability link** — quiet "How Clarity works" link below the Capture button on Today for first-time users
+
+### Fixes
+- CalendarHeatmap: `mode="popLayout"` eliminates BottomNav layout jump on month change (iOS Safari)
+- CalendarHeatmap: `border-color` flash below Journaling on navigation eliminated
+- CheckInForm: Joy section enter animation restored (`initial={{ height: 0, opacity: 0 }}` on `m.section`)
+- ManageView: `+ New` chip contrast raised to `text-stone-600` (WCAG AA)
+- ManageView: moment chip edit-state contrast raised from `text-stone-400` to `text-stone-600` on `bg-stone-100` (WCAG AA)
+- FrequencyList: bar width scale corrected to proportional 100% (was capped at 38%); bar track height raised to 4px
+- HistoryView: empty-state message repositioned immediately below heatmap; Frequency section suppressed when no entries exist
+
+### Docs
+- Help page updated for typographic calendar encoding; numeric habits and import/reset documented
+- Sprint-14 e2e spec added (62 tests)
+- Audit docs refreshed (colour, typography, interaction, arch)
+
+---
+
 ## [v2.5.1] — 2026-03-16
 
 ### Features
