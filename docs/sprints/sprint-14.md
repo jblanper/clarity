@@ -412,21 +412,21 @@ None — sprint-09 period selector WCAG test passes trivially (buttons now insid
 **Note:** Tailwind v4 uses oklch color format; `getComputedStyle().color` does not return `rgb(...)` strings. Color assertions use class-name checks (`span.getAttribute("class")` contains `"amber"`) instead of computed style values.
 
 ### Manual checklist
-- [ ] Animations feel smooth on enter and exit
-- [ ] Dark mode: no invisible text, no layout shifts on History page
-- [ ] Mobile (390px): no horizontal overflow, touch targets reachable, calendar cells fully visible
-- [ ] Reduced motion: enable in OS settings, verify calendar slide animation is suppressed
-- [ ] Nav — open Settings from Today → back → lands on Today; open Settings from History → back → lands on History
-- [ ] CalendarHeatmap: a day with all habits done shows clearly bolder date number vs a day with no habits
-- [ ] CalendarHeatmap: a day with joy or moments shows amber text (visually distinct from stone text)
-- [ ] CalendarHeatmap: legend row "no activity / active / joy" displays correctly in both light and dark mode
-- [ ] CalendarHeatmap: year row hidden on a fresh account; shows "March 2026" in heading (month + year)
-- [ ] CalendarHeatmap: filter active — tapping a FrequencyList row dims non-matching days to 25% opacity
-- [ ] FrequencyList: bars fill full proportional width (top item reaches container edge)
-- [ ] FrequencyList: bar track height visibly thicker than before (4px)
-- [ ] HistoryView: SegmentedPill period selector matches SettingsView pill pattern (same visual style)
-- [ ] Help page: "Looking back" describes typographic encoding correctly; no reference to cool/warm tone blends
-- [ ] Today: "How Clarity works" link visible below Capture button; absent in edit mode; navigates to Help
+- [x] Animations feel smooth on enter and exit
+- [x] Dark mode: no invisible text, no layout shifts on History page
+- [x] Mobile (390px): no horizontal overflow, touch targets reachable, calendar cells fully visible
+- [x] Reduced motion: enable in OS settings, verify calendar slide animation is suppressed
+- [x] Nav — open Settings from Today → back → lands on Today; open Settings from History → back → lands on History
+- [x] CalendarHeatmap: a day with all habits done shows clearly bolder date number vs a day with no habits
+- [x] CalendarHeatmap: a day with joy or moments shows amber text (visually distinct from stone text)
+- [x] CalendarHeatmap: legend row "no activity / active / joy" displays correctly in both light and dark mode
+- [x] CalendarHeatmap: year row hidden on a fresh account; shows "March 2026" in heading (month + year)
+- [x] CalendarHeatmap: filter active — tapping a FrequencyList row dims non-matching days to 25% opacity
+- [x] FrequencyList: bars fill full proportional width (top item reaches container edge)
+- [x] FrequencyList: bar track height visibly thicker than before (4px)
+- [x] HistoryView: SegmentedPill period selector matches SettingsView pill pattern (same visual style)
+- [x] Help page: "Looking back" describes typographic encoding correctly; no reference to cool/warm tone blends
+- [x] Today: "How Clarity works" link visible below Capture button; absent in edit mode; navigates to Help
 
 ---
 
