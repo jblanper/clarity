@@ -1,191 +1,110 @@
 # Microcopy & Tone Audit
 
-Generated: 2026-03-15 (Sprint 13 validation)
+Generated: 2026-03-17 11:07
 
-Archive note: Pre-sprint baseline (Sprint 12): 0 high · 0 medium · 2 low. Sprint 13 resolved 0 lows and introduced 0 new findings. Net unchanged at 0 medium · 2 low.
-
-Audited files: `CheckInForm.tsx`, `SettingsView.tsx`, `ManageView.tsx`, `HelpView.tsx`, `DayDetail.tsx`, `HistoryView.tsx`, `FrequencyList.tsx`, `BottomNav.tsx`, `CalendarHeatmap.tsx`, `lib/transferData.ts`, `app/layout.tsx`.
-
-Sprint 12 context: Task 1 ManageView carry-forward (placeholder "Optional" fix). Task 4 SettingsView Your Data restyle — BACKUP/RESTORE sub-labels, new copy (Save a copy, Choose a file, Import another file, Keep my data). Task 5 Reset flow — "Start fresh" resting button, "Yes, start fresh" / "Keep my data" confirmation copy. Tasks 7–9 ManageView redesign — "Habits"/"Moments" section headers, joy toggle labels, "What kind of habit?" copy.
+Audited files: `components/CheckInForm.tsx`, `components/DayDetail.tsx`, `components/ManageView.tsx`, `components/SettingsView.tsx`, `components/HelpView.tsx`, `components/FrequencyList.tsx`, `components/CalendarHeatmap.tsx`, `components/HistoryView.tsx`, `components/BottomNav.tsx`, `components/HabitToggle.tsx`, `components/NumberStepper.tsx`, `components/MomentChip.tsx`, `app/page.tsx`, `app/history/page.tsx`, `app/edit/page.tsx`, `lib/transferData.ts`
 
 ---
 
-## 1. Tone Violations
+## 1. Tone violations
 
 ### Technical language
 
-**None found.** ✅
-
-No format names, internal filenames, database metaphors, or unexplained technical terms in new copy. ✅
-
-"What kind of habit?" prompt (ManageView:420) — "Yes / No" and "Number" as type pickers. "Yes / No" is human and clear. "Number" is plain language — acceptable. ✅
+| Location | Current copy | Issue |
+|---|---|---|
+| `ManageView.tsx` L353 | Field label `Increment` | "Increment" is a developer term. A user configuring a numeric habit thinks about how much the value changes per tap, not an "increment". Medium severity. |
+| `ManageView.tsx` L366–367 | Field label `Start at · [unit]` | "Start at" with no helper text gives no actionable context for new users. The concept of a first-tap jump value is not self-evident from the label alone. Low severity. |
 
 ### Vague / generic
 
-**None found.** ✅
-
-Error messages remain specific and actionable. ✅
+| Location | Current copy | Issue |
+|---|---|---|
+| `SettingsView.tsx` L84 | `"Something went wrong. Please try again."` | Classic generic error — directly violates the Calma spec example. This is the catch-all fallback when `err` is not an `Error` instance. The code path exists and could surface to users in unexpected error conditions. Medium severity. |
+| `CheckInForm.tsx` L191 | `"Please enter a name."` | Mildly imperative. Functional but cold. Low severity. |
+| `CheckInForm.tsx` L198 | `"A moment with that name already exists."` | Technically correct but clinical. Low severity. |
 
 ### Accusatory or guilt-inducing
 
-**None found.** All empty states remain inviting. ✅
+No accusatory copy found. All empty states are correctly inviting:
+
+- `DayDetail.tsx` L166: "Nothing here yet" — correct
+- `HistoryView.tsx` L97: "Your days will appear here once you start logging." — correct
+- `FrequencyList.tsx` L110: "Nothing logged in this period" — correct
 
 ### Exclamation marks / ALL CAPS
 
-BACKUP and RESTORE sub-labels in SettingsView (lines 172, 192) use CSS uppercase via `uppercase` class with string-level "BACKUP"/"RESTORE" text. The `uppercase` class applies CSS `text-transform: uppercase`, not literal caps. However, the actual JSX text nodes also contain "BACKUP" and "RESTORE" in all-caps directly. Strictly, CLAUDE.md says "Uses ALL CAPS outside the `tracking-widest` section label pattern" is a violation. These strings **are** within a `tracking-widest` sub-label context (matching the section-label pattern). This is analogous to the nav section labels that use `uppercase` CSS. **Acceptable** — the rendered visual is equivalent to `uppercase` CSS, and the context (sub-section header) is appropriate for this display pattern.
+| Location | Current copy | Issue |
+|---|---|---|
+| `SettingsView.tsx` L172 | `<p ...>BACKUP</p>` | ALL CAPS in raw source markup inside a plain `<p>` tag. Every other section label in the codebase uses sentence-case source copy and relies on CSS `text-transform: uppercase` via the `uppercase` class. These two strings are the only instances of literal ALL CAPS in JSX text content. High severity. |
+| `SettingsView.tsx` L192 | `<p ...>RESTORE</p>` | Same violation — ALL CAPS literal text in a `<p>` tag. High severity. |
 
-No exclamation marks found anywhere. ✅
+No exclamation marks found anywhere in the codebase.
 
 ---
 
-## 2. Sprint 12 Copy Changes
+## 2. Flat or functional phrasing (lower severity)
 
-### SettingsView Your Data section
-
-| Element | New copy | Assessment |
+| Location | Current copy | Suggested direction |
 |---|---|---|
-| BACKUP sub-label | `"BACKUP"` | Sub-section header — matches section-label register ✅ |
-| Backup description | `"Keep a copy of your entries on your device."` | Plain, human, action-focused. Improved over previous "Download a backup of all your entries." ✅ |
-| Export button | `"Save a copy"` | Specific and plain. Previous "Export backup" was slightly technical. ✅ |
-| RESTORE sub-label | `"RESTORE"` | Sub-section header ✅ |
-| Restore description | `"Load a backup file. Days you've already logged won't change."` | Excellent — plain language, reassuring note about existing data. ✅ |
-| Idle import button | `"Choose a file"` | Clear and simple ✅ |
-| Import another file button | `"Restore another file"` | ✅ Sprint 13 S3: renamed for consistency with the confirm button |
-| Try again button | `"Try again"` | Clear ✅ |
+| `ManageView.tsx` L277 | `"What kind of habit?"` | Acceptable. Slightly transactional; "What should this habit track?" would add more context, but current version is not a violation. |
+| `ManageView.tsx` L353 | `Increment` field label | "Each tap adds" or "Step size" would be more discoverable for a non-technical user. |
+| `ManageView.tsx` L366 | `Start at · [unit]` | A placeholder such as "Optional — first tap jumps here" would clarify the field's purpose. Currently has `placeholder="Optional"` which tells the user nothing about the concept. |
+| `CheckInForm.tsx` L191 | `"Please enter a name."` | "A name is needed to add this moment." — warmer and more specific. |
+| `CheckInForm.tsx` L198 | `"A moment with that name already exists."` | "You already have a moment called that." — more conversational. |
 
-### SettingsView Reset section
-
-| Element | New copy | Assessment |
-|---|---|---|
-| Resting button | `"Start fresh"` | Warm, non-threatening framing for a destructive action ✅ |
-| Warning copy | `"Your entries will be removed and habits reset to defaults."` | Clear and direct. Sprint brief called for more specific copy but current version is unambiguous. Slightly softer than planned "permanently delete … cannot be undone" — acceptable given Calma's calm register. **Low** — could be more explicit about permanence. |
-| Confirm button | `"Yes, start fresh"` | Consistent with the resting button label — single phrase echoed. ✅ |
-| Cancel button | `"Keep my data"` | Positive framing for the cancel path — excellent. More inviting than "Cancel." ✅ |
-
-### ManageView section headers (B1)
-
-| Element | Copy | Assessment |
-|---|---|---|
-| Habits section header | `"Habits"` | ✅ Clear, consistent with existing app vocabulary. |
-| Moments section header | `"Moments"` | ✅ |
-| `+ New` button (Habits) | `"+ New"` | ✅ Concise, action-oriented. |
-| `+ New` button (Moments) | `"+ New"` | ✅ |
-
-### ManageView action tray (B2 → Sprint 13 M4/M5)
-
-| Element | Copy | Assessment |
-|---|---|---|
-| Edit action | `"Edit"` | ✅ Direct |
-| Archive action | `"Archive"` | ✅ Direct; amber pill border signals reversibility |
-| Joy button | `"Joy"` | ✅ Single label; state communicated by fill/border, not text. Sprint 13 M5 intentionally simplified from "Mark joy"/"Unmark joy". |
-
-### ManageView B3 Moments chip editing
-
-| Element | Copy | Assessment |
-|---|---|---|
-| Save inline edit | `"Save"` | ✅ |
-| Cancel inline edit | `"Cancel"` | ✅ |
-| Archive from editing | `"Archive"` | ✅ |
-
-### ManageView B4 Joy pill
-
-| Element | Copy | Assessment |
-|---|---|---|
-| Joy pill label | `"Joy"` | ✅ Single word, clear semantic meaning |
-
-### ManageView type picker (form-boolean/numeric)
-
-| Element | Copy | Assessment |
-|---|---|---|
-| Type prompt | `"What kind of habit?"` | ✅ Conversational, direct |
-| Boolean option | `"Yes / No"` | ✅ Intuitive phrasing |
-| Numeric option | `"Number"` | ✅ Plain language |
-| Joy by default label | `"Joy by default"` | ✅ Matches vocabulary used elsewhere |
-| Joy on state | `"Brings joy by default"` | ✅ |
-| Joy off state | `"Joy is marked separately"` | ✅ |
+Items that are working well and need no change:
+- `CheckInForm.tsx` reflection placeholder: "Anything about today worth remembering?" — evocative and open
+- `CheckInForm.tsx` new moment placeholder: "e.g. Morning light" — human and evocative
+- `ManageView.tsx` habit label placeholders: "e.g. Stretching" / "e.g. Running" — good examples
+- `ManageView.tsx` unit placeholder: "e.g. km, pages, cups" — useful range of examples
+- `ManageView.tsx` moment add placeholder: "e.g. Long walk" — good
+- `SettingsView.tsx` restore description: "Load a backup file. Days you've already logged won't change." — reassuring and specific
+- `SettingsView.tsx` success message: `"{n} days added."` / `"{n} days were already in your history and weren't changed."` — clear
+- `ManageView.tsx` archive confirmation: "Archived. Past entries are preserved." — calm and reassuring
 
 ---
 
-## 3. Carry-forward Fixes
+## 3. Save / confirmation copy
 
-### ManageView Start at placeholder (Task 1)
+**Pass.** The save flow in `CheckInForm.tsx` correctly implements all three states:
 
-| Location | Before | After | Assessment |
-|---|---|---|---|
-| ManageView inline-edit Start at | `placeholder="0"` | `placeholder="Optional"` | ✅ Resolved — both instances (edit form and add form) fixed |
-
-Sprint 11 audit had flagged both Start at placeholder instances as low-severity (suggested "Optional"). Both are now resolved. ✅
-
----
-
-## 4. Empty State Audit
-
-| Location | Current copy | Assessment |
+| State | New entry | Edit mode |
 |---|---|---|
-| `DayDetail.tsx:166` | "Nothing here yet" | ✅ |
-| `FrequencyList.tsx:110–112` | "Nothing logged in this period" | ✅ |
-| `HistoryView.tsx:88–92` | "Your days will appear here once you start logging." | ✅ |
+| Idle | `"Capture"` | `"Save"` |
+| In-progress | `"Capturing…"` | `"Saving…"` |
+| Confirmed | `"Day captured"` | `"Saved"` |
+
+All states match the Calma spec example table exactly. No modal, no celebration, no urgency. The confirmed state uses a muted stone background. Fully compliant.
 
 ---
 
-## 5. Confirmation and Feedback Messages
+## Suggested rewrites
 
-| Location | Current copy | Assessment |
-|---|---|---|
-| `CheckInForm.tsx:503` | `"Day captured"` (new entry) | ✅ |
-| `CheckInForm.tsx:503` | `"Saved"` (edit mode) | ✅ |
-| `CheckInForm.tsx:501` | `"Capturing…"` / `"Saving…"` | ✅ |
-| `ManageView.tsx:403,640` | `"Archived. Past entries are preserved."` | ✅ |
-| `SettingsView.tsx:247–253` | `"{n} days added."` / `"{n} days were already in your history and weren't changed."` | ✅ |
-
----
-
-## 6. Error Message Audit
-
-All errors: calm, specific, tells the user what to do next.
-
-| Location | Current copy | Assessment |
-|---|---|---|
-| `transferData.ts` | Import error messages | ✅ Unchanged |
-| `SettingsView.tsx:185` | `"Couldn't download the backup — try again."` | ✅ |
-| `CheckInForm.tsx:190` | `"Please enter a name."` | Low — functional but cold (pre-existing carry-forward) |
-| `CheckInForm.tsx:197` | `"A moment with that name already exists."` | Low — clinical (pre-existing carry-forward) |
-
----
-
-## 7. Placeholder Text
-
-| Location | Current copy | Assessment |
-|---|---|---|
-| `CheckInForm.tsx:484` | `"Anything about today worth remembering?"` | ✅ |
-| `CheckInForm.tsx:394` | `"e.g. Morning light"` | ✅ |
-| `ManageView.tsx:458` | `"e.g. Stretching"` / `"e.g. Running"` | ✅ |
-| `ManageView.tsx:487` | `"e.g. km, pages, cups"` | ✅ |
-| `ManageView.tsx:662` | `"e.g. Long walk"` | ✅ |
-| `ManageView.tsx:355,515` | `placeholder="Optional"` (Start at fields) | ✅ **Fixed in Sprint 12 Task 1** |
-
----
-
-## 8. Consistency Check
-
-All terminology consistent. "Habits", "Moments", "Archive", "Restore", "Reflection", "Highlights", "Start fresh", "Joy" are used consistently across surfaces. ✅
-
-"Keep my data" as the reset cancel is new vocabulary — not used elsewhere, but contextually clear and unambiguous. ✅
-
----
-
-## Suggested rewrites for remaining low-severity items
+For every high-severity and medium-severity finding, a suggested replacement:
 
 | Location | Current | Suggested |
 |---|---|---|
-| `CheckInForm.tsx:190` | "Please enter a name." | "Give this moment a name." |
-| `CheckInForm.tsx:197` | "A moment with that name already exists." | "You've already got a moment called that." |
-| `SettingsView.tsx:301` | "Your entries will be removed and habits reset to defaults." | "This will permanently remove all your entries and reset habits to defaults. This can't be undone." |
+| `SettingsView.tsx` L172 | `BACKUP` (literal ALL CAPS in `<p>` source) | Change to `Backup` in source — CSS `uppercase` class handles the visual rendering. Matches the pattern of every other section label in the app. |
+| `SettingsView.tsx` L192 | `RESTORE` (literal ALL CAPS in `<p>` source) | Change to `Restore` in source — same fix. |
+| `SettingsView.tsx` L84 | `"Something went wrong. Please try again."` | `"That didn't work — try a different file."` — specific, calm, tells the user what to try next. |
+| `ManageView.tsx` L353 | `Increment` field label | `"Step"` with a helper note, or `"Each tap adds"` — avoids developer terminology. |
 
 ---
 
 ## Summary
 
-**0 high · 0 medium · 2 low**
+2 high · 2 medium · 5 low
 
-Sprint 13 new copy: Joy button simplified to single "Joy" label (M5) — state via visual affordance, no two-label variant. "Restore another file" replaces "Import another file" (S3) — consistent with confirm button copy. Archived disclosure "Archived (n)" toggle, archived confirmation note "Archived. Past entries are preserved." — calm, factual, consistent with existing tone. `+ New` chip in moments grid — consistent with Habits header. All new copy passes Calma tone review. No new findings. Two pre-existing lows carry forward (CheckInForm inline validation copy).
+**High (2):**
+- `BACKUP` and `RESTORE` labels in `SettingsView.tsx` L172 and L192 are ALL CAPS in raw JSX source text inside `<p>` tags, violating the Calma rule "no all-caps except the section label pattern". Every other section label in the codebase uses sentence-case source copy and relies on CSS `text-transform: uppercase`. These two strings are the sole inconsistency and should use `Backup` / `Restore` in source.
+
+**Medium (2):**
+- Generic fallback error `"Something went wrong. Please try again."` in `SettingsView.tsx` L84 — a code path that could surface to users in unexpected conditions.
+- `Increment` field label in `ManageView.tsx` L353 — developer terminology exposed to users configuring habits.
+
+**Low (5):**
+- `Start at · [unit]` field label has no helper context about the first-tap jump behaviour
+- `"Please enter a name."` moment add validation — mildly imperative
+- `"A moment with that name already exists."` — functional but clinical
+- `What kind of habit?` type picker intro — slightly transactional
+- `Start at` placeholder `"Optional"` tells the user nothing about the concept
