@@ -430,6 +430,35 @@ None — sprint-09 period selector WCAG test passes trivially (buttons now insid
 
 ---
 
+## Validation
+
+**Date:** 2026-03-17
+
+### Audit results
+
+| Audit | Before | After | Fixed | Regressions |
+|---|---|---|---|---|
+| colour | 1 finding (0 crit · 1 low) | 2 findings (1 crit · 1 low) | 0 | 1 (ManageView:628 `text-stone-400` on `bg-stone-100` — WCAG AA fail) |
+| typography | 5 findings (0 crit · 5 low) | 5 findings (0 crit · 5 low) | 0 | 0 |
+| interaction | 10 findings (1 med · 9 low) | 9 findings (1 med · 8 low) | 1 (period selector Low resolved by SegmentedPill) | 0 |
+
+### Remaining findings
+
+- Colour Low (L1): CalendarHeatmap day-of-week dark variant `dark:text-stone-600` (expected `dark:text-stone-500`) — pre-existing, deferred.
+- Typography Low (L1–L5): archived disclosure touch targets, CalendarHeatmap year row text size, SettingsView spacing, DayDetail numeric font-medium, NumberStepper text-sm — all pre-existing, deferred.
+- Interaction Medium (1): Two-step hover jump not documented in Calma spec — docs-only, low urgency, deferred.
+- Interaction Low (L1–L8): keyboard, aria, chevron, opacity, transition-colors polish items — all pre-existing, deferred.
+
+### Regressions
+
+**1 regression — must fix before `/deploy`:**
+
+| Severity | File | Line | Issue | Fix |
+|---|---|---|---|---|
+| Critical | `ManageView.tsx` | 628 | Moment chip editing state: `text-stone-400` on `bg-stone-100` — contrast ≈ 2.9:1, fails WCAG AA (4.5:1 required) | Change `text-stone-400` → `text-stone-600` |
+
+---
+
 ## Retrospective
 
 <!-- To be filled in after the sprint using /sprint-retro -->

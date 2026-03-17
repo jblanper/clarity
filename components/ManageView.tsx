@@ -625,7 +625,7 @@ export default function ManageView() {
                   }}
                   className={`min-h-[44px] flex items-center rounded-full border px-4 py-2 text-sm transition-colors ${
                     isEditing
-                      ? "border-stone-200 dark:border-stone-700 bg-stone-100 dark:bg-stone-800 text-stone-400 dark:text-stone-600 cursor-default"
+                      ? "border-stone-200 dark:border-stone-700 bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-600 cursor-default"
                       : "border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800"
                   }`}
                 >

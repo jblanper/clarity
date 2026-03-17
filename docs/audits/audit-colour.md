@@ -2,9 +2,11 @@
 
 Audited: all files in `components/`, `app/`, `app/globals.css`.
 Reference: `docs/calma-design-language.md`.
-Generated: 2026-03-15 (Sprint 13 validation)
+Generated: 2026-03-17 10:42
 
-Archive note: Pre-sprint snapshot preserved as `docs/audits/archive/audit-colour-2026-03-14.md` (Sprint 12 baseline). The current `docs/audits/audit-colour.md` as of Sprint 12 validation also serves as the before-state (0 critical · 0 high · 2 medium · 2 low).
+Archive note: Pre-sprint snapshot preserved as `docs/audits/archive/audit-colour-2026-03-17.md`. Sprint 13 baseline: 0 critical · 0 high · 0 medium · 1 low.
+
+Sprint 14 context: CalendarHeatmap refactored to typographic date-as-weight calendar (font weight + amber). FrequencyList bar refinement. SegmentedPill period selector in HistoryView. Conditional year row.
 
 ---
 
@@ -18,100 +20,89 @@ Stone-400 (`#a8a29e`) fails WCAG AA on the light background (≈2.4:1, minimum 4
 
 ### 1b. Light-mode violations — dark pairing present, base still fails
 
-**None found.** ✅
+| Component | Line | Current value | Context | Severity |
+|---|---|---|---|---|
+| `ManageView.tsx` | 628 | `bg-stone-100 text-stone-400 dark:text-stone-600` | Moment chip in editing state (selected/disabled appearance) | **Critical** |
 
-Sprint 13 Task 1 fixed the SegmentedPill inactive-segment contrast issue: `text-stone-500` → `text-stone-600 dark:text-stone-400`. stone-600 (#57534e) on stone-100 (#f5f5f4) ≈ 5.9:1 — passes AA. ✅
+`text-stone-400` (#a8a29e) on `bg-stone-100` (#f5f5f4): contrast ≈ 2.9:1 — fails WCAG AA (4.5:1 required). Per CLAUDE.md: on elevated backgrounds (`bg-stone-100`), `text-stone-500` also fails — use `text-stone-600` minimum.
 
-The `···` affordance in ManageView habit rows uses `text-stone-400 dark:text-stone-600`. This is a purely decorative, non-text chrome element conveying no semantic state — exempted from WCAG AA per non-text contrast rules. ✅
+**Fix:** `text-stone-400` → `text-stone-600` at line 628.
+
+### Permitted stone-400 uses
+
+| Component | Line | Value | Reason |
+|---|---|---|---|
+| `ManageView.tsx` | 436 | `text-stone-400 dark:text-stone-600` | `···` tap affordance — decorative non-text element, exempt from 4.5:1 text contrast ✅ |
+| Various constants | — | `placeholder:text-stone-400` | Placeholder text — input placeholders exempt ✅ |
+| All constants | — | `dark:text-stone-400` | Dark-mode only variant ✅ |
 
 ---
 
-## 2. Sprint 13 colour token changes
-
-### SegmentedPill.tsx — Task 1 fix (line 25)
-
-| Token | Usage | Role | Contrast / Assessment |
-|---|---|---|---|
-| `text-stone-600 dark:text-stone-400` | Inactive segment | Unselected option | stone-600 (#57534e) on stone-100 (#f5f5f4) ≈ 5.9:1 ✅ **Passes AA** (was stone-500 ≈ 3.7:1 — Medium finding resolved) |
-
-### SettingsView.tsx — Task 2 fix (line 307)
-
-| Token | Usage | Role | Contrast / Assessment |
-|---|---|---|---|
-| `text-red-700 dark:text-red-400` | "Yes, start fresh" destructive confirm | Destructive action | red-700 (#b91c1c) on white ≈ 5.9:1 ✅; dark: red-400 on dark bg ✅ — correct per CLAUDE.md error colour spec |
-
-### ManageView.tsx — Task 3/4/5 additions
-
-| Token | Usage | Role | Contrast / Assessment |
-|---|---|---|---|
-| `···` `text-stone-400 dark:text-stone-600` | Decorative affordance glyph | Non-text chrome | Decorative — exempt from 4.5:1 text contrast. ✅ |
-| `bg-stone-50 dark:bg-stone-800/50` | Active row wash | Background | Background only ✅ |
-| `font-medium text-stone-800 dark:text-stone-100` | Active row label | Primary label | stone-800 on stone-50 ≈ 12:1 ✅ |
-| `TRAY_ARCHIVE_BTN`: `border-amber-300 text-amber-700 dark:border-amber-700/50 dark:text-amber-400` | Archive pill | Cautionary action | amber-700 (#b45309) on white ≈ 4.5:1 ✅; dark: amber-400 ✅ |
-| `TRAY_JOY_BTN`: `border-stone-200 text-stone-600 dark:border-stone-700 dark:text-stone-400` | Joy pill (off) | Neutral action | stone-600 on white ≈ 5.9:1 ✅; dark: stone-400 on dark bg — `dark:text-stone-400` only as dark variant ✅ |
-| `TRAY_JOY_ON_BTN`: `bg-amber-100 border-amber-300 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400` | Joy pill (on) | Active state | amber-700 on amber-100 ≈ 5.5:1 ✅; dark: amber-400 ✅ |
-| Archived disclosure toggle: `text-stone-500 dark:text-stone-400` | "Archived (n)" toggle | Low-hierarchy button | stone-500 on white ≈ 4.6:1 ✅ (just passes AA) |
-| `+ New` chip: `text-stone-500 dark:text-stone-500` | Moments `+ New` chip | Action | stone-500 on white ≈ 4.6:1 ✅ (just passes AA) |
-
----
-
-## 3. Colour-role hierarchy violations
-
-### Correct usages
-
-All page titles use `text-stone-800 dark:text-stone-200` consistently. ✅
-
-App card rows use `text-stone-700 dark:text-stone-300` for label text. ✅
-
-Section labels all use `text-stone-500 dark:text-stone-500` consistently. ✅
-
-Amber tokens: joy pill in ManageView, TRAY_ARCHIVE_BTN, Reset button — all within designated amber roles. ✅
-
-Red used exclusively for destructive confirm button ("Yes, start fresh") and error messages. ✅
-
-### Pre-existing carry-forward divergences
+## 2. Colour-role hierarchy violations
 
 | Component | Line | Current value | Role | Expected | Severity |
 |---|---|---|---|---|---|
-| CalendarHeatmap.tsx | ~300 | `text-stone-500 dark:text-stone-600` (day-of-week labels) | Metadata | `dark:text-stone-500` — wrong direction in dark | **Low** (pre-existing) |
+| `ManageView.tsx` | 628 | `text-stone-400` on `bg-stone-100` | Dimmed chip state | `text-stone-600` | **Critical** (same as §1b) |
+
+All other colour-role assignments are correct: page titles `text-stone-800 dark:text-stone-200` ✅, body labels `text-stone-700` ✅, section labels `text-stone-500` ✅, nav links `text-stone-600` ✅, errors `text-red-700 dark:text-red-400` ✅.
 
 ---
 
-## 4. Dark mode completeness
+## 3. Sprint 14 new colours — dark mode completeness
 
-### Sprint 13 resolutions
+All new Sprint 14 colour tokens have correct dark variants:
 
-SettingsView BACKUP/RESTORE sub-labels (lines 172, 192): now have `dark:text-stone-500` ✅. Both Medium findings from Sprint 12 resolved.
+| Token | Usage | Dark variant | Status |
+|---|---|---|---|
+| `text-amber-600` | Calendar amber (joy/moments) | `dark:text-amber-400` | ✅ |
+| `text-stone-300` | Calendar ghost day | `dark:text-stone-700` | ✅ |
+| `text-stone-700` | Calendar active day | `dark:text-stone-300` | ✅ |
+| `bg-stone-100` | Selected day circle | `dark:bg-stone-800` | ✅ |
+| Legend sample glyphs | font-light/bold on stone/amber | All have dark variants | ✅ |
 
-### Sprint 13 new tokens — dark mode check
+---
 
-All new ManageView tokens have correct dark variants. ✅
+## 4. Sprint 14 refactor validation
 
-All new SettingsView token changes have correct dark variants. ✅
+**CalendarHeatmap (typographic date-as-weight):**
+- Ghost days: `text-stone-300 dark:text-stone-700` — stone-300 on white ≈ 2.1:1 intentional (ghost/faded state for days with no data). ✅ by design
+- Active days: `text-stone-700 dark:text-stone-300` — stone-700 on white ≈ 8.9:1 ✅
+- Amber days: `text-amber-600 dark:text-amber-400` — amber-600 on white ≈ 3.3:1 — **note:** amber-600 is below 4.5:1 threshold on white. However, this is used exclusively for date numbers in the calendar grid (large, decorative data channel), consistent with the prior heatmap palette treatment. Carried forward as an accepted design decision (same as previous sprint baseline).
+- Selected day circle: `bg-stone-100 dark:bg-stone-800` behind date number — non-text background ✅
+- Future days: `opacity-30` on top of ghost weight — purely decorative ✅
+- Two-axis HSL blend fully removed ✅
 
-### Carry-forward
+**FrequencyList bar colours:** unchanged from Sprint 13 — `bg-stone-300 dark:bg-stone-600` / `bg-amber-400 dark:bg-amber-500` ✅
 
-None remaining from Sprint 12 medium list. ✅
+**SegmentedPill period selector (HistoryView):** inactive `text-stone-600 dark:text-stone-400` on `bg-stone-100` ≈ 5.9:1 ✅ (carries the Sprint 13 fix forward correctly)
 
 ---
 
 ## 5. Non-stone accent colours
 
-No violations found. Amber and red are used in their designated roles only. ✅
+No violations found. Amber confined to joy/moments, archive actions, and reset buttons per spec. Red used only for destructive actions and error messages. ✅
+
+---
+
+## Carry-forward from Sprint 13
+
+| ID | Component | Line | Issue | Severity |
+|---|---|---|---|---|
+| L1 | `CalendarHeatmap.tsx` | day-of-week row | `text-stone-500 dark:text-stone-600` — dark variant uses `stone-600` instead of expected `stone-500` | **Low** (pre-existing) |
 
 ---
 
 ## Summary
 
-**0 critical · 0 high · 0 medium · 1 low**
+**1 critical · 0 high · 0 medium · 1 low**
 
 Severity key: **Critical** = WCAG AA failure · **High** = spec contradiction · **Medium** = missing detail · **Low** = minor inconsistency
 
-| Severity | Count | Primary locations |
+| Severity | Count | Location |
 |---|---|---|
-| Critical | 0 | — |
+| Critical | 1 | ManageView.tsx:628 — moment chip edit state `text-stone-400` on `bg-stone-100` (≈2.9:1) — **regression, must fix before deploy** |
 | High | 0 | — |
-| Medium | 0 | ✅ Sprint 12 mediums resolved: SegmentedPill inactive contrast (Task 1), SettingsView BACKUP/RESTORE dark variants |
+| Medium | 0 | — |
 | Low | 1 | CalendarHeatmap day-of-week dark variant (pre-existing) |
 
-**Sprint 13 impact:** SegmentedPill inactive contrast medium resolved (Task 1). SettingsView BACKUP/RESTORE dark variant mediums resolved (already present in code from Sprint 12, but confirmed correct). Net: 2 medium → 0 medium, 1 low carry-forward from pre-existing CalendarHeatmap finding.
+**Sprint 14 regression:** ManageView moment chip editing state uses `text-stone-400` on `bg-stone-100`. This violates WCAG AA. Fix: `text-stone-400` → `text-stone-600` at ManageView.tsx:628.

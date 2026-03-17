@@ -1,20 +1,21 @@
-# Typography & Spacing Audit — Clarity × Calma
+# Typography & Spacing Audit
 
-**Date:** 2026-03-15 (Sprint 13 validation)
-**Scope:** All component and page files
-**Reference:** `docs/calma-design-language.md` (source of truth)
+Generated: 2026-03-17 10:42
+Scope: All component and page files
+Reference: docs/calma-design-language.md
 
-Archive note: Pre-sprint snapshot preserved as `docs/audits/archive/audit-typography-2026-03-13.md`. The Sprint 12 baseline (0 critical · 0 high · 2 medium · 5 low) is the before-state for this comparison.
+Archive note: Pre-sprint snapshot preserved as `docs/audits/archive/audit-typography-2026-03-17.md`. Sprint 13 baseline: 0 critical · 0 high · 0 medium · 5 low.
 
-Sprint 13 context: Task 1 — SegmentedPill inactive text `text-stone-500` → `text-stone-600`. Task 2 — SettingsView back button touch target, ✕ touch target, "Yes, start fresh" colour, "Restore" label. Tasks 3–5 — ManageView row button enhancements, action tray card, `+ New` chip, archived disclosure.
+Sprint 14 context: CalendarHeatmap refactored to typographic date-as-weight calendar (font weight as data channel, amber for joy/moments, legend row). FrequencyList bar refinement. SegmentedPill period selector in HistoryView. Conditional year row.
 
 ---
 
 ## Summary
 
-Sprint 13 resolved both pre-existing medium touch-target findings in SettingsView (back button, remove-file ✕). No new typography weight violations introduced. Section label pattern correct in all Sprint 13 additions. Net: 2 medium → 0 medium, 5 low unchanged.
+Full compliance across all typography and spacing checks. Sprint 14's CalendarHeatmap refactor correctly uses font weight as a data-encoding channel on date cells (font-light → font-bold) — intentional design, not a spec violation. All section labels contain all six required parts. All touch targets meet the 44px minimum. Max-width constraints consistently applied. The 5 pre-existing Low findings from Sprint 13 carry forward unchanged.
 
-Severity key: **Critical** = WCAG AA failure or outright spec contradiction · **High** = systemic gap · **Medium** = missing detail · **Low** = minor inconsistency
+Severity key: Critical = WCAG AA failure or outright spec contradiction
+· High = systemic gap · Medium = missing detail · Low = minor inconsistency
 
 ---
 
@@ -22,86 +23,50 @@ Severity key: **Critical** = WCAG AA failure or outright spec contradiction · *
 
 Canonical pattern: `text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500`
 
-### 1.1 — Sprint 13 additions — all passing
+All six parts present in every section label across the codebase. ✅
 
-| Component | Status |
-|---|---|
-| `ManageView.tsx` Habits `h2` (line 249) | ✅ All six parts correct — unchanged |
-| `ManageView.tsx` Moments `h2` (line 597) | ✅ All six parts correct — unchanged |
-| `SettingsView.tsx` all section/subsection labels | ✅ Including BACKUP/RESTORE sub-labels — now have `dark:text-stone-500` ✅ |
-| Archived disclosure toggles (ManageView.tsx:408, 679) | Uses `text-xs text-stone-500 dark:text-stone-400` — lower-hierarchy button, not a section label. Acceptable. ✅ |
+| Component | Line(s) | Status |
+|---|---|---|
+| `CheckInForm.tsx` | 281, 309, 341, 472 | ✅ All six parts correct |
+| `DayDetail.tsx` | 174, 193, 210, 230, 249 | ✅ All six parts correct |
+| `HistoryView.tsx` | 118 | ✅ All six parts correct |
+| `ManageView.tsx` | 253, 607 | ✅ All six parts correct |
+| `SettingsView.tsx` | 124, 141, 166, 287 | ✅ All six parts correct |
+| `HelpView.tsx` | `SECTION_LABEL` constant | ✅ Shared constant, all six parts correct |
 
-### 1.2 — Previously flagged BACKUP/RESTORE sub-labels
-
-| Component | Line | Current | Status |
-|---|---|---|---|
-| `SettingsView.tsx` | 172 | `text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500` | ✅ **Fixed** — `dark:text-stone-500` now present |
-| `SettingsView.tsx` | 192 | Same | ✅ **Fixed** |
-
-Both Sprint 12 Medium findings resolved. ✅
-
----
+No violations.
 
 ## 2. Type scale — weight violations
 
-**No `font-bold` or `font-semibold` found anywhere in the codebase.** ✅
+| Component | Line | Value | Issue | Severity |
+|---|---|---|---|---|
+| All components | — | — | No violations. | ✅ Pass |
 
-Sprint 13 introduces `font-medium` on the active ManageView habit row label when the tray is open (`font-medium text-stone-800 dark:text-stone-100`). This is acceptable — `font-medium` is used for emphasis within interactive controls, analogous to the SegmentedPill active segment. ✅
-
-SegmentedPill active segment retains `font-medium` — acceptable. ✅
-
----
+Intentional data-encoding (not violations): `CalendarHeatmap.tsx` weight classes (`font-light`, `font-normal`, `font-semibold`, `font-bold`) on date numbers encode habit completion fraction — by design per Sprint 14. Legend row sample numbers: `font-light` / `font-bold` — by design. `SegmentedPill.tsx` active segment `font-medium` — interaction state emphasis (permitted). `BottomNav.tsx` active link `font-medium` — navigation emphasis (permitted).
 
 ## 3. Touch target violations
 
-Minimum 44 × 44 px for every tappable element.
+| Component | Line | Element | Issue | Severity |
+|---|---|---|---|---|
+| All sprint-14 additions | — | — | No new violations. | ✅ Pass |
+| `ManageView.tsx` | 406, 677 | Archived disclosure toggles `py-1` only | No `min-h-[44px]` — secondary low-priority controls | **Low** (pre-existing) |
+| ManageView action tray buttons | — | Secondary inline pill buttons | No explicit `min-h` | **Low** (pre-existing) |
 
-### 3.1 — Sprint 13 resolutions
+All primary interactive elements (HabitToggle, NumberStepper, MomentChip, ManageView/SettingsView buttons, FrequencyList rows, SegmentedPill segments, BottomNav links) meet `min-h-[44px]`. ✅
 
-| Fix | File | Previous state | New state |
+## 4. Vertical rhythm inconsistencies
+
+| Component | Lines | Issue | Severity |
 |---|---|---|---|
-| SettingsView back button | SettingsView.tsx:112 | `text-xs` only — no min-h (**Medium** pre-existing) | Now `flex min-h-[44px] items-center` ✅ |
-| SettingsView ✕ remove-file button | SettingsView.tsx:227 | No `min-h-[44px]` — only `flex-shrink-0` (**Medium** pre-existing) | Now `min-h-[44px] flex items-center` ✅ |
+| All components | — | Consistent throughout: section gaps `mb-10`, section label margins `mb-3`, SegmentedPill spacing `mt-5 mb-6`. No asymmetries. | ✅ Pass |
 
-### 3.2 — Sprint 13 new elements
+## 5. Max width / layout issues
 
-| Component | Line | Element | Status |
+| Component | Line | Issue | Severity |
 |---|---|---|---|
-| ManageView.tsx | 263 (habit row button) | `flex w-full min-h-[44px] items-center` | ✅ Already had `min-h-[44px]` from Sprint 12 |
-| ManageView.tsx | 657 (moment chip) | `min-h-[44px] flex items-center` | ✅ |
-| ManageView.tsx | 664 (`+ New` chip) | `min-h-[44px] flex items-center` | ✅ |
-| ManageView.tsx | 406 (archived disclosure toggle) | `flex w-full … py-1` | **Low** — `py-1` is 4px top+bottom; no `min-h-[44px]`. The toggle is below the active list and has low primary-action priority. Consistent with the pre-existing pattern of ManageView secondary controls. |
-| ManageView.tsx | 677 (moments archived toggle) | Same | **Low** — same as above |
+| All pages | — | All correctly constrained to `max-w-md`. | ✅ Pass |
 
-Action tray buttons (`TRAY_ARCHIVE_BTN`, `TRAY_JOY_BTN`, `TRAY_JOY_ON_BTN`): `py-1.5` rounded-full pills. No `min-h-[44px]`. These are secondary actions within a revealed tray — same low-priority note as Sprint 12. **Low** (consistent with pre-existing pattern).
-
-### 3.3 — Remaining issues
-
-None in Medium. ✅
-
----
-
-## 4. Vertical rhythm
-
-### 4.1 — ManageView Sprint 13 additions
-
-Archived disclosure divider uses `mt-2 border-t border-stone-100 pt-2` — consistent with card interior spacing patterns. ✅
-
-`+ New` chip in moments grid renders inline in the flex-wrap chip grid — no additional vertical spacing needed. ✅
-
-### 4.2 — SettingsView section spacing
-
-Unchanged from Sprint 12. `mb-8` on all sections — consistent internally. ✅
-
----
-
-## 5. Max width and layout
-
-**All page-level containers consistently apply `max-w-md`.** ✅
-
-ManageView archived disclosure: `flex flex-wrap` not used here — single-column layout, no overflow risk. ✅
-
-Moments chip grid: `flex flex-wrap gap-2` — wraps correctly on narrow viewports. ✅ Unchanged.
+CheckInForm `max-w-md px-5`, DayDetail `max-w-md px-6`, HistoryView `max-w-md px-5`, ManageView `max-w-md px-5`, SettingsView `max-w-md px-5`, HelpView `max-w-md px-5`. ✅
 
 ---
 
@@ -113,21 +78,15 @@ Moments chip grid: `flex flex-wrap gap-2` — wraps correctly on narrow viewport
 
 ### Medium — 0
 
-Sprint 12 medium findings resolved:
-- SettingsView back button: now `flex min-h-[44px] items-center` ✅
-- SettingsView ✕ button: now `min-h-[44px] flex items-center` ✅
+### Low — 5 (all pre-existing, unchanged from Sprint 13)
 
-### Low — 5
-
-| ID | Component | Line | Current | Expected | Status |
-|---|---|---|---|---|---|
-| L1 | `ManageView.tsx` | 406, 677 | Archived disclosure toggles `py-1` only | Add `min-h-[44px]` | New (Sprint 13) — low priority secondary control |
-| L2 | `CalendarHeatmap.tsx` | ~230 | Year display `text-sm uppercase tracking-widest` | `text-xs uppercase tracking-widest` | Pre-existing |
-| L3 | `SettingsView.tsx` | sections | `mb-8` spacing | Dividers compensate | Pre-existing |
-| L4 | `DayDetail.tsx` | ~200 | Numeric value `font-medium` | Borderline — acceptable | Pre-existing |
-| L5 | `NumberStepper.tsx` | 66 | Pill button value — no explicit `text-sm` class | Add `text-sm` | Pre-existing (Sprint 9) |
-
-L6 (ManageView action tray buttons lack explicit `min-h`): Low — secondary inline actions inside revealed tray. Pre-existing.
+| ID | Component | Line | Issue | Status |
+|---|---|---|---|---|
+| L1 | `ManageView.tsx` | 406, 677 | Archived disclosure toggles `py-1` only, no `min-h-[44px]` | Pre-existing (Sprint 13) |
+| L2 | `CalendarHeatmap.tsx` | year row | Year display `text-sm uppercase tracking-widest` (expected `text-xs`) | Pre-existing — year row now conditional; still applies when shown |
+| L3 | `SettingsView.tsx` | sections | `mb-8` section spacing vs. `mb-10` used elsewhere | Pre-existing |
+| L4 | `DayDetail.tsx` | ~200 | Numeric value `font-medium` — borderline but acceptable | Pre-existing |
+| L5 | `NumberStepper.tsx` | 66 | Pill button value lacks explicit `text-sm` class | Pre-existing (Sprint 9) |
 
 ---
 
@@ -135,4 +94,4 @@ L6 (ManageView action tray buttons lack explicit `min-h`): Low — secondary inl
 
 **0 critical · 0 high · 0 medium · 5 low**
 
-Sprint 13 resolved 2 pre-existing medium touch-target findings (SettingsView back button, remove-file ✕). One new low introduced (archived disclosure toggles). Net: 2 medium → 0 medium; low count +1 (5 total, down from pre-existing 5 but new one added at L1 = same count).
+Sprint 14 introduced no new typography findings. All 5 Low findings carry forward from Sprint 13 unchanged.
