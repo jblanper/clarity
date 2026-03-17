@@ -1,100 +1,131 @@
 # Audit Action List
 
-Generated: 2026-03-16 14:25
+Generated: 2026-03-17 11:27
 Source audits: audit-colour.md · audit-typography.md · audit-interaction.md · audit-microcopy.md · audit-design-overall.md
 
-Archived previous action list → docs/audits/archive/audit-action-list-2026-03-16.md
-
-Sprint 13 resolved all five issues from the Sprint 12 action list: SegmentedPill inactive contrast (Critical), SettingsView back button touch target (Medium), SettingsView remove-file ✕ touch target (Medium), ManageView habit row `aria-expanded` (Medium). The nav-link hover Calma-spec documentation Medium carries forward unresolved. Two findings from `audit-design-overall` (dated 2026-03-14, post-Sprint 9) remain open and are classified here for the first time.
+Archive note: Archived previous action list → `docs/audits/archive/audit-action-list-2026-03-17.md`
 
 ---
 
 ## Critical
 
-None.
+### Moment chip editing-state WCAG AA contrast failure
+
+Source: audit-colour.md · audit-design-overall.md (confirmed by 2 audits)
+File: `ManageView.tsx` (line 628)
+
+What to fix:
+The editing/selected moment chip uses `bg-stone-100 text-stone-400 dark:text-stone-600`. `text-stone-400` (#a8a29e) on `bg-stone-100` (#f5f5f4) yields ≈2.9:1 contrast — below the WCAG AA minimum of 4.5:1. Per CLAUDE.md, on elevated `bg-stone-100` backgrounds, `text-stone-500` also fails; `text-stone-600` is the minimum. Change `text-stone-400` to `text-stone-600` at line 628. The dark variant (`dark:text-stone-600`) is correct and does not need changing.
 
 ---
 
 ## High
 
-### HistoryView — empty-state message positioned after Frequency toggle
+### BACKUP / RESTORE labels use literal ALL CAPS in JSX source
 
-Source: audit-design-overall (M1 — flagged as the single most important observation)
-File: `components/HistoryView.tsx`
+Source: audit-microcopy.md
+File: `SettingsView.tsx` (lines 172, 192)
 
 What to fix:
-When `entries.length === 0`, the page currently renders: (1) all-grey calendar, (2) a Frequency toggle button, (3) the empty-state message below the toggle. A first-time user encounters a toggleable section — implying data exists — before seeing the explanation that nothing has been logged. Expanding Frequency produces a second empty message ("Nothing logged in this period") that overlaps with the first. Two changes, both in `HistoryView.tsx`: (1) suppress the Frequency section entirely when `entries.length === 0` — the toggle and its contents should not render — and (2) move the empty-state message `<p>` immediately below the heatmap so it reads as the calendar's own empty state rather than a page footer.
+The two `<p>` elements at lines 172 and 192 contain the literal strings `BACKUP` and `RESTORE` in their source text. Every other section label in the codebase uses sentence-case source copy and relies on the CSS `uppercase` class to produce the visual ALL CAPS appearance. These two strings are the sole exception. Change the source text from `BACKUP` to `Backup` and from `RESTORE` to `Restore` — the `uppercase` class already present on both elements will continue to render them as uppercase visually. No other changes are required.
+
+---
+
+### "How Clarity works" help link is positioned below the Capture button
+
+Source: audit-design-overall.md (single most important observation)
+File: `CheckInForm.tsx`
+
+What to fix:
+The help link ("How Clarity works") currently sits below the Capture button in today-mode layout, placing it below the fold on most phones. A first-time user who taps through the checklist and hits "Capture" will never see it, missing joy-marking, moments, and the reflection field&apos;s intent. Move the help link above the Capture button (or into the header alongside the Settings link) so it is visible before the primary action. The link itself is correctly styled in the quiet tertiary register — only its vertical position needs to change. Do not add the link in edit mode where it would be irrelevant.
 
 ---
 
 ## Medium
 
-### Calma spec — document nav-link two-step hover as a named exception
+### Generic fallback error copy in restore flow
 
-Source: audit-interaction · audit-design-overall (confirmed by 2 audits)
-File: `docs/calma-design-language.md`
+Source: audit-microcopy.md
+File: `SettingsView.tsx` (line 84)
 
 What to fix:
-Nav links throughout the app use `text-stone-600 hover:text-stone-800` — a two-step jump — while the Calma spec states "Color transitions are subtle — one step along the scale. No exceptions." This causes every future interaction audit to flag it as a violation. In `docs/calma-design-language.md`, under the Interaction section "States", add a named exception note: "Nav-link hover exception: navigation links start at stone-600 and jump two steps to stone-800 on hover (rather than the standard one-step rule) because the lighter starting tone requires more contrast shift to communicate the hover state clearly." No code changes required; the fix is 1–3 lines in the spec document.
+The catch-all error fallback reads `"Something went wrong. Please try again."` — a textbook generic error that the Calma spec explicitly calls out as a violation. This code path surfaces when `err` is not an `Error` instance during data restore. Change the string to `"That didn&apos;t work — try a different file."` — this is specific to the restore context, calm in register, and tells the user the one actionable next step. One line change in the catch block at line 84.
+
+---
+
+### "Increment" is developer terminology in the habit edit form
+
+Source: audit-microcopy.md
+File: `ManageView.tsx` (line 353)
+
+What to fix:
+The field label `Increment` is exposed to users configuring a numeric habit. "Increment" is a programming term — a user thinks about how much their count changes per tap, not an "increment". Change the label to `"Step"` (e.g. `Step · [unit]`), which is short, universally understood, and consistent with the numeric stepper concept. One line change at line 353.
+
+---
+
+### "By the numbers" section label breaks the noun-only rhythm
+
+Source: audit-design-overall.md
+File: `CheckInForm.tsx`
+
+What to fix:
+Every section label in the app is a single clean noun: "Habits", "Moments", "Reflection", "Highlights". "By the numbers" is a multi-word phrase and the longest label by a large margin, disrupting the quiet typographic rhythm of the form. Change it to `"Numbers"` to match the noun-only pattern. This is a one-line JSX text change in the section label for the numeric habits block in `CheckInForm.tsx`.
+
+---
+
+### "Manage" page title is a verb, not a destination noun
+
+Source: audit-design-overall.md
+File: `ManageView.tsx`
+
+What to fix:
+Every other page title names what the user sees: "Today", "History", "Settings", "Help". "Manage" names what the user does — a verb — which contradicts the Calma principle that labels should name destinations. Change the `<h1>` page title in `ManageView.tsx` to `"Habits & Moments"`, which names the page&apos;s actual contents. The Settings navigation card already reads "Habits and moments" (no change needed there), so this aligns the two. One line change to the `<h1>` in `ManageView.tsx`.
 
 ---
 
 ## Deferred
 
-Low findings and non-trivial Medium findings deferred to a polish pass:
+Low findings and non-trivial Medium findings deferred to a polish pass. One line each.
 
-### Medium — non-trivial (touches more than one file)
+**From audit-colour:**
+- `CalendarHeatmap.tsx` day-of-week row — `dark:text-stone-600` dark variant should be `dark:text-stone-500` (pre-existing) · audit-colour
 
-- `HistoryView.tsx` · `ManageView.tsx` — Page headers use `flex items-center justify-between`; CLAUDE.md specifies `flex items-start justify-between`. Swap `items-center` → `items-start` in both files. Visually harmless on single-line headers. Deferred: touches two files. — audit-design-overall M2
+**From audit-typography:**
+- `ManageView.tsx:406,677` — Archived disclosure toggles have `py-1` only, no `min-h-[44px]` (pre-existing) · audit-typography, audit-interaction
+- `CalendarHeatmap.tsx` year row — `text-sm uppercase tracking-widest` (spec calls for `text-xs`) (pre-existing, applies when year row is shown) · audit-typography
+- `SettingsView.tsx` — Uses `mb-8` section spacing; rest of app uses `mb-10` (pre-existing) · audit-typography, audit-design-overall
+- `DayDetail.tsx:~200` — Numeric habit value `font-medium` — borderline but acceptable (pre-existing) · audit-typography
+- `NumberStepper.tsx:66` — Pill button value lacks explicit `text-sm` class (pre-existing Sprint 9) · audit-typography
 
-### Low — colour
+**From audit-interaction:**
+- Medium: Two-step hover jump `stone-600 → stone-800` on nav links not documented in Calma spec — docs-only update, no code change · audit-interaction
+- `NumberStepper.tsx` — No `onKeyDown` arrow-key increment/decrement · audit-interaction
+- `NumberStepper.tsx` — No `aria-valuemax` when `max !== Infinity` · audit-interaction
+- `CalendarHeatmap.tsx` — `opacity-25` on filtered/future cells; could raise to `opacity-30` for marginally better legibility · audit-interaction
+- `FrequencyList.tsx` — `invisible` chevron used for layout spacing; should be `opacity-0` (invisible elements remain in accessibility tree) · audit-interaction
+- `BottomNav.tsx` — Inactive tabs have `transition-colors` but no hover colour — transition fires over nothing · audit-interaction
+- `SettingsView.tsx:227` — Remove-file "✕" button has `hover:text-stone-700` but no `transition-colors` · audit-interaction
+- `ManageView.tsx` exit animations — Use framework default easing rather than explicit `easeIn` · audit-interaction
 
-- `CalendarHeatmap.tsx` ~300 — Day-of-week labels use `dark:text-stone-600`; wrong direction in dark (lower contrast, not higher). Correct to `dark:text-stone-500`. Pre-existing. — audit-colour
+**From audit-microcopy:**
+- `ManageView.tsx` `Start at · [unit]` field — no helper text explaining the first-tap jump concept; placeholder says only "Optional" · audit-microcopy
+- `CheckInForm.tsx:191` — `"Please enter a name."` validation — mildly imperative · audit-microcopy
+- `CheckInForm.tsx:198` — `"A moment with that name already exists."` — functional but clinical · audit-microcopy
+- `ManageView.tsx:277` — `"What kind of habit?"` type-picker intro — slightly transactional · audit-microcopy
 
-### Low — typography & spacing
-
-- `ManageView.tsx` lines 406, 677 — Archived disclosure toggles have `py-1` only, no `min-h-[44px]`. Low-priority secondary controls below the active list. New in Sprint 13. — audit-typography · audit-interaction
-- `CalendarHeatmap.tsx` ~230 — Year display uses `text-sm uppercase tracking-widest`; should be `text-xs uppercase tracking-widest` for spec compliance. Pre-existing. — audit-typography
-- `SettingsView.tsx` sections — `mb-8` spacing throughout; internal `border-t` dividers compensate. Pre-existing. — audit-typography
-- `DayDetail.tsx` ~200 — Numeric value uses `font-medium`; borderline but acceptable for data emphasis. Pre-existing. — audit-typography
-- `NumberStepper.tsx` line 66 — Pill button value has no explicit `text-sm` class. Pre-existing. — audit-typography
-- `ManageView.tsx` action tray buttons (~line 287) — Revealed tray secondary pills have no `min-h-[44px]`. Pre-existing pattern for secondary controls inside a tray. — audit-typography
-
-### Low — interaction & motion
-
-- `BottomNav.tsx` line 34 — Inactive tabs have `transition-colors` but no hover colour target; add `hover:text-stone-700 dark:hover:text-stone-300` so the transition has something to animate. Pre-existing. Confirmed by 2 audits. — audit-interaction · audit-design-overall
-- `SettingsView.tsx` line 227 — Remove-file "✕" has `hover:text-stone-700` but no `transition-colors`. Pre-existing. — audit-interaction
-- `ManageView.tsx` lines 425, 430 — "Yes / No" and "Number" type-pickers have `hover:underline` but no `transition-colors`. Pre-existing. — audit-interaction
-- `NumberStepper.tsx` — `role="spinbutton"` has no `onKeyDown` arrow-key handler; keyboard increment/decrement not possible. Pre-existing (accepted per sprint plan). — audit-interaction
-- `NumberStepper.tsx` — `aria-valuemax` absent when `max !== Infinity`; revisit if a configurable max is introduced. Pre-existing. — audit-interaction
-- `CalendarHeatmap.tsx` ~341, ~347 — Future and filter-dimmed cells at `opacity-25`; raise to `opacity-30` (30% disabled-state floor). Pre-existing. — audit-interaction
-- `FrequencyList.tsx` ~148 — Inactive-filter chevron uses `invisible` (visibility: hidden) instead of `opacity-0`. Pre-existing. — audit-interaction
-- `ManageView.tsx` exit animations — default easing is `easeOut` for exits rather than CLAUDE.md-recommended `easeIn`; consistent with pre-existing pattern. — audit-interaction
-
-### Low — microcopy
-
-- `CheckInForm.tsx` line 190 — "Please enter a name." → suggested rewrite "Give this moment a name." Pre-existing. — audit-microcopy
-- `CheckInForm.tsx` line 197 — "A moment with that name already exists." → suggested rewrite "You&apos;ve already got a moment called that." Pre-existing. — audit-microcopy
-- `SettingsView.tsx` line 301 — Reset warning could be more explicit about permanence: "This will permanently remove all your entries and reset habits to defaults. This can&apos;t be undone." Current copy is unambiguous; suggested rewrite adds stronger permanence signal. — audit-microcopy
-
-### Low — visual consistency
-
-- `DayDetail.tsx` — Done-habit indicator is Unicode `✓` at `text-stone-500`; HabitToggle uses an amber dot for done state. Replace `✓` with a small amber dot (`h-2 w-2 rounded-full bg-amber-500`) to unify visual vocabulary between form and review surfaces. — audit-design-overall L1
-- `CheckInForm.tsx` line ~361 · `ManageView.tsx` — Add-action glyph mismatch: `＋` (fullwidth U+FF0B) in CheckInForm vs `+` (ASCII U+002B) in ManageView. Align to ASCII `+` in CheckInForm. Touches two files. — audit-design-overall L2
-- `DayDetail.tsx` · `CheckInForm.tsx` — Date format inconsistency: DayDetail heading uses European day-first with year ("25 February 2026"); Today subtitle uses US month-first without year ("February 25"). Standardise on European day-first with year across both. Touches two files. — audit-design-overall L3
+**From audit-design-overall (non-trivial Medium):**
+- `ManageView.tsx` — Moments section `+ New` chip is inside the chip grid; Habits section `+ New` is inline in the section header — asymmetric layout between two parallel sections · audit-design-overall
+- `HelpView.tsx` — Header uses `items-start`; History and Manage use `items-center` — minor alignment inconsistency across pages · audit-design-overall
+- `HelpView.tsx` — "Design language" link uses trailing `›` chevron; all back-links lead with `←` — opposite arrow convention within the same register · audit-design-overall
 
 ---
 
 ## Design intent to carry forward
 
-- The two-axis colour system (Dusk Blue for habits, Warm Ember for moments and joy) is the app's most visually distinctive design feature. Any future colour additions to the heatmap must preserve the proportional blending logic and the two-pole semantics.
-- Clarity's emotional identity — no gamification, no streaks, no progress bars — is successfully reflected end-to-end. The amber semantic weight (joy, archive, reset — all reversible, all warm) is consistent throughout. Treat this as a hard constraint when evaluating any new feature.
-- The Joy section's conditional appearance (revealed only after at least one boolean habit is marked done) makes the factual/emotional separation tangible without explanation. This pattern should inform any future conditional UI sections: the emotional question should arrive only when there is something to reflect on.
-- "Day captured" is the most affirming the app ever gets. Its restraint is the target register for any future state messaging or confirmation copy.
-- The nav-link hover pattern (`stone-600 → stone-800`, two steps darker) is intentionally codified in CLAUDE.md as a nav-specific exception to the one-step hover rule. The Medium action above adds formal documentation to the Calma spec.
-- The "Highlights" section label (renamed from "Joy" in Sprint 9) is broader and less precise. "Joy" named a specific emotional category; "Highlights" suggests a summary. The rename is unlikely to cause confusion but slightly dilutes the intentional factual/emotional split (Habits = fact, Joy = feeling). Monitor in user testing before revisiting.
-- The NumberStepper's amber pill when non-zero is consistent with the system-wide active/positive accent and does not read as a gamified score — it increments without celebration or fanfare. The framing remains observational. Preserve this register if the stepper design changes.
-- ManageView has no `border-t` divider between the Habits and Moments sections (unlike SettingsView). When the Habits list is long, the visual jump to Moments can feel abrupt. Consider adding a divider in a future structural pass if the page grows.
+- **FrequencyList analytics risk** — The sorted descending bar graph is the most dashboard-like element in the app. Current neutral stone/amber palette prevents a competitive feel. If trend lines, comparisons, or time-period breakdowns are ever added, re-evaluate against Calma&apos;s no-gamification principle before building.
+- **NumberStepper zero state** — A bare `0` in a rounded pill reads as a score waiting to be filled, which is slightly more loaded than an unchecked boolean toggle. This is inherent to the numeric habit type and not fixable without changing the component paradigm; worth naming if the emotional identity is ever revisited.
+- **Today page visual identity** — The Today page is the thinnest in terms of visual presence relative to the richer History and Settings pages. No fix is implied now, but if a future sprint addresses first-time user experience, Today is the surface most in need of a sense of occasion.
+- **Divider asymmetry (intentional)** — Settings and Help use hairline `border-b` dividers between sections; Today and Manage use spacing alone. This asymmetry is intentional — Settings/Help have thematically distinct sub-sections; the others flow continuously. Document this as a design decision rather than a violation if the Calma spec is ever formalised further.
 
 ---
 
@@ -102,7 +133,12 @@ Low findings and non-trivial Medium findings deferred to a polish pass:
 
 | # | Title | File | Severity | Source |
 |---|-------|------|----------|--------|
-| 1 | HistoryView — empty-state after Frequency toggle | `HistoryView.tsx` | High | audit-design-overall |
-| 2 | Calma spec — nav-link two-step hover exception | `calma-design-language.md` | Medium | audit-interaction · audit-design-overall |
+| 1 | Moment chip editing-state WCAG AA contrast failure | `ManageView.tsx:628` | Critical | audit-colour, audit-design-overall |
+| 2 | BACKUP / RESTORE literal ALL CAPS in JSX source | `SettingsView.tsx:172,192` | High | audit-microcopy |
+| 3 | "How Clarity works" help link below Capture button | `CheckInForm.tsx` | High | audit-design-overall |
+| 4 | Generic fallback error copy in restore flow | `SettingsView.tsx:84` | Medium | audit-microcopy |
+| 5 | "Increment" developer-terminology field label | `ManageView.tsx:353` | Medium | audit-microcopy |
+| 6 | "By the numbers" section label breaks noun rhythm | `CheckInForm.tsx` | Medium | audit-design-overall |
+| 7 | "Manage" page title is a verb, not a destination | `ManageView.tsx` | Medium | audit-design-overall |
 
-Critical: 0 · High: 1 · Medium: 1 · Deferred: 21 · Design intent notes: 8
+Critical: 1 · High: 2 · Medium: 4 · Deferred: 21 · Design intent notes: 4
