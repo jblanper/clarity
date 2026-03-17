@@ -423,7 +423,7 @@ export default function CheckInForm({ date }: Props) {
       <AnimatePresence initial={false}>
         {doneHabits.length > 0 && (
           <m.section
-            initial={false}
+            initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0, marginBottom: 0 }}
             transition={{ duration: 0.28, ease: "easeOut" }}

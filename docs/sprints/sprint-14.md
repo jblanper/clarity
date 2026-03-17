@@ -348,6 +348,88 @@ An initial attempt with `min-h-[294px]` (wrong value — should have been 344px)
 
 ---
 
+## Architecture Review
+
+**Date:** 2026-03-16
+**Diff base:** fbfb105 (Release v2.5.1)
+**Lint/tests:** pass
+
+### Findings
+
+| Severity | File | Issue | Status |
+|---|---|---|---|
+| Medium | `components/CheckInForm.tsx:426` | Joy section `initial={false}` removes enter animation. `AnimatePresence initial={false}` on the parent only suppresses entry for elements already mounted on first render; child's `initial={false}` also skips the enter animation when user toggles a habit on mid-session. Section snaps in instead of sliding from height 0. Exit animation unaffected. | **Fixed 2026-03-17** — restored `initial={{ height: 0, opacity: 0 }}` on `m.section`. |
+| Low | `components/CalendarHeatmap.tsx` | `<div className="relative overflow-hidden">` wrapper and `<AnimatePresence>` at same indent level — cosmetic only. | Deferred — no behaviour impact. |
+| Medium (carry-over) | `components/ManageView.tsx:640` | `+ New` chip `text-stone-500 hover:bg-stone-50` — just under AA on hover. | **Fixed 2026-03-17** — changed to `text-stone-600`. |
+
+### Must fix before deploy
+
+None — the Medium finding is a UX regression (enter animation lost) but does not block functionality.
+
+### Recommendations for next sprint
+
+~~- Fix Joy section enter animation: restore `initial={{ height: 0, opacity: 0 }}` on `m.section` in CheckInForm (~1 line).~~ ✓ Done.
+~~- Address carry-over Medium in ManageView: `+ New` chip `text-stone-500 hover:bg-stone-50` — just under AA on hover. Change to `text-stone-600`.~~ ✓ Done.
+
+### Plan fidelity
+
+All 7 tasks + BottomNav bug fix implemented per spec. No skipped tasks, no unplanned scope. Bug fix was documented in the sprint doc before implementation.
+
+### Architecture audit comparison
+
+| Before | After | Fixed | Regressions |
+|---|---|---|---|
+| 1 finding (1 low) | 1 finding (1 medium) | 1 (Low: createEmptyEntry test) | 0* |
+
+*The Medium carry-over (`+ New` chip, ManageView) was present before Sprint 14 and not previously recorded — not a regression.
+
+---
+
+## QA Results
+
+**Date:** 2026-03-16
+
+### Regression suite
+292 tests passed · 0 failed · 0 stale tests updated
+
+### New tests written
+- `e2e/sprint-14.spec.ts` — 31 tests (62 including mobile/desktop variants)
+  - Task 2 (H3): FrequencyList bar width and track height
+  - Task 3 (H4): SegmentedPill period selector (replaces dot-button pattern)
+  - Task 4 (H4): HistoryView empty-state (empty message, no frequency section)
+  - Task 5 (H1+H2): Typographic calendar — no filled bg, font-bold on completion, amber class on joy/moments, legend row, year row hidden for fresh accounts, month heading includes year
+  - Task 5 dark mode: cells visible, legend visible
+  - Task 6: Help page Looking back description, numeric habits mention, Your data restore/reset content
+  - Task 7: Help discoverability link on Today, absent in edit mode
+  - Mobile viewport: calendar cells, legend, help link, period pill, no horizontal overflow
+
+### Failures found
+None — all 62 new tests pass first run (after fixing wrong default UUIDs in seeds and adjusting color checks for Tailwind v4 oklch format).
+
+### Stale tests updated
+None — sprint-09 period selector WCAG test passes trivially (buttons now inside collapsed frequency section). Left as-is; behaviour is correct.
+
+**Note:** Tailwind v4 uses oklch color format; `getComputedStyle().color` does not return `rgb(...)` strings. Color assertions use class-name checks (`span.getAttribute("class")` contains `"amber"`) instead of computed style values.
+
+### Manual checklist
+- [ ] Animations feel smooth on enter and exit
+- [ ] Dark mode: no invisible text, no layout shifts on History page
+- [ ] Mobile (390px): no horizontal overflow, touch targets reachable, calendar cells fully visible
+- [ ] Reduced motion: enable in OS settings, verify calendar slide animation is suppressed
+- [ ] Nav — open Settings from Today → back → lands on Today; open Settings from History → back → lands on History
+- [ ] CalendarHeatmap: a day with all habits done shows clearly bolder date number vs a day with no habits
+- [ ] CalendarHeatmap: a day with joy or moments shows amber text (visually distinct from stone text)
+- [ ] CalendarHeatmap: legend row "no activity / active / joy" displays correctly in both light and dark mode
+- [ ] CalendarHeatmap: year row hidden on a fresh account; shows "March 2026" in heading (month + year)
+- [ ] CalendarHeatmap: filter active — tapping a FrequencyList row dims non-matching days to 25% opacity
+- [ ] FrequencyList: bars fill full proportional width (top item reaches container edge)
+- [ ] FrequencyList: bar track height visibly thicker than before (4px)
+- [ ] HistoryView: SegmentedPill period selector matches SettingsView pill pattern (same visual style)
+- [ ] Help page: "Looking back" describes typographic encoding correctly; no reference to cool/warm tone blends
+- [ ] Today: "How Clarity works" link visible below Capture button; absent in edit mode; navigates to Help
+
+---
+
 ## Retrospective
 
 <!-- To be filled in after the sprint using /sprint-retro -->

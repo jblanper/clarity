@@ -637,7 +637,7 @@ export default function ManageView() {
               <button
                 type="button"
                 onClick={() => { closeAllEditors(); setAddingTag(true); }}
-                className="min-h-[44px] flex items-center rounded-full border border-stone-200 dark:border-stone-700 px-4 py-2 text-xs text-stone-500 dark:text-stone-500 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800"
+                className="min-h-[44px] flex items-center rounded-full border border-stone-200 dark:border-stone-700 px-4 py-2 text-xs text-stone-600 dark:text-stone-500 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800"
               >
                 + New
               </button>
