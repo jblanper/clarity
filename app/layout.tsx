@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     // suppressHydrationWarning prevents React warnings when the theme script
     // adds the 'dark' class before hydration, causing a class mismatch.
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <body className={`${geistSans.variable} min-h-screen`}>
         {/* Runs before first paint to apply the saved theme without flash. */}
         <Script src="/clarity/theme-init.js" strategy="beforeInteractive" />
