@@ -18,6 +18,11 @@ will break these into implementation tasks later.]
 
 [Anything explicitly discussed and deferred.]
 
+## Audits to run
+
+[Comma-separated list, e.g. "colour, typography, interaction, microcopy, arch".
+Default: all five. Narrow only if the sprint is clearly docs/tooling-only.]
+
 ## Open questions
 
 [Anything unresolved that UX or Arch review should address.]

@@ -4,11 +4,10 @@ The Product Owner uses this guide before starting any sprint to decide how much
 planning overhead the sprint needs. Answer the questions in order — the first
 "Yes" wins and determines the tier.
 
-Run `/sprint-pre-flight` to walk this decision tree interactively and surface
-any blockers from the last sprint before planning begins. It writes
-`docs/sprints/pre-flight-report.md`, which `/sprint-brief` reads automatically —
-run pre-flight before brief, or brief will hard-stop. To decide manually,
-use the decision tree below or run `bash scripts/sprint-tier.sh`.
+Use this guide to manually determine the sprint tier before planning. Run
+`bash scripts/sprint-tier.sh` for an interactive version of the decision tree.
+`/sprint-brief` does not walk this decision tree — use it to guide your own
+judgment before or during the brief discussion.
 
 ---
 
@@ -105,9 +104,9 @@ Write `docs/sprints/sprint-NN-brief.md` directly using the template at
 ```
 
 `/sprint-post-code` respects audit scoping — it runs only the audits listed in
-the sprint doc's "Audits to run" field (populated from the pre-flight report via
-`/sprint-brief`). If that field is absent, it runs targeted audits based on what
-the sprint touched (see **Audit scoping** below).
+the sprint doc's "Audits to run" field (populated by `/sprint-brief`). If that
+field is absent, it runs targeted audits based on what the sprint touched
+(see **Audit scoping** below).
 
 To run steps individually instead:
 ```
@@ -177,7 +176,6 @@ lint + tests + build alone.
 
 ## Notes for the PO
 
-- Run `/sprint-pipeline` at any point to see where the current sprint sits in the full sequence (pre-flight → brief → plan → execute → validate → retro → deploy) and to advance to the next phase with human approval.
 - When scope comes from the audit action list, check each finding's
   severity level: clearing all High findings in one sprint is a Tier 2 sprint
   (use Tier 2 even if there are many items — they're pre-classified by the

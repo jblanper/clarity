@@ -27,21 +27,16 @@ doc (`sprint-NN.md`) that drives execution.
 **Rules:** Sprint brief and documents are owned by the Product Owner role.
 One release per sprint if possible.
 
-**Before starting any sprint:** run `/sprint-pre-flight` — it surfaces blockers,
-determines the tier, and outputs the exact skills to run. To decide manually
-instead, consult `docs/sprint-tier-guide.md` or run `bash scripts/sprint-tier.sh`.
-
-### Pre-flight
-
-| Skill | When to use |
-|---|---|
-| `/sprint-pre-flight` | Before every sprint — surfaces blockers from last retro and open audit findings, walks the tier decision tree, recommends exact skills to run. Writes `docs/sprints/pre-flight-report.md` (required by `/sprint-brief`). |
+**Before starting any sprint:** run `/sprint-brief` — it reads the last retro,
+retro reports, and audit action list; surfaces any blockers; then opens the PO
+discussion. To decide tier manually, consult `docs/sprint-tier-guide.md` or run
+`bash scripts/sprint-tier.sh`.
 
 ### Planning
 
 | Skill | Role | When to use |
 |---|---|---|
-| `/sprint-brief` | Product Owner | Start here — reads pre-flight report (hard-stop if missing or >1 day old); surfaces any blockers from the report before scoping begins (soft raise — you decide to address or defer); back-and-forth discussion, produces the brief |
+| `/sprint-brief` | Product Owner | Start here — reads last retro, retro reports, and audit action list; surfaces blockers (soft raise — you decide to address or defer); back-and-forth discussion, produces the brief |
 | `/sprint-ux` | UX/UI Designer | Reviews brief with you; flags which audits to run at validation |
 | `/sprint-arch` | Senior Architect | Reviews brief with you, technical feasibility and risks |
 | `/sprint-review` | PO mediator | Runs UX + Arch in parallel, you mediate conflicts |
@@ -76,12 +71,6 @@ instead, consult `docs/sprint-tier-guide.md` or run `bash scripts/sprint-tier.sh
 | `/update-claude-md` | End of session — review conversation and codebase, update CLAUDE.md with corrections, new patterns, gotchas, and stale rules |
 
 ### Full execution order
-
-Always start with pre-flight, then follow the path for your tier.
-
-```
-/sprint-pre-flight     ← surfaces blockers + determines tier
-```
 
 #### Tier 1 — Full pipeline
 New features, data model changes, new routes, new Calma patterns.
