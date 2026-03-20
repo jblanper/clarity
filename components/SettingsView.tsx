@@ -81,7 +81,7 @@ export default function SettingsView() {
       setImportStatus({ kind: "success", imported, skipped });
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : "Something went wrong. Please try again.";
+        err instanceof Error ? err.message : "That didn't work — try a different file.";
       setImportStatus({ kind: "error", message });
     }
     // Reset the file input so the same file can be re-selected if needed
@@ -120,7 +120,7 @@ export default function SettingsView() {
       </header>
 
       {/* ── Theme ─────────────────────────────────────────────────── */}
-      <section className="mb-8">
+      <section className="mb-10">
         <h2 className="mb-4 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Theme
         </h2>
@@ -134,10 +134,10 @@ export default function SettingsView() {
         />
       </section>
 
-      <div className="mb-8 border-t border-stone-100 dark:border-stone-800" />
+      <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
 
       {/* ── App ───────────────────────────────────────────────────── */}
-      <section className="mb-8">
+      <section className="mb-10">
         <h2 className="mb-4 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
           App
         </h2>
@@ -159,17 +159,17 @@ export default function SettingsView() {
         </div>
       </section>
 
-      <div className="mb-8 border-t border-stone-100 dark:border-stone-800" />
+      <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
 
       {/* ── Your Data ─────────────────────────────────────────────── */}
-      <section className="mb-8">
+      <section className="mb-10">
         <h2 className="mb-4 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
           Your data
         </h2>
 
         {/* Backup */}
         <div className="mb-6">
-          <p className="mb-1 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">BACKUP</p>
+          <p className="mb-1 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Backup</p>
           <p className="mb-4 text-sm text-stone-500 dark:text-stone-400">
             Keep a copy of your entries on your device.
           </p>
@@ -182,14 +182,14 @@ export default function SettingsView() {
           </button>
           {exportStatus === "error" && (
             <p className="mt-3 text-center text-sm text-red-700 dark:text-red-400">
-              Couldn&apos;t download the backup — try again.
+              Couldn&apos;t download the backup — check that downloads are allowed in your browser.
             </p>
           )}
         </div>
 
         {/* Restore */}
         <div>
-          <p className="mb-1 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">RESTORE</p>
+          <p className="mb-1 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">Restore</p>
           <p className="mb-4 text-sm text-stone-500 dark:text-stone-400">
             Load a backup file. Days you&apos;ve already logged won&apos;t change.
           </p>
@@ -224,7 +224,7 @@ export default function SettingsView() {
                   type="button"
                   onClick={resetImport}
                   aria-label="Remove selected file"
-                  className="ml-3 flex-shrink-0 min-h-[44px] flex items-center text-stone-500 dark:text-stone-500 hover:text-stone-700 dark:hover:text-stone-300"
+                  className="ml-3 flex-shrink-0 min-h-[44px] flex items-center text-stone-500 dark:text-stone-500 transition-colors hover:text-stone-700 dark:hover:text-stone-300"
                 >
                   ✕
                 </button>
@@ -249,7 +249,7 @@ export default function SettingsView() {
                 </p>
                 {importStatus.skipped > 0 && (
                   <p className="mt-1 text-stone-500 dark:text-stone-500">
-                    {importStatus.skipped} days were already in your history and weren&apos;t changed.
+                    {importStatus.skipped} already in your history — left unchanged.
                   </p>
                 )}
               </div>
@@ -280,7 +280,7 @@ export default function SettingsView() {
         </div>
       </section>
 
-      <div className="mb-8 border-t border-stone-100 dark:border-stone-800" />
+      <div className="mb-10 border-t border-stone-100 dark:border-stone-800" />
 
       {/* ── Reset ─────────────────────────────────────────────────── */}
       <section>

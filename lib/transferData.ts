@@ -119,7 +119,7 @@ export function parseImportFile(content: string): {
 
   const validEntries = parsed.entries.filter(isHabitEntry);
   if (validEntries.length === 0 && parsed.entries.length > 0) {
-    throw new Error("No recognisable entries were found in that file.");
+    throw new Error("No entries were found in that file — it may be empty or from a different app.");
   }
 
   return { entries: validEntries, configs: parsed.configs };

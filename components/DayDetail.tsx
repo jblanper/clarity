@@ -145,6 +145,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
         <div className="sticky top-0 z-10 bg-background px-5 pt-5 pb-1">
           <div className="mx-auto flex max-w-md justify-end">
             <button
+              type="button"
               onClick={handleClose}
               aria-label="Close"
               className="flex min-h-[44px] min-w-[44px] items-center justify-end text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
@@ -208,7 +209,7 @@ export default function DayDetail({ date, entry, onClose }: Props) {
               {loggedNumbers.length > 0 && (
                 <section className="mb-6">
                   <h3 className="mb-2 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
-                    By the numbers
+                    Numbers
                   </h3>
                   <div className="space-y-1">
                     {loggedNumbers.map((h) => (

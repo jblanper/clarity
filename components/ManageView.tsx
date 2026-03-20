@@ -236,7 +236,7 @@ export default function ManageView() {
       {/* ── Header ──────────────────────────────────────────────────── */}
       <header className="mb-6 flex items-center justify-between">
         <h1 className="text-xl font-light tracking-widest text-stone-800 dark:text-stone-200">
-          Manage
+          Habits &amp; Moments
         </h1>
         <Link
           href="/settings"
@@ -269,12 +269,12 @@ export default function ManageView() {
                 className={`mb-3 ${INLINE_FORM_SHELL}`}
                 initial={{ height: 0, opacity: 0, marginBottom: 0 }}
                 animate={{ height: "auto", opacity: 1, marginBottom: 12 }}
-                exit={{ height: 0, opacity: 0, marginBottom: 0 }}
+                exit={{ height: 0, opacity: 0, marginBottom: 0, transition: { duration: 0.22, ease: "easeIn" } }}
                 transition={{ duration: 0.22, ease: "easeOut" }}
                 style={{ overflow: "hidden" }}
               >
                 <div className="px-4 py-4 space-y-3">
-                  <p className="text-xs text-stone-500 dark:text-stone-400">What kind of habit?</p>
+                  <p className="text-xs text-stone-500 dark:text-stone-400">Choose a type.</p>
                   <div className="flex gap-3">
                     <button
                       type="button"
@@ -305,13 +305,13 @@ export default function ManageView() {
               className={`mb-3 ${INLINE_FORM_SHELL}`}
               initial={{ height: 0, opacity: 0, marginBottom: 0 }}
               animate={{ height: "auto", opacity: 1, marginBottom: 12 }}
-              exit={{ height: 0, opacity: 0, marginBottom: 0 }}
+              exit={{ height: 0, opacity: 0, marginBottom: 0, transition: { duration: 0.22, ease: "easeIn" } }}
               transition={{ duration: 0.22, ease: "easeOut" }}
               style={{ overflow: "hidden" }}
             >
             <div className="px-4 py-4 space-y-3">
               <div>
-                <label className={FIELD_LABEL}>Label</label>
+                <label className={FIELD_LABEL}>Name</label>
                 <input
                   type="text"
                   placeholder={addHabit.stage === "form-boolean" ? "e.g. Stretching" : "e.g. Running"}
@@ -322,7 +322,7 @@ export default function ManageView() {
               </div>
               {addHabit.stage === "form-boolean" && (
                 <div>
-                  <label className={FIELD_LABEL}>Joy by default</label>
+                  <label className={FIELD_LABEL}>Joyful by default</label>
                   <button
                     type="button"
                     onClick={() =>
@@ -350,7 +350,7 @@ export default function ManageView() {
                     />
                   </div>
                   <div>
-                    <label className={FIELD_LABEL}>Increment</label>
+                    <label className={FIELD_LABEL}>Step</label>
                     <input
                       type="number"
                       min={0.01}
@@ -361,6 +361,7 @@ export default function ManageView() {
                       }
                       className={TEXT_INPUT}
                     />
+                    <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">How much each tap adds.</p>
                   </div>
                   <div>
                     <label className={FIELD_LABEL}>
@@ -380,6 +381,7 @@ export default function ManageView() {
                       }
                       className={TEXT_INPUT}
                     />
+                    <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">First tap jumps here; further taps add one step.</p>
                   </div>
                 </>
               )}
@@ -433,7 +435,7 @@ export default function ManageView() {
                     Joy
                   </span>
                 )}
-                <span className="ml-auto text-stone-400 dark:text-stone-600 text-xs leading-none select-none">···</span>
+                <span className="ml-auto text-stone-500 dark:text-stone-500 text-xs leading-none select-none">···</span>
               </button>
 
               {/* Action tray / Inline edit form — single AnimatePresence prevents simultaneous counter-animations */}
@@ -443,7 +445,7 @@ export default function ManageView() {
                     key="tray"
                     initial={{ height: 0, opacity: 0, marginBottom: 0 }}
                     animate={{ height: "auto", opacity: 1, marginBottom: 8 }}
-                    exit={{ height: 0, opacity: 0, marginBottom: 0 }}
+                    exit={{ height: 0, opacity: 0, marginBottom: 0, transition: { duration: 0.2, ease: "easeIn" } }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
                     style={{ overflow: "hidden" }}
                     className="mb-2 rounded-2xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/50"
@@ -469,13 +471,13 @@ export default function ManageView() {
                     className={INLINE_FORM_SHELL}
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0, marginBottom: 0 }}
+                    exit={{ height: 0, opacity: 0, marginBottom: 0, transition: { duration: 0.22, ease: "easeIn" } }}
                     transition={{ duration: 0.22, ease: "easeOut" }}
                     style={{ overflow: "hidden" }}
                   >
                     <div className="px-4 py-4 space-y-3">
                     <div>
-                      <label className={FIELD_LABEL}>Label</label>
+                      <label className={FIELD_LABEL}>Name</label>
                       <input
                         type="text"
                         value={editingHabit.label}
@@ -495,7 +497,7 @@ export default function ManageView() {
                           />
                         </div>
                         <div>
-                          <label className={FIELD_LABEL}>Increment</label>
+                          <label className={FIELD_LABEL}>Step</label>
                           <input
                             type="number"
                             min={0.01}
@@ -506,6 +508,7 @@ export default function ManageView() {
                             }
                             className={TEXT_INPUT}
                           />
+                          <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">How much each tap adds.</p>
                         </div>
                         <div>
                           <label className={FIELD_LABEL}>
@@ -525,6 +528,7 @@ export default function ManageView() {
                             }
                             className={TEXT_INPUT}
                           />
+                          <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">First tap jumps here; further taps add one step.</p>
                         </div>
                       </>
                     )}
@@ -553,7 +557,7 @@ export default function ManageView() {
               <button
                 type="button"
                 onClick={() => setArchivedHabitsOpen((v) => !v)}
-                className="flex w-full items-center justify-between text-xs text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors py-1"
+                className="flex w-full min-h-[44px] items-center justify-between text-xs text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors py-1"
               >
                 <span>Archived ({archivedHabits.length})</span>
                 <span className={`transition-transform duration-200 ${archivedHabitsOpen ? "rotate-180" : ""}`}>
@@ -565,7 +569,7 @@ export default function ManageView() {
                   <m.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
+                    exit={{ height: 0, opacity: 0, transition: { duration: 0.22, ease: "easeIn" } }}
                     transition={{ duration: 0.22, ease: "easeOut" }}
                     style={{ overflow: "hidden" }}
                   >
@@ -603,11 +607,67 @@ export default function ManageView() {
       {/* ── Moments ─────────────────────────────────────────────────── */}
       <section className="mb-6">
         <div className="rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-4">
-          <div className="mb-4">
+          <div className="mb-4 flex items-center justify-between">
             <h2 className="text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
               Moments
             </h2>
+            {!addingTag && (
+              <button
+                type="button"
+                onClick={() => { closeAllEditors(); setAddingTag(true); }}
+                className="flex min-h-[44px] items-center text-xs text-stone-500 dark:text-stone-400 transition-colors hover:text-stone-700 dark:hover:text-stone-200"
+              >
+                + New
+              </button>
+            )}
           </div>
+
+          {/* Add moment form — rendered above the chip grid */}
+          <AnimatePresence initial={false}>
+            {addingTag && (
+              <m.div
+                className={INLINE_FORM_SHELL}
+                initial={{ height: 0, opacity: 0, marginBottom: 0 }}
+                animate={{ height: "auto", opacity: 1, marginBottom: 12 }}
+                exit={{ height: 0, opacity: 0, marginBottom: 0, transition: { duration: 0.22, ease: "easeIn" } }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+                style={{ overflow: "hidden" }}
+              >
+                <div className="px-4 py-4 space-y-3">
+                  <div>
+                    <label className={FIELD_LABEL}>Name</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Long walk"
+                      value={newTagLabel}
+                      onChange={(e) => setNewTagLabel(e.target.value)}
+                      className={TEXT_INPUT}
+                    />
+                  </div>
+                  <div className="flex gap-3 pt-1">
+                    <button
+                      type="button"
+                      onClick={saveNewTag}
+                      disabled={!newTagLabel.trim()}
+                      className={SAVE_BTN}
+                    >
+                      Add
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAddingTag(false);
+                        setNewTagLabel("");
+                      }}
+                      className={CANCEL_BTN}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </m.div>
+            )}
+          </AnimatePresence>
 
           {/* Active tags — chip grid; editing chip hidden while edit card is open */}
           <div className="flex flex-wrap gap-2 py-2">
@@ -633,15 +693,6 @@ export default function ManageView() {
                 </button>
               );
             })}
-            {!addingTag && (
-              <button
-                type="button"
-                onClick={() => { closeAllEditors(); setAddingTag(true); }}
-                className="min-h-[44px] flex items-center rounded-full border border-stone-200 dark:border-stone-700 px-4 py-2 text-xs text-stone-600 dark:text-stone-500 transition-colors hover:bg-stone-50 dark:hover:bg-stone-800"
-              >
-                + New
-              </button>
-            )}
           </div>
 
           {/* Moment edit card — AnimatePresence gives it a proper close animation */}
@@ -652,13 +703,13 @@ export default function ManageView() {
                 className={INLINE_FORM_SHELL}
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0, marginBottom: 0 }}
+                exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0, marginBottom: 0, transition: { duration: 0.2, ease: "easeIn" } }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
                 style={{ overflow: "hidden" }}
               >
                 <div className="px-4 py-4 space-y-3">
                 <div>
-                  <label className={FIELD_LABEL}>Label</label>
+                  <label className={FIELD_LABEL}>Name</label>
                   <input
                     type="text"
                     value={editingMomentLabel}
@@ -706,59 +757,12 @@ export default function ManageView() {
             )}
           </AnimatePresence>
 
-          {/* Add moment form — rendered above the archived section */}
-          <AnimatePresence initial={false}>
-          {addingTag && (
-            <m.div
-              className={`mt-3 ${INLINE_FORM_SHELL}`}
-              initial={{ height: 0, opacity: 0, marginTop: 0 }}
-              animate={{ height: "auto", opacity: 1, marginTop: 12 }}
-              exit={{ height: 0, opacity: 0, marginTop: 0, marginBottom: 0 }}
-              transition={{ duration: 0.22, ease: "easeOut" }}
-              style={{ overflow: "hidden" }}
-            >
-              <div className="px-4 py-4 space-y-3">
-                <div>
-                  <label className={FIELD_LABEL}>Label</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Long walk"
-                    value={newTagLabel}
-                    onChange={(e) => setNewTagLabel(e.target.value)}
-                    className={TEXT_INPUT}
-                  />
-                </div>
-                <div className="flex gap-3 pt-1">
-                  <button
-                    type="button"
-                    onClick={saveNewTag}
-                    disabled={!newTagLabel.trim()}
-                    className={SAVE_BTN}
-                  >
-                    Add
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAddingTag(false);
-                      setNewTagLabel("");
-                    }}
-                    className={CANCEL_BTN}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </m.div>
-          )}
-          </AnimatePresence>
-
           {archivedTags.length > 0 && (
             <div className="mt-2 border-t border-stone-100 dark:border-stone-800 pt-2">
               <button
                 type="button"
                 onClick={() => setArchivedMomentsOpen((v) => !v)}
-                className="flex w-full items-center justify-between text-xs text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors py-1"
+                className="flex w-full min-h-[44px] items-center justify-between text-xs text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors py-1"
               >
                 <span>Archived ({archivedTags.length})</span>
                 <span className={`transition-transform duration-200 ${archivedMomentsOpen ? "rotate-180" : ""}`}>
@@ -770,7 +774,7 @@ export default function ManageView() {
                   <m.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
+                    exit={{ height: 0, opacity: 0, transition: { duration: 0.22, ease: "easeIn" } }}
                     transition={{ duration: 0.22, ease: "easeOut" }}
                     style={{ overflow: "hidden" }}
                   >
