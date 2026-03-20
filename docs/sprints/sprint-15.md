@@ -1,7 +1,7 @@
 # Sprint 15 — Audit Zero
 
 **Dates:** 2026-03-20 – (TBD)
-**Status:** active
+**Status:** completed
 **Release:** v2.6.3 (patch — all audit debt closure and polish; no new features)
 
 ---
@@ -532,4 +532,26 @@ None.
 
 ## Retrospective
 
-<!-- To be filled in after the sprint using /sprint-retro -->
+**Date:** 2026-03-20
+
+### What went well
+
+- All 35 audit findings across 5 audits closed in a single sprint — zero regressions
+- Validation runs worked well and caught issues before sprint close (8 microcopy findings found and fixed in the same session)
+- Arch review caught the `Increment` → `Step` miss (Task 2) and 6+ additional issues before deploy
+- Planning was solid: scope held, task ordering followed the arch recommendation, no unplanned creep
+
+### What was harder than expected
+
+- Post-code audits surfaced 8 microcopy findings that weren't in the brief — frustrating after careful upfront planning. Closed in the same session (commit `f30032b`) but added unplanned scope after the plan was locked.
+- `/sprint-post-code` is context-heavy; token exhaustion caused an interruption mid-process this sprint
+
+### Process improvements for next sprint
+
+- `/sprint-pre-flight` already removed — it wasn't needed
+- Consider removing `/sprint-post-code` orchestrator and invoking individual phases (`/arch-review`, `/validate`, `/qa`, `/calma-sync`) separately so each runs in a fresh context; reduces token exhaustion risk and interruption cost
+- Audit coverage gap: post-code microcopy findings suggest the pre-sprint microcopy audit pass may need to be more thorough, or a lightweight microcopy scan should be added to the brief phase
+
+### Planning accuracy
+
+Accurate. Scope, ordering, and task detail were well-calibrated. The 8 post-code microcopy findings were an audit coverage gap, not a planning failure.
