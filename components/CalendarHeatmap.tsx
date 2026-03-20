@@ -326,18 +326,9 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
 
       {/* ── Legend ─────────────────────────────────────────────── */}
       <div className="mt-4 flex items-center justify-center gap-5">
-        <span className="flex items-center gap-1.5 text-xs text-stone-500 dark:text-stone-500">
-          <span className="text-sm font-light text-stone-300 dark:text-stone-700">7</span>
-          no activity
-        </span>
-        <span className="flex items-center gap-1.5 text-xs text-stone-500 dark:text-stone-500">
-          <span className="text-sm font-bold text-stone-700 dark:text-stone-300">7</span>
-          active
-        </span>
-        <span className="flex items-center gap-1.5 text-xs text-stone-500 dark:text-stone-500">
-          <span className="text-sm font-bold text-amber-600 dark:text-amber-400">7</span>
-          joy
-        </span>
+        <span className="text-xs font-light text-stone-500 dark:text-stone-500">no activity</span>
+        <span className="text-xs font-bold text-stone-700 dark:text-stone-300">active</span>
+        <span className="text-xs font-bold text-amber-600 dark:text-amber-400">joy</span>
       </div>
     </div>
   );
