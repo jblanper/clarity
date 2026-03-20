@@ -1,5 +1,16 @@
 # Changelog
 
+## [v2.6.1] — 2026-03-20
+
+### Fixes
+- Layout: hardcoded `/clarity/` basePath prefix in `theme-init.js` script src — `strategy="beforeInteractive"` does not auto-prepend basePath, causing a 404 on GitHub Pages
+- Layout: added `data-scroll-behavior="smooth"` to `<html>` to suppress Next.js smooth-scroll console warning
+
+### Docs / Tooling
+- Skills: added `/debug` skill for structured bug investigation workflow
+- Audits: design-overall, microcopy, and triage audits post-Sprint 14
+- Retros: Sprint 14 retrospective report
+
 ## [v2.6.0] — 2026-03-17
 
 ### Features
