@@ -41,7 +41,7 @@ export default function HistoryView() {
     const openDate = params.get("open");
     if (openDate) {
       startTransition(() => setSelectedDate(openDate));
-      window.history.replaceState({}, "", "/history");
+      window.history.replaceState({}, "", window.location.pathname);
     }
   }, []);
 

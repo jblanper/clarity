@@ -1,5 +1,10 @@
 # Changelog
 
+## [v2.6.2] — 2026-03-20
+
+### Fixes
+- History: `window.history.replaceState` was called with `/history` (missing `/clarity` basePath), causing Next.js App Router to crash on mobile when resolving the URL after returning from the edit flow
+
 ## [v2.6.1] — 2026-03-20
 
 ### Fixes
