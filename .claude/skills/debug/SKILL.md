@@ -15,6 +15,22 @@ If no description is provided, ask: "What behaviour are you seeing and what did 
 
 ---
 
+## Workflow checklist
+
+Copy this checklist into your response and check off each phase as you complete it. Do not stop until all phases are marked done.
+
+```
+Debug progress:
+- [ ] Phase 1 — Understand (classify, locate, check CLAUDE.md)
+- [ ] Phase 2 — Reproduce (dev server, reproduction steps)
+- [ ] Phase 3 — Isolate (hypothesis, verify, quote offending code)
+- [ ] Phase 4 — Fix (edit, lint/test/build, scope check)
+- [ ] Phase 5 — Document (console summary + report file)
+- [ ] Phase 6 — Stop dev server
+```
+
+---
+
 ## Phase 1 — Understand
 
 Before touching any code, gather facts.
