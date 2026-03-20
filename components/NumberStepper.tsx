@@ -63,7 +63,7 @@ export default function NumberStepper({
           aria-valuenow={value}
           aria-valuemin={min}
           aria-label={label}
-          className={`min-h-[44px] min-w-[44px] px-4 rounded-full transition-colors active:opacity-70 ${
+          className={`min-h-[44px] min-w-[44px] px-4 text-sm rounded-full transition-colors active:opacity-70 ${
             value > 0
               ? "bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300"
               : "bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400"

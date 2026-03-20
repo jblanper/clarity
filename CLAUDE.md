@@ -71,7 +71,7 @@ These translate the Calma spec to concrete Tailwind classes. The spec defines th
 /edit       Edit         BottomNav hidden — back via ← history link
 ```
 
-- **Page headers** — `flex items-start justify-between`: title left, nav link top-right in `text-xs uppercase tracking-widest text-stone-600`.
+- **Page headers** — `flex items-center justify-between`: title left, nav link top-right in `text-xs uppercase tracking-widest text-stone-600`.
 - **Settings back** — caller writes `sessionStorage.setItem("settings-back", "/" | "/history")` before navigating; SettingsView reads it on mount and calls `router.push(backDest)`, never `router.back()`. Today sets `"/"`, HistoryView sets `"/history"`.
 - **DayDetail → Edit** — `/edit?date=[date]`; on save redirects to `/history?open=[date]`; HistoryView auto-opens DayDetail then cleans the URL with `replaceState`.
 

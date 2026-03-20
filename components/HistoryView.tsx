@@ -6,7 +6,7 @@ import Link from "next/link";
 import { getAllEntries } from "@/lib/storage";
 import type { HabitEntry } from "@/types/entry";
 import CalendarHeatmap from "@/components/CalendarHeatmap";
-import type { HeatmapFilter } from "@/components/CalendarHeatmap";
+import type { HeatmapFilter } from "@/lib/calendarUtils";
 import DayDetail from "@/components/DayDetail";
 import FrequencyList, { type Period } from "@/components/FrequencyList";
 import Chevron from "@/components/Chevron";

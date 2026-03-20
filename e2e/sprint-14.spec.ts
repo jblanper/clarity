@@ -451,7 +451,8 @@ test("HelpView — 'Your data' section mentions backup restore and reset", async
 
 // ── Task 7 — Help discoverability link on Today ────────────────────────────
 
-test("Today — 'How Clarity works' link is visible below the Capture button", async ({
+// Sprint 15 Task 5: link moved from below to above the Capture button
+test("Today — 'How Clarity works' link is visible above the Capture button", async ({
   page,
 }) => {
   await page.goto("/clarity/");

@@ -137,21 +137,25 @@ test("ManageView — M5: Joy button shows 'Joy' label in action tray", async ({ 
 
 // ── Task 5 — ManageView: L1/L2 — + New chip + archived disclosure ───────────
 
-test("ManageView — L1: Moments chip grid contains a '+ New' chip", async ({ page }) => {
+// Sprint 15 Task 10: '+ New' moved from chip grid to Moments section header (matching Habits pattern)
+test("ManageView — L1: Moments section header contains a '+ New' button (not chip grid)", async ({ page }) => {
   await page.goto("/clarity/manage");
 
   const momentsSection = page.locator("section").filter({ has: page.getByText("Moments") });
+  // '+ New' is now in the header row, not inside the chip grid
+  const newBtn = momentsSection.getByRole("button", { name: "+ New", exact: true });
+  await expect(newBtn).toBeVisible();
+  // Verify it is NOT inside the chip grid (flex-wrap container)
   const chipGrid = momentsSection.locator("div.flex.flex-wrap");
-  const newChip = chipGrid.getByRole("button", { name: "+ New", exact: true });
-  await expect(newChip).toBeVisible();
+  const newChipInGrid = chipGrid.getByRole("button", { name: "+ New", exact: true });
+  await expect(newChipInGrid).not.toBeAttached();
 });
 
-test("ManageView — L1: '+ New' chip opens the add-moment form", async ({ page }) => {
+test("ManageView — L1: '+ New' header button opens the add-moment form", async ({ page }) => {
   await page.goto("/clarity/manage");
 
   const momentsSection = page.locator("section").filter({ has: page.getByText("Moments") });
-  const chipGrid = momentsSection.locator("div.flex.flex-wrap");
-  await chipGrid.getByRole("button", { name: "+ New", exact: true }).click();
+  await momentsSection.getByRole("button", { name: "+ New", exact: true }).click();
 
   await expect(page.getByRole("button", { name: "Add", exact: true })).toBeVisible({ timeout: 600 });
 });
@@ -216,7 +220,8 @@ test("Mobile — ManageView: habit row ··· affordance visible at 390px", asyn
   await expect(firstRow.getByText("···")).toBeVisible();
 });
 
-test("Mobile — ManageView: + New chip visible in moments grid at 390px", async ({ page }) => {
+// Sprint 15 Task 10: '+ New' is now in Moments section header, not chip grid
+test("Mobile — ManageView: + New button visible in moments section header at 390px", async ({ page }) => {
   await page.setViewportSize(MOBILE);
   await page.goto("/clarity/manage");
 

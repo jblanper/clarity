@@ -9,7 +9,7 @@ import {
   DEFAULT_MOMENT_CONFIGS,
   type AppConfigs,
 } from "@/lib/habitConfig";
-import type { HeatmapFilter } from "@/components/CalendarHeatmap";
+import type { HeatmapFilter } from "@/lib/calendarUtils";
 import Chevron from "@/components/Chevron";
 
 export type Period = "month" | "3m" | "always";
@@ -145,7 +145,7 @@ export default function FrequencyList({ entries, period, viewedYear, viewedMonth
                       : "text-stone-700 dark:text-stone-300"
                   }`}
                 >
-                  <span className={`flex-shrink-0 ${isActive ? "" : "invisible"}`}>
+                  <span className={`flex-shrink-0 ${isActive ? "" : "opacity-0"}`}>
                     <Chevron direction="right" />
                   </span>
                   <div className="flex-1 flex flex-col justify-center">

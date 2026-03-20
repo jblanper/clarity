@@ -131,17 +131,18 @@ test("Settings — App card links meet 44px touch target", async ({ page }) => {
 
 // ── Task 4 — Your Data section restyle ────────────────────────────────────
 
-test("Settings — Your Data shows BACKUP sub-label", async ({ page }) => {
+test("Settings — Your Data shows Backup sub-label (visually uppercase via CSS)", async ({ page }) => {
   await page.goto("/clarity/settings");
 
-  // Text is literally "BACKUP" in the source (not CSS-transformed from "backup")
-  await expect(page.getByText("BACKUP", { exact: true })).toBeVisible();
+  // Sprint 15 Task 1: Source text is now "Backup" (CSS text-transform: uppercase renders as BACKUP)
+  await expect(page.getByText("Backup", { exact: true })).toBeVisible();
 });
 
-test("Settings — Your Data shows RESTORE sub-label", async ({ page }) => {
+test("Settings — Your Data shows Restore sub-label (visually uppercase via CSS)", async ({ page }) => {
   await page.goto("/clarity/settings");
 
-  await expect(page.getByText("RESTORE", { exact: true })).toBeVisible();
+  // Sprint 15 Task 1: Source text is now "Restore" (CSS text-transform: uppercase renders as RESTORE)
+  await expect(page.getByText("Restore", { exact: true })).toBeVisible();
 });
 
 test("Settings — Export button is a tertiary-style button (not full-width primary)", async ({
@@ -528,5 +529,6 @@ test("Mobile — dark mode: Settings reset and data section visible at 390px", a
 
   await page.evaluate(() => document.documentElement.classList.add("dark"));
   await expect(page.getByRole("button", { name: "Start fresh", exact: true })).toBeVisible();
-  await expect(page.getByText("BACKUP", { exact: true })).toBeVisible();
+  // Sprint 15 Task 1: DOM text is now "Backup" (CSS renders as BACKUP)
+  await expect(page.getByText("Backup", { exact: true })).toBeVisible();
 });

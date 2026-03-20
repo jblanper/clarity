@@ -16,7 +16,8 @@ test("Today page loads and renders the check-in form", async ({ page }) => {
   await page.goto("/clarity/");
   await expect(page.getByRole("heading", { name: "Today" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Habits" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "By the numbers" })).toBeVisible();
+  // Sprint 15 Task 1: "By the numbers" renamed to "Numbers"
+  await expect(page.getByRole("heading", { name: "Numbers" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Moments" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Reflection" })).toBeVisible();
 });

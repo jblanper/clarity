@@ -130,7 +130,7 @@ Max content width: 448px. Horizontal padding: 20px. This keeps lines short and r
 ### Principles
 
 - Every interactive element transitions its colors on hover and active. No exceptions. Color transitions are subtle — one step along the scale. Spatial motion is reserved for layout changes.
-- Hover always shifts darker in light mode, lighter in dark mode.
+- Hover always shifts darker in light mode, lighter in dark mode. Nav links (`stone-600` at rest → `stone-800` on hover) use a deliberate two-step jump rather than a smooth `stone-700` intermediate. This provides clear affordance at hover without adding weight at rest. This is a documented pattern, not a contrast inconsistency.
 - Disabled elements are dimmed (40–50% opacity), never hidden. Absence without explanation is confusing. This rule applies to controls that exist but are temporarily unavailable. Controls that only become relevant at a specific state — where their absence is itself informative — may appear contextually. An affordance that disappears when its action is meaningless is clearer than one that persists in a dimmed, unclearable state.
 - Touch targets are minimum 44×44px on all tappable elements.
 
@@ -147,6 +147,10 @@ A tertiary button may use amber border and text when the action is significant b
 ### Segmented control
 
 For mutually exclusive choices presented inline (e.g. theme, period), use a segmented pill track: a rounded-full container with a subtle filled background and border, with each segment as a rounded-full button. The active segment lifts to the page-surface background with a shadow and medium-weight text. Inactive segments use muted stone text with a one-step hover shift. All segments must meet the 44 × 44 px touch target.
+
+### Section header action button
+
+When a management section contains a user-editable list, expose the primary list action (e.g. "add new item") as a right-aligned text button in the section header row — not inside the list or chip grid. The button sits on the same baseline as the section label and uses `text-xs` text with the section label's stone color (`text-stone-500 dark:text-stone-400`) and a one-step hover shift. The `+ New` label is minimal and non-possessive. The button is hidden while its form is open, since the open form is a sufficient affordance. This pattern establishes a consistent grammar: section label on the left, section action on the right.
 
 ### Navigation card
 
@@ -185,13 +189,13 @@ In read-only review contexts, the filled state may be used as a static display i
 
 This fill-vs-border state signaling also applies to verb-labeled toggle buttons, where the label remains constant and only the visual treatment changes. When the active state is amber-filled, the button reads immediately without relying on text change — the filled form replaces a "selected / not selected" textual label.
 
-**Chip active-edit state:** When a chip in a grid is the target of an adjacent inline edit form, the chip remains visible at its original grid position with a muted appearance (stone-100 background, stone-400 text) — not hidden, not interactive. This treatment distinguishes the active target from both the resting chip and a disabled chip. The muted chip creates a spatial anchor between the chip's position and the edit form below it.
+**Chip active-edit state:** When a chip in a grid is the target of an adjacent inline edit form, the chip remains visible at its original grid position with a muted appearance (stone-100 background, stone-600 text) — not hidden, not interactive. This treatment distinguishes the active target from both the resting chip and a disabled chip. The muted chip creates a spatial anchor between the chip's position and the edit form below it.
 
 **Inline edit card (chip context):** When editing an item from a chip grid, the edit form appears as a bordered card below the grid — not as an in-grid replacement that disrupts the layout. The chip being edited remains in the grid in its muted "active target" state, establishing a visible spatial link between the chip and the form. The form enters and exits via height-reveal animation. This pattern preserves the chip grid's shape during editing and avoids reflow.
 
 **Attribute badge variant:** When a list row carries a persistent configuration attribute (e.g. "Joy" for joy-by-default), surface it as a small amber pill placed inline after the item label. The badge is non-interactive — it communicates a state, not an action. Do not apply hover or press styles; the action that changes the state lives elsewhere (e.g. in an action tray).
 
-**Tap affordance indicator:** When a list row is entirely tappable but has no obvious interactive affordance (no chevron, no toggle), a small decorative `···` marker at the trailing edge signals interactivity. It uses `text-stone-400 dark:text-stone-600` — below foreground contrast — because it is a non-text decorative element, not a content label. It is positioned with `ml-auto` to always trail any inline badges. It should not appear on rows that are not interactive.
+**Tap affordance indicator:** When a list row is entirely tappable but has no obvious interactive affordance (no chevron, no toggle), a small decorative `···` marker at the trailing edge signals interactivity. It uses `text-stone-500 dark:text-stone-500` — the lowest safe contrast threshold — present but undemanding. WCAG AA applies regardless of semantic role at text-xs size, so stone-500 is the floor. It is positioned with `ml-auto` to always trail any inline badges. It should not appear on rows that are not interactive.
 
 ---
 
@@ -252,6 +256,7 @@ Words are design material. They should feel as considered as any visual element.
 - **No exclamation marks.** No all-caps except the section label pattern.
 - **Labels** — plain and human. *"Theme"* not *"Appearance Settings."*
 - **Navigation labels** — reflect the user's actual destination, not a generic direction. `← Today` or `← History` rather than `← back`. A label that names where you're going is more trustworthy than one that names only the direction.
+- **HelpView `›` exception** — the "Design language" link in HelpView deliberately uses a trailing `›` (not the back-link `←` convention). The link opens an external URL in a new tab; `←` implies back-navigation within the app. `›` is semantically correct for an outbound link. This is a deliberate exception to the back-link convention.
 
 ### Examples
 

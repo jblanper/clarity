@@ -5,12 +5,12 @@ import { AnimatePresence, m } from "motion/react";
 import type { HabitEntry } from "@/types/entry";
 import { getConfigs, DEFAULT_HABIT_CONFIGS } from "@/lib/habitConfig";
 import Chevron from "@/components/Chevron";
-
-/** Narrows the heatmap to a single habit or moment item. */
-export interface HeatmapFilter {
-  type: "boolean-habit" | "numeric-habit" | "moment";
-  id: string;
-}
+import {
+  buildMonthWeeks,
+  computeCellStyle,
+  doesEntryMatchFilter,
+} from "@/lib/calendarUtils";
+import type { HeatmapFilter } from "@/lib/calendarUtils";
 
 interface Props {
   entries: HabitEntry[];
@@ -32,70 +32,6 @@ const DAY_LABELS = ["M", "T", "W", "T", "F", "S", "S"];
 function getTodayString(): string {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
-
-/**
- * Builds the week grid for a given month.
- * Returns an array of weeks; each week has 7 slots (index 0=Mon … 6=Sun).
- * Slots outside the month boundaries are null.
- */
-function buildMonthWeeks(year: number, month: number): (string | null)[][] {
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  // Convert Sunday-first JS day to Monday-first (0=Mon, 6=Sun)
-  const firstDow = (new Date(year, month, 1).getDay() + 6) % 7;
-
-  const cells: (string | null)[] = Array(firstDow).fill(null);
-
-  for (let d = 1; d <= daysInMonth; d++) {
-    const mm = String(month + 1).padStart(2, "0");
-    const dd = String(d).padStart(2, "0");
-    cells.push(`${year}-${mm}-${dd}`);
-  }
-
-  // Pad to a complete final week
-  while (cells.length % 7 !== 0) cells.push(null);
-
-  const weeks: (string | null)[][] = [];
-  for (let i = 0; i < cells.length; i += 7) {
-    weeks.push(cells.slice(i, i + 7));
-  }
-  return weeks;
-}
-
-function doesEntryMatchFilter(entry: HabitEntry, filter: HeatmapFilter): boolean {
-  if (filter.type === "boolean-habit") return entry.habits[filter.id]?.done ?? false;
-  if (filter.type === "numeric-habit") return (entry.numeric[filter.id] ?? 0) > 0;
-  return entry.moments.includes(filter.id);
-}
-
-interface CellStyle {
-  weightClass: string;
-  colorClass: string;
-}
-
-function computeCellStyle(
-  entry: HabitEntry | null,
-  activeHabitCount: number,
-): CellStyle {
-  if (!entry) {
-    return { weightClass: "font-light", colorClass: "text-stone-300 dark:text-stone-700" };
-  }
-  const done = Object.values(entry.habits).filter((s) => s.done).length;
-  const b = activeHabitCount > 0 ? done / activeHabitCount : 0;
-  const hasJoyOrMoment =
-    Object.values(entry.habits).some((s) => s.joy) || entry.moments.length > 0;
-
-  const weightClass =
-    b === 0 ? "font-light"
-    : b <= 0.33 ? "font-normal"
-    : b <= 0.67 ? "font-semibold"
-    : "font-bold";
-
-  const colorClass = hasJoyOrMoment
-    ? "text-amber-600 dark:text-amber-400"
-    : "text-stone-700 dark:text-stone-300";
-
-  return { weightClass, colorClass };
 }
 
 /** Variants that receive the slide direction (1=forward, -1=back) via custom. */
@@ -185,6 +121,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
       {showYearRow && (
         <div className="mb-1 flex items-center justify-center gap-8">
           <button
+            type="button"
             onClick={prevYear}
             disabled={year <= minYear}
             aria-label="Previous year"
@@ -192,10 +129,11 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
           >
             <Chevron direction="left" />
           </button>
-          <span className="min-w-[4rem] text-center text-sm uppercase tracking-widest text-stone-500 dark:text-stone-500">
+          <span className="min-w-[4rem] text-center text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500">
             {year}
           </span>
           <button
+            type="button"
             onClick={nextYear}
             disabled={year >= currentYear}
             aria-label="Next year"
@@ -209,6 +147,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
       {/* ── Month navigation ──────────────────────────────────── */}
       <div className="mb-6 flex items-center justify-between">
         <button
+          type="button"
           onClick={prevMonth}
           aria-label="Previous month"
           className="min-h-[44px] flex items-center text-xl text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
@@ -217,7 +156,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
         </button>
 
         {/* Month heading crossfades on change */}
-        <AnimatePresence mode="wait" initial={false}>
+        <AnimatePresence initial={false}>
           <m.h2
             key={`${year}-${month}`}
             initial={{ opacity: 0 }}
@@ -231,6 +170,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
         </AnimatePresence>
 
         <button
+          type="button"
           onClick={nextMonth}
           disabled={isAtCurrentMonth}
           aria-label="Next month"
@@ -268,7 +208,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
                 {DAY_LABELS.map((label, i) => (
                   <div
                     key={i}
-                    className="flex h-11 w-5 items-center justify-center text-xs uppercase tracking-widest text-stone-500 dark:text-stone-600"
+                    className="flex h-11 w-5 items-center justify-center text-xs uppercase tracking-widest text-stone-500 dark:text-stone-500"
                   >
                     {label}
                   </div>
@@ -304,7 +244,7 @@ export default function CalendarHeatmap({ entries, selectedDate, onDayClick, fil
                           "flex h-11 w-11 items-center justify-center rounded-full transition-colors",
                           isSelected ? "bg-stone-100 dark:bg-stone-800" : "",
                           isFuture ? "cursor-default opacity-30" : "cursor-pointer",
-                          isFilteredOut ? "opacity-25" : "",
+                          isFilteredOut ? "opacity-30" : "",
                         ]
                           .filter(Boolean)
                           .join(" ")}

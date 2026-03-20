@@ -188,14 +188,14 @@ export default function CheckInForm({ date }: Props) {
   const handleAddMoment = () => {
     const label = newMomentLabel.trim();
     if (!label) {
-      setAddMomentError("Please enter a name.");
+      setAddMomentError("A name helps you recognise this later.");
       return;
     }
     const isDuplicate = configs.moments.some(
       (m) => m.label.toLowerCase() === label.toLowerCase()
     );
     if (isDuplicate) {
-      setAddMomentError("A moment with that name already exists.");
+      setAddMomentError("You already have a moment with that name.");
       return;
     }
     const newMoment: MomentConfig = { id: crypto.randomUUID(), label, archived: false };
@@ -307,7 +307,7 @@ export default function CheckInForm({ date }: Props) {
       {/* ── Numeric habits ─────────────────────────────────────────── */}
       <section className="mb-10">
         <h2 className="mb-3 text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-500">
-          By the numbers
+          Numbers
         </h2>
         <div className="divide-y divide-stone-100 dark:divide-stone-800">
           {activeNumeric.map((h) => (
@@ -484,6 +484,17 @@ export default function CheckInForm({ date }: Props) {
       </section>
 
       {/* ── Save ───────────────────────────────────────────────────── */}
+      {!isEditMode && (
+        <div className="mb-4 flex justify-center">
+          <Link
+            href="/help"
+            className="inline-flex min-h-[44px] items-center text-xs uppercase tracking-widest text-stone-500 dark:text-stone-600 transition-colors hover:text-stone-700 dark:hover:text-stone-400"
+          >
+            How Clarity works
+          </Link>
+        </div>
+      )}
+
       <button
         type="submit"
         disabled={saveState !== "idle"}
@@ -499,17 +510,6 @@ export default function CheckInForm({ date }: Props) {
             ? (isEditMode ? "Saved" : "Day captured")
             : (isEditMode ? "Save" : "Capture")}
       </button>
-
-      {!isEditMode && (
-        <div className="mt-6 flex justify-center">
-          <Link
-            href="/help"
-            className="inline-flex min-h-[44px] items-center text-xs uppercase tracking-widest text-stone-500 dark:text-stone-600 transition-colors hover:text-stone-700 dark:hover:text-stone-400"
-          >
-            How Clarity works
-          </Link>
-        </div>
-      )}
 
     </form>
   );

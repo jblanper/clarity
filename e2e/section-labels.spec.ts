@@ -21,7 +21,8 @@ test.beforeEach(async ({ page }) => {
 test("CheckInForm — all section labels are font-medium", async ({ page }) => {
   await page.goto("/clarity/");
 
-  const labels = ["Habits", "By the numbers", "Moments", "Reflection"];
+  // Sprint 15 Task 1: "By the numbers" renamed to "Numbers"
+  const labels = ["Habits", "Numbers", "Moments", "Reflection"];
   for (const name of labels) {
     const heading = page.getByRole("heading", { name });
     const weight = await heading.evaluate((node) => getComputedStyle(node).fontWeight);
@@ -84,8 +85,11 @@ test("SettingsView — Reset label is visible in light and dark mode", async ({ 
 test("ManageView — Habits and Moments section labels are font-medium", async ({ page }) => {
   await page.goto("/clarity/manage");
 
+  // Use exact:true + level:2 to avoid matching the h1 "Habits & Moments" heading
+  // (which is font-light). After Sprint 15 Task 3, the h1 contains "Habits" so a
+  // non-exact match would return the wrong element.
   for (const name of ["Habits", "Moments"]) {
-    const heading = page.getByRole("heading", { name });
+    const heading = page.getByRole("heading", { name, exact: true, level: 2 });
     const weight = await heading.evaluate((node) => getComputedStyle(node).fontWeight);
     expect(weight, `Manage "${name}" label should be font-medium`).toBe("500");
   }

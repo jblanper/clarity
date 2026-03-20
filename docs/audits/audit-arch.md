@@ -1,6 +1,6 @@
 # Architecture & Code Health Audit
 
-Generated: 2026-03-16 22:01
+Generated: 2026-03-20 12:28
 Scope: components/ · app/ · lib/ · types/
 Reference: CLAUDE.md
 
@@ -8,13 +8,7 @@ Reference: CLAUDE.md
 
 ## Summary
 
-Sprint 14 introduced no new CLAUDE.md violations. The five changed components
-(CalendarHeatmap, CheckInForm, FrequencyList, HabitToggle, HistoryView) are all
-compliant. One carry-over Medium surfaces in ManageView (`text-stone-500` on
-`hover:bg-stone-50` for the `+ New` chip — present before Sprint 14, now formally
-recorded). The Sprint 13 Low (`createEmptyEntry` test coverage) is resolved. The
-`text-stone-400` dimmed moment chip is spec-mandated and classified as an accepted
-deviation, not a violation.
+The codebase is in strong health overall: no `any` types, no `router.back()` calls, no `useSearchParams()` usage, full test coverage across all `lib/` utilities, and the static export constraint is consistently respected. The three high-severity findings are: four `<button>` elements missing `type="button"` in `CalendarHeatmap.tsx`, one in `DayDetail.tsx`, and one bare `text-stone-400` foreground in light mode in `ManageView.tsx`. Medium findings include missing tests for `lib/habitConfig.ts` and two pure utility functions inside `CalendarHeatmap.tsx` that are untestable in their current location. Three page headers use `items-center` where the spec requires `items-start`.
 
 Severity key: **Critical** = data loss risk or build-breaking constraint violation
 · **High** = CLAUDE.md rule violation · **Medium** = structural signal worth addressing
@@ -26,79 +20,77 @@ Severity key: **Critical** = data loss risk or build-breaking constraint violati
 
 | File | Line | Rule | Issue | Severity |
 |---|---|---|---|---|
-| `components/ManageView.tsx` | 640 | WCAG — `text-stone-500` on `bg-stone-50` | `+ New` chip: `text-stone-500` at rest is fine on white (~4.6:1), but `hover:bg-stone-50` brings it to ~4.4:1 for `text-xs` — just under AA threshold on hover. Carry-over; ManageView unchanged in Sprint 14. | **Medium** |
+| `components/CalendarHeatmap.tsx` | 187, 198, 211, 233 | Always `type="button"` on non-submit buttons | Four `<button>` elements (prevYear, nextYear, prevMonth, nextMonth) missing `type="button"` | **High** |
+| `components/DayDetail.tsx` | 147 | Always `type="button"` on non-submit buttons | Close `<button>` missing `type="button"` | **High** |
+| `components/ManageView.tsx` | 437 | Never `text-stone-400` as foreground in light mode | `text-stone-400 dark:text-stone-600` on the `···` row indicator span — `text-stone-400` is the light-mode foreground value, fails WCAG AA (2.4:1) | **High** |
+| `components/HistoryView.tsx` | 70 | Page header — `flex items-start justify-between` | Header uses `flex items-center justify-between`; spec requires `items-start` | **Low** |
+| `components/HelpView.tsx` | 17 | Page header — `flex items-start justify-between` | Header uses `flex items-center justify-between`; spec requires `items-start` | **Low** |
+| `components/ManageView.tsx` | 237 | Page header — `flex items-start justify-between` | Header uses `flex items-center justify-between`; spec requires `items-start` | **Low** |
+| `components/CalendarHeatmap.tsx` | 220 | Do not use `mode="wait"` on the CalendarHeatmap grid `AnimatePresence` | `mode="wait"` is used on the month-heading `AnimatePresence` (not the grid). The grid correctly uses `mode="popLayout"` (line 252). Spec targets the grid specifically; heading use is a grey area. Heading contributes to layout height so iOS repaint risk applies, though lower than the grid. | **Low** |
+| `lib/transferData.ts` | 66 | Never use `toISOString()` for dates | `new Date().toISOString()` for the `exportedAt` metadata field — a full ISO timestamp, not a YYYY-MM-DD date key. The CLAUDE.md rule targets UTC offset bugs on date keys; this field is never parsed as a date key. No practical risk. | — |
+| `components/CheckInForm.tsx` | 232 | Never use `toISOString()` for dates | `new Date().toISOString()` for `entry.lastEdited` — same rationale as above; this is a display timestamp, not a storage key. No practical risk. | — |
 
-Notable compliant patterns confirmed across sprint diff:
-
-- **CalendarHeatmap.tsx**: `computeCellStyle` uses pure Tailwind dark: classes — no `useIsDark()` needed. `doesEntryMatchFilter` preserved. `activeHabitCount` state preserved for weight normalisation. `type="button"` added to all cell buttons. `mode="popLayout"` correctly wrapped in `<div className="relative overflow-hidden">` to contain the absolutely-positioned exiting element. Legend uses `text-stone-500` on page-level background — passes AA.
-- **CheckInForm.tsx**: `Link` was already imported. `!isEditMode` guard on help link correct. `doneHabits` moved out of IIFE — clean simplification, no side effects. Exit animation on Joy section (`marginBottom: 0` in exit) correctly handles the only spacing on `m.section` (`mb-10`).
-- **FrequencyList.tsx**: `* 100` bar width and `h-1` track height — both one-line changes, no surrounding drift.
-- **HabitToggle.tsx**: `transition-[background-color] duration-150` correctly scoped — avoids transitioning the amber dot's color change at the same rate as the row wash.
-- **HistoryView.tsx**: `handlePeriodChange` guard (`if (p === period) return`) preserved. `PERIOD_OPTIONS` defined outside component. `satisfies` constraint on options array is correct TypeScript.
-- **ManageView.tsx line 628**: `text-stone-400 dark:text-stone-600` on selected chip — explicitly prescribed in CLAUDE.md ("tapping a chip shows a dimmed selected state (`bg-stone-100 text-stone-400 cursor-default`)"). Accepted deviation per spec; WCAG AA exemption applies to disabled/selected UI states.
+---
 
 ## 2. TypeScript strictness
 
 | File | Line | Pattern | Issue | Severity |
 |---|---|---|---|---|
+| `lib/habitConfig.ts` | 81–82, 86 | `as Record<string, unknown>` / `as AppConfigs` | Post-parse cast to `AppConfigs` after validating only that `habits` and `moments` are arrays; per-element types not narrowed. Low runtime risk since `getConfigs()` is guarded by default fallback. | **Low** |
+| `lib/storage.ts` | 40, 46 | `as Record<string, HabitEntry>` / `as Partial<HabitState>` | Post-parse casts following structural checks. `sanitizeHabitState` provides a runtime safety net for malformed habit states. | **Low** |
+| `lib/transferData.ts` | 34 | `as unknown[]` | Narrowing cast inside a type-guard function; the outer `isPlainObject` has already established the type. Acceptable. | **Low** |
+| `lib/transferData.test.ts` | 233 | `as unknown as ProgressEvent<FileReader>` | Double-cast in test mock for `ProgressEvent`. Test infrastructure only; no runtime impact. | — |
 
-No `any` annotations, `as any` casts, or unsafe type assertions found in changed files or codebase-wide.
+No `any` annotations or `as any` casts found anywhere. TypeScript strict mode is well-observed across all files.
+
+---
 
 ## 3. Test coverage
 
 | lib/ file | Exported symbol | Test present | Notes | Severity |
 |---|---|---|---|---|
-| `lib/habits.ts` | `createEmptyEntry` | **Yes** | `lib/habits.test.ts` added in Sprint 14. Asserts date, habits, numeric, moments, reflection. | — |
-| `lib/storage.ts` | All exports | Yes | Full coverage in `storage.test.ts` | — |
-| `lib/transferData.ts` | All exports | Yes | Full coverage in `transferData.test.ts` (`downloadJson` is browser side-effect only — acceptable) | — |
-| `lib/theme.ts` | All exports | Yes | Full coverage in `theme.test.ts` | — |
-| `lib/habitConfig.ts` | `getConfigs`, `saveConfigs` | Indirect | Covered via storage and transferData integration tests | — |
+| `lib/storage.ts` | `sanitizeHabitState` | Yes | 4 cases — empty, done-only, joy-only, inconsistent | — |
+| `lib/storage.ts` | `saveEntry` | Yes | 3 cases | — |
+| `lib/storage.ts` | `getEntry` | Yes | 4 cases | — |
+| `lib/storage.ts` | `getAllEntries` | Yes | 3 cases + sort order | — |
+| `lib/storage.ts` | `clearAllEntries` | Yes | 2 cases | — |
+| `lib/habits.ts` | `createEmptyEntry` | Yes | 1 case — function is trivial | — |
+| `lib/theme.ts` | `getTheme` | Yes | 4 cases | — |
+| `lib/theme.ts` | `setTheme` | Yes | 5 cases | — |
+| `lib/theme.ts` | `applyTheme` | Yes | 3 cases | — |
+| `lib/transferData.ts` | `prepareExportData` | Yes | 5 cases | — |
+| `lib/transferData.ts` | `parseImportFile` | Yes | 8 cases including edge cases | — |
+| `lib/transferData.ts` | `mergeEntries` | Yes | 4 cases | — |
+| `lib/transferData.ts` | `exportBackup` | No | Thin wrapper over `prepareExportData` + browser `document.createElement`; not testable in Jest without DOM mocking. Acceptable gap. | **Low** |
+| `lib/transferData.ts` | `importBackup` | Yes | 3 cases via `FileReader` mock | — |
+| `lib/habitConfig.ts` | `getConfigs` | **No test file** | Branching logic across four paths (localStorage unavailable, null, malformed JSON, valid JSON) — all untested. No `habitConfig.test.ts` exists. | **Medium** |
+| `lib/habitConfig.ts` | `saveConfigs` | **No test file** | localStorage-unavailable path untested. | **Medium** |
 
-All `lib/` utilities now have direct test coverage.
+---
 
 ## 4. Component structure signals
 
 | Component | Lines | Issue | Severity |
 |---|---|---|---|
+| `ManageView.tsx` | 805 | Largest component. Config mutation helpers (`archiveHabit`, `archiveMoment`, `restoreHabit`, `restoreTag`, `toggleJoyByDefault`, `saveNewHabit`, `saveNewTag`, `saveEditHabit`) all live inline. They are thin wrappers over `saveConfigs`; CLAUDE.md explicitly forbids partial helpers on AppConfigs so extraction would be out-of-spec. Worth watching as the component grows further. | **Medium** |
+| `CalendarHeatmap.tsx` | 335 | `buildMonthWeeks`, `computeCellStyle`, `doesEntryMatchFilter` are pure utility functions with no component dependencies. Currently untestable in Jest without importing the full component. Could be extracted to `lib/` or a co-located `calendarUtils.ts`. | **Medium** |
+| `CheckInForm.tsx` | 516 | Inline moment creation (`handleAddMoment`) calls `saveConfigs` / `setConfigs` directly — a second component (besides ManageView) performing config mutations. CLAUDE.md's "no partial helpers" rule means this pattern is by design; acceptable at current scale. | **Low** |
+| `FrequencyList.tsx` | 177 | Period-filtering and frequency-counting logic is inline IIFE + loop. Pure data transformation; could be extracted but file is small. | **Low** |
 
-No structural concerns. `ManageView.tsx` is ~803 lines; all logic remains UI state with no business logic or localStorage access outside `applyConfigs`. `CalendarHeatmap.tsx` decreased by ~40 lines after removing the colour-blend machinery — a positive simplification signal.
+---
 
 ## 5. Static export constraints
 
 | File | Issue | Severity |
 |---|---|---|
-
-No issues. No dynamic routes introduced. No `useSearchParams()`. No server-runtime assumptions. `edit/page.tsx` correctly reads `window.location.search` in a `useEffect`. Static export constraints fully satisfied.
+| `app/edit/page.tsx` | Reads `?date=` via `window.location.search` in `useEffect` — correct static-export pattern; no `useSearchParams()` or dynamic route. Compliant. | — |
+| All `app/` pages | No dynamic route segments (`[param]`) found. All routes are statically known at build time. Compliant. | — |
+| `app/layout.tsx` | `next/font/google` (Geist) fetched at build time — compatible with static export. Compliant. | — |
+| `components/BottomNav.tsx` | `usePathname()` reads path client-side — compatible with static export. Compliant. | — |
+| Entire codebase | No `useSearchParams()` calls found — the hook that requires `<Suspense>` wrapping and breaks static builds is absent everywhere. Compliant. | — |
 
 ---
 
 ## Summary counts
-0 critical · 0 high · 1 medium · 0 low
 
----
-
-## Comparison vs. Sprint 13 baseline
-
-| | Before (Sprint 13) | After (Sprint 14) | Fixed | Regressions |
-|---|---|---|---|---|
-| Critical | 0 | 0 | — | 0 |
-| High | 0 | 0 | — | 0 |
-| Medium | 0 | 1 | 0 | 0* |
-| Low | 1 | 0 | 1 | 0 |
-
-*The Medium is a carry-over finding (ManageView `+ New` chip) that was present before Sprint 14
-and not previously recorded — it is not a regression introduced by this sprint.
-
-Sprint 14 fixed the only previous Low (`createEmptyEntry` test) and introduced no new violations.
-
----
-
-## Gate decision
-
-**PASS** — No must-fix issues. Sprint 14 changes are clean.
-One Medium carry-over (`+ New` chip `text-stone-500 hover:bg-stone-50` in ManageView) is
-non-blocking and not introduced by this sprint.
-
-Sprint plan fidelity: all 7 tasks + BottomNav bug fix implemented per spec. One animation
-regression (Joy section `initial={false}` removes enter animation) flagged in arch-review
-as Medium; does not block deploy but warrants a follow-up fix.
+0 critical · 3 high · 4 medium · 5 low

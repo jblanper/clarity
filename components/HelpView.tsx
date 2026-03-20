@@ -14,13 +14,13 @@ export default function HelpView() {
     <div className="mx-auto max-w-md px-5 pb-12 pt-10">
 
       {/* ── Header ────────────────────────────────────────────────── */}
-      <header className="mb-10 flex items-start justify-between">
+      <header className="mb-10 flex items-center justify-between">
         <h1 className="text-xl font-light tracking-widest text-stone-800 dark:text-stone-200">
           Help
         </h1>
         <Link
           href="/settings"
-          className="mt-2 flex min-h-[44px] items-center text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
+          className="flex min-h-[44px] items-center text-xs uppercase tracking-widest text-stone-600 dark:text-stone-500 transition-colors hover:text-stone-800 dark:hover:text-stone-300"
         >
           <Chevron direction="left" /> Settings
         </Link>

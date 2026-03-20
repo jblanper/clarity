@@ -155,7 +155,7 @@ describe("parseImportFile", () => {
       configs: makeConfigs(),
       entries: [{ date: "bad", habits: "nope" }],
     });
-    expect(() => parseImportFile(json)).toThrow("No recognisable entries were found");
+    expect(() => parseImportFile(json)).toThrow("No entries were found in that file — it may be empty or from a different app.");
   });
 
   it("succeeds with zero entries when the entries array is empty", () => {
