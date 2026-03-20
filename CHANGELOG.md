@@ -1,5 +1,17 @@
 # Changelog
 
+## [v2.6.3] — 2026-03-20
+
+### Fixes
+- Microcopy: resolved all 8 post-Sprint-15 audit findings (labels, hints, button copy)
+
+### Refinements
+- History: simplified calendar legend — labels now styled with their own encoding (font weight + colour) instead of separate indicator glyphs
+
+### Docs / Tooling
+- Sprint 15: sprint doc, audit zero (35 findings resolved), Calma design-language sync
+- Skills: `/debug` made project-agnostic; sprint-pre-flight merged into sprint-brief
+
 ## [v2.6.2] — 2026-03-20
 
 ### Fixes
