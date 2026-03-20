@@ -32,7 +32,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} min-h-screen`}>
         {/* Runs before first paint to apply the saved theme without flash. */}
-        <Script src="/theme-init.js" strategy="beforeInteractive" />
+        <Script src="/clarity/theme-init.js" strategy="beforeInteractive" />
         <MotionProvider>
           {children}
           <BottomNav />
